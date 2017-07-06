@@ -1,0 +1,43 @@
+@import "../../../variables.css";
+
+.fj-table {
+  width: 100%;
+}
+
+.fj-table th,
+.fj-table td {
+  padding: 10px;
+  border-bottom: var(--table-border);
+}
+
+.fj-table th {
+  color: var(--table-th-color);
+  border-right: var(--table-border);
+}
+.fj-table th:last-child {
+  border-right: 0;
+}
+
+.fj-table td {
+  color: var(--table-td-color);
+}
+.fj-table tbody tr:hover{
+  background-color: var(--table-tr-hover-bg-color);
+}
+.fj-table-striped {
+  background-color: var(--table-tr-striped-bg-color);
+}
+.fj-table tbody tr.fj-current-row {
+  background-color: var(--table-current-row-bg-color);
+}
+
+.hidden-column {
+  display: none;
+}
+
+.fj-table-empty-block {
+  border: var(--table-border);
+  border-top: 0;
+  text-align: center;
+  height: 88px;
+}

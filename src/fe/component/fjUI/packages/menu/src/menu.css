@@ -1,0 +1,28 @@
+@import "../../../variables.css";
+
+.fj-menu {
+  width: var(--menu-width);
+  height: 100%;
+  background-color: var(--menu-bg-color);
+}
+
+.fj-menu-item {
+  height: 77px;
+  line-height: 77px;
+  font-size: 12px;
+  color: #9FB3CA;
+  border-bottom: 1px solid #5B728A;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color .3s, color .3s, border-bottom .3s;
+}
+.fj-menu-item:hover {
+  background-color: #38B1EB;
+  border-bottom: 1px solid #38B1EB;
+  color: #FFFFFF;
+}
+.fj-menu-item.active {
+  background-color: #1497D6;
+  border-bottom: 1px solid #1497D6;
+  color: #FFFFFF;
+}

@@ -1,0 +1,15 @@
+@import "./packages/button/src/button.css";
+@import "./packages/radio/src/radio.css";
+@import "./packages/checkbox/src/checkbox.css";
+@import "./packages/input/src/input.css";
+@import "./packages/select/src/select.css";
+@import "./packages/form/src/form.css";
+@import "./packages/dialog/src/dialog.css";
+@import "./packages/table/src/table.css";
+@import "./packages/tag/src/tag.css";
+@import "./packages/message/src/message.css";
+@import "./packages/pagination/src/pagination.css";
+@import "./packages/tabs/src/tabs.css";
+@import "./packages/menu/src/menu.css";
+@import "./packages/submenu/src/submenu.css";
+@import "./transition.css";

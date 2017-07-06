@@ -1,0 +1,46 @@
+@import "../../../variables.css";
+
+.fj-submenu {
+  width: var(--submenu-width);
+  height: 100%;
+  padding: 10px 0;
+  background-color: var(--submenu-bg-color);
+}
+.fj-submenu-item {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 25px;
+  font-size: 14px;
+  color: #2A3E52;
+  cursor: pointer;
+  transition: background-color .3s, color .3s;
+}
+.fj-submenu-item:hover {
+  background-color: #9FB3CA;
+  color: #fff;
+}
+.fj-submenu-item.active {
+  background-color: #9FB3CA;
+  color: #fff;
+}
+.fj-submenu-group-title {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 25px;
+  font-size: 14px;
+  color: #2A3E52;
+  cursor: pointer;
+}
+
+.fj-submenu-group .fj-submenu-item {
+  padding-left: 30px;
+  color: #4C637B;
+}
+.fj-submenu-group .fj-submenu-item:hover {
+  background-color: #9FB3CA;
+  color: #fff;
+}
+.fj-submenu-group .fj-submenu-item.active {
+  background-color: #9FB3CA;
+  color: #fff;
+}

@@ -1,0 +1,43 @@
+@import "../../../variables.css";
+
+.fj-tag {
+  display: inline-block;
+
+  height: 20px;
+  line-height: 18px;
+  padding: 0 10px;
+
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--tag-default-border-color);
+  border-radius: 15px;
+
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--tag-color);
+  background-color: var(--tag-default-bg-color);
+}
+.fj-tag + .fj-tag {
+  margin-left: 10px;
+}
+
+.fj-tag-primary {
+  border-color: var(--tag-primary-border-color);
+  background-color: var(--tag-primary-bg-color);
+}
+.fj-tag-success {
+  border-color: var(--tag-success-border-color);
+  background-color: var(--tag-success-bg-color);
+}
+.fj-tag-warning {
+  border-color: var(--tag-warning-border-color);
+  background-color: var(--tag-warning-bg-color);
+}
+.fj-tag-danger {
+  border-color: var(--tag-danger-border-color);
+  background-color: var(--tag-danger-bg-color);
+}
+
+.fj-tag-close {
+  cursor: pointer;
+}
