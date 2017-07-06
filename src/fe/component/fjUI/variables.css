@@ -1,0 +1,139 @@
+:root {
+  --z-index-select-dropdown: 1000;
+  --z-index-message: 2000;
+
+  --danger-text-color: #FF3366;
+
+  --button-default-background-color: #FFF;
+  --button-hover-default-background-color: #FFF;
+  --button-active-default-background-color: #FFF;
+
+  --button-primary-background-color: #F4AC32;
+  --button-hover-primary-background-color: #FAC66D;
+  --button-active-primary-background-color: #F09A08;
+
+  --button-success-background-color: #2EC4B6;
+  --button-hover-success-background-color: #4FD8CB;
+  --button-active-success-background-color: #0FAFA0;
+
+  --button-danger-background-color: #FF3366;
+  --button-hover-danger-background-color: #FF6B90;
+  --button-active-danger-background-color: #E91A4E;
+
+  --button-info-background-color: #20A4F3;
+  --button-hover-info-background-color: #56BEFC;
+  --button-active-info-background-color: #008BDE;
+
+  --button-text-background-color: transparent;
+  --button-hover-text-background-color: transparent;
+  --button-active-text-background-color: transparent;
+
+  --button-hover-disabled-background-color: #F4F4F4;
+  --button-disabled-border: 1px solid #DDDDDD;
+
+  --button-default-color: #666;
+  --button-hover-default-color: #20A4F3;
+  --button-active-default-color: #008BDE;
+
+  --button-text-color: #1FB4F6;
+  --button-hover-text-color: #56BEFC;
+  --button-active-text-color: #008BDE;
+
+  --button-color: #FFF;
+
+  --button-default-border: 1px solid #ccc;
+  --button-hover-default-border: 1px solid #20A4F3;
+  --button-active-default-border: 1px solid #008BDE;
+  --button-border: 0;
+
+  --button-border-radius: 4px;
+
+  --radio-size: 16px;
+  --radio-border: 1px solid #CCC;
+  --radio-hover-border: 1px solid #20A4F3;
+  --radio-checked-border: 1px solid #008BDE;
+  --radio-checked-color: #008BDE;
+  --radio-disabled-checked-color: #F4F4F4;
+
+  --checkbox-border-radius: 4px;
+
+  --input-height: 36px;
+
+  --input-border: 1px solid #CCCCCC;
+  --input-hover-border-color: #888888;
+  --input-focus-border-color: #F4AC32;
+
+  --error-input-border: 1px solid #FF3366;
+
+  --label-color: #222;
+
+  --disabled-color: #9F9F9F;
+  --disabled-border-color: #DDD;
+
+  --input-disabled-background-color: #F4F4F4;
+
+  --input-border-radius: 4px;
+
+  --select-dropdown-box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
+
+  --select-option-height: 32px;
+  --select-option-hover-background-color: #F4F4F4;
+  --select-option-selected-background-color: #F4AC32;
+
+  --select-dropdown-max-height: 240px;
+
+  --table-border: 1px solid #f1f5f6;
+  --table-th-color: #021120;
+  --table-td-color: #4C637B;
+  --table-tr-hover-bg-color: #EBF3FB;
+  --table-tr-striped-bg-color: #F8FAFB;
+  --table-current-row-bg-color: rgba(56,176,235,0.25);
+
+  --dialog-border-radius: 4px;
+  --dialog-border: 1px solid #CED9E5;
+  --dialog-title-color: #021120;
+  --dialog-title-font-weight: 700;
+  --dialog-closebtn-color: #9FB3CA;
+  --dialog-closebtn-hover-bg-color: #CED9E5;
+  --dialog-body-color: #4C637B;
+
+  --tag-color: #4C637B;
+  --tag-default-border-color: #38B1EB;
+  --tag-primary-border-color: #38B1EB;
+  --tag-success-border-color: #2EC4B6;
+  --tag-warning-border-color: #9FB3CA;
+  --tag-danger-border-color: #FF3366;
+
+  --tag-default-bg-color: #fff;
+  --tag-primary-bg-color: rgba(56,176,235,0.10);
+  --tag-success-bg-color: rgba(46,196,182,0.10);
+  --tag-warning-bg-color: rgba(159,179,202,0.10);
+  --tag-danger-bg-color: rgba(255,50,101,0.10);
+
+  --message-error-color: #FF5C85;
+  --message-success-color: #2EC4B6;
+  --message-info-color: #38B1EB;
+  --message-warning-color: #F5A623;
+
+  --pagination-btn-background-color: #FFF;
+  --pagination-btn-border: 1px solid #CED9E5;
+  --pagination-text-color: #4C637B;
+
+  --pagination-btn-hover-background-color: #38B1EB;
+  --pagination-btn-hover-border: 1px solid #38B1EB;
+  --pagination-btn-hover-color: #FFF;
+
+  --pagination-btn-active-background-color: #1497D6;
+  --pagination-btn-active-border: 1px solid #1497D6;
+  --pagination-btn-active-color: #FFF;
+
+  --pagination-btn-disabled-bg-color: #E3EAF3;
+
+  --tabs-header-border: 1px solid #EBF3FB;
+  --tabs-item-active-color: #38B1EB;
+
+  --menu-bg-color: #4C637B;
+  --menu-width: 84px;
+  --submenu-width: 122px;
+  --submenu-bg-color: #E3EAF3;
+}

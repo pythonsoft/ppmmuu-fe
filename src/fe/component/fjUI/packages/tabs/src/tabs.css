@@ -1,0 +1,21 @@
+@import "../../../variables.css";
+.fj-tabs-header {
+  margin-bottom: 15px;
+  border-bottom: var(--tabs-header-border);
+}
+.fj-tabs-item {
+  padding: 0 15px;
+  height: 42px;
+  line-height: 42px;
+  display: inline-block;
+  font-size: 14px;
+  color: #666666;
+  cursor: pointer;
+}
+.fj-tabs-item.active,
+.fj-tabs-item:hover {
+  color: var(--tabs-item-active-color);
+}
+.fj-tabs-item.active {
+  border-bottom: 2px solid var(--tabs-item-active-color);
+}

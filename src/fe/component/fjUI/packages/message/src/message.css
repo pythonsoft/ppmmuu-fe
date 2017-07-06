@@ -1,0 +1,33 @@
+@import "../../../variables.css";
+
+.fj-message {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+
+  min-width: 170px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 4px;
+  padding: 0 16px;
+
+  text-align: center;
+  color: #fff;
+
+  transition: opacity .3s, transform .4s;
+  transform: translateX(-50%);
+  z-index: var(--z-index-message);
+}
+
+.fj-message-info {
+  background-color: var(--message-info-color);
+}
+.fj-message-error {
+  background-color: var(--message-error-color);
+}
+.fj-message-success {
+  background-color: var(--message-success-color);
+}
+.fj-message-warning {
+  background-color: var(--message-warning-color);
+}

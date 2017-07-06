@@ -1,0 +1,63 @@
+@import "../../../variables.css";
+
+.fj-input-wrap {
+  position: relative;
+  width: 100%;
+}
+.fj-textarea-wrap {
+  position: relative;
+  width: 100%;
+  vertical-align: bottom;
+}
+
+.fj-input-inner {
+  width: 100%;
+  height: var(--input-height);
+  line-height: 1;
+  padding: 3px 10px;
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  outline: none;
+  font-size: 14px;
+}
+
+.fj-input-inner:hover,
+.fj-textarea-inner:hover {
+  border-color: var(--input-hover-border-color);
+}
+.fj-input-inner:focus,
+.fj-input-inner:active,
+.fj-textarea-inner:focus,
+.fj-textarea-inner:active {
+  border-color: var(--input-focus-border-color);
+}
+
+.fj-input-disabled .fj-input-inner,
+.fj-input-disabled .fj-textarea-inner {
+  cursor: not-allowed;
+  border-color: var(--disabled-border-color);
+  color: var(--disabled-color);
+  background-color: var(--input-disabled-background-color);
+}
+.fj-textarea-inner {
+  padding: 5px 7px;
+  line-height: 1.5;
+  width: 100%;
+  font-size: 14px;
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+}
+
+.fj-input-icon {
+  position: absolute;
+  width: 35px;
+  height: 100%;
+  right: 0;
+  top: 0;
+  text-align: center;
+  color: #333;
+  cursor: pointer;
+}
+.fj-input-icon+.fj-input-inner {
+  padding-right: 35px;
+}

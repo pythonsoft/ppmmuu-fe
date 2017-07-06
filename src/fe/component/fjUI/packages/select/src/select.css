@@ -1,0 +1,38 @@
+@import "../../../variables.css";
+
+.fj-select {
+  position: relative;
+}
+
+.fj-select .fj-input-inner {
+  cursor: pointer;
+}
+
+.fj-select-dropdown {
+  position: absolute;
+  max-height: var(--select-dropdown-max-height);
+  overflow: scroll;
+  margin: 4px 0;
+  padding: 8px 0;
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  background-color: #fff;
+  box-shadow: var(--select-dropdown-box-shadow);
+  z-index: var(--z-index-select-dropdown);
+}
+
+.fj-select-dropdown-item {
+  padding: 6px 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: var(--select-option-height);
+  cursor: pointer;
+}
+.fj-select-dropdown-item.hover {
+  background-color: var(--select-option-hover-background-color);
+}
+.fj-select-dropdown-item.selected {
+  color: #fff;
+  background-color: var(--select-option-selected-background-color);
+}
