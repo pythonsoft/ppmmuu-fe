@@ -43,11 +43,11 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 6px;
-  opacity: 0;
-  background: var(--radio-checked-color);
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  /*opacity: 0;*/
+  background: #fff;
   transform: translate(-50%,-50%) scale(0);
   transition: all .15s cubic-bezier(.78,.14,.15,.86);
 }
@@ -57,19 +57,20 @@
 
 .fj-radio-checked .fj-radio-inner {
   border: var(--radio-checked-border);
+  background: var(--radio-checked-color);
 }
 .fj-radio-checked .fj-radio-inner:after {
-  opacity: 1;
+  /*opacity: 1;*/
   transform: translate(-50%,-50%) scale(1);
   transition: all .15s cubic-bezier(.78,.14,.15,.86);
 }
 
 .fj-radio-disabled .fj-radio-inner {
   border-color: var(--disabled-border-color);
+  background: var(--radio-disabled-checked-color);
 }
 .fj-radio-disabled.fj-radio-checked .fj-radio-inner:after {
-  opacity: 1;
-  background: var(--radio-disabled-checked-color);
+  /*opacity: 1;*/
   transform: translate(-50%,-50%) scale(1);
   transition: all .15s cubic-bezier(.78,.14,.15,.86);
 }
