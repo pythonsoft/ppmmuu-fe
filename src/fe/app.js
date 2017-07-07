@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import './css/base.css';
 import routes from './routers/routes';
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -16,7 +17,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title || '';
   next();
-})
+});
 
 new Vue({
   router,
