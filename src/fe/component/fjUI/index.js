@@ -23,6 +23,7 @@ import MenuItem from './packages/menuItem';
 import Submenu from './packages/submenu';
 import SubmenuItem from './packages/submenuItem';
 import SubmenuGroup from './packages/submenuGroup';
+import Tree from './packages/tree';
 
 import './index.css';
 
@@ -48,7 +49,8 @@ const components = [
   MenuItem,
   Submenu,
   SubmenuItem,
-  SubmenuGroup
+  SubmenuGroup,
+  Tree
 ];
 
 const install = function (vue, options = {}) {
@@ -88,7 +90,8 @@ const FjUI = {
   MenuItem,
   Submenu,
   SubmenuItem,
-  SubmenuGroup
+  SubmenuGroup,
+  Tree
 };
 
 Vue.use(FjUI);
