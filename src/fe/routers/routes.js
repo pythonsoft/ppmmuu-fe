@@ -3,6 +3,8 @@ import Menu from './menu';
 
 const Management = resolve => require.ensure([], () => resolve(require('./management/index')), 'management');
 // const SubPage1 = resolve => require.ensure([], () => resolve(require('./page1/sub/sub_index')), 'page1');
+const Role = resolve => require.ensure([], () => resolve(require('./management/role/index')), 'role');
+const Permission = resolve => require.ensure([], () => resolve(require('./management/permission/index')), 'permission');
 
 const Root = {
   template: '<router-view></router-view>'
@@ -21,7 +23,9 @@ export default [{
     component: Management,
     meta: { title: '管理' },
     children: [
-      { path: 'account', component: Root, meta: { title: '账户' } }
+      { path: 'account', component: Role, meta: { title: '账户' } },
+      { path: 'role', component: Role, meta: { title: '角色' } },
+      { path: 'permission', component: Root, meta: { title: '权限' } }
     ]
   }]
 }];
