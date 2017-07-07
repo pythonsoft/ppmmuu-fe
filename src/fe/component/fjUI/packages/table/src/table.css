@@ -4,21 +4,21 @@
   width: 100%;
 }
 
-.fj-table th,
-.fj-table td {
-  padding: 10px;
-  border-bottom: var(--table-border);
-}
-
 .fj-table th {
+  padding: 3px 10px;
+  border-bottom: var(--table-th-border);
   color: var(--table-th-color);
-  border-right: var(--table-border);
+  border-right: var(--table-th-border);
 }
 .fj-table th:last-child {
   border-right: 0;
 }
-
+.fj-table th:first-child,
+.fj-table td:first-child {
+  padding-left: 20px;
+}
 .fj-table td {
+  padding: 11px 10px;
   color: var(--table-td-color);
 }
 .fj-table tbody tr:hover{

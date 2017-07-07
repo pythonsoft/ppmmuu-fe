@@ -1,6 +1,6 @@
 @import "../../../variables.css";
 .fj-button {
-  padding: 10px 15px;
+  padding: 10px;
   background: var(--button-default-background-color);
   color: var(--button-default-color);
   border: var(--button-default-border);
@@ -11,6 +11,9 @@
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
+}
+.fj-button-default-size {
+  min-width: 88px;
 }
 
 .fj-button:hover {
@@ -25,80 +28,88 @@
   border: var(--button-active-default-border);
 }
 
+.fj-button-mini {
+  padding: 6px 16px;
+  font-size: 12px;
+}
+
+.fj-button-small {
+  padding: 8px 14px;
+}
 
 .fj-button-primary {
   background: var(--button-primary-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-primary-background-color);
 }
 
 .fj-button-primary:hover {
   background: var(--button-hover-primary-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-hover-primary-background-color);
 }
 
 .fj-button-primary:active {
   background: var(--button-active-primary-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-active-primary-background-color);
 }
 
 
 .fj-button-success {
   background: var(--button-success-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-success-background-color);
 }
 
 .fj-button-success:hover {
   background: var(--button-hover-success-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-hover-success-background-color);
 }
 
 .fj-button-success:active {
   background: var(--button-active-success-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-active-success-background-color);
 }
 
 
 .fj-button-danger {
   background: var(--button-danger-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-danger-background-color);
 }
 
 .fj-button-danger:hover {
   background: var(--button-hover-danger-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-hover-danger-background-color);
 }
 
 .fj-button-danger:active {
   background: var(--button-active-danger-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-active-danger-background-color);
 }
 
 
 .fj-button-info {
   background: var(--button-info-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-info-background-color);
 }
 
 .fj-button-info:hover {
   background: var(--button-hover-info-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-hover-info-background-color);
 }
 
 .fj-button-info:active {
   background: var(--button-active-info-background-color);
   color: var(--button-color);
-  border: var(--button-border);
+  border: 1px solid var(--button-active-info-background-color);
 }
 
 
@@ -124,7 +135,7 @@
 .fj-button-disabled:hover,
 .fj-button-disabled:active {
   background: var(--button-hover-disabled-background-color);
-  color: var(--disabled-color);
+  color: rgba(255, 255, 255, .5);
   border-color: var(--disabled-border-color);
   cursor: not-allowed;
 }

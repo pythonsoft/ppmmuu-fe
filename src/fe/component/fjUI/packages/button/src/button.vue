@@ -3,7 +3,7 @@
     class="fj-button"
     :class="[
       type ? 'fj-button-' + type : '',
-      size ? 'fj-button-' + size : '',
+      size ? 'fj-button-' + size : 'fj-button-default-size',
       {
         'fj-button-disabled': disabled,
         'fj-button-loading': loading
