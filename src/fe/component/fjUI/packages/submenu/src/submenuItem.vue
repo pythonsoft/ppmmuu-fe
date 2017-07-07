@@ -29,7 +29,7 @@
         if (this.$parent && this.$parent.$options.name === 'FjSubmenuGroup') {
           group = this.$parent;
         }
-        return group
+        return group;
       },
       active() {
         return this.index === this.parent.activedIndex || this.route === this.parent.activedIndex;

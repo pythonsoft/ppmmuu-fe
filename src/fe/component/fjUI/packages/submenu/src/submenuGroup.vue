@@ -19,7 +19,7 @@
       return {
         opened: false,
         items: {}
-      }
+      };
     },
     watch: {
       '$parent.activedIndex'(val) {
@@ -46,5 +46,5 @@
     mounted() {
       this.initOpenedMenu(this.$parent.activedIndex);
     }
-  }
+  };
 </script>

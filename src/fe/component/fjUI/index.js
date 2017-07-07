@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 import Input from './packages/input';
 import Button from './packages/button';
 import Radio from './packages/radio';
@@ -23,7 +25,6 @@ import SubmenuItem from './packages/submenuItem';
 import SubmenuGroup from './packages/submenuGroup';
 
 import './index.css';
-import Vue from 'vue';
 
 const components = [
   Input,
@@ -50,16 +51,17 @@ const components = [
   SubmenuGroup
 ];
 
-const install = function (Vue, options = {}) {
+const install = function (vue, options = {}) {
   components.forEach((component) => {
-    Vue.component(component.name, component);
+    vue.component(component.name, component);
   });
-  Vue.prototype.$message = Message;
+  vue.prototype.$message = Message;
 };
 
-if (typeof window !== 'undefined' && window.Vue) {
-  install(window.Vue);
-}
+// if (typeof window !== 'undefined' && window.Vue) {
+//   install(window.Vue);
+// }
+install(Vue);
 
 // module.exports = {
 const FjUI = {

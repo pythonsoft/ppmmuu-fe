@@ -27,14 +27,14 @@
 </template>
 <script>
   const menu = [
-    { title: "账户管理", index: "accountCenter", children: [
-      { text: "账户", index: "account", route: "account" },
-      { text: "角色", index: "2", route: "2" },
-      { text: "权限", index: "3", route: "3" }
+    { title: '账户管理', index: 'accountCenter', children: [
+      { text: '账户', index: 'account', route: 'account' },
+      { text: '角色', index: '2', route: '2' },
+      { text: '权限', index: '3', route: '3' }
     ] },
-    { text: "引擎管理", index: "4", route: "4" },
-    { text: "存储管理", index: "5", route: "5" },
-    { text: "设置", index: "6", route: "6" }
+    { text: '引擎管理', index: '4', route: '4' },
+    { text: '存储管理', index: '5', route: '5' },
+    { text: '设置', index: '6', route: '6' }
   ];
   export default {
     data() {
