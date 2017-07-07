@@ -25,7 +25,7 @@ export default [{
     children: [
       { path: 'account', component: Role, meta: { title: '账户' } },
       { path: 'role', component: Role, meta: { title: '角色' } },
-      { path: 'permission', component: Root, meta: { title: '权限' } }
+      { path: 'permission', component: Permission, meta: { title: '权限' } }
     ]
   }]
 }];
