@@ -12,4 +12,5 @@
 @import "./packages/tabs/src/tabs.css";
 @import "./packages/menu/src/menu.css";
 @import "./packages/submenu/src/submenu.css";
+@import "./packages/tree/src/tree.css";
 @import "./transition.css";

@@ -1,0 +1,18 @@
+.fj-tree-item-expandable {
+  color: #2A3E52;
+}
+.fj-tree-item {
+  color: #4C637B;
+}
+
+.fj-tree-item,
+.fj-tree-item-expandable {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  cursor: default;
+}
+
+.fj-tree-current-item {
+  background-color: #9FB3CA;
+  color: #fff;
+}
