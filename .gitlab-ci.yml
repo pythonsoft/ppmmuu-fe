@@ -37,9 +37,9 @@ setup_job:
 
 run_node_68:
   stage: run_node
-    script:
-      - function at_68 { ssh ump@10.0.15.68 $1; }
-      - at_68 "killall -q node; nohup node UMP-FE/build/server.js >/dev/null 2>&1 &"
+  script:
+    - function at_68 { ssh ump@10.0.15.68 $1; }
+    - at_68 "killall -q node; nohup node UMP-FE/build/server.js >/dev/null 2>&1 &"
 
   environment:
     name: test
