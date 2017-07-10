@@ -117,6 +117,7 @@
     watch: {
       data(val) {
         this.store.states.data = val;
+        this.clearSelection();
       }
     },
     methods: {
