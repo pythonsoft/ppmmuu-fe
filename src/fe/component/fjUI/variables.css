@@ -2,6 +2,7 @@
   --z-index-select-dropdown: 1000;
   --z-index-message: 2000;
 
+  --base-color: #2A3E52;
   --danger-text-color: #FF3366;
 
   --button-default-background-color: #FFF;
@@ -64,7 +65,7 @@
 
   --error-input-border: 1px solid #FF3366;
 
-  --label-color: #222;
+  --label-color: #4C637B;
 
   --disabled-color: #9F9F9F;
   --disabled-border-color: #CED9E5;
