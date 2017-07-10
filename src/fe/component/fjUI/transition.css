@@ -23,3 +23,20 @@
   opacity: 0;
   transform: translate(-50%, -100%);
 }
+
+.slide-in-right-enter-active {
+  animation: slideInRight .4s;
+}
+
+.slide-in-right-leave-active {
+  animation: slideInRight .4s reverse;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}

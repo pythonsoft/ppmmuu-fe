@@ -1,5 +1,5 @@
 <template>
-  <transition>
+  <transition name="slide-in-right">
     <div v-show="visible" class="fj-slide-dialog-wrapper" :style="{ width: width }">
       <div class="fj-slide-dialog-header">
         <slot name="title">
