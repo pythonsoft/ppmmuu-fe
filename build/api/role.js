@@ -2,7 +2,7 @@ import axios from 'axios';
 const api = {};
 
 api.getRoleList = function getRoleList(data,cb) {
-  axios.get('http://localhost:8080/role/list', data)
+  axios.get('http://10.0.15.105:8080/role/list', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -12,7 +12,7 @@ api.getRoleList = function getRoleList(data,cb) {
 }
 
 api.getRoleDetail = function getRoleDetail(data,cb) {
-  axios.get('http://localhost:8080/role/getDetail', data)
+  axios.get('http://10.0.15.105:8080/role/getDetail', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -22,7 +22,7 @@ api.getRoleDetail = function getRoleDetail(data,cb) {
 }
 
 api.postAddRole = function postAddRole(data,cb) {
-  axios.post('http://localhost:8080/role/add', data)
+  axios.post('http://10.0.15.105:8080/role/add', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -32,7 +32,7 @@ api.postAddRole = function postAddRole(data,cb) {
 }
 
 api.postUpdateRole = function postUpdateRole(data,cb) {
-  axios.post('http://localhost:8080/role/update', data)
+  axios.post('http://10.0.15.105:8080/role/update', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -42,7 +42,7 @@ api.postUpdateRole = function postUpdateRole(data,cb) {
 }
 
 api.postDeleteRole = function postDeleteRole(data,cb) {
-  axios.post('http://localhost:8080/role/delete', data)
+  axios.post('http://10.0.15.105:8080/role/delete', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -52,7 +52,7 @@ api.postDeleteRole = function postDeleteRole(data,cb) {
 }
 
 api.getPermissionList = function getPermissionList(data,cb) {
-  axios.get('http://localhost:8080/role/listPermission', data)
+  axios.get('http://10.0.15.105:8080/role/listPermission', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -62,7 +62,7 @@ api.getPermissionList = function getPermissionList(data,cb) {
 }
 
 api.postAssignRole = function postAssignRole(data,cb) {
-  axios.post('http://localhost:8080/role/assignRole', data)
+  axios.post('http://10.0.15.105:8080/role/assignRole', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -72,7 +72,7 @@ api.postAssignRole = function postAssignRole(data,cb) {
 }
 
 api.postEnablePermission = function postEnablePermission(data,cb) {
-  axios.post('http://localhost:8080/role/enablePermission', data)
+  axios.post('http://10.0.15.105:8080/role/enablePermission', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })
@@ -82,7 +82,7 @@ api.postEnablePermission = function postEnablePermission(data,cb) {
 }
 
 api.getUserOrDepartmentRoleAndPermissions = function getUserOrDepartmentRoleAndPermissions(data,cb) {
-  axios.post('http://localhost:8080/role/getUserOrDepartmentRoleAndPermissions', data)
+  axios.post('http://10.0.15.105:8080/role/getUserOrDepartmentRoleAndPermissions', data)
     .then(function (res) {
       return cb && cb(null, res.data);
     })

@@ -1,15 +1,30 @@
 stages:
-  - setup
   - deploy
+  - setup
+  - run_node
+
+deploy_to_68_job:
+  stage: deploy
+  script:
+    - function at_68 { ssh ump@10.0.15.68 $1; }
+    - at_68 "git clone git@gitlab.szdev.cn:dev/UMP-FE.git"
+
+  environment:
+    name: test
+  tags:
+    - test
+  only:
+    - master
 
 setup_job:
   stage: setup
   script:
-    - npm config set strict-ssl false
-    - npm config set registry "http://registry.npm.taobao.org/"
-    - npm install
+    - function at_68 { ssh ump@10.0.15.68 $1; }
+    - at_68 "npm config set strict-ssl false"
+    - at_68 "npm config set registry 'http://registry.npm.taobao.org/'"
+    - at_68 "npm install"
   cache:
-    key: ${CI_BUILD_REF_NAME}
+    key: ump-fe
     paths:
       - node_modules/
   artifacts:
@@ -20,16 +35,11 @@ setup_job:
   tags:
     - test
 
-deploy_to_68_job:
-  stage: deploy
-  script:
-    - proj_path="/home/ump/"
-    - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "git clone git@gitlab.szdev.cn:dev/UMP-FE.git"
-    - scp -r build/* ump@10.0.15.68:"${proj_path}-manager/build"
-    - scp -r node_modules/* ump@10.0.15.67:"${proj_path}-manager/node_modules"
-    - at_67 "sed -i -re \"s/(^\s*config\.host)\s*=.*/\1='api\.szdev\.cn\/'/\" ${proj_path}-manager/build/config_master.js"
-    - at_67 "killall -q node; nohup node ${proj_path}-manager/build/server.js >/dev/null 2>&1 &"
+run_node_68:
+  stage: run_node
+    script:
+      - function at_68 { ssh ump@10.0.15.68 $1; }
+      - at_68 "killall -q node; nohup node UMP-FE/build/server.js >/dev/null 2>&1 &"
 
   environment:
     name: test
