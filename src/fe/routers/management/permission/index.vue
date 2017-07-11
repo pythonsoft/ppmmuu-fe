@@ -103,17 +103,17 @@
           status: me.status
         };
         api.getPermissionList(searchObj)
-        .then(function(res){
+          .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
-        })
-        .catch(function(error){
-           me.showErrorInfo(error);
-        });
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       handleClickEnable() {
         this.dialogMessage = '确定要启用这些权限吗?';
@@ -155,14 +155,14 @@
         }
 
         api.postEnablePermission(postData)
-        .then(function(response){
-          me.showSuccessInfo(message + "成功!");
-          me.handleClickSearch();
-        })
-        .catch(function(error){
-          me.showErrorInfo(error);
-          me.resetDialog();
-        });
+          .then((response) => {
+            me.showSuccessInfo(`${message}成功!`);
+            me.handleClickSearch();
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+            me.resetDialog();
+          });
       },
       handleSelectionChange(rows) {
         this.selectedDisableIds = [];
