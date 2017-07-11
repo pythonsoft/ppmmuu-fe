@@ -1,6 +1,7 @@
 import Vue from 'vue';
+import MessageComponent from './message.vue';
 
-const MessageConstructor = Vue.extend(require('./message.vue'));
+const MessageConstructor = Vue.extend(MessageComponent);
 
 let instance;
 let instances = [];
@@ -22,6 +23,7 @@ const Message = function (options = {}) {
   });
   instance.id = id;
   instance.vm = instance.$mount();
+  console.log('instance.vm', instance.vm);
   document.body.appendChild(instance.vm.$el);
   instance.vm.visible = true;
   instances.push(instance);
