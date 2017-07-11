@@ -32,9 +32,13 @@
         </div>
 
       </fj-dialog>
-       <div class="permission-operation" slot="operation">
-          <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
+       <div slot="operation">
+         <span class="btn-mini-margin">
+           <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
+         </span>
+         <span class="btn-mini-margin">
+           <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
+         </span>
        </div>
         <div slot="table">
           <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
@@ -102,7 +106,8 @@
           name: me.name,
           status: me.status
         };
-        api.getPermissionList(searchObj)
+        console.log(formatQuery(searchObj));
+        api.getPermissionList(formatQuery(searchObj, true))
         .then(function(res){
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -226,12 +231,9 @@
       margin-left: 10px;
     }
 
-    .permission-operation{
-      background: #F2F6FA;
-      line-height: 46px;
-      height: 46px;
-      margin-top: 10px;
-      padding-left: 20px;
+    .btn-mini-margin {
+      margin-left: 6px;
+      font-size: 12px;
     }
 
     .table-pagination {
