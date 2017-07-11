@@ -1,24 +1,24 @@
 <template>
-    <div class="layout-content">
-      <div class="top-search">
-        <div class="search-title"><slot name="search-left"></slot></div>
-        <div class="search-right-content">
-            <slot name="search-right"></slot>
-        </div>
+  <div class="layout-content">
+    <div class="layout-top-search">
+      <div class="layout-search-title"><slot name="search-left"></slot></div>
+      <div class="layout-search-right-content">
+          <slot name="search-right"></slot>
       </div>
-       <div class="layout-operation">
-         <slot name="operation"></slot>
-       </div>
-       <slot></slot>
-        <div>
-          <slot name="table"></slot>
-          <slot name="pagination"></slot>
-        </div>
     </div>
+    <div class="layout-operation">
+      <slot name="operation"></slot>
+    </div>
+    <slot name="table"></slot>
+    <div class="layout-table-pagination">
+      <slot name="pagination"></slot>
+    </div>
+    <slot></slot>
+  </div>
 </template>
 <script>
   export default {
-    name: 'TableListLayout'
+    name: 'fourRowLayoutRightContent'
   };
 </script>
 <style>
@@ -27,7 +27,7 @@
       margin-top: 10px;
     }
 
-    .top-search {
+    .layout-top-search {
       height: 40px;
       width: 100%;
       line-height: 38px;
@@ -35,19 +35,19 @@
       min-width: 700px;
     }
 
-    .top-search .search-title{
+    .layout-top-search .layout-search-title{
       font-size: 16px;
       color: #273F57;
       position: absolute;
       left: 20px;
     }
 
-    .top-search .search-right-content{
+    .layout-top-search .layout-search-right-content{
       position: absolute;
       right: 20px;
     }
 
-    .layout-operation{
+    .layout-operation {
       background: #F2F6FA;
       line-height: 46px;
       height: 46px;
@@ -56,7 +56,7 @@
       overflow: hidden;
     }
 
-    .table-pagination {
+    .layout-table-pagination {
       margin-top: 30px;
       text-align: center;
       height: 28px;

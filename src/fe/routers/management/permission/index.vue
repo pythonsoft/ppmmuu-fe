@@ -1,67 +1,67 @@
 <template>
-    <table-list-layout>
-        <div slot="search-left">权限</div>
-        <div slot="search-right">
-          <div class="search-item">
-            <fj-select placeholder="请选择" v-model="status" size="mini">
-              <fj-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </fj-option>
-            </fj-select>
-          </div>
-          <div class="search-item">
-            <fj-input placeholder="请输入权限名" v-model="name"></fj-input>
-          </div>
-          <div class="search-item">
-            <fj-button type="primary" @click="handleClickSearch">搜索</fj-button>
-          </div>
-        </div>
-     <fj-dialog
-        title="提示"
-        :visible.sync="dialogVisible"
-        @close="cancelDialog">
+  <four-row-layout-right-content>
+    <template slot="search-left">权限</template>
+    <template slot="search-right">
+      <div class="permission-search-item">
+        <fj-select placeholder="请选择" v-model="status" size="mini">
+          <fj-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </fj-option>
+        </fj-select>
+      </div>
+      <div class="permission-search-item">
+        <fj-input placeholder="请输入权限名" v-model="name"></fj-input>
+      </div>
+      <div class="permission-search-item">
+        <fj-button type="primary" @click="handleClickSearch">搜索</fj-button>
+      </div>
+    </template>
+     <template slot="operation">
+       <span class="permission-btn-mini-margin">
+         <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
+       </span>
+       <span class="permission-btn-mini-margin">
+         <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
+       </span>
+     </template>
+      <template slot="table">
+        <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
+          <fj-table-column type="selection" width="20" align="center"></fj-table-column>
+          <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
+          <fj-table-column prop="name" label="名称" ></fj-table-column>
+          <fj-table-column prop="description" label="描述"></fj-table-column>
+        </fj-table>
+      </template>
+      <template slot="pagination">
+        <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
+      </template>
+    <fj-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            @close="cancelDialog">
 
-        <span>{{dialogMessage}}</span>
+      <span>{{dialogMessage}}</span>
 
-        <div slot="footer">
-          <fj-button @click="cancelDialog">取消</fj-button>
-          <fj-button type="primary" @click="confirmDialog">确定</fj-button>
-        </div>
+      <div slot="footer">
+        <fj-button @click="cancelDialog">取消</fj-button>
+        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+      </div>
 
-      </fj-dialog>
-       <div slot="operation">
-         <span class="btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
-         </span>
-         <span class="btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
-         </span>
-       </div>
-        <div slot="table">
-          <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
-            <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-            <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'status-span enable': 'status-span disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
-            <fj-table-column prop="name" label="名称" ></fj-table-column>
-            <fj-table-column prop="description" label="描述"></fj-table-column>
-          </fj-table>
-          <div class="table-pagination" slot="pagination">
-            <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
-          </div>
-        </div>
-    </table-list-layout>
+    </fj-dialog>
+  </four-row-layout-right-content>
 </template>
 <script>
   import { formatQuery } from '../../../common/utils';
-  import TableListLayout from '../../../component/layout/tableListLayout/tableListLayout';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
   const api = require('../../../../../build/api/role');
 
   export default {
     components: {
-      'table-list-layout': TableListLayout
+      'four-row-layout-right-content': FourRowLayoutRightContent
     },
     data() {
       return {
@@ -108,17 +108,17 @@
         };
         console.log(formatQuery(searchObj));
         api.getPermissionList(formatQuery(searchObj, true))
-        .then(function(res){
+          .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
-        })
-        .catch(function(error){
-           me.showErrorInfo(error);
-        });
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       handleClickEnable() {
         this.dialogMessage = '确定要启用这些权限吗?';
@@ -160,14 +160,14 @@
         }
 
         api.postEnablePermission(postData)
-        .then(function(response){
-          me.showSuccessInfo(message + "成功!");
-          me.handleClickSearch();
-        })
-        .catch(function(error){
-          me.showErrorInfo(error);
-          me.resetDialog();
-        });
+          .then((response) => {
+            me.showSuccessInfo(`${message}成功!`);
+            me.handleClickSearch();
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+            me.resetDialog();
+          });
       },
       handleSelectionChange(rows) {
         this.selectedDisableIds = [];
@@ -201,42 +201,17 @@
   };
 </script>
 <style>
-    .permission-content {
-      margin-left: 20px;
-      margin-top: 10px;
-    }
-
-    .top-search {
-      height: 40px;
-      width: 100%;
-      line-height: 38px;
-      position: relative;
-      min-width: 700px;
-    }
-
-    .top-search .search-title{
-      font-size: 16px;
-      color: #273F57;
-      position: absolute;
-      left: 20px;
-    }
-
-    .top-search .search-right-content{
-      position: absolute;
-      right: 20px;
-    }
-
-    .top-search .search-right-content .search-item{
+    .permission-search-item{
       float: left;
       margin-left: 10px;
     }
 
-    .btn-mini-margin {
+    .permission-btn-mini-margin {
       margin-left: 6px;
       font-size: 12px;
     }
 
-    .table-pagination {
+    .permission-table-pagination {
       margin-top: 30px;
       text-align: center;
       height: 28px;
@@ -244,7 +219,7 @@
       color: #4C637B;
     }
 
-    .status-span {
+    .permission-status-span {
       font-size: 12px;
       color: #FFFFFF;
       width: 48px;
@@ -254,11 +229,11 @@
       text-align:center;
       display: block;
     }
-    .enable {
+    .permission-enable {
       background: #2EC4B6;
     }
 
-    .disable {
+    .permission-disable {
       background: #FF3366;
     }
 </style>
