@@ -24,6 +24,7 @@ import Submenu from './packages/submenu';
 import SubmenuItem from './packages/submenuItem';
 import SubmenuGroup from './packages/submenuGroup';
 import Tree from './packages/tree';
+import SlideDialog from './packages/slideDialog';
 
 import './index.css';
 
@@ -50,7 +51,8 @@ const components = [
   Submenu,
   SubmenuItem,
   SubmenuGroup,
-  Tree
+  Tree,
+  SlideDialog
 ];
 
 const install = function (vue, options = {}) {
@@ -60,10 +62,10 @@ const install = function (vue, options = {}) {
   vue.prototype.$message = Message;
 };
 
-// if (typeof window !== 'undefined' && window.Vue) {
-//   install(window.Vue);
-// }
-install(Vue);
+if (typeof window !== 'undefined' && window.Vue) {
+  install(window.Vue);
+}
+// install(Vue);
 
 // module.exports = {
 const FjUI = {
@@ -91,7 +93,8 @@ const FjUI = {
   Submenu,
   SubmenuItem,
   SubmenuGroup,
-  Tree
+  Tree,
+  SlideDialog
 };
 
 Vue.use(FjUI);

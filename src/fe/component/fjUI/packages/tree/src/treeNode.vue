@@ -27,7 +27,7 @@
     props: {
       node: Object,
       nodeKey: String,
-      indent: Number
+      indent: {}
     },
     data() {
       return {
