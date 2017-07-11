@@ -10,6 +10,7 @@
 </template>
 <script>
   import FjTreeNode from './treeNode';
+
   export default {
     name: 'FjTree',
     props: {
@@ -19,8 +20,8 @@
         default: 'id'
       },
       indent: {
-        type: Number,
-        default: 10
+        type: String,
+        default: '10'
       }
     },
     data() {
