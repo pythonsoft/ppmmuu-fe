@@ -1,12 +1,12 @@
 <template>
-    <div class="permission-content">
+    <div class="layout-content">
       <div class="top-search">
         <div class="search-title"><slot name="search-left"></slot></div>
         <div class="search-right-content">
             <slot name="search-right"></slot>
         </div>
       </div>
-       <div class="permission-operation">
+       <div class="layout-operation">
          <slot name="operation"></slot>
        </div>
        <slot></slot>
@@ -22,7 +22,7 @@
   };
 </script>
 <style>
-    .permission-content {
+    .layout-content {
       margin-left: 20px;
       margin-top: 10px;
     }
@@ -35,7 +35,19 @@
       min-width: 700px;
     }
 
-    .permission-operation{
+    .top-search .search-title{
+      font-size: 16px;
+      color: #273F57;
+      position: absolute;
+      left: 20px;
+    }
+
+    .top-search .search-right-content{
+      position: absolute;
+      right: 20px;
+    }
+
+    .layout-operation{
       background: #F2F6FA;
       line-height: 46px;
       height: 46px;

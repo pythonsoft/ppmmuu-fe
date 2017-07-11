@@ -27,7 +27,7 @@
       </span>
     </div>
     <div slot="table">
-      <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
+      <fj-table :data="tableData" name="table1" ref="table" @current-change="handleCurrentChange">
         <fj-table-column prop="_id" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
         <fj-table-column prop="description" label="描述"></fj-table-column>
@@ -36,6 +36,30 @@
         <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
       </div>
     </div>
+    <fj-slide-dialog
+            :title="slideDialogTitle"
+            :visible.sync="slideDialogVisible"
+            @open="handleOpenSlideDialog"
+            @close="handleCloseSlideDialog">
+
+      <fj-form :model="formData" :rules="rules" ref="form" label-width="80px">
+        <fj-form-item label="标识" prop="_id">
+          <fj-input v-model="formData._id"></fj-input>
+        </fj-form-item>
+        <fj-form-item label="名称" prop="name">
+          <fj-input v-model="formData.name"></fj-input>
+        </fj-form-item>
+        <fj-form-item label="描述" prop="description">
+          <fj-input type="textarea" :rows="5" v-model="formData.description"></fj-input>
+        </fj-form-item>
+      </fj-form>
+
+      <div slot="footer">
+        <fj-button @click="slideDialogVisible=false">取消</fj-button>
+        <fj-button type="primary" @click="saveClick">保存</fj-button>
+      </div>
+
+    </fj-slide-dialog>
   </table-list-layout>
 </template>
 <script>
@@ -51,7 +75,7 @@
     data() {
       return {
         defaultRoute: '/',
-        addBtnDisabled: true,
+        addBtnDisabled: false,
         editBtnDisabled: true,
         configBtnDisabled: true,
         manageBtnDisabled: true,
@@ -60,7 +84,10 @@
         tableData: [],
         currentPage: 1,
         total: 0,
-        pageSize: 15
+        pageSize: 15,
+        slideDialogTitle: '添加角色',
+        slideDialogVisible: false,
+        formData: {}
       };
     },
     created() {
@@ -79,7 +106,7 @@
           pageSize: me.pageSize,
           keyword: me.keyword
         };
-        api.getRoleList(formatQuery(searchObj))
+        api.getRoleList(formatQuery(searchObj, true))
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -105,22 +132,18 @@
 
       },
       deleteBtnClick() {
+
       },
-      handleSelectionChange(rows) {
-        this.selectedDisableIds = [];
-        this.selectedEnableIds = [];
-        if (rows && rows.length) {
-          for (let i = 0, len = rows.length; i < len; i++) {
-            const row = rows[i];
-            if (row.status === '0') {
-              this.selectedDisableIds.push(row._id);
-            } else {
-              this.selectedEnableIds.push(row._id);
-            }
-          }
-        }
-        this.enabled = !this.selectedEnableIds.length;
-        this.disabled = !this.selectedDisableIds.length;
+      saveClick(){
+
+      },
+      resetSlideDialog(){
+        this.slideDialogTitle = "";
+        this.slideDialogVisible = false;
+        this.formData = {};
+      },
+      handleCurrentChange(row) {
+        console.log("row===>", row);
       },
       clearTableSelection() {
         this.$refs.table.clearSelection();
@@ -138,42 +161,9 @@
   };
 </script>
 <style>
-    .permission-content {
-      margin-left: 20px;
-      margin-top: 10px;
-    }
-
-    .top-search {
-      height: 40px;
-      width: 100%;
-      line-height: 38px;
-      position: relative;
-      min-width: 700px;
-    }
-
-    .top-search .search-title{
-      font-size: 16px;
-      color: #273F57;
-      position: absolute;
-      left: 20px;
-    }
-
-    .top-search .search-right-content{
-      position: absolute;
-      right: 20px;
-    }
-
     .top-search .search-right-content .search-item{
       float: left;
       margin-left: 10px;
-    }
-
-    .permission-operation{
-      background: #F2F6FA;
-      line-height: 46px;
-      height: 46px;
-      margin-top: 10px;
-      padding-left: 20px;
     }
 
     .btn-mini-margin {

@@ -1,0 +1,20 @@
+
+.fj-slide-dialog-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: 24px;
+  padding-right: 40px;
+  border-left: 1px solid #CED9E5;
+  background: #FFFFFF;
+  box-shadow: 2px 2px 15px 0px #9FB3CA;
+  overflow: auto;
+}
+.fj-slide-dialog-header {
+  margin: 22px 0 28px 0;
+}
+.fj-slide-dialog-title {
+  font-size: 16px;
+  color: var(--dialog-title-color);
+}
