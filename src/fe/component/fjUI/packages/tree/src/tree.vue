@@ -10,6 +10,7 @@
 </template>
 <script>
   import FjTreeNode from './treeNode';
+
   export default {
     name: 'FjTree',
     props: {

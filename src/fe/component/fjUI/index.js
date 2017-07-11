@@ -62,10 +62,10 @@ const install = function (vue, options = {}) {
   vue.prototype.$message = Message;
 };
 
-// if (typeof window !== 'undefined' && window.Vue) {
-//   install(window.Vue);
-// }
-install(Vue);
+if (typeof window !== 'undefined' && window.Vue) {
+  install(window.Vue);
+}
+// install(Vue);
 
 // module.exports = {
 const FjUI = {
