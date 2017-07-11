@@ -102,22 +102,17 @@
           name: me.name,
           status: me.status
         };
-        api.getPermissionList(postData)
-        .then((function(response){
-          const res = response.data;
-          if (res.status === '0') {
+        api.getPermissionList(searchObj)
+        .then(function(res){
             const data = res.data;
             me.tableData = data ? data.docs : [];
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
-          } else {
-            me.$message.error(res.statusInfo.message);
-          }
         })
         .catch(function(error){
-           me.$message.error(error);
+           me.showErrorInfo(error);
         });
       },
       handleClickEnable() {
@@ -160,16 +155,12 @@
         }
 
         api.postEnablePermission(postData)
-        .then((function(response){
-          if (res.status === '0') {
-            me.$message.success(message + "成功!");
-            me.handleClickSearch();
-          } else {
-            me.$message.error(res.statusInfo.message);
-          }
+        .then(function(response){
+          me.showSuccessInfo(message + "成功!");
+          me.handleClickSearch();
         })
         .catch(function(error){
-          me.$message.error(error);
+          me.showErrorInfo(error);
           me.resetDialog();
         });
       },
@@ -194,6 +185,12 @@
       },
       handleCurrentPageChange(val) {
         this.handleClickSearch();
+      },
+      showSuccessInfo(message) {
+        this.$message.success(message);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
       }
     }
   };
