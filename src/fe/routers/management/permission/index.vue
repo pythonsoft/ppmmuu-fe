@@ -107,7 +107,7 @@
           status: me.status
         };
         api.getPermissionList(formatQuery(searchObj, true))
-        .then(function(res){
+          .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
             me.currentPage = data.page;

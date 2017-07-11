@@ -80,17 +80,17 @@
           keyword: me.keyword
         };
         api.getRoleList(formatQuery(searchObj))
-        .then(function(res){
+          .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
-        })
-        .catch(function(error){
-           me.showErrorInfo(error);
-        });
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       addBtnClick() {
 
