@@ -3,7 +3,7 @@ import Vue from 'vue';
 const MessageConstructor = Vue.extend(require('./message.vue'));
 
 let instance;
-let instances = [];
+const instances = [];
 let seed = 1;
 
 const Message = function (options = {}) {

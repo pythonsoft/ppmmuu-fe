@@ -31,13 +31,13 @@
         return this.$parent;
       },
       labelStyle() {
-        let style = {};
+        const style = {};
         const labelWidth = this.labelWidth || this.form.labelWidth;
         if (labelWidth) style.width = labelWidth;
         return style;
       },
       contentStyle() {
-        let style = {};
+        const style = {};
         const labelWidth = this.labelWidth || this.form.labelWidth;
         if (labelWidth) style.marginLeft = labelWidth;
         return style;
@@ -51,9 +51,7 @@
       },
       getFilteredRule(trigger) {
         const rules = this.getRules();
-        return rules.filter((rule) => {
-          return !rule.trigger || rule.trigger.indexOf(trigger) !== -1;
-        });
+        return rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1);
       },
       getFieldValue() {
         const data = this.form.model;
@@ -74,7 +72,7 @@
         }
 
         let error = false;
-        let errors = [];
+        const errors = [];
         const value = this.getFieldValue();
 
         rules.forEach((rule) => {
@@ -95,7 +93,7 @@
     mounted() {
       if (this.prop) {
         this.form.$emit('add-field', this);
-        let rules = this.getRules();
+        const rules = this.getRules();
         if (rules.length > 0) {
           for (let i = 0; i < rules.length; i++) {
             if (rules[i].required) {

@@ -1,8 +1,7 @@
 <template>
-    <div class="permission-content">
-      <div class="top-search">
-        <div class="search-title">权限</div>
-        <div class="search-right-content">
+    <table-list-layout>
+        <div slot="search-left">权限</div>
+        <div slot="search-right">
           <div class="search-item">
             <fj-select placeholder="请选择" v-model="status" size="mini">
               <fj-option
@@ -20,7 +19,6 @@
             <fj-button type="primary" @click="handleClickSearch">搜索</fj-button>
           </div>
         </div>
-      </div>
      <fj-dialog
         title="提示"
         :visible.sync="dialogVisible"
@@ -34,28 +32,33 @@
         </div>
 
       </fj-dialog>
-       <div class="permission-operation">
+       <div class="permission-operation" slot="operation">
           <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
           <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
        </div>
-        <div>
+        <div slot="table">
           <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
             <fj-table-column type="selection" width="20" align="center"></fj-table-column>
             <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'status-span enable': 'status-span disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
             <fj-table-column prop="name" label="名称" ></fj-table-column>
             <fj-table-column prop="description" label="描述"></fj-table-column>
           </fj-table>
-          <div class="table-pagination">
+          <div class="table-pagination" slot="pagination">
             <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
           </div>
         </div>
-    </div>
+    </table-list-layout>
 </template>
 <script>
   import { formatQuery } from '../../../common/utils';
+  import TableListLayout from '../../../component/layout/tableListLayout/tableListLayout';
+
   const api = require('../../../../../build/api/role');
 
   export default {
+    components: {
+      'table-list-layout': TableListLayout
+    },
     data() {
       return {
         defaultRoute: '/',
@@ -73,7 +76,7 @@
           value: '',
           label: '全部'
         }],
-        name: "",
+        name: '',
         enabled: true,
         disabled: true,
         tableData: [],
@@ -91,105 +94,105 @@
         const pathArr = path.split('/');
         return pathArr[level] || '';
       },
-      handleClickSearch(){
+      handleClickSearch() {
         const me = this;
         const searchObj = {
           page: me.currentPage,
           pageSize: me.pageSize,
           name: me.name,
           status: me.status
-        }
-        api.getPermissionList({params: formatQuery(searchObj)}, function(err, res){
-          if(err){
-            me.$message.error(error);
-            return false;
-          }
-          if(res.status == '0'){
+        };
+        api.getPermissionList(postData)
+        .then((function(response){
+          const res = response.data;
+          if (res.status === '0') {
             const data = res.data;
             me.tableData = data ? data.docs : [];
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
-          }else{
+          } else {
             me.$message.error(res.statusInfo.message);
           }
+        })
+        .catch(function(error){
+           me.$message.error(error);
         });
       },
-      handleClickEnable(){
+      handleClickEnable() {
         this.dialogMessage = '确定要启用这些权限吗?';
         this.dialogVisible = true;
         this.enableOrDisable = 'enable';
       },
-      handleClickDisable(){
+      handleClickDisable() {
         this.dialogMessage = '确定要禁用这些权限吗?';
         this.dialogVisible = true;
         this.enableOrDisable = 'disable';
       },
-      resetDialog(){
+      resetDialog() {
         this.dialogMessage = '';
         this.dialogVisible = false;
         this.enableOrDisable = '';
       },
-      cancelDialog(){
+      cancelDialog() {
         this.resetDialog();
       },
-      confirmDialog(){
+      confirmDialog() {
         const me = this;
         let postData = {};
-        let message = "";
-        if( this.enableOrDisable === 'enable'){
+        let message = '';
+        if (this.enableOrDisable === 'enable') {
           postData = {
             _ids: this.selectedEnableIds.join(','),
             status: '0'
           };
-          message = "启用";
-        }else if(this.enableOrDisable === 'disable'){
+          message = '启用';
+        } else if (this.enableOrDisable === 'disable') {
           postData = {
             _ids: this.selectedDisableIds.join(','),
             status: '1'
-          }
-          message = "禁用";
-        }else{
+          };
+          message = '禁用';
+        } else {
           this.resetDialog();
           return;
         }
 
-        api.postEnablePermission( postData, function(err, res) {
-          if(err){
-            me.$message.error(err);
-          }else{
-            if(res.status == '0'){
-              //me.$message.success("成功!");
-              me.handleClickSearch();
-            }else{
-              me.$message.error(res.statusInfo.message);
-            }
+        api.postEnablePermission(postData)
+        .then((function(response){
+          if (res.status === '0') {
+            me.$message.success(message + "成功!");
+            me.handleClickSearch();
+          } else {
+            me.$message.error(res.statusInfo.message);
           }
-          me.resetDialog();
         })
+        .catch(function(error){
+          me.$message.error(error);
+          me.resetDialog();
+        });
       },
-      handleSelectionChange(rows){
+      handleSelectionChange(rows) {
         this.selectedDisableIds = [];
         this.selectedEnableIds = [];
-        console.log(rows);
-        if(rows && rows.length){
-          for(let i =0, len = rows.length; i < len; i++){
+        if (rows && rows.length) {
+          for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
-            if(row.status == '0'){
+            if (row.status === '0') {
               this.selectedDisableIds.push(row._id);
-            }else{
+            } else {
               this.selectedEnableIds.push(row._id);
             }
           }
         }
-        this.enabled = this.selectedEnableIds.length ? false : true;
-        this.disabled = this.selectedDisableIds.length ? false : true;
+        this.enabled = !this.selectedEnableIds.length;
+        this.disabled = !this.selectedDisableIds.length;
       },
       clearTableSelection() {
         this.$refs.table.clearSelection();
       },
-      handleCurrentPageChange(val){
+      handleCurrentPageChange(val) {
         this.handleClickSearch();
       }
     }

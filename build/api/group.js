@@ -1,94 +1,40 @@
 import axios from 'axios';
 const api = {};
 
-api.getGroupList = function getGroupList(data,cb) {
-  axios.get('http://localhost:8080/group/list', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.getGroupList = function getGroupList(data) {
+  axios.get('http://localhost:8080/group/list', data);
 }
 
-api.getAllChildGroupList = function getAllChildGroupList(data,cb) {
-  axios.get('http://localhost:8080/group/listAllChildGroup', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.getAllChildGroupList = function getAllChildGroupList(data) {
+  axios.get('http://localhost:8080/group/listAllChildGroup', data);
 }
 
-api.getGroupDetail = function getGroupDetail(data,cb) {
-  axios.get('http://localhost:8080/group/getDetail', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.getGroupDetail = function getGroupDetail(data) {
+  axios.get('http://localhost:8080/group/getDetail', data);
 }
 
-api.postAddGroup = function postAddGroup(data,cb) {
-  axios.post('http://localhost:8080/group/add', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.postAddGroup = function postAddGroup(data) {
+  axios.post('http://localhost:8080/group/add', data);
 }
 
-api.postUpdateGroup = function postUpdateGroup(data,cb) {
-  axios.post('http://localhost:8080/group/update', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.postUpdateGroup = function postUpdateGroup(data) {
+  axios.post('http://localhost:8080/group/update', data);
 }
 
-api.postDeleteGroup = function postDeleteGroup(data,cb) {
-  axios.post('http://localhost:8080/group/delete', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.postDeleteGroup = function postDeleteGroup(data) {
+  axios.post('http://localhost:8080/group/delete', data);
 }
 
-api.getGroupUserDetail = function getGroupUserDetail(data,cb) {
-  axios.post('http://localhost:8080/group/userDetail', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.getGroupUserDetail = function getGroupUserDetail(data) {
+  axios.post('http://localhost:8080/group/userDetail', data);
 }
 
-api.postGroupAddUser = function postGroupAddUser(data,cb) {
-  axios.post('http://localhost:8080/group/addUser', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.postGroupAddUser = function postGroupAddUser(data) {
+  axios.post('http://localhost:8080/group/addUser', data);
 }
 
-api.postGroupUpdateUser = function postGroupUpdateUser(data,cb) {
-  axios.post('http://localhost:8080/group/updateUser', data)
-    .then(function (res) {
-      return cb && cb(null, res.data);
-    })
-    .catch(function (error) {
-      return cb && cb(error);
-    });
+api.postGroupUpdateUser = function postGroupUpdateUser(data) {
+  axios.post('http://localhost:8080/group/updateUser', data);
 }
 
 module.exports = api;

@@ -15,13 +15,11 @@ export default {
                 on-click={() => { this.handleClick(row); }}
               >
                 {
-                  this.columns.map((column, cellIndex) => {
-                    return (
-                      <td style={{ textAlign: column.align }}>
-                        {column.renderCell(h, { row, column, rowIndex, store: this.store })}
-                      </td>
-                    );
-                  })
+                  this.columns.map((column, cellIndex) => (
+                    <td style={{ textAlign: column.align }}>
+                      {column.renderCell(h, { row, column, rowIndex, store: this.store })}
+                    </td>
+                  ))
                 }
               </tr>
             );

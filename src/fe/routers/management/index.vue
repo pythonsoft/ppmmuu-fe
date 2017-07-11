@@ -29,11 +29,13 @@
 </template>
 <script>
   const menu = [
-    { title: '账户管理', index: 'accountCenter', children: [
-      { text: '账户', index: 'account', route: 'account' },
-      { text: '角色', index: 'role', route: 'role' },
-      { text: '权限', index: 'permission', route: 'permission' }
-    ] },
+    { title: '账户管理',
+      index: 'accountCenter',
+      children: [
+        { text: '账户', index: 'account', route: 'account' },
+        { text: '角色', index: 'role', route: 'role' },
+        { text: '权限', index: 'permission', route: 'permission' }
+      ] },
     { text: '引擎管理', index: '4', route: '4' },
     { text: '存储管理', index: '5', route: '5' },
     { text: '设置', index: '6', route: '6' }

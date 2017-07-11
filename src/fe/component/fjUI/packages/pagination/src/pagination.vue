@@ -82,7 +82,7 @@
           }
         }
 
-        let array = [];
+        const array = [];
 
         if (!showPrevMore && showNextMore) {
           for (let i = 2; i < showCount; i++) {

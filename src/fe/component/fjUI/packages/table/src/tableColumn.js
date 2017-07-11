@@ -24,7 +24,7 @@ export default {
     this.$options.render = h => h('div', this.$slots.default);
     const parent = this.$parent;
     const me = this;
-    let column = {
+    const column = {
       property: this.prop,
       label: this.label,
       type: this.type,

@@ -38,7 +38,7 @@
       highlightCurrentRow: Boolean
     },
     data() {
-      let store = {};
+      const store = {};
       store.states = {
         columns: [],
         data: this.data,
@@ -49,9 +49,7 @@
       store.insertColumn = (column) => {
         this.store.states.columns.push(column);
       };
-      store.isSelected = (row) => {
-        return (this.store.states.selection).indexOf(row) > -1;
-      };
+      store.isSelected = row => (this.store.states.selection).indexOf(row) > -1;
       store.rowSelectedChanged = (row) => {
         this.store.toggleRowSelection(row);
         this.store.updateAllSelected();
@@ -78,7 +76,7 @@
         this.$emit('selection-change', states.selection);
       };
       store.toggleRowSelection = (row, selected) => {
-        let selection = this.store.states.selection;
+        const selection = this.store.states.selection;
         const index = selection.indexOf(row);
         if (typeof selected === 'undefined') {
           if (index === -1) {

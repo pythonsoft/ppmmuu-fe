@@ -5,6 +5,6 @@ utils.formatQuery = function formatQuery(obj) {
   rs.timestamps = new Date().getTime();
 
   return rs;
-}
+};
 
 module.exports = utils;
