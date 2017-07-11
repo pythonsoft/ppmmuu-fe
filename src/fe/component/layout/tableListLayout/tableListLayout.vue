@@ -40,7 +40,8 @@
       line-height: 46px;
       height: 46px;
       margin-top: 10px;
-      padding-left: 20px;
+      padding-left: 14px;
+      overflow: hidden;
     }
 
     .table-pagination {
