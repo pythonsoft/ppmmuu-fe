@@ -1,4 +1,4 @@
-let nodeList = [];
+const nodeList = [];
 const ctx = '@@clickoutsideContext';
 
 let startClick;

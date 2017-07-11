@@ -1,0 +1,49 @@
+stages:
+  - deploy
+  - setup
+  - run_node
+
+deploy_to_68_job:
+  stage: deploy
+  script:
+    - function at_68 { ssh ump@10.0.15.68 $1; }
+    - at_68 "git clone git@gitlab.szdev.cn:dev/UMP-FE.git"
+
+  environment:
+    name: test
+  tags:
+    - test
+  only:
+    - master
+
+setup_job:
+  stage: setup
+  script:
+    - function at_68 { ssh ump@10.0.15.68 $1; }
+    - at_68 "npm config set strict-ssl false"
+    - at_68 "npm config set registry 'http://registry.npm.taobao.org/'"
+    - at_68 "npm install"
+  cache:
+    key: ump-fe
+    paths:
+      - node_modules/
+  artifacts:
+    when: always
+    paths:
+      - node_modules/*
+    expire_in: "1 month"
+  tags:
+    - test
+
+run_node_68:
+  stage: run_node
+  script:
+    - function at_68 { ssh ump@10.0.15.68 $1; }
+    - at_68 "killall -q node; nohup node UMP-FE/build/server.js >/dev/null 2>&1 &"
+
+  environment:
+    name: test
+  tags:
+    - test
+  only:
+    - master
