@@ -1,41 +1,41 @@
 <template>
-  <table-list-layout>
-    <div slot="search-left">角色</div>
-    <div slot="search-right">
-      <div class="search-item">
+  <four-row-layout-right-content>
+    <template slot="search-left">角色</template>
+    <template slot="search-right">
+      <div class="role-search-item">
         <fj-input placeholder="请输入名称或标识" v-model="keyword"></fj-input>
       </div>
-      <div class="search-item">
+      <div class="role-search-item">
         <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
       </div>
-    </div>
-    <div slot="operation">
-     <span class="btn-mini-margin">
+    </template>
+    <template slot="operation">
+     <span class="role-btn-mini-margin">
       <fj-button type="info" size="mini" v-bind:disabled="addBtnDisabled" @click="addBtnClick">增加</fj-button>
      </span>
-     <span class="btn-mini-margin">
+     <span class="role-btn-mini-margin">
       <fj-button type="info" size="mini" v-bind:disabled="editBtnDisabled" @click="editBtnClick">编辑</fj-button>
      </span>
-     <span class="btn-mini-margin">
+     <span class="role-btn-mini-margin">
       <fj-button type="info" size="mini" v-bind:disabled="configBtnDisabled" @click="configBtnClick">配置</fj-button>
      </span>
-      <span class="btn-margin">
+      <span class="role-btn-margin">
         <fj-button type="info" size="mini" v-bind:disabled="manageBtnDisabled" @click="manageBtnClick">管理账户及组织</fj-button>
       </span>
-      <span class="btn-margin">
+      <span class="role-btn-margin">
         <fj-button type="danger" size="mini" v-bind:disabled="deleteBtnDisabled" @click="deleteBtnClick">删除</fj-button>
       </span>
-    </div>
-    <div slot="table">
+    </template>
+    <template slot="table">
       <fj-table :data="tableData" name="table1" ref="table" @current-change="handleCurrentChange">
         <fj-table-column prop="_id" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
         <fj-table-column prop="description" label="描述"></fj-table-column>
       </fj-table>
-      <div class="table-pagination" slot="pagination">
-        <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
-      </div>
-    </div>
+    </template>
+    <template slot="pagination">
+      <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
+    </template>
     <fj-slide-dialog
             :title="slideDialogTitle"
             :visible.sync="slideDialogVisible"
@@ -60,17 +60,17 @@
       </div>
 
     </fj-slide-dialog>
-  </table-list-layout>
+  </four-row-layout-right-content>
 </template>
 <script>
   import { formatQuery } from '../../../common/utils';
-  import TableListLayout from '../../../component/layout/tableListLayout/tableListLayout';
+  import FourRowLayoutRight from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
   const api = require('../../../../../build/api/role');
 
   export default {
     components: {
-      'table-list-layout': TableListLayout
+      'four-row-layout-right-content': FourRowLayoutRight
     },
     data() {
       return {
@@ -134,16 +134,16 @@
       deleteBtnClick() {
 
       },
-      saveClick(){
+      saveClick() {
 
       },
-      resetSlideDialog(){
-        this.slideDialogTitle = "";
+      resetSlideDialog() {
+        this.slideDialogTitle = '';
         this.slideDialogVisible = false;
         this.formData = {};
       },
       handleCurrentChange(row) {
-        console.log("row===>", row);
+        console.log('row===>', row);
       },
       clearTableSelection() {
         this.$refs.table.clearSelection();
@@ -161,44 +161,18 @@
   };
 </script>
 <style>
-    .top-search .search-right-content .search-item{
+    .role-search-item{
       float: left;
       margin-left: 10px;
     }
 
-    .btn-mini-margin {
+    .role-btn-mini-margin {
       margin-left: 6px;
       font-size: 12px;
     }
 
-    .btn-margin {
+    .role-btn-margin {
       margin-left: 18px;
       font-size: 12px;
-    }
-
-    .table-pagination {
-      margin-top: 30px;
-      text-align: center;
-      height: 28px;
-      line-height: 28px;
-      color: #4C637B;
-    }
-
-    .status-span {
-      font-size: 12px;
-      color: #FFFFFF;
-      width: 48px;
-      height: 20px;
-      line-height: 20px;
-      border-radius: 2px;
-      text-align:center;
-      display: block;
-    }
-    .enable {
-      background: #2EC4B6;
-    }
-
-    .disable {
-      background: #FF3366;
     }
 </style>
