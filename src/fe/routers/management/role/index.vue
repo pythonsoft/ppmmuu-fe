@@ -27,7 +27,7 @@
       </span>
     </template>
     <template slot="table">
-      <fj-table :data="tableData" name="table1" ref="table" @current-change="handleCurrentChange">
+      <fj-table :data="tableData" name="table1" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
         <fj-table-column prop="description" label="描述"></fj-table-column>
@@ -38,13 +38,11 @@
     </template>
     <fj-slide-dialog
             :title="slideDialogTitle"
-            :visible.sync="slideDialogVisible"
-            @open="handleOpenSlideDialog"
-            @close="handleCloseSlideDialog">
+            :visible.sync="slideDialogVisible">
 
       <fj-form :model="formData" :rules="rules" ref="form" label-width="80px">
         <fj-form-item label="标识" prop="_id">
-          <fj-input v-model="formData._id"></fj-input>
+          <fj-input v-model="formData._id" :readonly="isEdit()"></fj-input>
         </fj-form-item>
         <fj-form-item label="名称" prop="name">
           <fj-input v-model="formData.name"></fj-input>
@@ -56,21 +54,30 @@
 
       <div slot="footer">
         <fj-button @click="slideDialogVisible=false">取消</fj-button>
-        <fj-button type="primary" @click="saveClick">保存</fj-button>
+        <fj-button type="primary" @click="confirmSlideDialogClick">保存</fj-button>
       </div>
+
+    </fj-slide-dialog>
+    <fj-slide-dialog
+            title="配置"
+            :visible.sync="configSlideDialogVisible">
+       <div class="config-dialog-content">
+
+       </div>
+
 
     </fj-slide-dialog>
   </four-row-layout-right-content>
 </template>
 <script>
-  import { formatQuery } from '../../../common/utils';
-  import FourRowLayoutRight from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
+  import { formatQuery, deepClone } from '../../../common/utils';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
   const api = require('../../../../../build/api/role');
 
   export default {
     components: {
-      'four-row-layout-right-content': FourRowLayoutRight
+      'four-row-layout-right-content': FourRowLayoutRightContent
     },
     data() {
       return {
@@ -87,7 +94,23 @@
         pageSize: 15,
         slideDialogTitle: '添加角色',
         slideDialogVisible: false,
-        formData: {}
+        configSlideDialogVisible: true,
+        formData: {},
+        currentRow: {},
+        rules: {
+          _id:[
+            { required: true, message: '请输入标识' }
+          ],
+          name:[
+            { required: true, message: '请输入名称' }
+          ],
+          description:[
+            { message: '长度不能超过100位字符', validator: (rule, value) => {
+              if (value && value.length > 100) return false;
+              return true;
+            }}
+          ]
+        }
       };
     },
     created() {
@@ -113,17 +136,39 @@
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
-            me.handleSelectionChange();
+            me.resetBtn();
           })
           .catch((error) => {
             me.showErrorInfo(error);
           });
       },
+      isEdit(){
+        if(this.slideDialogTitle === '编辑角色'){
+          return true;
+        }
+        return false;
+      },
+      resetBtn(){
+        this.editBtnDisabled = true;
+        this.configBtnDisabled = true;
+        this.manageBtnDisabled = true;
+        this.deleteBtnDisabled = true;
+      },
+      enableBtn(){
+        this.editBtnDisabled = false;
+        this.configBtnDisabled = false;
+        this.manageBtnDisabled = false;
+        this.deleteBtnDisabled = false;
+      },
       addBtnClick() {
-
+        this.formData = {};
+        this.slideDialogTitle = '添加角色';
+        this.slideDialogVisible = true;
       },
       editBtnClick() {
-
+        this.formData = deepClone(this.currentRow);
+        this.slideDialogTitle = '编辑角色';
+        this.slideDialogVisible = true;
       },
       configBtnClick() {
 
@@ -134,8 +179,24 @@
       deleteBtnClick() {
 
       },
-      saveClick() {
+      confirmSlideDialogClick() {
+        const me = this;
+        console.log("heloo");
+        this.$refs['form'].validate((valid) => {
+          if (!valid) {
+            return false;
+          }
+        });
 
+        const apiFunc = this.isEdit()? api.postUpdateRole : api.postAddRole;
+        apiFunc(this.formData)
+        .then(function(res){
+          me.handleClickSearch();
+          me.showSuccessInfo('保存成功');
+        })
+        .catch(function(error){
+          me.showErrorInfo(error);
+        })
       },
       resetSlideDialog() {
         this.slideDialogTitle = '';
@@ -143,7 +204,9 @@
         this.formData = {};
       },
       handleCurrentChange(row) {
-        console.log('row===>', row);
+        this.currentRow = deepClone(row);
+        this.slideDialogVisible = false;
+        this.enableBtn();
       },
       clearTableSelection() {
         this.$refs.table.clearSelection();

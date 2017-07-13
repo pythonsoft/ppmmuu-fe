@@ -7,4 +7,8 @@ utils.formatQuery = function formatQuery(obj, isGet = false) {
   return isGet ? { params: rs } : rs;
 };
 
+utils.deepClone = function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 module.exports = utils;
