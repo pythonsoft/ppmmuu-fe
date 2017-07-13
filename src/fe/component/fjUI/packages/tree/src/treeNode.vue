@@ -8,26 +8,33 @@
       @click.stop="handleClick">
       <div :style="{ paddingLeft: indent + 'px' }">
         <span v-if="isFolder">{{ open ? '-' : '+' }}</span>
-        {{ node.name }}
+        <node-content :node="nodes[id]"></node-content>
       </div>
     </div>
     <ul v-if="isFolder" v-show="open">
       <fj-tree-node
-        v-for="(item, index) in node.children"
-        :nodeKey="nodeKey"
-        :node="item"
+        v-for="(item, index) in nodes[id].children"
+        v-if="nodes[item]"
+        :node-key="nodeKey"
+        :id="item"
+        :nodes="nodes"
         :indent="indent*2"
-        :key="getNodeKey(item, index)"></fj-tree-node>
+        :render-content="renderContent"
+        :key="item"></fj-tree-node>
     </ul>
   </li>
 </template>
 <script>
+  import NodeContent from './nodeContent';
+
   export default {
     name: 'FjTreeNode',
     props: {
-      node: Object,
+      id: String,
+      nodes: Object,
       nodeKey: String,
-      indent: {}
+      indent: {},
+      renderContent: Function
     },
     data() {
       return {
@@ -37,7 +44,8 @@
     },
     computed: {
       isFolder() {
-        return this.node.children && this.node.children.length;
+        const node = this.nodes[this.id]
+        return node.children && node.children.length;
       },
       isCurrentNode() {
         return this.tree.currentNode === this;
@@ -45,18 +53,19 @@
     },
     methods: {
       handleClick() {
+        const node = this.nodes[this.id]
         if (this.isFolder) {
           if (!this.open) {
-            this.tree.$emit('node-expand', this.node);
+            this.tree.$emit('node-expand', node);
           } else {
-            this.tree.$emit('node-collapse', this.node);
+            this.tree.$emit('node-collapse', node);
           }
           this.open = !this.open;
         } else {
           this.tree.currentNode = this;
-          this.tree.$emit('current-change', this.node);
+          this.tree.$emit('current-change', node);
         }
-        this.tree.$emit('node-click', this.node);
+        this.tree.$emit('node-click', node);
       },
       getNodeKey(node, index) {
         const nodeKey = this.nodeKey;
@@ -73,6 +82,9 @@
       } else {
         this.tree = parent.tree;
       }
+    },
+    components: {
+      NodeContent: NodeContent
     }
   };
 </script>

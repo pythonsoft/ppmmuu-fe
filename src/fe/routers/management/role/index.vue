@@ -27,7 +27,7 @@
       </span>
     </template>
     <template slot="table">
-      <fj-table :data="tableData" name="table1" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+      <fj-table :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
         <fj-table-column prop="description" label="描述"></fj-table-column>
@@ -62,7 +62,21 @@
             title="配置"
             :visible.sync="configSlideDialogVisible">
        <div class="config-dialog-content">
-
+         <div>{{configRow.name}}</div>
+         <div class="config-description">{{configRow.description}}</div>
+         <div class="permission-operation">
+           <span class="permission-title">权限项</span>
+           <fj-button type="info" size="mini" @click="addPermissionClick">增加</fj-button>
+           <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="deletePermissionDisabled">删除</fj-button>
+         </div>
+         <div class="permissions">
+           <fj-table :data="permissionData" name="table1" ref="table1" @selection-change="handleSelectionChange">
+             <fj-table-column type="selection" width="20"></fj-table-column>
+             <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
+             <fj-table-column prop="name" label="名称" ></fj-table-column>
+             <fj-table-column prop="description" label="行为"></fj-table-column>
+           </fj-table>
+         </div>
        </div>
 
 
@@ -105,12 +119,15 @@
             { required: true, message: '请输入名称' }
           ],
           description:[
-            { message: '长度不能超过100位字符', validator: (rule, value) => {
-              if (value && value.length > 100) return false;
+            { message: '长度不能超过500位字符', validator: (rule, value) => {
+              if (value && value.length > 500) return false;
               return true;
             }}
           ]
-        }
+        },
+        configRow: {},
+        permissionData: [],
+        deletePermissionDisabled: true
       };
     },
     created() {
@@ -171,7 +188,11 @@
         this.slideDialogVisible = true;
       },
       configBtnClick() {
+        this.configRow = deepClone(this.currentRow);
+        const allowedPermissions = this.configRow.allowedPermissions;
+        const deniedPermissions = this.configRow.deniedPermissions;
 
+        this.configSlideDialogVisible = true;
       },
       manageBtnClick() {
 
@@ -208,8 +229,11 @@
         this.slideDialogVisible = false;
         this.enableBtn();
       },
-      clearTableSelection() {
-        this.$refs.table.clearSelection();
+      addPermissionClick() {
+
+      },
+      deletePermissionClick() {
+
       },
       handleCurrentPageChange(val) {
         this.handleClickSearch();
@@ -224,18 +248,63 @@
   };
 </script>
 <style>
-    .role-search-item{
-      float: left;
-      margin-left: 10px;
-    }
 
-    .role-btn-mini-margin {
-      margin-left: 6px;
-      font-size: 12px;
-    }
+  .role-search-item{
+    float: left;
+    margin-left: 10px;
+  }
 
-    .role-btn-margin {
-      margin-left: 18px;
-      font-size: 12px;
-    }
+  .role-btn-mini-margin {
+    margin-left: 6px;
+    font-size: 12px;
+  }
+
+  .role-btn-margin {
+    margin-left: 18px;
+    font-size: 12px;
+  }
+
+  .config-dialog-content {
+    margin-left:16px;
+    width: 100%;
+  }
+
+  .config-description {
+    margin-top: 14px;
+    padding: 14px 15px 13px 16px;
+    border: 1px solid #CED9E5;
+    border-radius: 2px;
+    width: 100%;
+  }
+
+  .permission-operation {
+    margin-top: 20px;
+  }
+
+  .permission-title {
+    margin-right: 20px;
+  }
+
+  .permissions {
+    width: 100%;
+    max-height: 350px;
+    overflow: scroll;
+  }
+
+  .permission-status-span {
+    font-size: 12px;
+    color: #FFFFFF;
+    width: 48px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 2px;
+    text-align:center;
+    display: block;
+  }
+  .permission-enable {
+    background: #2EC4B6;
+  }
+
+
+
 </style>
