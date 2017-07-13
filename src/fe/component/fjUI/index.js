@@ -25,6 +25,9 @@ import SubmenuItem from './packages/submenuItem';
 import SubmenuGroup from './packages/submenuGroup';
 import Tree from './packages/tree';
 import SlideDialog from './packages/slideDialog';
+import Dropdown from './packages/dropdown';
+import DropdownMenu from './packages/dropdownMenu';
+import DropdownItem from './packages/dropdownItem';
 
 import './index.css';
 
@@ -52,7 +55,10 @@ const components = [
   SubmenuItem,
   SubmenuGroup,
   Tree,
-  SlideDialog
+  SlideDialog,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem
 ];
 
 const install = function (vue, options = {}) {
@@ -94,7 +100,10 @@ const FjUI = {
   SubmenuItem,
   SubmenuGroup,
   Tree,
-  SlideDialog
+  SlideDialog,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem
 };
 
 Vue.use(FjUI);

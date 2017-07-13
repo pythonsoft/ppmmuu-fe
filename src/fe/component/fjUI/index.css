@@ -14,4 +14,5 @@
 @import "./packages/submenu/src/submenu.css";
 @import "./packages/tree/src/tree.css";
 @import "./packages/slideDialog/src/slideDialog.css";
+@import "./packages/dropdown/src/dropdown.css";
 @import "./transition.css";
