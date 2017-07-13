@@ -6,6 +6,7 @@
       :nodes="data"
       :node-key="nodeKey"
       :indent="indent"
+      :render-content="renderContent"
       :key="id"></fj-tree-node>
   </ul>
 </template>
@@ -24,7 +25,8 @@
       indent: {
         type: String,
         default: '10'
-      }
+      },
+      renderContent: Function
     },
     data() {
       return {

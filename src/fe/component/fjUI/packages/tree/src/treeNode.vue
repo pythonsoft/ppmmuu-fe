@@ -8,7 +8,7 @@
       @click.stop="handleClick">
       <div :style="{ paddingLeft: indent + 'px' }">
         <span v-if="isFolder">{{ open ? '-' : '+' }}</span>
-        {{ nodes[id].name }}
+        <node-content :node="nodes[id]"></node-content>
       </div>
     </div>
     <ul v-if="isFolder" v-show="open">
@@ -19,18 +19,22 @@
         :id="item"
         :nodes="nodes"
         :indent="indent*2"
+        :render-content="renderContent"
         :key="item"></fj-tree-node>
     </ul>
   </li>
 </template>
 <script>
+  import NodeContent from './nodeContent';
+
   export default {
     name: 'FjTreeNode',
     props: {
       id: String,
       nodes: Object,
       nodeKey: String,
-      indent: {}
+      indent: {},
+      renderContent: Function
     },
     data() {
       return {
@@ -78,6 +82,9 @@
       } else {
         this.tree = parent.tree;
       }
+    },
+    components: {
+      NodeContent: NodeContent
     }
   };
 </script>
