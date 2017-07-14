@@ -9,8 +9,8 @@ export default {
     const node = this.node;
     return (
       parent.renderContent
-      ? parent.renderContent.call(parent._renderProxy, h, node)
-      : <span>{node.name}</span>
+        ? parent.renderContent.call(parent._renderProxy, h, node)
+        : <span>{node.name}</span>
     );
   }
-}
+};

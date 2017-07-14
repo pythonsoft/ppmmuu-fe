@@ -106,7 +106,6 @@
           name: me.name,
           status: me.status
         };
-        console.log(formatQuery(searchObj));
         api.getPermissionList(formatQuery(searchObj, true))
           .then((res) => {
             const data = res.data;
