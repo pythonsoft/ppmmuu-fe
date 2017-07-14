@@ -235,11 +235,13 @@
         this.action = 'changeConfig';
       },
       handleClickDeleted() {
+        this.dialogTitle = '提示';
         this.dialogMessage = '确定要删除这些配置吗?';
         this.dialogVisible = true;
         this.action = 'deleteConfig';
       },
       resetDialog() {
+        this.dialogTitle = '提示';
         this.dialogMessage = '';
         this.dialogVisible = false;
         this.action = '';
