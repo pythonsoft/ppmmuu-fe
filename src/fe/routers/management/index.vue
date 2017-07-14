@@ -38,7 +38,7 @@
       ] },
     { text: '引擎管理', index: '4', route: '4' },
     { text: '存储管理', index: '5', route: '5' },
-    { text: '设置', index: '6', route: '6' }
+    { text: '设置', index: 'configuration', route: 'configuration' }
   ];
   export default {
     data() {
