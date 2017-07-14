@@ -59,35 +59,133 @@
 
     </fj-slide-dialog>
     <fj-slide-dialog
-            title="配置"
-            :visible.sync="configSlideDialogVisible">
+            title="管理账户及组织"
+            :visible.sync="manageSlideDialogVisible">
        <div class="config-dialog-content">
-         <div>{{configRow.name}}</div>
-         <div class="config-description">{{configRow.description}}</div>
-         <div class="permission-operation">
-           <span class="permission-title">权限项</span>
-           <fj-button type="info" size="mini" @click="addPermissionClick">增加</fj-button>
-           <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="deletePermissionDisabled">删除</fj-button>
+         <div class="manage-operation">
+           <fj-button type="info" size="mini" @click="assignUserClick">添加用户</fj-button>
+           <fj-button type="info" size="mini" @click="assignGroupClick">添加组织</fj-button>
+           <fj-button type="danger" size="mini" @click="manageSearchDeleteClick" v-bind:disabled="manageSearchDeleteDisabled">移除</fj-button>
          </div>
-         <div class="permissions">
-           <fj-table :data="permissionData" name="table1" ref="table1" @selection-change="handleSelectionChange">
-             <fj-table-column type="selection" width="20"></fj-table-column>
-             <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
-             <fj-table-column prop="name" label="名称" ></fj-table-column>
-             <fj-table-column prop="description" label="行为"></fj-table-column>
+         <div class="manage-search">
+            <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="icon-sousuo" on-icon-click="manageSearchClick"></fj-input>
+         </div>
+         <div v-if="searchItems.length" class="manage-search-content">
+           <fj-table :data="searchItems" name="table3" ref="table3" @current-change="manageSearchHandleCurrentChange" highlight-current-row>
+             <fj-table-column prop="_id">
+               <template scope="props">
+                 <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
+                 <span>{{props.row.name}}</span>
+                 <span :class="getSearchItemClass(props.row)">{{searchItemTypeMap[props.row.type]}}</span>
+               </template>
+             </fj-table-column>
            </fj-table>
+           <li class="manage-search-li manage-dark-li">
+             <div class="manage-search-content-bottom">更多内容请搜索</div>
+           </li>
          </div>
        </div>
 
 
     </fj-slide-dialog>
+    <fj-slide-dialog
+            title="配置"
+            :visible.sync="configSlideDialogVisible">
+      <div class="config-dialog-content">
+        <div>{{configRow.name}}</div>
+        <div class="config-description">{{configRow.description}}</div>
+        <div class="permission-operation">
+          <span class="permission-title">权限项</span>
+          <fj-button type="info" size="mini" @click="addPermissionClick">增加</fj-button>
+          <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="deletePermissionDisabled">删除</fj-button>
+        </div>
+        <div class="permissions">
+          <fj-table :data="permissionData" name="table1" ref="table1" @selection-change="handleSelectionChange">
+            <fj-table-column type="selection" width="20"></fj-table-column>
+            <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
+            <fj-table-column prop="name" label="名称" ></fj-table-column>
+            <fj-table-column prop="allowed" label="行为"></fj-table-column>
+          </fj-table>
+        </div>
+      </div>
+
+
+    </fj-slide-dialog>
+    <fj-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            @close="dialogVisible=false">
+
+      <span>确定要删除这个角色吗?</span>
+
+      <div slot="footer">
+        <fj-button @click="dialogVisible=false">取消</fj-button>
+        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+      </div>
+
+    </fj-dialog>
+    <fj-dialog
+            title="权限项"
+            :visible.sync="permissionDialogVisible"
+            @close="permissionDialogVisible=false">
+      <div class="permission-list-table">
+        <fj-table :data="permissionListData" name="table2" ref="table2" @selection-change="handleSelectionChange2">
+          <fj-table-column type="selection" width="20"></fj-table-column>
+          <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
+          <fj-table-column prop="name" label="名称" ></fj-table-column>
+        </fj-table>
+        </div>
+      <div slot="footer">
+        <fj-button @click="permissionDialogVisible=false">取消</fj-button>
+        <fj-button type="info" @click="addAllowedClick">添加允许权限</fj-button>
+        <fj-button type="danger" @click="addDeniedClick">添加拒绝权限</fj-button>
+      </div>
+
+    </fj-dialog>
+    <fj-dialog
+            title="提示"
+            :visible.sync="deletePermissionDialogVisible"
+            @close="deletePermissionDialogVisible=false">
+
+      <span>确定要删除这些权限吗?</span>
+
+      <div slot="footer">
+        <fj-button @click="deletePermissionDialogVisible=false">取消</fj-button>
+        <fj-button type="primary" @click="deletePermissionConfirm">确定</fj-button>
+      </div>
+
+    </fj-dialog>
+    <fj-dialog
+            :title="addOwnerTitle"
+            :visible.sync="addOwnerDialogVisible"
+            @close="addOwnerDialogVisible=false">
+
+      <div class="manage-search">
+        <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword3" icon="icon-sousuo" on-icon-click="searchOwnerClick"></fj-input>
+      </div>
+      <div v-if="searchOwner.length" class="manage-search-content">
+        <fj-table :data="searchOwner" name="table4" ref="table4" @current-change="searchOwnerHandleCurrentChange" highlight-current-row>
+          <fj-table-column prop="_id">
+            <template scope="props">
+              <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
+              <span>{{props.row.name}}</span>
+            </template>
+          </fj-table-column>
+        </fj-table>
+      </div>
+      <div slot="footer">
+        <fj-button @click="addOwnerDialogVisible=false">取消</fj-button>
+        <fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
+      </div>
+    </fj-dialog>
   </four-row-layout-right-content>
 </template>
 <script>
-  import { formatQuery, deepClone } from '../../../common/utils';
+  import { formatQuery, deepClone, hardMerge } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
   const api = require('../../../../../build/api/role');
+  const searchApi = require('../../../../../build/api/search');
 
   export default {
     components: {
@@ -108,7 +206,7 @@
         pageSize: 15,
         slideDialogTitle: '添加角色',
         slideDialogVisible: false,
-        configSlideDialogVisible: true,
+        configSlideDialogVisible: false,
         formData: {},
         currentRow: {},
         rules: {
@@ -126,8 +224,25 @@
           ]
         },
         configRow: {},
-        permissionData: [],
-        deletePermissionDisabled: true
+        permissionData: [{status: '0'}],
+        deletePermissionDisabled: true,
+        dialogVisible: false,
+        permissionDialogVisible: false,
+        deletePermissionDialogVisible: false,
+        manageSlideDialogVisible: false,
+        manageSearchDeleteDisabled: true,
+        searchItems: [],
+        searchItemTypeMap: {
+          '0': '用户',
+          '1': '公司',
+          '2': '部门',
+          '3': '小组'
+        },
+        keyword2: '',
+        addOwnerTitle: '',
+        keyword3: 'x',
+        addOwnerDialogVisible: false,
+        searchOwner: []
       };
     },
     created() {
@@ -140,6 +255,11 @@
         return pathArr[level] || '';
       },
       handleClickSearch() {
+        this.resetBtn();
+        this.resetDialog();
+        this.getRoleList();
+      },
+      getRoleList(){
         const me = this;
         const searchObj = {
           page: me.currentPage,
@@ -147,23 +267,29 @@
           keyword: me.keyword
         };
         api.getRoleList(formatQuery(searchObj, true))
-          .then((res) => {
-            const data = res.data;
-            me.tableData = data ? data.docs : [];
-            me.currentPage = data.page;
-            me.total = data.total;
-            me.pageSize = data.pageSize;
-            me.resetBtn();
-          })
-          .catch((error) => {
+                .then((res) => {
+          const data = res.data;
+          me.tableData = data ? data.docs : [];
+          me.currentPage = data.page;
+          me.total = data.total;
+          me.pageSize = data.pageSize;
+        })
+        .catch((error) => {
             me.showErrorInfo(error);
-          });
+        });
       },
       isEdit(){
         if(this.slideDialogTitle === '编辑角色'){
           return true;
         }
         return false;
+      },
+      resetDialog(){
+        this.dialogVisible = false;
+        this.slideDialogVisible = false;
+        this.configSlideDialogVisible = false;
+        this.permissionDialogVisible = false;
+        this.manageSlideDialogVisible = false;
       },
       resetBtn(){
         this.editBtnDisabled = true;
@@ -189,20 +315,64 @@
       },
       configBtnClick() {
         this.configRow = deepClone(this.currentRow);
-        const allowedPermissions = this.configRow.allowedPermissions;
-        const deniedPermissions = this.configRow.deniedPermissions;
-
-        this.configSlideDialogVisible = true;
+        this.getRoleDetail();
       },
-      manageBtnClick() {
+      getRoleDetail(){
+        const me = this;
+        api.getRoleDetail({params: formatQuery({_id: this.configRow._id})})
+                .then(function(res){
+                  const data = deepClone(res.data);
+                  const allowed = [];
+                  const denied = [];
 
+                  for(let i =0, len = data.allowedPermissions.length; i < len; i++){
+                    allowed.push(data.allowedPermissions[i].path);
+                  }
+
+                  for(let i =0, len = data.deniedPermissions.length; i < len; i++){
+                    denied.push(data.deniedPermissions[i].path);
+                  }
+
+                  data.allowedPermissions = allowed;
+                  data.deniedPermissions = denied;
+                  me.configRow = data;
+
+                  me.roleDetail = res.data;
+                  let allowedPermissions = me.roleDetail.allowedPermissions;
+                  let deniedPermissions = me.roleDetail.deniedPermissions;
+                  for(let i =0, len = allowedPermissions.length; i < len; i++){
+                    allowedPermissions[i]['allowed'] = '允许';
+                  }
+
+                  for(let i =0, len = deniedPermissions.length; i < len; i++){
+                    deniedPermissions[i]['allowed'] = '拒绝';
+                  }
+
+                  me.permissionData = allowedPermissions.concat(deniedPermissions);
+
+                  me.configSlideDialogVisible = true;
+                  me.deletePermissionDisabled = true;
+                })
+                .catch(function(error){
+                  me.showErrorInfo(error);
+                })
       },
       deleteBtnClick() {
-
+        this.dialogVisible = true;
+      },
+      confirmDialog(){
+        const _ids = this.currentRow._id;
+        const me = this;
+        api.postDeleteRole({_ids: _ids})
+        .then(function(res){
+          me.showSuccessInfo('删除成功');
+          me.handleClickSearch();
+        }).catch(function(error){
+          me.showErrorInfo(error);
+        })
       },
       confirmSlideDialogClick() {
         const me = this;
-        console.log("heloo");
         this.$refs['form'].validate((valid) => {
           if (!valid) {
             return false;
@@ -210,7 +380,12 @@
         });
 
         const apiFunc = this.isEdit()? api.postUpdateRole : api.postAddRole;
-        apiFunc(this.formData)
+        const postData = {
+          _id: this.formData._id,
+          name: this.formData.name,
+          description: this.formData.description
+        }
+        apiFunc(postData)
         .then(function(res){
           me.handleClickSearch();
           me.showSuccessInfo('保存成功');
@@ -230,10 +405,175 @@
         this.enableBtn();
       },
       addPermissionClick() {
-
+        const me = this;
+        api.getPermissionList({params: formatQuery({pageSize: 999})})
+        .then(function(res){
+          me.permissionListData = res.data.docs;
+          me.permissionDialogVisible = true;
+        }).catch(function(error){
+          me.showErrorInfo(error);
+        })
+      },
+      handleSelectionChange2(rows){
+        this.selectedPermissionPaths = [];
+        for(let i =0 ,len = rows.length; i < len; i++){
+          this.selectedPermissionPaths.push(rows[i].path);
+        }
+      },
+      addPermission(isAllowed){
+        const _id = this.configRow._id;
+        const message = isAllowed ? '添加允许权限成功!' : '添加拒绝权限成功!';
+        const key = isAllowed ? 'allowedPermissions': 'deniedPermissions'
+        const me = this;
+        const postData = {
+          _id: _id
+        }
+        postData[key] = hardMerge(me.configRow[key], this.selectedPermissionPaths);
+        api.postUpdateRole(postData)
+                .then(function(res){
+                  me.showSuccessInfo(message)
+                  me.getRoleList();
+                  me.getRoleDetail();
+                }).catch(function(error){
+          me.showSuccessInfo(error)
+        })
+      },
+      addAllowedClick(){
+        this.addPermission(true);
+      },
+      addDeniedClick(){
+        this.addPermission(false);
       },
       deletePermissionClick() {
+        this.deletePermissionDialogVisible = true;
+      },
+      handleSelectionChange(rows){
+        this.deletePermissionDisabled = false;
+        this.selectedDeletePermissions = rows;
+      },
+      deletePermissionConfirm(){
+        const me = this;
+        const rows = this.selectedDeletePermissions;
+        let allowed = deepClone(me.configRow.allowedPermissions);
+        let denied = deepClone(me.configRow.deniedPermissions);
+        for(let i = 0, len = rows.length; i < len; i++){
+          if(rows[i].allowed === '允许'){
+            allowed.splice(allowed.indexOf(rows[i].path), 1);
+          }else{
+            denied.splice(denied.indexOf(rows[i].path), 1);
+          }
+        }
+        const postData = {
+          _id: this.configRow._id,
+          allowedPermissions: allowed,
+          deniedPermissions: denied
+        }
+        api.postUpdateRole(postData)
+                .then(function(res){
+                  me.deletePermissionDialogVisible = false;
+                  me.showSuccessInfo('删除权限成功!');
+                  me.getRoleList();
+                  me.getRoleDetail();
+                }).catch(function(error) {
+          me.showErrorInfo(err);
+        })
+      },
+      getSearchItemClass(item){
+        let rs = "search-item-type ";
+        if(item.type == '0'){
+          rs += "search-item-type-user"
+        }else if(item.type == '1'){
+          rs += "search-item-type-company"
+        }else if(item.type == '2'){
+          rs += "search-item-type-department"
+        }else if(item.type == '3'){
+          rs += "search-item-type-team"
+        }
+        return rs;
+      },
+      manageBtnClick() {
+        this.manageSlideDialogVisible = true;
+        this.manageRow = deepClone(this.currentRow);
+        this.manageSearchClick();
+      },
+      manageSearchClick(){
+        const query = {
+          _id: this.manageRow._id,
+          keyword: this.keyword2
+        }
+        const me =this;
+        api.getRoleOwners(formatQuery(query, true))
+                .then(function(res){
+                  me.searchItems = res.data;
+                }).catch(function(error){
+          me.showErrorInfo(error);
+        })
+      },
+      manageSearchHandleCurrentChange(row){
+        this.manageSearchCurrentRow = deepClone(row);
+        this.manageSearchDeleteDisabled = false;
+      },
+      manageSearchDeleteClick(){
+        const postData = {
+          roles: this.manageRow._id,
+          _id: this.manageSearchCurrentRow._id
+        }
+        const me = this;
+        api.postDeleteOwnerRole(postData)
+                .then(function(res){
+                  me.showSuccessInfo("移除成功");
+                  me.manageSearchClick();
+                }).catch(function(error){
+          me.showErrorInfo(error);
+        })
 
+      },
+      assignUserClick(){
+        this.addOwnerTitle = '添加用户';
+        this.addOwnerDialogVisible = true;
+        this.searchOwnerClick();
+      },
+      assignGroupClick(){
+        this.addOwnerTitle = '添加组织';
+        this.addOwnerDialogVisible = true;
+      },
+      searchOwnerClick(){
+        const type = this.addOwnerTitle === '添加用户' ? '0' : '1';
+        const query = {
+          type: type,
+          keyword: this.keyword3
+        }
+        const me = this;
+        searchApi.getSearchUserOrGroup(formatQuery(query, true))
+                .then(function(res){
+                  me.searchOwner = res.data;
+                }).catch(function(error){
+          me.showErrorInfo(error)
+        })
+      },
+      addOwnerConfirm(){
+        const type = this.addOwnerTitle === '添加用户' ? '0' : '1';
+        const postData = {
+          type: type,
+          _id: this.searchOwnerCurrentRow._id,
+          roles: this.manageRow._id
+        };
+        const me = this;
+
+        api.postAssignRole(postData)
+                .then(function(res){
+                  me.showSuccessInfo("添加成功");
+                  me.addOwnerTitle = '';
+                  me.addOwnerDialogVisible = false;
+                  me.addOwner = [];
+                  me.manageSearchClick();
+                }).catch(function(error){
+          me.showErrorInfo(error)
+        })
+
+      },
+      searchOwnerHandleCurrentChange(row){
+        this.searchOwnerCurrentRow = deepClone(row);
       },
       handleCurrentPageChange(val) {
         this.handleClickSearch();
@@ -279,6 +619,7 @@
 
   .permission-operation {
     margin-top: 20px;
+    margin-bottom: 15px;
   }
 
   .permission-title {
@@ -304,6 +645,98 @@
   .permission-enable {
     background: #2EC4B6;
   }
+
+  .permission-disable {
+    background: #FF3366;
+  }
+
+  .permission-list-table {
+    width: 100%;
+    height: 300px;
+    overflow: scroll;
+  }
+
+  .manage-search {
+    margin-top: 14px;
+    margin-bottom: 16px;
+    height: 30px;
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .manage-search-content {
+    max-height: 1080px;
+    width: 100%;
+    background: #FFFFFF;
+    border-top: 1px solid #CED9E5;
+    border-right: 1px solid #CED9E5;
+    border-left: 1px solid #CED9E5;
+    border-radius: 4px;
+  }
+
+  .manage-search-li {
+    height: 40px;
+    padding: 10px 0 12px 20px;
+    border-bottom: 1px solid #CED9E5;
+  }
+
+  .manage-dark-li {
+    background: #F8FAFB;
+  }
+
+  .search-item-icon {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin-right: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 20px;
+    height: 20px;
+  }
+
+  .search-item-icon-img {
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  .search-item-type {
+    margin-left: 5px;
+    color: #FFFFFF;
+    line-height: 1;
+    padding: 2px;
+    margin-left: 8px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  .search-item-type-user {
+    background: #F4AC32;
+  }
+
+  .search-item-type-company {
+    background:  #38B1EB;
+  }
+
+  .search-item-type-department {
+    background: #2EC4B6;
+  }
+
+  .search-item-type-team {
+    background: #9353DE;
+  }
+
+  .manage-search-content-bottom {
+    font-size: 12px;
+    text-align: center;
+    color: #9FB3CA;
+  }
+
+
+
+
 
 
 

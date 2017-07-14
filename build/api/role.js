@@ -113,6 +113,22 @@ api.postAssignRole = function postAssignRole(data) {
   })
 }
 
+api.postDeleteOwnerRole = function postDeleteOwnerRole(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/role/deleteOwnerRole', data)
+      .then(function (response) {
+        const res = response.data;
+        if(res.status === '0'){
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch(function (error) {
+        reject(error);
+      });
+  })
+}
+
 api.postEnablePermission = function postEnablePermission(data) {
   return new Promise((resolve, reject) => {
     axios.post('http://localhost:8080/role/enablePermission', data)
@@ -131,7 +147,23 @@ api.postEnablePermission = function postEnablePermission(data) {
 
 api.getUserOrDepartmentRoleAndPermissions = function getUserOrDepartmentRoleAndPermissions(data) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/getUserOrDepartmentRoleAndPermissions', data)
+    axios.get('http://localhost:8080/role/getUserOrDepartmentRoleAndPermissions', data)
+      .then(function (response) {
+        const res = response.data;
+        if(res.status === '0'){
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch(function (error) {
+        reject(error);
+      });
+  })
+}
+
+api.getRoleOwners = function getRoleOwners(data) {
+  return new Promise((resolve, reject) => {
+    axios.get('http://localhost:8080/role/getRoleOwners', data)
       .then(function (response) {
         const res = response.data;
         if(res.status === '0'){
