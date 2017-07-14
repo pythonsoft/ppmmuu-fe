@@ -44,7 +44,7 @@
     },
     computed: {
       isFolder() {
-        const node = this.nodes[this.id]
+        const node = this.nodes[this.id];
         return node.children && node.children.length;
       },
       isCurrentNode() {
@@ -53,7 +53,7 @@
     },
     methods: {
       handleClick() {
-        const node = this.nodes[this.id]
+        const node = this.nodes[this.id];
         if (this.isFolder) {
           if (!this.open) {
             this.tree.$emit('node-expand', node);
