@@ -9,7 +9,7 @@ utils.formatQuery = function formatQuery(obj, isGet = false) {
 
 utils.deepClone = function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
-}
+};
 
 /**
  * @description 去重合并
@@ -17,19 +17,19 @@ utils.deepClone = function deepClone(obj) {
  * @param arr2
  * @returns []
  */
-utils.hardMerge = function hardMerge(arr1, arr2){
-  for (var i = 0 ; i < arr1.length ; i ++ ){
-    for(var j = 0 ; j < arr2.length ; j ++ ){
-      if (arr1[i] === arr2[j]){
-        arr1.splice(i,1);
+utils.hardMerge = function hardMerge(arr1, arr2) {
+  for (let i = 0; i < arr1.length; i++) {
+    for (let j = 0; j < arr2.length; j++) {
+      if (arr1[i] === arr2[j]) {
+        arr1.splice(i, 1);
       }
     }
   }
-  for(var i = 0; i <arr2.length; i++){
+  for (let i = 0; i < arr2.length; i++) {
     arr1.push(arr2[i]);
   }
   return arr1;
-}
+};
 
 function transferDataToTree(data, keyName) {
   keyName = keyName || '_id';
