@@ -10,10 +10,18 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const webpackConfig = require('./webpack.dev.conf');
 const config = require('./config');
 const app = express();
+const pug = require('pug');
 
 const autoOpenBrowser = !!config.dev.autoOpenBrowser;
 const port = process.env.PORT || config.dev.port;
 const uri = 'http://localhost:' + port;
+
+app.use('/', express.static(path.join(__dirname, '../src/fe/html')));
+app.set('views', path.join(__dirname, '../src/fe/html'));
+app.set('view engine', 'pug');
+app.get('/login', function(req, res){
+  return res.render('login/index.pug');
+})
 
 let compiler = webpack(webpackConfig);
 const devMiddleware = webpackDevMiddleware(compiler, {

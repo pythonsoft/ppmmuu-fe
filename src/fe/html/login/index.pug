@@ -1,0 +1,17 @@
+extends ../base/layout.pug
+
+block style
+  link(href='/login/login.css', rel='stylesheet')
+
+block content
+  div(class='content')
+    form(class='login-form')
+      div(class='login-form-item')
+        label 用户名
+        input(class='login-form-input' id='username' name='username' placeholder='请输入用户名')
+      div(class='login-form-item')
+        label 密码
+        input(class='login-form-input' type='password' id='password' name='password' placeholder='请输入密码')
+      div(class='login-form-button')
+        button(class='submit-btn' id='login-btn') 登录
+  script.
