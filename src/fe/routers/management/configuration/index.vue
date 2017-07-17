@@ -1,100 +1,114 @@
 <template>
-  <div>
-    <two-row-tree id=two-row-tree>
-      <template slot="tworowtree-upper-title">分组结构</template>
-      <template slot="tworowtree-upper-button">
-        <fj-button size="mini" @click="clickAddGroup">添加组</fj-button>
-      </template>
-      <template slot="tree">
-        <fj-tree
-          :data="treeData"
-          :topNodeIdArr= "treeTopIdArr"
-          node-key="id"
-          @node-click="handleTreeNodeClick"
-          @current-change="handleTreeNodeCurrentChange"
-          @node-expand="handleTreeNodeExpand"
-          @node-collapse="handleTreeNodeCollapse">
-        </fj-tree>
-      </template>
-    </two-row-tree>
-    <four-row-layout-right-content id=two-row-tree>
-      <template slot="search-left">{{currentNode.name || '配置项'}}</template>
-      <template slot="search-right">
-        <div class="permission-search-item">
-          <fj-input placeholder="请输入关键字" v-model="name"></fj-input>
-        </div>
-        <div class="permission-search-item">
-          <fj-button type="primary" @click="handleClickSearch">搜索</fj-button>
-        </div>
-      </template>
-      <template slot="operation">
-        <span class="permission-btn-mini-margin">
-          <fj-button type="info" size="mini" v-bind:disabled="Object.keys(currentNode).length === 0" @click="handleClickAdd">增加</fj-button>
-        </span>
-        <span class="permission-btn-mini-margin">
-          <fj-button type="info" size="mini" v-bind:disabled="change" @click="handleClickChange">变更</fj-button>
-        </span>
-        <span class="permission-btn-mini-margin">
-          <fj-button type="info" size="mini" v-bind:disabled="deleted" @click="handleClickDeleted">删除</fj-button>
-        </span>
-      </template>
-      <template slot="table">
-        <fj-table :data="tableData" name="table1" ref="table" @current-change="handleSelectionChange" highlight-current-row>
-          <fj-table-column prop="key" label="键" ></fj-table-column>
-          <fj-table-column prop="value" label="值" ></fj-table-column>
-          <fj-table-column prop="description" label="描述"></fj-table-column>
-        </fj-table>
-      </template>
-      <template slot="pagination">
-        <fj-pagination
-          :page-size="pageSize"
-          :total="total"
-          :current-page.sync="currentPage"
-          @current-change="handleCurrentPageChange">
-        </fj-pagination>
-      </template>
+  <div class="clearfix">
+    <div class="left-tree">
+      <two-row-tree>
+        <template slot="tworowtree-upper-title">分组结构</template>
+        <template slot="tworowtree-upper-button">
+          <fj-button size="mini" @click="clickAddGroup">添加组</fj-button>
+        </template>
+        <template slot="tree">
+          <div id=second-row-of-tree>
+            <fj-tree
+              :data="treeData"
+              :topNodeIdArr= "treeTopIdArr"
+              node-key="id"
+              @node-click="handleTreeNodeClick"
+              @current-change="handleTreeNodeCurrentChange"
+              @node-expand="handleTreeNodeExpand"
+              @node-collapse="handleTreeNodeCollapse">
+            </fj-tree>
+            <fj-dropdown @command="handleClickDropDownItem" class="top-right-settings">
+              设置
+              <fj-dropdown-menu slot="dropdown">
+                <fj-dropdown-item command="edit">编辑组</fj-dropdown-item>
+                <fj-dropdown-item command="delete">删除组</fj-dropdown-item>
+                <fj-dropdown-item command="delete">新建组</fj-dropdown-item>
+              </fj-dropdown-menu>
+            </fj-dropdown>
+          </div>
+        </template>
+      </two-row-tree>
+    </div>
+    <div class="right-list">
+      <four-row-layout-right-content>
+        <template slot="search-left">{{currentNode.name || '配置项'}}</template>
+        <template slot="search-right">
+          <div class="permission-search-item">
+            <fj-input placeholder="请输入关键字" v-model="name"></fj-input>
+          </div>
+          <div class="permission-search-item">
+            <fj-button type="primary" @click="handleClickSearch">搜索</fj-button>
+          </div>
+        </template>
+        <template slot="operation">
+          <span class="permission-btn-mini-margin">
+            <fj-button type="info" size="mini" v-bind:disabled="Object.keys(currentNode).length === 0" @click="handleClickAdd">增加</fj-button>
+          </span>
+          <span class="permission-btn-mini-margin">
+            <fj-button type="info" size="mini" v-bind:disabled="change" @click="handleClickChange">变更</fj-button>
+          </span>
+          <span class="permission-btn-mini-margin">
+            <fj-button type="info" size="mini" v-bind:disabled="deleted" @click="handleClickDeleted">删除</fj-button>
+          </span>
+        </template>
+        <template slot="table">
+          <fj-table :data="tableData" name="table1" ref="table" @current-change="handleSelectionChange" highlight-current-row>
+            <fj-table-column prop="key" label="键" ></fj-table-column>
+            <fj-table-column prop="value" label="值" ></fj-table-column>
+            <fj-table-column prop="description" label="描述"></fj-table-column>
+          </fj-table>
+        </template>
+        <template slot="pagination">
+          <fj-pagination
+            :page-size="pageSize"
+            :total="total"
+            :current-page.sync="currentPage"
+            @current-change="handleCurrentPageChange">
+          </fj-pagination>
+        </template>
 
-      <fj-dialog
-        v-bind:title="dialogTitle"
-        :visible.sync="dialogVisible"
-        @close="cancelDialog">
-        <template v-if="dialogTitle == '新建组'">
-          请输入组名称
-          <fj-input v-model="groupName" autofocus />
-        </template>
-        <template v-else-if="dialogTitle == ''">
-        </template>
-        <template v-else>
-          <span>{{dialogMessage}}</span>
-        </template>
-        <div slot="footer">
-          <fj-button @click="cancelDialog">取消</fj-button>
-          <fj-button type="primary" @click="confirmDialog">确定</fj-button>
-        </div>
-      </fj-dialog>
+        <fj-dialog
+          v-bind:title="dialogTitle"
+          :visible.sync="dialogVisible"
+          @close="cancelDialog">
+          <template v-if="dialogTitle == '新建组'">
+            请输入组名称
+            <fj-input v-model="groupName" autofocus />
+          </template>
+          <template v-else-if="dialogTitle == ''">
+          </template>
+          <template v-else>
+            <span>{{dialogMessage}}</span>
+          </template>
+          <div slot="footer">
+            <fj-button @click="cancelDialog">取消</fj-button>
+            <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+          </div>
+        </fj-dialog>
 
-      <fj-slide-dialog
-        v-bind:title="slideDialogTitle"
-        :visible.sync="slideDialogVisible"
-        @open="handleOpenSlideDialog"
-        @close="handleCloseSlideDialog">
-        <fj-form :model="configFormData" :rules="configFormDataRules" ref="configForm" label-width="80px">
-          <fj-form-item label="键" prop="key">
-            <fj-input v-model="configFormData.key" :disabled="action == 'changeConfig'" />
-          </fj-form-item>
-          <fj-form-item label="值" prop="value">
-            <fj-input v-model="configFormData.value" />
-          </fj-form-item>
-          <fj-form-item label="描述">
-            <fj-input type="textarea" :rows="5" v-model="configFormData.description" />
-          </fj-form-item>
-        </fj-form>
-        <div slot="footer">
-          <fj-button @click="cancelSlideDialog">取消</fj-button>
-          <fj-button type="primary" @click="confirmSlideDialog">确定</fj-button>
-        </div>
-      </fj-slide-dialog>
-    </four-row-layout-right-content>
+        <fj-slide-dialog
+          v-bind:title="slideDialogTitle"
+          :visible.sync="slideDialogVisible"
+          @open="handleOpenSlideDialog"
+          @close="handleCloseSlideDialog">
+          <fj-form :model="configFormData" :rules="configFormDataRules" ref="configForm" label-width="80px">
+            <fj-form-item label="键" prop="key">
+              <fj-input v-model="configFormData.key" :disabled="action == 'changeConfig'" />
+            </fj-form-item>
+            <fj-form-item label="值" prop="value">
+              <fj-input v-model="configFormData.value" />
+            </fj-form-item>
+            <fj-form-item label="描述">
+              <fj-input type="textarea" :rows="5" v-model="configFormData.description" />
+            </fj-form-item>
+          </fj-form>
+          <div slot="footer">
+            <fj-button @click="cancelSlideDialog">取消</fj-button>
+            <fj-button type="primary" @click="confirmSlideDialog">确定</fj-button>
+          </div>
+        </fj-slide-dialog>
+      </four-row-layout-right-content>
+    </div>
   </div>
 </template>
 <script>
@@ -173,10 +187,10 @@
               me.treeTopIdArr = [];
               for (let i = 0; i < dataKeys.length; i++) {
                 me.treeTopIdArr.push(data[dataKeys[i]].id);
-                me.treeData = Object.assign(me.treeData, data);
+                me.treeData = Object.assign({}, me.treeData, data);
               }
             } else {
-              me.treeData = Object.assign(me.treeData, data);
+              me.treeData = Object.assign({}, me.treeData, data);
             }
           })
           .catch((err) => {
@@ -362,17 +376,29 @@
               me.cancelSlideDialog();
             });
         }
-      }
+      },
+      handleClickDropDownItem() {},
     }
   };
 </script>
 <style>
+  .left-tree {
+    float: left;
+    width: 192px;
+  }
+  .right-list {
+    margin-left: 192px;
+  }
+  #second-row-of-tree {
+    position: relative;
+  }
+
   #two-row-tree {
     float: left;
     min-width: 192px;
   }
 
-  .permission-search-item{
+  .permission-search-item {
     float: left;
     margin-left: 10px;
   }
@@ -382,30 +408,9 @@
     font-size: 12px;
   }
 
-  .permission-table-pagination {
-    margin-top: 30px;
-    text-align: center;
-    height: 28px;
-    line-height: 28px;
-    color: #4C637B;
-  }
-
-  .permission-status-span {
-    font-size: 12px;
-    color: #FFFFFF;
-    width: 48px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 2px;
-    text-align:center;
-    display: block;
-  }
-
-  .permission-enable {
-    background: #2EC4B6;
-  }
-
-  .permission-disable {
-    background: #FF3366;
+  .top-right-settings {
+    position: absolute;
+    top: 0px;
+    right: 0px;
   }
 </style>
