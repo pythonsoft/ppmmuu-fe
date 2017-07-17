@@ -68,7 +68,7 @@
            <fj-button type="danger" size="mini" @click="manageSearchDeleteClick" v-bind:disabled="manageSearchDeleteDisabled">移除</fj-button>
          </div>
          <div class="manage-search">
-            <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="icon-sousuo" on-icon-click="manageSearchClick"></fj-input>
+            <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="icon-sousuo" @on-icon-click="manageSearchClick"></fj-input>
          </div>
          <div v-if="searchItems.length" class="manage-search-content">
            <fj-table :data="searchItems" name="table3" ref="table3" @current-change="manageSearchHandleCurrentChange" highlight-current-row>
