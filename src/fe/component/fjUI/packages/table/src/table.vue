@@ -1,7 +1,7 @@
 <template>
   <table class="fj-table">
     <div class="hidden-column"><slot></slot></div>
-    <thead>
+    <thead v-if="showThead">
       <tr>
         <th v-for="column in store.states.columns" :style="{width: column.width + 'px', 'text-align': column.align}">
           <div v-if="column.type === 'selection'">
@@ -35,7 +35,11 @@
         type: String,
         default: '暂无数据'
       },
-      highlightCurrentRow: Boolean
+      highlightCurrentRow: Boolean,
+      showThead: {
+        type: Boolean,
+        default: true
+      }
     },
     data() {
       const store = {};

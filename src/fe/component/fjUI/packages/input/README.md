@@ -10,7 +10,6 @@
 | readonly | 是否只读 | boolean | — | false | ✅ |
 | rows | 输入框行数 | number | — | 2 | ✅ |
 | icon | 输入框尾部图标 | string | — | - | ✅ |
-| on-icon-click | 点击input内的图标的钩子函数 | function | — | - | ✅ |
 
 ...原生属性
 
@@ -20,3 +19,4 @@
 | blur |  | event | ✅ |
 | focus |  | event | ✅ |
 | change |  | value | ✅ |
+| on-icon-click | 点击input内的图标的钩子函数 | event | ✅ |
