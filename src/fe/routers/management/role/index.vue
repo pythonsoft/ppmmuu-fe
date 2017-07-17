@@ -71,7 +71,7 @@
             <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="icon-sousuo" @on-icon-click="manageSearchClick"></fj-input>
          </div>
          <div v-if="searchItems.length" class="manage-search-content">
-           <fj-table :data="searchItems" name="table3" ref="table3" @current-change="manageSearchHandleCurrentChange" showThead="false" highlight-current-row>
+           <fj-table :data="searchItems" name="table3" ref="table3" @current-change="manageSearchHandleCurrentChange" :showThead=false highlight-current-row>
              <fj-table-column prop="_id">
                <template scope="props">
                  <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
@@ -164,7 +164,7 @@
         <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword3" icon="icon-sousuo" on-icon-click="searchOwnerClick"></fj-input>
       </div>
       <div v-if="searchOwner.length" class="manage-search-content">
-        <fj-table :data="searchOwner" name="table4" ref="table4" @current-change="searchOwnerHandleCurrentChange" showThead="false" highlight-current-row>
+        <fj-table :data="searchOwner" name="table4" ref="table4" @current-change="searchOwnerHandleCurrentChange" :showThead=false highlight-current-row>
           <fj-table-column prop="_id">
             <template scope="props">
               <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
@@ -547,6 +547,7 @@
       assignGroupClick() {
         this.addOwnerTitle = '添加组织';
         this.addOwnerDialogVisible = true;
+        this.searchOwnerClick();
       },
       searchOwnerClick() {
         const type = this.addOwnerTitle === '添加用户' ? '0' : '1';

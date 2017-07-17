@@ -77,9 +77,7 @@
     max-height: 1080px;
     width: 100%;
     background: #FFFFFF;
-    border-top: 1px solid #CED9E5;
-    border-right: 1px solid #CED9E5;
-    border-left: 1px solid #CED9E5;
+    border: 1px solid #CED9E5;
     border-radius: 4px;
 }
 
