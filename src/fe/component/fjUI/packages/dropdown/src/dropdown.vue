@@ -15,7 +15,7 @@
     data() {
       return {
         visible: false
-      }
+      };
     },
     methods: {
       handleClick() {
