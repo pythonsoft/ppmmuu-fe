@@ -3,9 +3,9 @@
 .fj-tag {
   display: inline-block;
 
-  height: 20px;
-  line-height: 18px;
-  padding: 0 10px;
+  height: 26px;
+  line-height: 24px;
+  padding: 0 8px;
 
   border-width: 1px;
   border-style: solid;
@@ -36,6 +36,9 @@
 .fj-tag-danger {
   border-color: var(--tag-danger-border-color);
   background-color: var(--tag-danger-bg-color);
+}
+.fj-closable-tag-primary:hover {
+  color: var(--tag-primary-hover-color);
 }
 
 .fj-tag-close {

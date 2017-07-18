@@ -1,5 +1,9 @@
 <template>
-  <span class="fj-tag" :class="type ? 'fj-tag-' + type : ''">
+  <span :class="[
+    'fj-tag',
+    type ? 'fj-tag-' + type : '',
+    closable ? 'fj-closable-tag-' + type : ''
+  ]">
     <slot></slot>
     <i v-if="closable" @click="handleClose" class="fj-tag-close">X</i>
   </span>
