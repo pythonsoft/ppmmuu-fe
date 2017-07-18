@@ -12,19 +12,12 @@
               :data="treeData"
               :topNodeIdArr= "treeTopIdArr"
               node-key="id"
+              :render-content="renderContent"
               @node-click="handleTreeNodeClick"
               @current-change="handleTreeNodeCurrentChange"
               @node-expand="handleTreeNodeExpand"
               @node-collapse="handleTreeNodeCollapse">
             </fj-tree>
-            <fj-dropdown @command="handleClickDropDownItem" class="top-right-settings">
-              设置
-              <fj-dropdown-menu slot="dropdown">
-                <fj-dropdown-item command="edit">编辑组</fj-dropdown-item>
-                <fj-dropdown-item command="delete">删除组</fj-dropdown-item>
-                <fj-dropdown-item command="delete">新建组</fj-dropdown-item>
-              </fj-dropdown-menu>
-            </fj-dropdown>
           </div>
         </template>
       </two-row-tree>
@@ -115,6 +108,7 @@
   import { formatQuery, formatTree } from '../../../common/utils';
   import TwoRowTree from '../../../component/layout/twoRowTree/twoRowTree';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
+  import TreeNodeContent from './treeNodeContent';
 
   const api = require('../../../../../build/api/role');
   const apiConfig = require('../../../../../build/api/configuration');
@@ -122,7 +116,8 @@
   export default {
     components: {
       'two-row-tree': TwoRowTree,
-      'four-row-layout-right-content': FourRowLayoutRightContent
+      'four-row-layout-right-content': FourRowLayoutRightContent,
+      'tree-node-content': TreeNodeContent,
     },
     data() {
       return {
@@ -167,10 +162,12 @@
       this.handleTreeNodeClick();
     },
     methods: {
+
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
       },
+
       handleTreeNodeClick(node) {
         const me = this;
         const query = {};
@@ -217,6 +214,7 @@
             });
         }
       },
+
       handleClickSearch() {
         const me = this;
         const searchObj = {
@@ -237,32 +235,38 @@
             me.showErrorInfo(error);
           });
       },
+
       handleClickAdd() {
         this.slideDialogTitle = '增加设置项';
         this.slideDialogVisible = true;
         this.action = 'addConfig';
       },
+
       handleClickChange() {
         this.configFormData = this.currentConfig;
         this.slideDialogTitle = '变更设置项';
         this.slideDialogVisible = true;
         this.action = 'changeConfig';
       },
+
       handleClickDeleted() {
         this.dialogTitle = '提示';
         this.dialogMessage = '确定要删除这些配置吗?';
         this.dialogVisible = true;
         this.action = 'deleteConfig';
       },
+
       resetDialog() {
         this.dialogTitle = '提示';
         this.dialogMessage = '';
         this.dialogVisible = false;
         this.action = '';
       },
+
       cancelDialog() {
         this.resetDialog();
       },
+
       confirmDialog() {
         const me = this;
         const postData = {};
@@ -308,37 +312,50 @@
           this.deleted = true;
         }
       },
+
       clearTableSelection() {
         this.$refs.table.clearSelection();
       },
+
       handleCurrentPageChange(val) {
         this.handleTreeNodeClick();
       },
+
       showSuccessInfo(message) {
         this.$message.success(message);
       },
+
       showErrorInfo(message) {
         this.$message.error(message);
       },
+
       handleTreeNodeCurrentChange() {},
+
       handleTreeNodeExpand(node) {
       },
+
       handleTreeNodeCollapse() {},
+
       clickAddGroup() {
         this.dialogTitle = '新建组';
         this.dialogVisible = true;
         this.action = 'addGroup';
       },
+
       handleOpenSlideDialog() {},
+
       handleCloseSlideDialog() {},
+
       cancelSlideDialog() {
         this.slideDialogVisible = false;
         this.action = '';
       },
+
       resetSlideDialog() {
         this.configFormData = {};
         this.cancelSlideDialog();
       },
+
       confirmSlideDialog() {
         const me = this;
         const postData = {};
@@ -377,7 +394,19 @@
             });
         }
       },
-      handleClickDropDownItem() {},
+
+      renderContent(h, node) {
+        return h(TreeNodeContent, {
+          props: {
+            node: node,
+            treeData: this.treeData,
+            currentNode: this.currentNode,
+          },
+          methods: {
+            showErrorInfo: this.showErrorInfo,
+          }
+        });
+      },
     }
   };
 </script>
@@ -387,7 +416,7 @@
     width: 192px;
   }
   .right-list {
-    margin-left: 192px;
+    margin-left: 212px;
   }
   #second-row-of-tree {
     position: relative;
@@ -406,11 +435,5 @@
   .permission-btn-mini-margin {
     margin-left: 6px;
     font-size: 12px;
-  }
-
-  .top-right-settings {
-    position: absolute;
-    top: 0px;
-    right: 0px;
   }
 </style>
