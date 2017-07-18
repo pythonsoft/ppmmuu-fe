@@ -102,8 +102,8 @@
   import TwoRowTree from '../../../component/layout/twoRowTree/twoRowTree';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
-  const api = require('../../../../../build/api/role');
-  const apiConfig = require('../../../../../build/api/configuration');
+  const api = require('../../../api/role');
+  const apiConfig = require('../../../api/configuration');
 
   export default {
     components: {
@@ -165,7 +165,7 @@
         } else {
           query.parent = node.id;
         }
-        apiConfig.getListGroup(formatQuery(query, true))
+        apiConfig.getListGroup(formatQuery(query, true), me)
           .then((res) => {
             const data = formatTree(res.data, 'id').node;
             if (query.parent === '') {
@@ -179,9 +179,6 @@
               me.treeData = Object.assign(me.treeData, data);
             }
           })
-          .catch((err) => {
-            me.showErrorInfo(err);
-          });
         if (node !== undefined) {
           me.currentNode = node;
           const searchObj = {
@@ -189,7 +186,7 @@
             pageSize: me.pageSize,
             groupId: node.id
           };
-          apiConfig.getListConfig(formatQuery(searchObj, true))
+          apiConfig.getListConfig(formatQuery(searchObj, true), me)
             .then((res) => {
               const data = res.data;
               me.tableData = data ? data.docs : [];
@@ -198,9 +195,6 @@
               me.pageSize = data.pageSize;
               me.handleSelectionChange();
             })
-            .catch((error) => {
-              me.showErrorInfo(error);
-            });
         }
       },
       handleClickSearch() {
@@ -210,7 +204,7 @@
           pageSize: me.pageSize,
           name: me.name
         };
-        apiConfig.getListConfig(formatQuery(searchObj, true))
+        apiConfig.getListConfig(formatQuery(searchObj, true), me)
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -219,9 +213,6 @@
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
           })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
       },
       handleClickAdd() {
         this.slideDialogTitle = '增加设置项';
@@ -257,29 +248,21 @@
           postData.parent = this.currentNode.id || '';
           postData.name = this.groupName;
           message = '增加';
-          apiConfig.postAddGroup(postData)
+          apiConfig.postAddGroup(postData, me)
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetDialog();
               me.handleTreeNodeClick();
             })
-            .catch((err) => {
-              me.showErrorInfo(err);
-              me.resetDialog();
-            });
         } else if (this.action === 'deleteConfig') {
           postData.id = this.currentConfig._id;
           message = '删除';
-          apiConfig.postDeleteConfig(postData)
+          apiConfig.postDeleteConfig(postData, me)
             .then((response) => {
               me.showSuccessInfo(`${message}成功!`);
               me.resetDialog();
               me.handleTreeNodeClick(me.currentNode);
             })
-            .catch((error) => {
-              me.showErrorInfo(error);
-              me.resetDialog();
-            });
         } else {
           this.resetDialog();
         }
@@ -302,9 +285,6 @@
       },
       showSuccessInfo(message) {
         this.$message.success(message);
-      },
-      showErrorInfo(message) {
-        this.$message.error(message);
       },
       handleTreeNodeCurrentChange() {},
       handleTreeNodeExpand(node) {
@@ -336,31 +316,23 @@
           postData.value = this.configFormData.value;
           postData.description = this.configFormData.description;
           message = '增加';
-          apiConfig.postAddConfig(postData)
+          apiConfig.postAddConfig(postData, me)
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetSlideDialog();
               me.handleTreeNodeClick(me.currentNode);
             })
-            .catch((err) => {
-              me.showErrorInfo(err);
-              me.cancelSlideDialog();
-            });
         } else if (me.action === 'changeConfig') {
           postData.id = this.currentConfig._id;
           postData.value = this.configFormData.value;
           postData.description = this.configFormData.description;
           message = '变更';
-          apiConfig.postUpdateConfig(postData)
+          apiConfig.postUpdateConfig(postData, me)
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetSlideDialog();
               me.handleTreeNodeClick(me.currentNode);
             })
-            .catch((err) => {
-              me.showErrorInfo(err);
-              me.cancelSlideDialog();
-            });
         }
       }
     }

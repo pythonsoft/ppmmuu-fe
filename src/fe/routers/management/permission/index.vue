@@ -57,7 +57,7 @@
   import { formatQuery } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
-  const api = require('../../../../../build/api/role');
+  const api = require('../../../api/role');
 
   export default {
     components: {
@@ -106,7 +106,7 @@
           name: me.name,
           status: me.status
         };
-        api.getPermissionList(formatQuery(searchObj, true))
+        api.getPermissionList(formatQuery(searchObj, true), me)
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -115,9 +115,6 @@
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
           })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
       },
       handleClickEnable() {
         this.dialogMessage = '确定要启用这些权限吗?';
@@ -158,14 +155,10 @@
           return;
         }
 
-        api.postEnablePermission(postData)
+        api.postEnablePermission(postData, me)
           .then((response) => {
             me.showSuccessInfo(`${message}成功!`);
             me.handleClickSearch();
-          })
-          .catch((error) => {
-            me.showErrorInfo(error);
-            me.resetDialog();
           });
       },
       handleSelectionChange(rows) {
@@ -192,9 +185,6 @@
       },
       showSuccessInfo(message) {
         this.$message.success(message);
-      },
-      showErrorInfo(message) {
-        this.$message.error(message);
       }
     }
   };

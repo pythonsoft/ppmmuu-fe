@@ -1,18 +1,20 @@
 import axios from 'axios';
 const api = {};
 
-api.postUserLogin = function postUserLogin(data) {
+api.upload = function upload(data, me) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/user/login', data)
+    axios.post('http://10.0.15.105:8080/upload', data)
       .then(function (response) {
         const res = response.data;
         if(res.status === '0'){
           resolve(res);
         }
-        reject(res.statusInfo.message);
+        else{
+          me.$message.error(res.statusInfo.message);
+        }
       })
       .catch(function (error) {
-        reject(error);
+        me.$message.error(error);
       });
   })
 }

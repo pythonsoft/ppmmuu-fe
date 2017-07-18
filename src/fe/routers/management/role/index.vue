@@ -93,7 +93,7 @@
             :visible.sync="configSlideDialogVisible">
       <div class="config-dialog-content">
         <div>{{configRow.name}}</div>
-        <div class="config-description">{{configRow.description}}</div>
+        <div v-if="configRow.description" class="config-description">{{configRow.description}}</div>
         <div class="permission-operation">
           <span class="permission-title">权限项</span>
           <fj-button type="info" size="mini" @click="addPermissionClick">增加</fj-button>
@@ -182,11 +182,10 @@
 </template>
 <script>
   import './role.css';
-  import { formatQuery, deepClone, hardMerge } from '../../../common/utils';
+  import { formatQuery, deepClone } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
-  const api = require('../../../../../build/api/role');
-  const searchApi = require('../../../../../build/api/search');
+  const api = require('../../../api/role');
 
   export default {
     components: {
@@ -236,10 +235,10 @@
         manageSearchDeleteDisabled: true,
         searchItems: [],
         searchItemTypeMap: {
-          0: '用户',
-          1: '公司',
-          2: '部门',
-          3: '小组'
+          0: '公司',
+          1: '部门',
+          2: '小组',
+          3: '用户'
         },
         keyword2: '',
         addOwnerTitle: '',
@@ -269,7 +268,7 @@
           pageSize: me.pageSize,
           keyword: me.keyword
         };
-        api.getRoleList(formatQuery(searchObj, true))
+        api.getRoleList(formatQuery(searchObj, true), me)
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -277,9 +276,6 @@
             me.total = data.total;
             me.pageSize = data.pageSize;
           })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
       },
       isEdit() {
         if (this.slideDialogTitle === '编辑角色') {
@@ -313,21 +309,25 @@
         this.slideDialogVisible = true;
       },
       editBtnClick() {
+        const me = this;
         this.resetDialog();
-        this.formData = deepClone(this.currentRow);
-        this.slideDialogTitle = '编辑角色';
-        this.slideDialogVisible = true;
+        api.getRoleDetail(formatQuery({_id: this.currentRow._id}, true), me)
+                .then(function(res){
+                  me.formData = res.data;
+                  me.slideDialogTitle = '编辑角色';
+                  me.slideDialogVisible = true;
+                })
       },
       configBtnClick() {
         this.resetDialog();
         this.configSlideDialogVisible = true;
         this.deletePermissionDisabled = true;
-        this.configRow = deepClone(this.currentRow);
+        this.configRow = this.currentRow;
         this.getRoleDetail();
       },
       getRoleDetail() {
         const me = this;
-        api.getRoleDetail({ params: formatQuery({ _id: this.configRow._id }) })
+        api.getRoleDetail(formatQuery({ _id: this.configRow._id }, true), me)
           .then((res) => {
             const data = deepClone(res.data);
             const allowed = [];
@@ -361,9 +361,6 @@
             me.configSlideDialogVisible = true;
             me.deletePermissionDisabled = true;
           })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
       },
       deleteBtnClick() {
         this.dialogVisible = true;
@@ -371,13 +368,11 @@
       confirmDialog() {
         const _ids = this.currentRow._id;
         const me = this;
-        api.postDeleteRole({ _ids: _ids })
+        api.postDeleteRole({ _ids: _ids }, me)
           .then((res) => {
             me.showSuccessInfo('删除成功');
             me.handleClickSearch();
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
+          })
       },
       confirmSlideDialogClick() {
         const me = this;
@@ -394,14 +389,11 @@
           name: this.formData.name,
           description: this.formData.description
         };
-        apiFunc(postData)
+        apiFunc(postData, me)
           .then((res) => {
             me.handleClickSearch();
             me.showSuccessInfo('保存成功');
           })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
       },
       resetSlideDialog() {
         this.slideDialogTitle = '';
@@ -409,19 +401,17 @@
         this.formData = {};
       },
       handleCurrentChange(row) {
-        this.currentRow = deepClone(row);
+        this.currentRow = row;
         this.slideDialogVisible = false;
         this.enableBtn();
       },
       addPermissionClick() {
         const me = this;
-        api.getPermissionList({ params: formatQuery({ pageSize: 999 }) })
+        api.getPermissionList(formatQuery({ pageSize: 999 }, true), me)
           .then((res) => {
             me.permissionListData = res.data.docs;
             me.permissionDialogVisible = true;
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
+          })
       },
       handleSelectionChange2(rows) {
         this.selectedPermissionPaths = [];
@@ -437,8 +427,8 @@
         const postData = {
           _id: _id
         };
-        postData[key] = hardMerge(me.configRow[key], this.selectedPermissionPaths);
-        api.postUpdateRole(postData)
+        postData[key] =  this.selectedPermissionPaths;
+        api.postUpdateRoleAddPermission(postData)
           .then((res) => {
             me.showSuccessInfo(message);
             me.getRoleList();
@@ -465,13 +455,13 @@
       deletePermissionConfirm() {
         const me = this;
         const rows = this.selectedDeletePermissions;
-        const allowed = deepClone(me.configRow.allowedPermissions);
-        const denied = deepClone(me.configRow.deniedPermissions);
+        const allowed = [];
+        const denied = [];
         for (let i = 0, len = rows.length; i < len; i++) {
           if (rows[i].allowed === '允许') {
-            allowed.splice(allowed.indexOf(rows[i].path), 1);
+            allowed.push(rows[i].path);
           } else {
-            denied.splice(denied.indexOf(rows[i].path), 1);
+            denied.push(rows[i].path);
           }
         }
         const postData = {
@@ -479,15 +469,13 @@
           allowedPermissions: allowed,
           deniedPermissions: denied
         };
-        api.postUpdateRole(postData)
+        api.postUpdateRoleDeletePermission(postData, me)
           .then((res) => {
             me.deletePermissionDialogVisible = false;
             me.showSuccessInfo('删除权限成功!');
             me.getRoleList();
             me.getRoleDetail();
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
+          })
       },
       getSearchItemClass(item) {
         let rs = 'search-item-type ';
@@ -505,7 +493,7 @@
       manageBtnClick() {
         this.resetDialog();
         this.manageSlideDialogVisible = true;
-        this.manageRow = deepClone(this.currentRow);
+        this.manageRow = this.currentRow;
         this.manageSearchClick();
       },
       manageSearchClick() {
@@ -514,15 +502,13 @@
           keyword: this.keyword2
         };
         const me = this;
-        api.getRoleOwners(formatQuery(query, true))
+        api.getRoleOwners(formatQuery(query, true), me)
           .then((res) => {
             me.searchItems = res.data;
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
+          })
       },
       manageSearchHandleCurrentChange(row) {
-        this.manageSearchCurrentRow = deepClone(row);
+        this.manageSearchCurrentRow = row;
         this.manageSearchDeleteDisabled = false;
       },
       manageSearchDeleteClick() {
@@ -531,13 +517,11 @@
           _id: this.manageSearchCurrentRow._id
         };
         const me = this;
-        api.postDeleteOwnerRole(postData)
+        api.postDeleteOwnerRole(postData, me)
           .then((res) => {
             me.showSuccessInfo('移除成功');
             me.manageSearchClick();
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
+          })
       },
       assignUserClick() {
         this.addOwnerTitle = '添加用户';
@@ -556,15 +540,13 @@
           keyword: this.keyword3
         };
         const me = this;
-        searchApi.getSearchUserOrGroup(formatQuery(query, true))
+        api.getRoleSearchUserOrGroup(formatQuery(query, true), me)
           .then((res) => {
             me.searchOwner = res.data;
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
+          })
       },
       addOwnerConfirm() {
-        const type = this.addOwnerTitle === '添加用户' ? '0' : '1';
+        const type = this.addOwnerTitle === '添加用户' ? '3' : '0';
         const postData = {
           type: type,
           _id: this.searchOwnerCurrentRow._id,
@@ -572,28 +554,23 @@
         };
         const me = this;
 
-        api.postAssignRole(postData)
+        api.postAssignRole(postData, me)
           .then((res) => {
             me.showSuccessInfo('添加成功');
             me.addOwnerTitle = '';
             me.addOwnerDialogVisible = false;
             me.addOwner = [];
             me.manageSearchClick();
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
+          })
       },
       searchOwnerHandleCurrentChange(row) {
-        this.searchOwnerCurrentRow = deepClone(row);
+        this.searchOwnerCurrentRow = row;
       },
       handleCurrentPageChange(val) {
         this.handleClickSearch();
       },
       showSuccessInfo(message) {
         this.$message.success(message);
-      },
-      showErrorInfo(message) {
-        this.$message.error(message);
       }
     }
   };
