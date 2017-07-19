@@ -88,29 +88,7 @@
 
 
     </fj-slide-dialog>
-    <fj-slide-dialog
-            title="配置"
-            :visible.sync="configSlideDialogVisible">
-      <div class="config-dialog-content">
-        <div>{{configRow.name}}</div>
-        <div v-if="configRow.description" class="config-description">{{configRow.description}}</div>
-        <div class="permission-operation">
-          <span class="permission-title">权限项</span>
-          <fj-button type="info" size="mini" @click="addPermissionClick">增加</fj-button>
-          <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="deletePermissionDisabled">删除</fj-button>
-        </div>
-        <div class="permissions">
-          <fj-table :data="permissionData" name="table1" ref="table1" @selection-change="handleSelectionChange">
-            <fj-table-column type="selection" width="20"></fj-table-column>
-            <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
-            <fj-table-column prop="name" label="名称" ></fj-table-column>
-            <fj-table-column prop="allowed" label="行为"></fj-table-column>
-          </fj-table>
-        </div>
-      </div>
 
-
-    </fj-slide-dialog>
     <fj-dialog
             title="提示"
             :visible.sync="dialogVisible"
@@ -124,37 +102,7 @@
       </div>
 
     </fj-dialog>
-    <fj-dialog
-            title="权限项"
-            :visible.sync="permissionDialogVisible"
-            @close="permissionDialogVisible=false">
-      <div class="permission-list-table">
-        <fj-table :data="permissionListData" name="table2" ref="table2" @selection-change="handleSelectionChange2">
-          <fj-table-column type="selection" width="20"></fj-table-column>
-          <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
-          <fj-table-column prop="name" label="名称" ></fj-table-column>
-        </fj-table>
-        </div>
-      <div slot="footer">
-        <fj-button @click="permissionDialogVisible=false">取消</fj-button>
-        <fj-button type="info" @click="addAllowedClick">添加允许权限</fj-button>
-        <fj-button type="danger" @click="addDeniedClick">添加拒绝权限</fj-button>
-      </div>
 
-    </fj-dialog>
-    <fj-dialog
-            title="提示"
-            :visible.sync="deletePermissionDialogVisible"
-            @close="deletePermissionDialogVisible=false">
-
-      <span>确定要删除这些权限吗?</span>
-
-      <div slot="footer">
-        <fj-button @click="deletePermissionDialogVisible=false">取消</fj-button>
-        <fj-button type="primary" @click="deletePermissionConfirm">确定</fj-button>
-      </div>
-
-    </fj-dialog>
     <fj-dialog
             :title="addOwnerTitle"
             :visible.sync="addOwnerDialogVisible"
@@ -178,17 +126,20 @@
         <fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
       </div>
     </fj-dialog>
+    <config-role :roleId="roleId" :visible.sync="configRoleDialogVisible" ></config-role>
   </four-row-layout-right-content>
 </template>
 <script>
   import './role.css';
   import { formatQuery, deepClone } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
+  import ConfigRole  from './configRole';
 
   const api = require('../../../api/role');
 
   export default {
     components: {
+      'config-role': ConfigRole,
       'four-row-layout-right-content': FourRowLayoutRightContent
     },
     data() {
@@ -206,9 +157,11 @@
         pageSize: 15,
         slideDialogTitle: '添加角色',
         slideDialogVisible: false,
-        configSlideDialogVisible: false,
+        permissionDialogVisible: false,
         formData: {},
         currentRow: {},
+        roleId: "",
+        configRoleDialogVisible: false,
         rules: {
           _id: [
             { required: true, message: '请输入标识' }
@@ -224,13 +177,7 @@
               } }
           ]
         },
-        configRow: {},
-        permissionData: [],
-        permissionListData: [],
-        deletePermissionDisabled: true,
         dialogVisible: false,
-        permissionDialogVisible: false,
-        deletePermissionDialogVisible: false,
         manageSlideDialogVisible: false,
         manageSearchDeleteDisabled: true,
         searchItems: [],
@@ -314,61 +261,20 @@
       editBtnClick() {
         const me = this;
         this.resetDialog();
-        api.getRoleDetail(formatQuery({_id: this.currentRow._id}, true))
-                .then(function(res){
-                  me.formData = res.data;
-                  me.slideDialogTitle = '编辑角色';
-                  me.slideDialogVisible = true;
-                }).catch(function(error){
-          me.showErrorInfo(error);
-        })
+        api.getRoleDetail(formatQuery({ _id: this.currentRow._id }, true))
+          .then((res) => {
+            me.formData = res.data;
+            me.slideDialogTitle = '编辑角色';
+            me.slideDialogVisible = true;
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       configBtnClick() {
         this.resetDialog();
-        this.configSlideDialogVisible = true;
-        this.deletePermissionDisabled = true;
-        this.configRow = this.currentRow;
-        this.getRoleDetail();
-      },
-      getRoleDetail() {
-        const me = this;
-        api.getRoleDetail(formatQuery({ _id: this.configRow._id }, true))
-          .then((res) => {
-            const data = deepClone(res.data);
-            const allowed = [];
-            const denied = [];
-
-            for (let i = 0, len = data.allowedPermissions.length; i < len; i++) {
-              allowed.push(data.allowedPermissions[i].path);
-            }
-
-            for (let i = 0, len = data.deniedPermissions.length; i < len; i++) {
-              denied.push(data.deniedPermissions[i].path);
-            }
-
-            data.allowedPermissions = allowed;
-            data.deniedPermissions = denied;
-            me.configRow = data;
-
-            me.roleDetail = res.data;
-            const allowedPermissions = me.roleDetail.allowedPermissions;
-            const deniedPermissions = me.roleDetail.deniedPermissions;
-            for (let i = 0, len = allowedPermissions.length; i < len; i++) {
-              allowedPermissions[i].allowed = '允许';
-            }
-
-            for (let i = 0, len = deniedPermissions.length; i < len; i++) {
-              deniedPermissions[i].allowed = '拒绝';
-            }
-
-            me.permissionData = allowedPermissions.concat(deniedPermissions);
-
-            me.configSlideDialogVisible = true;
-            me.deletePermissionDisabled = true;
-          })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
+        this.configRoleDialogVisible = true;
+        this.roleId = this.currentRow._id;
+        console.log("fafsafsafasf");
       },
       deleteBtnClick() {
         this.dialogVisible = true;
@@ -417,82 +323,6 @@
         this.currentRow = row;
         this.slideDialogVisible = false;
         this.enableBtn();
-      },
-      addPermissionClick() {
-        const me = this;
-        api.getPermissionList({ params: formatQuery({ pageSize: 999 }) })
-          .then((res) => {
-            me.permissionListData = res.data.docs;
-            me.permissionDialogVisible = true;
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
-      },
-      handleSelectionChange2(rows) {
-        this.selectedPermissionPaths = [];
-        for (let i = 0, len = rows.length; i < len; i++) {
-          this.selectedPermissionPaths.push(rows[i].path);
-        }
-      },
-      addPermission(isAllowed) {
-        const _id = this.configRow._id;
-        const message = isAllowed ? '添加允许权限成功!' : '添加拒绝权限成功!';
-        const key = isAllowed ? 'allowedPermissions' : 'deniedPermissions';
-        const me = this;
-        const postData = {
-          _id: _id
-        };
-        postData[key] =  this.selectedPermissionPaths;
-        api.postUpdateRoleAddPermission(postData)
-          .then((res) => {
-            me.showSuccessInfo(message);
-            me.getRoleList();
-            me.getRoleDetail();
-          }).catch((error) => {
-            me.showSuccessInfo(error);
-          });
-      },
-      addAllowedClick() {
-        this.addPermission(true);
-      },
-      addDeniedClick() {
-        this.addPermission(false);
-      },
-      deletePermissionClick() {
-        this.deletePermissionDialogVisible = true;
-      },
-      handleSelectionChange(rows) {
-        if(rows.length > 0) {
-          this.deletePermissionDisabled = false;
-          this.selectedDeletePermissions = rows;
-        }
-      },
-      deletePermissionConfirm() {
-        const me = this;
-        const rows = this.selectedDeletePermissions;
-        const allowed = [];
-        const denied = [];
-        for (let i = 0, len = rows.length; i < len; i++) {
-          if (rows[i].allowed === '允许') {
-            allowed.push(rows[i].path);
-          } else {
-            denied.push(rows[i].path);
-          }
-        }
-        const postData = {
-          _id: this.configRow._id,
-          allowedPermissions: allowed,
-          deniedPermissions: denied
-        };
-        api.postUpdateRoleDeletePermission(postData)
-          .then((res) => {
-            me.deletePermissionDialogVisible = false;
-            me.showSuccessInfo('删除权限成功!');
-            me.getRoleList();
-            me.getRoleDetail();
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
       },
       getSearchItemClass(item) {
         let rs = 'search-item-type ';

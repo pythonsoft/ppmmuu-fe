@@ -1,20 +1,21 @@
 import axios from 'axios';
+
 const api = {};
 
 api.postUserLogin = function postUserLogin(data) {
   return new Promise((resolve, reject) => {
     axios.post('http://localhost:8080/user/login', data)
-      .then(function (response) {
+      .then((response) => {
         const res = response.data;
-        if(res.status === '0'){
+        if (res.status === '0') {
           resolve(res);
         }
         reject(res.statusInfo.message);
       })
-      .catch(function (error) {
+      .catch((error) => {
         reject(error);
       });
-  })
-}
+  });
+};
 
 module.exports = api;

@@ -1,8 +1,8 @@
 <template>
-  <template>
+  <div>
     <fj-slide-dialog
             title="配置"
-            :visible.sync="configSlideDialogVisible">
+            :visible.sync="configSlideDialogVisible" @close="close">
       <div class="config-dialog-content">
         <div>{{configRow.name}}</div>
         <div v-if="configRow.description" class="config-description">{{configRow.description}}</div>
@@ -53,35 +53,46 @@
       </div>
 
     </fj-dialog>
-  </template>
+  </div>
 </template>
 <script>
+  const api = require('../../../api/role');
+  import { formatQuery, deepClone } from '../../../common/utils';
+
   export default {
-    components: {
-      'four-row-layout-right-content': FourRowLayoutRightContent
+    name: 'configRole',
+    props: {
+      roleId: {
+        type: String,
+        default: ""
+      },
+      visible: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {
-        defaultRoute: '/',
-        slideDialogTitle: '添加角色',
         permissionDialogVisible: false,
         configSlideDialogVisible: false,
         deletePermissionDisabled: true,
         deletePermissionDialogVisible: false,
-        configRow: {},
         permissionData: [],
         permissionListData: [],
-
+        configRow: {}
       };
     },
-    created() {
-      this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
-      this.handleClickSearch();
+    mounted() {
     },
     watch: {
-      data(val) {
-        this.configRow = val;
-        this.clearSelection();
+      visible(val) {
+        console.log("enterrrrr")
+        if (val) {
+          this.getRoleDetail();
+          this.configSlideDialogVisible = val;
+        } else {
+          this.configSlideDialogVisible = val;
+        }
       }
     },
     methods: {
@@ -89,11 +100,51 @@
         const pathArr = path.split('/');
         return pathArr[level] || '';
       },
-      handleSelectionChange(){
+      handleSelectionChange(rows){
         if(rows.length > 0) {
           this.deletePermissionDisabled = false;
           this.selectedDeletePermissions = rows;
         }
+      },
+      getRoleDetail() {
+        const me = this;
+        api.getRoleDetail(formatQuery({ _id: this.roleId }, true))
+                .then((res) => {
+          const data = deepClone(res.data);
+        const allowed = [];
+        const denied = [];
+
+        for (let i = 0, len = data.allowedPermissions.length; i < len; i++) {
+          allowed.push(data.allowedPermissions[i].path);
+        }
+
+        for (let i = 0, len = data.deniedPermissions.length; i < len; i++) {
+          denied.push(data.deniedPermissions[i].path);
+        }
+
+        data.allowedPermissions = allowed;
+        data.deniedPermissions = denied;
+        me.configRow = data;
+
+        me.roleDetail = res.data;
+        const allowedPermissions = me.roleDetail.allowedPermissions;
+        const deniedPermissions = me.roleDetail.deniedPermissions;
+        for (let i = 0, len = allowedPermissions.length; i < len; i++) {
+          allowedPermissions[i].allowed = '允许';
+        }
+
+        for (let i = 0, len = deniedPermissions.length; i < len; i++) {
+          deniedPermissions[i].allowed = '拒绝';
+        }
+
+        me.permissionData = allowedPermissions.concat(deniedPermissions);
+
+        me.configSlideDialogVisible = true;
+        me.deletePermissionDisabled = true;
+      })
+      .catch((error) => {
+          me.showErrorInfo(error);
+      });
       },
       addPermissionClick(){
         const me = this;
@@ -121,7 +172,7 @@
           }
         }
         const postData = {
-          _id: this.configRow._id,
+          _id: this.roleId,
           allowedPermissions: allowed,
           deniedPermissions: denied
         };
@@ -129,13 +180,12 @@
                 .then((res) => {
           me.deletePermissionDialogVisible = false;
         me.showSuccessInfo('删除权限成功!');
-        me.getRoleList();
         me.getRoleDetail();
       }).catch((error) => {
           me.showErrorInfo(error);
       });
       },
-      handleSelectionChange2(){
+      handleSelectionChange2(rows){
         this.selectedPermissionPaths = [];
         for (let i = 0, len = rows.length; i < len; i++) {
           this.selectedPermissionPaths.push(rows[i].path);
@@ -153,17 +203,25 @@
         api.postUpdateRoleAddPermission(postData)
                 .then((res) => {
           me.showSuccessInfo(message);
-        me.getRoleList();
         me.getRoleDetail();
       }).catch((error) => {
           me.showSuccessInfo(error);
       });
+      },
+      close(){
+        this.$emit('update:visible', false);
       },
       addAllowedClick(){
         this.addPermission(true);
       },
       addDeniedClick(){
         this.addPermission(false);
+      },
+      showSuccessInfo(message) {
+        this.$message.success(message);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
       }
     }
   }
