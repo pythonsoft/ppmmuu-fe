@@ -268,7 +268,7 @@
           pageSize: me.pageSize,
           keyword: me.keyword
         };
-        api.getRoleList(formatQuery(searchObj, true), me)
+        api.getRoleList(formatQuery(searchObj, true))
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -276,6 +276,9 @@
             me.total = data.total;
             me.pageSize = data.pageSize;
           })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       isEdit() {
         if (this.slideDialogTitle === '编辑角色') {
@@ -311,12 +314,14 @@
       editBtnClick() {
         const me = this;
         this.resetDialog();
-        api.getRoleDetail(formatQuery({_id: this.currentRow._id}, true), me)
+        api.getRoleDetail(formatQuery({_id: this.currentRow._id}, true))
                 .then(function(res){
                   me.formData = res.data;
                   me.slideDialogTitle = '编辑角色';
                   me.slideDialogVisible = true;
-                })
+                }).catch(function(error){
+          me.showErrorInfo(error);
+        })
       },
       configBtnClick() {
         this.resetDialog();
@@ -327,7 +332,7 @@
       },
       getRoleDetail() {
         const me = this;
-        api.getRoleDetail(formatQuery({ _id: this.configRow._id }, true), me)
+        api.getRoleDetail(formatQuery({ _id: this.configRow._id }, true))
           .then((res) => {
             const data = deepClone(res.data);
             const allowed = [];
@@ -361,6 +366,9 @@
             me.configSlideDialogVisible = true;
             me.deletePermissionDisabled = true;
           })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       deleteBtnClick() {
         this.dialogVisible = true;
@@ -368,11 +376,13 @@
       confirmDialog() {
         const _ids = this.currentRow._id;
         const me = this;
-        api.postDeleteRole({ _ids: _ids }, me)
+        api.postDeleteRole({ _ids: _ids })
           .then((res) => {
             me.showSuccessInfo('删除成功');
             me.handleClickSearch();
-          })
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       confirmSlideDialogClick() {
         const me = this;
@@ -389,11 +399,14 @@
           name: this.formData.name,
           description: this.formData.description
         };
-        apiFunc(postData, me)
+        apiFunc(postData)
           .then((res) => {
             me.handleClickSearch();
             me.showSuccessInfo('保存成功');
           })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       resetSlideDialog() {
         this.slideDialogTitle = '';
@@ -407,11 +420,13 @@
       },
       addPermissionClick() {
         const me = this;
-        api.getPermissionList(formatQuery({ pageSize: 999 }, true), me)
+        api.getPermissionList({ params: formatQuery({ pageSize: 999 }) })
           .then((res) => {
             me.permissionListData = res.data.docs;
             me.permissionDialogVisible = true;
-          })
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       handleSelectionChange2(rows) {
         this.selectedPermissionPaths = [];
@@ -469,13 +484,15 @@
           allowedPermissions: allowed,
           deniedPermissions: denied
         };
-        api.postUpdateRoleDeletePermission(postData, me)
+        api.postUpdateRoleDeletePermission(postData)
           .then((res) => {
             me.deletePermissionDialogVisible = false;
             me.showSuccessInfo('删除权限成功!');
             me.getRoleList();
             me.getRoleDetail();
-          })
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       getSearchItemClass(item) {
         let rs = 'search-item-type ';
@@ -502,10 +519,12 @@
           keyword: this.keyword2
         };
         const me = this;
-        api.getRoleOwners(formatQuery(query, true), me)
+        api.getRoleOwners(formatQuery(query, true))
           .then((res) => {
             me.searchItems = res.data;
-          })
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       manageSearchHandleCurrentChange(row) {
         this.manageSearchCurrentRow = row;
@@ -517,11 +536,13 @@
           _id: this.manageSearchCurrentRow._id
         };
         const me = this;
-        api.postDeleteOwnerRole(postData, me)
+        api.postDeleteOwnerRole(postData)
           .then((res) => {
             me.showSuccessInfo('移除成功');
             me.manageSearchClick();
-          })
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       assignUserClick() {
         this.addOwnerTitle = '添加用户';
@@ -540,10 +561,12 @@
           keyword: this.keyword3
         };
         const me = this;
-        api.getRoleSearchUserOrGroup(formatQuery(query, true), me)
+        api.getRoleSearchUserOrGroup(formatQuery(query, true))
           .then((res) => {
             me.searchOwner = res.data;
-          })
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       addOwnerConfirm() {
         const type = this.addOwnerTitle === '添加用户' ? '3' : '0';
@@ -554,14 +577,16 @@
         };
         const me = this;
 
-        api.postAssignRole(postData, me)
+        api.postAssignRole(postData)
           .then((res) => {
             me.showSuccessInfo('添加成功');
             me.addOwnerTitle = '';
             me.addOwnerDialogVisible = false;
             me.addOwner = [];
             me.manageSearchClick();
-          })
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       searchOwnerHandleCurrentChange(row) {
         this.searchOwnerCurrentRow = row;
@@ -571,6 +596,9 @@
       },
       showSuccessInfo(message) {
         this.$message.success(message);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
       }
     }
   };

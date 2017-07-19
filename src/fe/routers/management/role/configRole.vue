@@ -39,6 +39,20 @@
       </div>
 
     </fj-dialog>
+
+    <fj-dialog
+            title="提示"
+            :visible.sync="deletePermissionDialogVisible"
+            @close="deletePermissionDialogVisible=false">
+
+      <span>确定要删除这些权限吗?</span>
+
+      <div slot="footer">
+        <fj-button @click="deletePermissionDialogVisible=false">取消</fj-button>
+        <fj-button type="primary" @click="deletePermissionConfirm">确定</fj-button>
+      </div>
+
+    </fj-dialog>
   </template>
 </template>
 <script>
@@ -49,57 +63,107 @@
     data() {
       return {
         defaultRoute: '/',
-        addBtnDisabled: false,
-        editBtnDisabled: true,
-        configBtnDisabled: true,
-        manageBtnDisabled: true,
-        deleteBtnDisabled: true,
-        keyword: '',
-        tableData: [],
-        currentPage: 1,
-        total: 0,
-        pageSize: 15,
         slideDialogTitle: '添加角色',
-        slideDialogVisible: false,
+        permissionDialogVisible: false,
         configSlideDialogVisible: false,
-        formData: {},
-        currentRow: {},
+        deletePermissionDisabled: true,
+        deletePermissionDialogVisible: false,
         configRow: {},
         permissionData: [],
         permissionListData: [],
-        deletePermissionDisabled: true,
-        dialogVisible: false,
-        permissionDialogVisible: false,
-        deletePermissionDialogVisible: false,
-        manageSlideDialogVisible: false,
-        manageSearchDeleteDisabled: true,
-        searchItems: [],
-        searchItemTypeMap: {
-          0: '公司',
-          1: '部门',
-          2: '小组',
-          3: '用户'
-        },
-        keyword2: '',
-        addOwnerTitle: '',
-        keyword3: 'x',
-        addOwnerDialogVisible: false,
-        searchOwner: []
+
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.handleClickSearch();
     },
+    watch: {
+      data(val) {
+        this.configRow = val;
+        this.clearSelection();
+      }
+    },
     methods: {
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
       },
-      handleClickSearch() {
-        this.resetBtn();
-        this.resetDialog();
-        this.getRoleList();
+      handleSelectionChange(){
+        if(rows.length > 0) {
+          this.deletePermissionDisabled = false;
+          this.selectedDeletePermissions = rows;
+        }
+      },
+      addPermissionClick(){
+        const me = this;
+        api.getPermissionList({ params: formatQuery({ pageSize: 999 }) })
+                .then((res) => {
+          me.permissionListData = res.data.docs;
+        me.permissionDialogVisible = true;
+      }).catch((error) => {
+          me.showErrorInfo(error);
+      });
+      },
+      deletePermissionClick(){
+        this.deletePermissionDialogVisible = true;
+      },
+      deletePermissionConfirm(){
+        const me = this;
+        const rows = this.selectedDeletePermissions;
+        const allowed = [];
+        const denied = [];
+        for (let i = 0, len = rows.length; i < len; i++) {
+          if (rows[i].allowed === '允许') {
+            allowed.push(rows[i].path);
+          } else {
+            denied.push(rows[i].path);
+          }
+        }
+        const postData = {
+          _id: this.configRow._id,
+          allowedPermissions: allowed,
+          deniedPermissions: denied
+        };
+        api.postUpdateRoleDeletePermission(postData)
+                .then((res) => {
+          me.deletePermissionDialogVisible = false;
+        me.showSuccessInfo('删除权限成功!');
+        me.getRoleList();
+        me.getRoleDetail();
+      }).catch((error) => {
+          me.showErrorInfo(error);
+      });
+      },
+      handleSelectionChange2(){
+        this.selectedPermissionPaths = [];
+        for (let i = 0, len = rows.length; i < len; i++) {
+          this.selectedPermissionPaths.push(rows[i].path);
+        }
+      },
+      addPermission(isAllowed) {
+        const _id = this.configRow._id;
+        const message = isAllowed ? '添加允许权限成功!' : '添加拒绝权限成功!';
+        const key = isAllowed ? 'allowedPermissions' : 'deniedPermissions';
+        const me = this;
+        const postData = {
+          _id: _id
+        };
+        postData[key] =  this.selectedPermissionPaths;
+        api.postUpdateRoleAddPermission(postData)
+                .then((res) => {
+          me.showSuccessInfo(message);
+        me.getRoleList();
+        me.getRoleDetail();
+      }).catch((error) => {
+          me.showSuccessInfo(error);
+      });
+      },
+      addAllowedClick(){
+        this.addPermission(true);
+      },
+      addDeniedClick(){
+        this.addPermission(false);
       }
     }
   }
@@ -142,5 +206,18 @@
     width: 100%;
     height: 300px;
     overflow: scroll;
+  }
+
+  .config-dialog-content {
+    margin-left:16px;
+    width: 100%;
+  }
+
+  .config-description {
+    margin-top: 14px;
+    padding: 14px 15px 13px 16px;
+    border: 1px solid #CED9E5;
+    border-radius: 2px;
+    width: 100%;
   }
 </style>

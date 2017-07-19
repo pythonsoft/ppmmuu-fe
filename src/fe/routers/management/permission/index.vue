@@ -106,7 +106,7 @@
           name: me.name,
           status: me.status
         };
-        api.getPermissionList(formatQuery(searchObj, true), me)
+        api.getPermissionList(formatQuery(searchObj, true))
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -115,6 +115,9 @@
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
           })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       handleClickEnable() {
         this.dialogMessage = '确定要启用这些权限吗?';
@@ -155,10 +158,14 @@
           return;
         }
 
-        api.postEnablePermission(postData, me)
+        api.postEnablePermission(postData)
           .then((response) => {
             me.showSuccessInfo(`${message}成功!`);
             me.handleClickSearch();
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+            me.resetDialog();
           });
       },
       handleSelectionChange(rows) {
@@ -185,6 +192,9 @@
       },
       showSuccessInfo(message) {
         this.$message.success(message);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
       }
     }
   };

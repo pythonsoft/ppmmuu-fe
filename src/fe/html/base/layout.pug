@@ -3,7 +3,10 @@ html
     title #{title}
     block style
     block script
+    script(src="/base/jquery-1.12.4.min.js")
   body
-    block content
+    block header
+    div(class="content")
+      block content
     block foot
       #footer

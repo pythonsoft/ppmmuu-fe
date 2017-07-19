@@ -165,7 +165,7 @@
         } else {
           query.parent = node.id;
         }
-        apiConfig.getListGroup(formatQuery(query, true), me)
+        apiConfig.getListGroup(formatQuery(query, true))
           .then((res) => {
             const data = formatTree(res.data, 'id').node;
             if (query.parent === '') {
@@ -179,6 +179,9 @@
               me.treeData = Object.assign(me.treeData, data);
             }
           })
+          .catch((err) => {
+            me.showErrorInfo(err);
+          });
         if (node !== undefined) {
           me.currentNode = node;
           const searchObj = {
@@ -186,7 +189,7 @@
             pageSize: me.pageSize,
             groupId: node.id
           };
-          apiConfig.getListConfig(formatQuery(searchObj, true), me)
+          apiConfig.getListConfig(formatQuery(searchObj, true))
             .then((res) => {
               const data = res.data;
               me.tableData = data ? data.docs : [];
@@ -195,6 +198,9 @@
               me.pageSize = data.pageSize;
               me.handleSelectionChange();
             })
+            .catch((error) => {
+              me.showErrorInfo(error);
+            });
         }
       },
       handleClickSearch() {
@@ -204,7 +210,7 @@
           pageSize: me.pageSize,
           name: me.name
         };
-        apiConfig.getListConfig(formatQuery(searchObj, true), me)
+        apiConfig.getListConfig(formatQuery(searchObj, true))
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -213,6 +219,9 @@
             me.pageSize = data.pageSize;
             me.handleSelectionChange();
           })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       handleClickAdd() {
         this.slideDialogTitle = '增加设置项';
@@ -248,21 +257,29 @@
           postData.parent = this.currentNode.id || '';
           postData.name = this.groupName;
           message = '增加';
-          apiConfig.postAddGroup(postData, me)
+          apiConfig.postAddGroup(postData)
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetDialog();
               me.handleTreeNodeClick();
             })
+            .catch((err) => {
+              me.showErrorInfo(err);
+              me.resetDialog();
+            });
         } else if (this.action === 'deleteConfig') {
           postData.id = this.currentConfig._id;
           message = '删除';
-          apiConfig.postDeleteConfig(postData, me)
+          apiConfig.postDeleteConfig(postData)
             .then((response) => {
               me.showSuccessInfo(`${message}成功!`);
               me.resetDialog();
               me.handleTreeNodeClick(me.currentNode);
             })
+            .catch((error) => {
+              me.showErrorInfo(error);
+              me.resetDialog();
+            });
         } else {
           this.resetDialog();
         }
@@ -285,6 +302,9 @@
       },
       showSuccessInfo(message) {
         this.$message.success(message);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
       },
       handleTreeNodeCurrentChange() {},
       handleTreeNodeExpand(node) {
@@ -316,23 +336,31 @@
           postData.value = this.configFormData.value;
           postData.description = this.configFormData.description;
           message = '增加';
-          apiConfig.postAddConfig(postData, me)
+          apiConfig.postAddConfig(postData)
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetSlideDialog();
               me.handleTreeNodeClick(me.currentNode);
             })
+            .catch((err) => {
+              me.showErrorInfo(err);
+              me.cancelSlideDialog();
+            });
         } else if (me.action === 'changeConfig') {
           postData.id = this.currentConfig._id;
           postData.value = this.configFormData.value;
           postData.description = this.configFormData.description;
           message = '变更';
-          apiConfig.postUpdateConfig(postData, me)
+          apiConfig.postUpdateConfig(postData)
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetSlideDialog();
               me.handleTreeNodeClick(me.currentNode);
             })
+            .catch((err) => {
+              me.showErrorInfo(err);
+              me.cancelSlideDialog();
+            });
         }
       }
     }
