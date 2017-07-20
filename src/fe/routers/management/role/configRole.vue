@@ -21,24 +21,6 @@
         </div>
       </div>
     </fj-slide-dialog>
-    <fj-dialog
-            title="权限项"
-            :visible.sync="permissionDialogVisible"
-            @close="permissionDialogVisible=false">
-      <div class="permission-list-table">
-        <fj-table :data="permissionListData" name="table2" ref="table2" @selection-change="handleSelectionChange2">
-          <fj-table-column type="selection" width="20"></fj-table-column>
-          <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
-          <fj-table-column prop="name" label="名称" ></fj-table-column>
-        </fj-table>
-      </div>
-      <div slot="footer">
-        <fj-button @click="permissionDialogVisible=false">取消</fj-button>
-        <fj-button type="info" @click="addAllowedClick">添加允许权限</fj-button>
-        <fj-button type="danger" @click="addDeniedClick">添加拒绝权限</fj-button>
-      </div>
-
-    </fj-dialog>
 
     <fj-dialog
             title="提示"
@@ -53,18 +35,20 @@
       </div>
 
     </fj-dialog>
+    <add-permission :visible.sync="addPermissionDialogVisible" @add-permission="addPermission"></add-permission>
   </div>
 </template>
 <script>
-  const api = require('../../../api/role');
   import { formatQuery, deepClone } from '../../../common/utils';
+  import AddPermission from './searchAddPermission';
+  const api = require('../../../api/role');
 
   export default {
     name: 'configRole',
     props: {
       roleId: {
         type: String,
-        default: ""
+        default: ''
       },
       visible: {
         type: Boolean,
@@ -77,16 +61,19 @@
         configSlideDialogVisible: false,
         deletePermissionDisabled: true,
         deletePermissionDialogVisible: false,
+        addPermissionDialogVisible: false,
         permissionData: [],
         permissionListData: [],
         configRow: {}
       };
     },
+    components: {
+      'add-permission': AddPermission
+    },
     mounted() {
     },
     watch: {
       visible(val) {
-        console.log("enterrrrr")
         if (val) {
           this.getRoleDetail();
           this.configSlideDialogVisible = val;
@@ -96,12 +83,8 @@
       }
     },
     methods: {
-      getActiveRoute(path, level) {
-        const pathArr = path.split('/');
-        return pathArr[level] || '';
-      },
-      handleSelectionChange(rows){
-        if(rows.length > 0) {
+      handleSelectionChange(rows) {
+        if (rows.length > 0) {
           this.deletePermissionDisabled = false;
           this.selectedDeletePermissions = rows;
         }
@@ -109,57 +92,50 @@
       getRoleDetail() {
         const me = this;
         api.getRoleDetail(formatQuery({ _id: this.roleId }, true))
-                .then((res) => {
-          const data = deepClone(res.data);
-        const allowed = [];
-        const denied = [];
+          .then((res) => {
+            const data = deepClone(res.data);
+            const allowed = [];
+            const denied = [];
 
-        for (let i = 0, len = data.allowedPermissions.length; i < len; i++) {
-          allowed.push(data.allowedPermissions[i].path);
-        }
+            for (let i = 0, len = data.allowedPermissions.length; i < len; i++) {
+              allowed.push(data.allowedPermissions[i].path);
+            }
 
-        for (let i = 0, len = data.deniedPermissions.length; i < len; i++) {
-          denied.push(data.deniedPermissions[i].path);
-        }
+            for (let i = 0, len = data.deniedPermissions.length; i < len; i++) {
+              denied.push(data.deniedPermissions[i].path);
+            }
 
-        data.allowedPermissions = allowed;
-        data.deniedPermissions = denied;
-        me.configRow = data;
+            data.allowedPermissions = allowed;
+            data.deniedPermissions = denied;
+            me.configRow = data;
 
-        me.roleDetail = res.data;
-        const allowedPermissions = me.roleDetail.allowedPermissions;
-        const deniedPermissions = me.roleDetail.deniedPermissions;
-        for (let i = 0, len = allowedPermissions.length; i < len; i++) {
-          allowedPermissions[i].allowed = '允许';
-        }
+            me.roleDetail = res.data;
+            const allowedPermissions = me.roleDetail.allowedPermissions;
+            const deniedPermissions = me.roleDetail.deniedPermissions;
+            for (let i = 0, len = allowedPermissions.length; i < len; i++) {
+              allowedPermissions[i].allowed = '允许';
+            }
 
-        for (let i = 0, len = deniedPermissions.length; i < len; i++) {
-          deniedPermissions[i].allowed = '拒绝';
-        }
+            for (let i = 0, len = deniedPermissions.length; i < len; i++) {
+              deniedPermissions[i].allowed = '拒绝';
+            }
 
-        me.permissionData = allowedPermissions.concat(deniedPermissions);
+            me.permissionData = allowedPermissions.concat(deniedPermissions);
 
-        me.configSlideDialogVisible = true;
-        me.deletePermissionDisabled = true;
-      })
-      .catch((error) => {
-          me.showErrorInfo(error);
-      });
+            me.configSlideDialogVisible = true;
+            me.deletePermissionDisabled = true;
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
-      addPermissionClick(){
-        const me = this;
-        api.getPermissionList({ params: formatQuery({ pageSize: 999 }) })
-                .then((res) => {
-          me.permissionListData = res.data.docs;
-        me.permissionDialogVisible = true;
-      }).catch((error) => {
-          me.showErrorInfo(error);
-      });
+      addPermissionClick() {
+        this.addPermissionDialogVisible = true;
       },
-      deletePermissionClick(){
+      deletePermissionClick() {
         this.deletePermissionDialogVisible = true;
       },
-      deletePermissionConfirm(){
+      deletePermissionConfirm() {
         const me = this;
         const rows = this.selectedDeletePermissions;
         const allowed = [];
@@ -177,21 +153,19 @@
           deniedPermissions: denied
         };
         api.postUpdateRoleDeletePermission(postData)
-                .then((res) => {
-          me.deletePermissionDialogVisible = false;
-        me.showSuccessInfo('删除权限成功!');
-        me.getRoleDetail();
-      }).catch((error) => {
-          me.showErrorInfo(error);
-      });
+          .then((res) => {
+            me.deletePermissionDialogVisible = false;
+            me.showSuccessInfo('删除权限成功!');
+            me.getRoleDetail();
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
-      handleSelectionChange2(rows){
-        this.selectedPermissionPaths = [];
-        for (let i = 0, len = rows.length; i < len; i++) {
-          this.selectedPermissionPaths.push(rows[i].path);
+      addPermission(isAllowed, selectedPermission) {
+        const selectedPermissionPaths = [];
+        for (let i = 0, len = selectedPermission.length; i < len; i++) {
+          selectedPermissionPaths.push(selectedPermission[i].path);
         }
-      },
-      addPermission(isAllowed) {
         const _id = this.configRow._id;
         const message = isAllowed ? '添加允许权限成功!' : '添加拒绝权限成功!';
         const key = isAllowed ? 'allowedPermissions' : 'deniedPermissions';
@@ -199,23 +173,17 @@
         const postData = {
           _id: _id
         };
-        postData[key] =  this.selectedPermissionPaths;
+        postData[key] = selectedPermissionPaths;
         api.postUpdateRoleAddPermission(postData)
-                .then((res) => {
-          me.showSuccessInfo(message);
-        me.getRoleDetail();
-      }).catch((error) => {
-          me.showSuccessInfo(error);
-      });
+          .then((res) => {
+            me.showSuccessInfo(message);
+            me.getRoleDetail();
+          }).catch((error) => {
+            me.showSuccessInfo(error);
+          });
       },
-      close(){
+      close() {
         this.$emit('update:visible', false);
-      },
-      addAllowedClick(){
-        this.addPermission(true);
-      },
-      addDeniedClick(){
-        this.addPermission(false);
       },
       showSuccessInfo(message) {
         this.$message.success(message);
@@ -224,7 +192,7 @@
         this.$message.error(message);
       }
     }
-  }
+  };
 </script>
 <style>
   .permission-operation {
@@ -238,7 +206,9 @@
 
   .permissions {
     width: 100%;
-    max-height: 5000px;
+    max-height: 500px;
+    border: 1px solid #CED9E5;
+    border-radius: 2px;
     overflow: scroll;
   }
 
@@ -258,12 +228,6 @@
 
   .permission-disable {
     background: #FF3366;
-  }
-
-  .permission-list-table {
-    width: 100%;
-    height: 300px;
-    overflow: scroll;
   }
 
   .config-dialog-content {

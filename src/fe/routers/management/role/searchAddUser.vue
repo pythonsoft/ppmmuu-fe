@@ -1,0 +1,107 @@
+<template>
+  <fj-dialog
+           title="添加用户"
+          :visible.sync="addOwnerDialogVisible"
+          @close="close">
+
+    <div class="manage-search">
+      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword3" icon="icon-sousuo" on-icon-click="searchOwnerClick"></fj-input>
+    </div>
+    <div v-if="searchOwner.length" class="manage-search-content">
+      <fj-table :data="searchOwner" name="table4" ref="table4" @current-change="searchOwnerHandleCurrentChange" :showThead=false highlight-current-row>
+        <fj-table-column prop="_id">
+          <template scope="props">
+            <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
+            <span>{{props.row.name}}</span>
+          </template>
+        </fj-table-column>
+      </fj-table>
+    </div>
+    <div slot="footer">
+      <fj-button @click="close">取消</fj-button>
+      <fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
+    </div>
+  </fj-dialog>
+</template>
+<script>
+  import { formatQuery } from '../../../common/utils';
+  const api = require('../../../api/role');
+
+  export default {
+    name: 'addUser',
+    props: {
+      visible: {
+        type: Boolean,
+        default: false
+      },
+      query: {
+        type: Object,
+        default() { return {}; }
+      },
+      searchOwner: {
+        type: Array,
+        default() { return []; }
+      }
+    },
+    data() {
+      return {
+        addOwnerDialogVisible: false,
+        keyword3: ''
+      };
+    },
+    mounted() {
+    },
+    watch: {
+      visible(val) {
+        if (val) {
+          this.searchOwnerClick();
+          this.addOwnerDialogVisible = val;
+        } else {
+          this.addOwnerDialogVisible = val;
+        }
+      }
+    },
+    methods: {
+      close() {
+        this.$emit('update:visible', false);
+      },
+      searchOwnerClick() {
+        const query = {
+          keyword: this.keyword3
+        };
+        this.$emit('search-user-api', query);
+      },
+      searchOwnerHandleCurrentChange(row) {
+        this.searchOwnerCurrentRow = row;
+      },
+      addOwnerConfirm() {
+        const postData = {
+          type: '3',
+          _id: this.searchOwnerCurrentRow._id
+        };
+        this.$emit('add-owner', postData);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
+      }
+    }
+  };
+</script>
+
+<style>
+  .manage-search {
+    margin-top: 14px;
+    margin-bottom: 16px;
+    height: 30px;
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .manage-search-content {
+    max-height: 1080px;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #CED9E5;
+    border-radius: 4px;
+  }
+</style>

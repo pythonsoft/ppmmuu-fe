@@ -58,36 +58,6 @@
       </div>
 
     </fj-slide-dialog>
-    <fj-slide-dialog
-            title="管理账户及组织"
-            :visible.sync="manageSlideDialogVisible">
-       <div class="config-dialog-content">
-         <div class="manage-operation">
-           <fj-button type="info" size="mini" @click="assignUserClick">添加用户</fj-button>
-           <fj-button type="info" size="mini" @click="assignGroupClick">添加组织</fj-button>
-           <fj-button type="danger" size="mini" @click="manageSearchDeleteClick" v-bind:disabled="manageSearchDeleteDisabled">移除</fj-button>
-         </div>
-         <div class="manage-search">
-            <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="icon-sousuo" @on-icon-click="manageSearchClick"></fj-input>
-         </div>
-         <div v-if="searchItems.length" class="manage-search-content">
-           <fj-table :data="searchItems" name="table3" ref="table3" @current-change="manageSearchHandleCurrentChange" :showThead=false highlight-current-row>
-             <fj-table-column prop="_id">
-               <template scope="props">
-                 <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
-                 <span>{{props.row.name}}</span>
-                 <span :class="getSearchItemClass(props.row)">{{searchItemTypeMap[props.row.type]}}</span>
-               </template>
-             </fj-table-column>
-           </fj-table>
-           <li class="manage-search-li manage-dark-li">
-             <div class="manage-search-content-bottom">更多内容请搜索</div>
-           </li>
-         </div>
-       </div>
-
-
-    </fj-slide-dialog>
 
     <fj-dialog
             title="提示"
@@ -103,43 +73,23 @@
 
     </fj-dialog>
 
-    <fj-dialog
-            :title="addOwnerTitle"
-            :visible.sync="addOwnerDialogVisible"
-            @close="addOwnerDialogVisible=false">
-
-      <div class="manage-search">
-        <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword3" icon="icon-sousuo" on-icon-click="searchOwnerClick"></fj-input>
-      </div>
-      <div v-if="searchOwner.length" class="manage-search-content">
-        <fj-table :data="searchOwner" name="table4" ref="table4" @current-change="searchOwnerHandleCurrentChange" :showThead=false highlight-current-row>
-          <fj-table-column prop="_id">
-            <template scope="props">
-              <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
-              <span>{{props.row.name}}</span>
-            </template>
-          </fj-table-column>
-        </fj-table>
-      </div>
-      <div slot="footer">
-        <fj-button @click="addOwnerDialogVisible=false">取消</fj-button>
-        <fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
-      </div>
-    </fj-dialog>
     <config-role :roleId="roleId" :visible.sync="configRoleDialogVisible" ></config-role>
+    <manage-role :manageId="manageId" :visible.sync="manageRoleDialogVisible" ></manage-role>
   </four-row-layout-right-content>
 </template>
 <script>
   import './role.css';
   import { formatQuery, deepClone } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
-  import ConfigRole  from './configRole';
+  import ConfigRole from './configRole';
+  import ManageRole from './manageRole';
 
   const api = require('../../../api/role');
 
   export default {
     components: {
       'config-role': ConfigRole,
+      'manage-role': ManageRole,
       'four-row-layout-right-content': FourRowLayoutRightContent
     },
     data() {
@@ -157,11 +107,12 @@
         pageSize: 15,
         slideDialogTitle: '添加角色',
         slideDialogVisible: false,
-        permissionDialogVisible: false,
         formData: {},
         currentRow: {},
-        roleId: "",
+        roleId: '',
+        manageId: '',
         configRoleDialogVisible: false,
+        manageRoleDialogVisible: false,
         rules: {
           _id: [
             { required: true, message: '请输入标识' }
@@ -177,21 +128,7 @@
               } }
           ]
         },
-        dialogVisible: false,
-        manageSlideDialogVisible: false,
-        manageSearchDeleteDisabled: true,
-        searchItems: [],
-        searchItemTypeMap: {
-          0: '公司',
-          1: '部门',
-          2: '小组',
-          3: '用户'
-        },
-        keyword2: '',
-        addOwnerTitle: '',
-        keyword3: 'x',
-        addOwnerDialogVisible: false,
-        searchOwner: []
+        dialogVisible: false
       };
     },
     created() {
@@ -236,9 +173,8 @@
       resetDialog() {
         this.dialogVisible = false;
         this.slideDialogVisible = false;
-        this.configSlideDialogVisible = false;
-        this.permissionDialogVisible = false;
-        this.manageSlideDialogVisible = false;
+        this.configRoleDialogVisible = false;
+        this.manageRoleDialogVisible = false;
       },
       resetBtn() {
         this.editBtnDisabled = true;
@@ -274,7 +210,6 @@
         this.resetDialog();
         this.configRoleDialogVisible = true;
         this.roleId = this.currentRow._id;
-        console.log("fafsafsafasf");
       },
       deleteBtnClick() {
         this.dialogVisible = true;
@@ -324,102 +259,10 @@
         this.slideDialogVisible = false;
         this.enableBtn();
       },
-      getSearchItemClass(item) {
-        let rs = 'search-item-type ';
-        if (item.type === '0') {
-          rs += 'search-item-type-user';
-        } else if (item.type === '1') {
-          rs += 'search-item-type-company';
-        } else if (item.type === '2') {
-          rs += 'search-item-type-department';
-        } else if (item.type === '3') {
-          rs += 'search-item-type-team';
-        }
-        return rs;
-      },
       manageBtnClick() {
         this.resetDialog();
-        this.manageSlideDialogVisible = true;
-        this.manageRow = this.currentRow;
-        this.manageSearchClick();
-      },
-      manageSearchClick() {
-        const query = {
-          _id: this.manageRow._id,
-          keyword: this.keyword2
-        };
-        const me = this;
-        api.getRoleOwners(formatQuery(query, true))
-          .then((res) => {
-            me.searchItems = res.data;
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
-      },
-      manageSearchHandleCurrentChange(row) {
-        this.manageSearchCurrentRow = row;
-        this.manageSearchDeleteDisabled = false;
-      },
-      manageSearchDeleteClick() {
-        const postData = {
-          roles: this.manageRow._id,
-          _id: this.manageSearchCurrentRow._id
-        };
-        const me = this;
-        api.postDeleteOwnerRole(postData)
-          .then((res) => {
-            me.showSuccessInfo('移除成功');
-            me.manageSearchClick();
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
-      },
-      assignUserClick() {
-        this.addOwnerTitle = '添加用户';
-        this.addOwnerDialogVisible = true;
-        this.searchOwnerClick();
-      },
-      assignGroupClick() {
-        this.addOwnerTitle = '添加组织';
-        this.addOwnerDialogVisible = true;
-        this.searchOwnerClick();
-      },
-      searchOwnerClick() {
-        const type = this.addOwnerTitle === '添加用户' ? '0' : '1';
-        const query = {
-          type: type,
-          keyword: this.keyword3
-        };
-        const me = this;
-        api.getRoleSearchUserOrGroup(formatQuery(query, true))
-          .then((res) => {
-            me.searchOwner = res.data;
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
-      },
-      addOwnerConfirm() {
-        const type = this.addOwnerTitle === '添加用户' ? '3' : '0';
-        const postData = {
-          type: type,
-          _id: this.searchOwnerCurrentRow._id,
-          roles: this.manageRow._id
-        };
-        const me = this;
-
-        api.postAssignRole(postData)
-          .then((res) => {
-            me.showSuccessInfo('添加成功');
-            me.addOwnerTitle = '';
-            me.addOwnerDialogVisible = false;
-            me.addOwner = [];
-            me.manageSearchClick();
-          }).catch((error) => {
-            me.showErrorInfo(error);
-          });
-      },
-      searchOwnerHandleCurrentChange(row) {
-        this.searchOwnerCurrentRow = row;
+        this.manageRoleDialogVisible = true;
+        this.manageId = this.currentRow._id;
       },
       handleCurrentPageChange(val) {
         this.handleClickSearch();
