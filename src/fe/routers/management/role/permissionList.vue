@@ -13,6 +13,7 @@
         <fj-table-column prop="action" label="行为"></fj-table-column>
       </fj-table>
     </div>
+    <add-permission :visible.sync="addPermissionDialogVisible" @add-permission="addPermission"></add-permission>
 
     <fj-dialog
             title="提示"
@@ -31,6 +32,7 @@
 </template>
 <script>
   import { formatQuery } from '../../../common/utils';
+  import AddPermission from './searchAddPermission';
   const api = require('../../../api/role');
 
   export default {
@@ -46,8 +48,12 @@
         addOwnerDialogVisible: false,
         deletePermissionDialogVisible: false,
         deletePermissionDisabled: true,
+        addPermissionDialogVisible: false,
         keyword: ''
       };
+    },
+    components: {
+      "add-permission": AddPermission
     },
     mounted() {
     },
@@ -66,11 +72,11 @@
       addPermissionClick() {
         this.addPermissionDialogVisible = true;
       },
+      addPermission(isAllowed, rows){
+        this.$emit('add-permission',isAllowed, rows);
+      },
       deletePermissionClick() {
         this.deletePermissionDialogVisible = true;
-      },
-      addPermissionClick(){
-        this.$emit("add-permission");
       },
       showErrorInfo(message) {
         this.$message.error(message);

@@ -7,9 +7,8 @@
         <div>{{configRow.name}}</div>
         <div v-if="configRow.description" class="config-description">{{configRow.description}}</div>
       </div>
-      <permission-list :permissionData="permissionData" @add-permission="addPermissionDialogVisible=true" @delete-permission="deletePermissionConfirm"></permission-list>
+      <permission-list :permissionData="permissionData" @add-permission="addPermission" @delete-permission="deletePermissionConfirm"></permission-list>
     </fj-slide-dialog>
-    <add-permission :visible.sync="addPermissionDialogVisible" @add-permission="addPermission"></add-permission>
   </div>
 </template>
 <script>
