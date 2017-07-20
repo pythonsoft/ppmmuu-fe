@@ -41,7 +41,7 @@
       </div>
 
     </fj-dialog>
-    <add-user :visible.sync="addUserDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick"></add-user>
+    <add-user :visible.sync="addUserDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick" title="添加用户"></add-user>
     <add-group :visible.sync="addGroupDialogVisible"  @add-owner="addOwner"></add-group>
   </div>
 </template>
@@ -158,7 +158,11 @@
         }
         return rs;
       },
-      addOwner(postData) {
+      addOwner(row) {
+        const postData = {
+          type: '3',
+          _id: row._id
+        };
         const me = this;
         postData.roles = this.manageId;
         api.postAssignRole(postData)

@@ -1,14 +1,14 @@
 <template>
   <fj-dialog
-           title="添加用户"
+          :title="title"
           :visible.sync="addOwnerDialogVisible"
           @close="close">
 
     <div class="manage-search">
-      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword3" icon="icon-sousuo" on-icon-click="searchOwnerClick"></fj-input>
+      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword" icon="搜索" @on-icon-click="searchOwnerClick" @keydown.native.enter.prevent="searchOwnerClick"></fj-input>
     </div>
     <div v-if="searchOwner.length" class="manage-search-content">
-      <fj-table :data="searchOwner" name="table4" ref="table4" @current-change="searchOwnerHandleCurrentChange" :showThead=false highlight-current-row>
+      <fj-table :data="searchOwner" name="table" ref="table" @current-change="searchOwnerHandleCurrentChange" :showThead=false highlight-current-row>
         <fj-table-column prop="_id">
           <template scope="props">
             <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
@@ -34,19 +34,19 @@
         type: Boolean,
         default: false
       },
-      query: {
-        type: Object,
-        default() { return {}; }
-      },
       searchOwner: {
         type: Array,
         default() { return []; }
+      },
+      title: {
+        type: String,
+        default: ""
       }
     },
     data() {
       return {
         addOwnerDialogVisible: false,
-        keyword3: ''
+        keyword: ''
       };
     },
     mounted() {
@@ -67,7 +67,7 @@
       },
       searchOwnerClick() {
         const query = {
-          keyword: this.keyword3
+          keyword: this.keyword
         };
         this.$emit('search-user-api', query);
       },
@@ -75,11 +75,7 @@
         this.searchOwnerCurrentRow = row;
       },
       addOwnerConfirm() {
-        const postData = {
-          type: '3',
-          _id: this.searchOwnerCurrentRow._id
-        };
-        this.$emit('add-owner', postData);
+        this.$emit('add-owner', this.searchOwnerCurrentRow);
       },
       showErrorInfo(message) {
         this.$message.error(message);
