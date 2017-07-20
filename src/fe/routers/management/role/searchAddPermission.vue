@@ -4,7 +4,7 @@
           :visible.sync="permissionDialogVisible"
           @close="close">
     <div class="manage-search">
-      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword" icon="icon-sousuo" on-icon-click="searchPermissionClick"></fj-input>
+      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword" icon="搜索" @on-icon-click="searchPermissionClick" @keydown.native.enter.prevent="searchPermissionClick"></fj-input>
     </div>
     <div class="permission-list-table">
       <fj-table :data="permissionListData" name="table2" ref="table2" @selection-change="handleSelectionChange">
