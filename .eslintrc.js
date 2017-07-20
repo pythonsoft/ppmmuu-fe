@@ -40,7 +40,6 @@ module.exports = {
     "no-lonely-if": 0,
     "no-underscore-dangle": 0,
     "func-names": 0,
-    "max-len": ["error", 100, { "ignoreComments": true, "ignoreUrls": true, "ignoreStrings": true }],
-    "indent": 2
+    "max-len": ["error", 100, { "ignoreComments": true, "ignoreUrls": true, "ignoreStrings": true }]
   }
 };
