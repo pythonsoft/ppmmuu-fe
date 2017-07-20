@@ -13,7 +13,6 @@
 </template>
 <script>
   import { formatQuery, deepClone } from '../../../common/utils';
-  import AddPermission from './searchAddPermission';
   import PermissionList from './permissionList';
   const api = require('../../../api/role');
 
@@ -38,7 +37,6 @@
       };
     },
     components: {
-      'add-permission': AddPermission,
       'permission-list': PermissionList
     },
     mounted() {

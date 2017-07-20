@@ -161,6 +161,7 @@
         api.postEnablePermission(postData)
           .then((response) => {
             me.showSuccessInfo(`${message}成功!`);
+            me.resetDialog();
             me.handleClickSearch();
           })
           .catch((error) => {
