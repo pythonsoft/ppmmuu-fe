@@ -10,7 +10,7 @@
           <fj-button type="danger" size="mini" @click="manageSearchDeleteClick" v-bind:disabled="manageSearchDeleteDisabled">移除</fj-button>
         </div>
         <div class="manage-search">
-          <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="icon-sousuo" @on-icon-click="manageSearchClick"></fj-input>
+          <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="搜索" @on-icon-click="manageSearchClick" @keydown.native.enter.prevent="manageSearchClick"></fj-input>
         </div>
         <div v-if="searchItems.length" class="manage-search-content">
           <fj-table :data="searchItems" name="table3" ref="table3" @current-change="manageSearchHandleCurrentChange" :showThead=false highlight-current-row>
@@ -41,8 +41,8 @@
       </div>
 
     </fj-dialog>
-    <add-user :visible.sync="addUserDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick"></add-user>
-    <add-group :visible.sync="addGroupDialogVisible"  @add-owner="addOwner"></add-group>
+    <add-user :visible.sync="addUserDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick" title="添加用户"></add-user>
+    <add-group :visible.sync="addGroupDialogVisible"  @add-owner="addOwner" title="添加组织"></add-group>
   </div>
 </template>
 
@@ -158,7 +158,13 @@
         }
         return rs;
       },
-      addOwner(postData) {
+      addOwner(row) {
+        console.log("row===>", row);
+        const type = row.type || '3';
+        const postData = {
+          type: type,
+          _id: row._id
+        };
         const me = this;
         postData.roles = this.manageId;
         api.postAssignRole(postData)

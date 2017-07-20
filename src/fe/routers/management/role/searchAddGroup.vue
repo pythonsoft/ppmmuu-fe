@@ -1,6 +1,6 @@
 <template>
   <fj-dialog
-          title="添加组织"
+          :title="title"
           :visible.sync="addOwnerDialogVisible"
           @close="close">
     <div v-if="treeTopIdArr.length" class="add-group-tree">
@@ -32,6 +32,10 @@
       visible: {
         type: Boolean,
         default: false
+      },
+      title: {
+        type: String,
+        default: ""
       }
     },
     data() {
@@ -64,11 +68,7 @@
           this.showErrorInfo('没有选中的组织');
           return false;
         }
-        const postData = {
-          type: this.currentNode.type,
-          _id: this.currentNode._id
-        };
-        this.$emit('addOwner', postData);
+        this.$emit('add-owner', this.currentNode);
         return true;
       },
       handleTreeNodeClick(node) {
