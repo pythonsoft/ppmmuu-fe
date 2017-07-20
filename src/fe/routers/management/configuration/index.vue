@@ -110,8 +110,8 @@
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
   import TreeNodeContent from './treeNodeContent';
 
-  const api = require('../../../../../build/api/role');
-  const apiConfig = require('../../../../../build/api/configuration');
+  const api = require('../../../api/role');
+  const apiConfig = require('../../../api/configuration');
 
   export default {
     components: {
