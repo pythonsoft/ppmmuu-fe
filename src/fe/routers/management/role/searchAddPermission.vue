@@ -108,4 +108,22 @@
     width: 100%;
     font-size: 12px;
   }
+
+  .permission-status-span {
+    font-size: 12px;
+    color: #FFFFFF;
+    width: 48px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 2px;
+    text-align:center;
+    display: block;
+  }
+  .permission-enable {
+    background: #2EC4B6;
+  }
+
+  .permission-disable {
+    background: #FF3366;
+  }
 </style>

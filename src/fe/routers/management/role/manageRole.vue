@@ -159,7 +159,6 @@
         return rs;
       },
       addOwner(row) {
-        console.log("row===>", row);
         const type = row.type || '3';
         const postData = {
           type: type,
