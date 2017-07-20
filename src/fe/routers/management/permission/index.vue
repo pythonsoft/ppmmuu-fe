@@ -57,7 +57,7 @@
   import { formatQuery } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
 
-  const api = require('../../../../../build/api/role');
+  const api = require('../../../api/role');
 
   export default {
     components: {
