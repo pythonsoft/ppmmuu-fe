@@ -100,4 +100,22 @@
     border: 1px solid #CED9E5;
     border-radius: 4px;
   }
+
+  .search-item-icon {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin-right: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 20px;
+    height: 20px;
+  }
+
+  .search-item-icon-img {
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 20px;
+  }
 </style>
