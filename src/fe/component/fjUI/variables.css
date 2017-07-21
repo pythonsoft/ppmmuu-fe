@@ -1,6 +1,7 @@
 :root {
   --z-index-select-dropdown: 1000;
   --z-index-message: 2000;
+  --z-index-message: 1500;
 
   --base-color: #2A3E52;
   --danger-text-color: #FF3366;
@@ -77,6 +78,7 @@
   --select-dropdown-box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
 
   --select-option-height: 32px;
+  --select-option-line-height: 20px;
   --select-option-hover-background-color: #F2F6FA;
   --select-option-selected-background-color: #38B1EB;
 

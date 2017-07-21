@@ -44,3 +44,9 @@
 .fj-tag-close {
   cursor: pointer;
 }
+.fj-clickable-tag {
+  cursor: pointer;
+}
+.fj-clickable-tag:hover {
+  color: var(--tag-primary-hover-color);
+}

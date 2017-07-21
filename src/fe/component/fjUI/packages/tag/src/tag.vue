@@ -1,8 +1,11 @@
 <template>
-  <span :class="[
+  <span
+    @click="handleClick"
+    :class="[
     'fj-tag',
     type ? 'fj-tag-' + type : '',
-    closable ? 'fj-closable-tag-' + type : ''
+    closable ? 'fj-closable-tag-' + type : '',
+    clickable ? 'fj-clickable-tag' : ''
   ]">
     <slot></slot>
     <i v-if="closable" @click="handleClose" class="fj-tag-close">X</i>
@@ -13,11 +16,17 @@
     name: 'FjTag',
     props: {
       type: String,
-      closable: Boolean
+      closable: Boolean,
+      clickable: Boolean
     },
     methods: {
       handleClose(e) {
         this.$emit('close', e);
+      },
+      handleClick(e) {
+        if (this.clickable) {
+          this.$emit('click', e);
+        }
       }
     }
   };
