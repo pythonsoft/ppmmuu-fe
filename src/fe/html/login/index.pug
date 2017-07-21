@@ -18,7 +18,6 @@ block content
       const usernameJQ = $("#username");
       const passwordJQ = $("#password");
 
-
      loginBtnJQ.click(function(e){
         e.preventDefault();
         $.post('http://localhost:8080/user/login', { username: usernameJQ.val(), password:passwordJQ.val()}, function(rs) {

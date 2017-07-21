@@ -3,7 +3,16 @@ html
     title #{title}
     block style
     block script
-    script(src="/base/jquery-1.12.4.min.js")
+    script(src="/base/jquery-3.2.1.min.js")
+    script.
+      $(function(){
+        $.ajaxSetup({
+            crossDomain: true,
+            xhrFields: {
+                withCredentials: true
+            }
+        });
+      })
   body
     block header
     div(class="content")

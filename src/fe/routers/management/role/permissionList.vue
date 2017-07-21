@@ -2,12 +2,12 @@
   <div class="config-dialog-content">
     <div class="permission-operation">
       <span class="permission-title">权限项</span>
-      <fj-button type="info" size="mini" @click="addPermissionClick">增加</fj-button>
-      <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="deletePermissionDisabled">删除</fj-button>
+      <fj-button type="info" size="mini" @click="addPermissionClick"  v-if="!readonly">增加</fj-button>
+      <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="deletePermissionDisabled"  v-if="!readonly">删除</fj-button>
     </div>
     <div class="permissions">
       <fj-table :data="permissionData" name="table" ref="table" @selection-change="handleSelectionChange">
-        <fj-table-column type="selection" width="20"></fj-table-column>
+        <fj-table-column type="selection" width="20" v-if="!readonly"></fj-table-column>
         <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
         <fj-table-column prop="action" label="行为"></fj-table-column>
@@ -38,6 +38,10 @@
   export default {
     name: 'permissionList',
     props: {
+      readonly: {
+        type: Boolean,
+        default: false
+      },
       permissionData: {
         type: Array,
         default() { return []; }
@@ -92,11 +96,11 @@
   }
   .permission-operation {
     margin-top: 20px;
-    margin-bottom: 15px;
   }
 
   .permission-title {
     margin-right: 20px;
+    color: #4C637B;
   }
 
   .permissions {
@@ -105,6 +109,7 @@
     border: 1px solid #CED9E5;
     border-radius: 2px;
     overflow: scroll;
+    margin-top: 20px;
   }
 
   .permission-status-span {
