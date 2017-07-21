@@ -2,10 +2,10 @@
   <div>
     <div class="fj-tabs-header">
       <div
-        v-for="pane in panes"
+        v-for="(pane, index) in panes"
         class="fj-tabs-item"
         :class="{ 'active': pane.active, 'disable': pane.disabled }"
-        @click="handleTabClick(pane)">
+        @click="handleTabClick(pane, index)">
         {{ pane.label }}
       </div>
     </div>
@@ -41,10 +41,10 @@
           panes.splice(index, 1);
         }
       },
-      handleTabClick(tab) {
+      handleTabClick(tab, index) {
         if (tab.disabled) return;
         this.$emit('input', tab.name);
-        this.$emit('tab-click', tab);
+        this.$emit('tab-click', tab, index);
       }
     }
   };

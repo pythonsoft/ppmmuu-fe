@@ -32,6 +32,7 @@
       },
       labelStyle() {
         const style = {};
+        if (this.form.labelPosition === 'top') return style;
         const labelWidth = this.labelWidth || this.form.labelWidth;
         if (labelWidth) style.width = labelWidth;
         return style;

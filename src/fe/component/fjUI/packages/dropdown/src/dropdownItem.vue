@@ -1,5 +1,5 @@
 <template>
-  <li class="fj-dropdown-item" @click="handleClick"><slot></slot></li>
+  <li class="fj-dropdown-item" @click.stop="handleClick"><slot></slot></li>
 </template>
 <script>
   export default {

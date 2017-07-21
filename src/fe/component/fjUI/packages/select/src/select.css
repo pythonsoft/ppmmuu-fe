@@ -27,6 +27,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   height: var(--select-option-height);
+  line-height: var(--select-option-line-height);
   cursor: pointer;
 }
 .fj-select-dropdown-item.hover {

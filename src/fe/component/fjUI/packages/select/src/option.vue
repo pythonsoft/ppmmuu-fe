@@ -28,7 +28,7 @@
       },
       itemSelected() {
         const value = this.parent.value || '';
-        return value.indexOf(this.value) > -1;
+        return value === this.value;
       },
       itemHovering() {
         return this.parent.options[this.parent.hoverIndex] === this;
