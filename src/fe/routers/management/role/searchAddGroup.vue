@@ -35,7 +35,7 @@
       },
       title: {
         type: String,
-        default: ""
+        default: ''
       }
     },
     data() {

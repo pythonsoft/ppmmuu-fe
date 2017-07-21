@@ -1,4 +1,20 @@
+import axios from 'axios';
 const utils = {};
+
+axios.defaults.withCredentials = true
+
+axios.interceptors.response.use(function (response) {
+  // Do something with response data
+  const res = response.data;
+  const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004']
+  if(loginStatusCodeArr.indexOf(res.status) !== -1){
+    window.location.href= '/login';
+  }
+  return response;
+}, function (error) {
+  // Do something with response error
+  return Promise.reject(error);
+});
 
 utils.formatQuery = function formatQuery(obj, isGet = false) {
   const rs = Object.assign(obj);

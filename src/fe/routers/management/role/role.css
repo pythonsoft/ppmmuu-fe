@@ -1,142 +1,142 @@
 .role-search-item{
-    float: left;
-    margin-left: 10px;
+  float: left;
+  margin-left: 10px;
 }
 
 .role-btn-mini-margin {
-    margin-left: 6px;
-    font-size: 12px;
+  margin-left: 6px;
+  font-size: 12px;
 }
 
 .role-btn-margin {
-    margin-left: 18px;
-    font-size: 12px;
+  margin-left: 18px;
+  font-size: 12px;
 }
 
 .config-dialog-content {
-    margin-left:16px;
-    width: 100%;
+  margin-left:16px;
+  width: 100%;
 }
 
 .config-description {
-    margin-top: 14px;
-    padding: 14px 15px 13px 16px;
-    border: 1px solid #CED9E5;
-    border-radius: 2px;
-    width: 100%;
+  margin-top: 14px;
+  padding: 14px 15px 13px 16px;
+  border: 1px solid #CED9E5;
+  border-radius: 2px;
+  width: 100%;
 }
 
 .permission-operation {
-    margin-top: 20px;
-    margin-bottom: 15px;
+  margin-top: 20px;
+  margin-bottom: 15px;
 }
 
 .permission-title {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .permissions {
-    width: 100%;
-    max-height: 5000px;
-    overflow: scroll;
+  width: 100%;
+  max-height: 5000px;
+  overflow: scroll;
 }
 
 .permission-status-span {
-    font-size: 12px;
-    color: #FFFFFF;
-    width: 48px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 2px;
-    text-align:center;
-    display: block;
+  font-size: 12px;
+  color: #FFFFFF;
+  width: 48px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 2px;
+  text-align:center;
+  display: block;
 }
 .permission-enable {
-    background: #2EC4B6;
+  background: #2EC4B6;
 }
 
 .permission-disable {
-    background: #FF3366;
+  background: #FF3366;
 }
 
 .permission-list-table {
-    width: 100%;
-    height: 300px;
-    overflow: scroll;
+  width: 100%;
+  height: 300px;
+  overflow: scroll;
 }
 
 .manage-search {
-    margin-top: 14px;
-    margin-bottom: 16px;
-    height: 30px;
-    width: 100%;
-    font-size: 12px;
+  margin-top: 14px;
+  margin-bottom: 16px;
+  height: 30px;
+  width: 100%;
+  font-size: 12px;
 }
 
 .manage-search-content {
-    max-height: 1080px;
-    width: 100%;
-    background: #FFFFFF;
-    border: 1px solid #CED9E5;
-    border-radius: 4px;
+  max-height: 1080px;
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #CED9E5;
+  border-radius: 4px;
 }
 
 .manage-search-li {
-    height: 40px;
-    padding: 10px 0 12px 20px;
-    border-bottom: 1px solid #CED9E5;
+  height: 40px;
+  padding: 10px 0 12px 20px;
+  border-bottom: 1px solid #CED9E5;
 }
 
 .manage-dark-li {
-    background: #F8FAFB;
+  background: #F8FAFB;
 }
 
 .search-item-icon {
-    position: relative;
-    display: inline-block;
-    float: left;
-    margin-right: 10px;
-    border-radius: 50%;
-    overflow: hidden;
-    width: 20px;
-    height: 20px;
+  position: relative;
+  display: inline-block;
+  float: left;
+  margin-right: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 20px;
+  height: 20px;
 }
 
 .search-item-icon-img {
-    position: absolute;
-    top: 0;
-    width: 20px;
-    height: 20px;
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
 }
 
 .search-item-type {
-    margin-left: 5px;
-    color: #FFFFFF;
-    line-height: 1;
-    padding: 2px;
-    margin-left: 8px;
-    border-radius: 2px;
-    display: inline-block;
+  margin-left: 5px;
+  color: #FFFFFF;
+  line-height: 1;
+  padding: 2px;
+  margin-left: 8px;
+  border-radius: 2px;
+  display: inline-block;
 }
 
 .search-item-type-user {
-    background: #F4AC32;
+  background: #F4AC32;
 }
 
 .search-item-type-company {
-    background:  #38B1EB;
+  background:  #38B1EB;
 }
 
 .search-item-type-department {
-    background: #2EC4B6;
+  background: #2EC4B6;
 }
 
 .search-item-type-team {
-    background: #9353DE;
+  background: #9353DE;
 }
 
 .manage-search-content-bottom {
-    font-size: 12px;
-    text-align: center;
-    color: #9FB3CA;
+  font-size: 12px;
+  text-align: center;
+  color: #9FB3CA;
 }
