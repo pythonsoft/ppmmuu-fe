@@ -29,8 +29,9 @@
 }
 
 .fj-button-mini {
-  padding: 6px 16px;
+  padding: 5px 8px;
   font-size: 12px;
+  min-width: 56px;
 }
 
 .fj-button-small {
@@ -114,6 +115,7 @@
 
 
 .fj-button-text {
+  padding: 0;
   background: var(--button-text-background-color);
   color: var(--button-text-color);
   border: var(--button-border);

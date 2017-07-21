@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="customClass">
     <slot></slot>
   </div>
 </template>
@@ -8,7 +8,8 @@
   export default {
     name: 'FjRadioGroup',
     props: {
-      value: {}
+      value: {},
+      customClass: String
     }
   };
 </script>

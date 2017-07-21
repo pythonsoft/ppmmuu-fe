@@ -5,6 +5,7 @@
       :id="id"
       :nodes="data"
       :node-key="nodeKey"
+      :node-style="nodeStyle"
       :indent="indent"
       :render-content="renderContent"
       :key="id"></fj-tree-node>
@@ -22,6 +23,7 @@
         type: String,
         default: '_id'
       },
+      nodeStyle: Object,
       indent: {
         type: String,
         default: '10'
