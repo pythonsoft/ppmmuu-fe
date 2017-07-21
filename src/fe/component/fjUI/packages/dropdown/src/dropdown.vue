@@ -1,8 +1,6 @@
 <template>
-  <div class="fj-dropdown">
-    <div class="fj-dropdown-button">
-      <fj-button type="text" @click="handleClick"><slot></slot></fj-button>
-    </div>
+  <div class="fj-dropdown" :class="visible ? 'showButton' : ''">
+    <fj-button type="text" @click.stop="handleClick"><slot></slot></fj-button>
     <div v-if="visible" v-clickoutside="handleClose"><slot name="dropdown"></slot></div>
   </div>
 </template>

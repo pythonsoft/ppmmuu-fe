@@ -4,12 +4,13 @@
 .fj-dropdown-menu {
   position: absolute;
   top: 32px;
-  right: 10px;
-  min-width: 135px;
+  right: 0;
   padding: 4px 0;
   background: #FFFFFF;
   border: 1px solid #CED9E5;
   border-radius: 2px;
+  z-index: 1;
+  color: #2A3E52;
 }
 .fj-dropdown-menu:after {
   content: '';
@@ -32,7 +33,10 @@
   line-height: 24px;
   cursor: pointer;
 }
-.fj-dropdown-button,
-.fj-dropdown-button button {
-  text-align: right;
+.fj-dropdown-item:hover {
+  background-color: #38B1EB;
+  color: #fff;
+}
+.showButton button {
+  display: inline-block !important;
 }
