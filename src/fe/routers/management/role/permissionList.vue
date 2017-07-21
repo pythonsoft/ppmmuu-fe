@@ -33,6 +33,7 @@
 <script>
   import { formatQuery } from '../../../common/utils';
   import AddPermission from './searchAddPermission';
+
   const api = require('../../../api/role');
 
   export default {
@@ -57,7 +58,7 @@
       };
     },
     components: {
-      "add-permission": AddPermission
+      'add-permission': AddPermission
     },
     mounted() {
     },
@@ -68,16 +69,16 @@
           this.selectedDeletePermissions = rows;
         }
       },
-      deletePermissionConfirm(){
-        this.$emit("delete-permission", this.selectedDeletePermissions);
+      deletePermissionConfirm() {
+        this.$emit('delete-permission', this.selectedDeletePermissions);
         this.deletePermissionDialogVisible = false;
         this.deletePermissionDisabled = true;
       },
       addPermissionClick() {
         this.addPermissionDialogVisible = true;
       },
-      addPermission(isAllowed, rows){
-        this.$emit('add-permission',isAllowed, rows);
+      addPermission(isAllowed, rows) {
+        this.$emit('add-permission', isAllowed, rows);
       },
       deletePermissionClick() {
         this.deletePermissionDialogVisible = true;
