@@ -6,6 +6,7 @@ const Management = resolve => require.ensure([], () => resolve(require('./manage
 const Role = resolve => require.ensure([], () => resolve(require('./management/role/index')), 'role');
 const Permission = resolve => require.ensure([], () => resolve(require('./management/permission/index')), 'permission');
 const Configuration = resolve => require.ensure([], () => resolve(require('./management/configuration/index')), 'configuration');
+const Engine = resolve => require.ensure([], () => resolve(require('./management/engine/index')), 'engine');
 
 const Root = {
   template: '<router-view></router-view>'
@@ -27,6 +28,7 @@ export default [{
       { path: 'account', component: Role, meta: { title: '账户' } },
       { path: 'role', component: Role, meta: { title: '角色' } },
       { path: 'permission', component: Permission, meta: { title: '权限' } },
+      { path: 'engine', component: Engine, meta: { title: '引擎管理' } },
       { path: 'configuration', component: Configuration, meta: { title: '设置' } }
     ]
   }]
