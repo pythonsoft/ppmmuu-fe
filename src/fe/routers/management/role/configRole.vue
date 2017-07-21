@@ -7,7 +7,7 @@
         <div>{{configRow.name}}</div>
         <div v-if="configRow.description" class="config-description">{{configRow.description}}</div>
       </div>
-      <permission-list :permissionData="permissionData" @add-permission="addPermission" @delete-permission="deletePermissionConfirm"></permission-list>
+      <permission-list :permissionData="permissionData" :readonly="readonly" @add-permission="addPermission" @delete-permission="deletePermissionConfirm"></permission-list>
     </fj-slide-dialog>
   </div>
 </template>
@@ -33,7 +33,8 @@
         configSlideDialogVisible: false,
         addPermissionDialogVisible: false,
         permissionData: [],
-        configRow: {}
+        configRow: {},
+        readonly: false
       };
     },
     components: {

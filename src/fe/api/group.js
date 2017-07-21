@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+axios.defaults.withCredentials = true
+
 const api = {};
 
 api.getGroupList = function getGroupList(data) {

@@ -103,7 +103,7 @@
         const searchObj = {
           page: me.currentPage,
           pageSize: me.pageSize,
-          name: me.name,
+          keyword: me.name,
           status: me.status
         };
         api.getPermissionList(formatQuery(searchObj, true))
@@ -143,13 +143,13 @@
         let message = '';
         if (this.enableOrDisable === 'enable') {
           postData = {
-            _ids: this.selectedEnableIds.join(','),
+            paths: this.selectedEnablePaths.join(','),
             status: '0'
           };
           message = '启用';
         } else if (this.enableOrDisable === 'disable') {
           postData = {
-            _ids: this.selectedDisableIds.join(','),
+            paths: this.selectedDisablePaths.join(','),
             status: '1'
           };
           message = '禁用';
@@ -170,20 +170,20 @@
           });
       },
       handleSelectionChange(rows) {
-        this.selectedDisableIds = [];
-        this.selectedEnableIds = [];
+        this.selectedDisablePaths = [];
+        this.selectedEnablePaths = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             if (row.status === '0') {
-              this.selectedDisableIds.push(row._id);
+              this.selectedDisablePaths.push(row.path);
             } else {
-              this.selectedEnableIds.push(row._id);
+              this.selectedEnablePaths.push(row.path);
             }
           }
         }
-        this.enabled = !this.selectedEnableIds.length;
-        this.disabled = !this.selectedDisableIds.length;
+        this.enabled = !this.selectedEnablePaths.length;
+        this.disabled = !this.selectedDisablePaths.length;
       },
       clearTableSelection() {
         this.$refs.table.clearSelection();
