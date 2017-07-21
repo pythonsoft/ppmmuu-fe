@@ -14,6 +14,7 @@
 <script>
   import { formatQuery, deepClone } from '../../../common/utils';
   import PermissionList from './permissionList';
+
   const api = require('../../../api/role');
 
   export default {

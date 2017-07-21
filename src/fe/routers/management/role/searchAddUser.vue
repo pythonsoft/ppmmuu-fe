@@ -25,6 +25,7 @@
 </template>
 <script>
   import { formatQuery } from '../../../common/utils';
+
   const api = require('../../../api/role');
 
   export default {
@@ -40,7 +41,7 @@
       },
       title: {
         type: String,
-        default: ""
+        default: ''
       }
     },
     data() {
