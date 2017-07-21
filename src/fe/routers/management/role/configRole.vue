@@ -7,13 +7,12 @@
         <div>{{configRow.name}}</div>
         <div v-if="configRow.description" class="config-description">{{configRow.description}}</div>
       </div>
-      <permission-list :permissionData="permissionData" @add-permission="addPermission" @delete-permission="deletePermissionConfirm"></permission-list>
+      <permission-list :permissionData="permissionData" :readonly="readonly" @add-permission="addPermission" @delete-permission="deletePermissionConfirm"></permission-list>
     </fj-slide-dialog>
   </div>
 </template>
 <script>
   import { formatQuery, deepClone } from '../../../common/utils';
-  import AddPermission from './searchAddPermission';
   import PermissionList from './permissionList';
   const api = require('../../../api/role');
 
@@ -34,11 +33,11 @@
         configSlideDialogVisible: false,
         addPermissionDialogVisible: false,
         permissionData: [],
-        configRow: {}
+        configRow: {},
+        readonly: false
       };
     },
     components: {
-      'add-permission': AddPermission,
       'permission-list': PermissionList
     },
     mounted() {
