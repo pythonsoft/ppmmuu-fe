@@ -6,14 +6,14 @@
         <template slot="button">
           <fj-button size="mini" @click="clickAddGroup">添加组</fj-button>
         </template>
-        <template slot="tree">
+        <template slot="tree" v-for="(item, index) in treeData">
           <fj-tree
-            :data="treeData"
+            :data="item"
             :node-key="id"
-            @node-click="handleTreeNodeClick"
-            @current-change="handleTreeNodeCurrentChange"
-            @node-expand="handleTreeNodeExpand"
-            @node-collapse="handleTreeNodeCollapse">
+            @node-click="treeNodeClick"
+            @current-change="treeNodeCurrentChange"
+            @node-expand="treeNodeExpand"
+            @node-collapse="treeNodeCollapse">
           </fj-tree>
         </template>
       </layout-two-row-tree>
@@ -24,6 +24,8 @@
 <script>
   import layoutTwoColumn from '../../../component/layout/twoColumn/index.vue';
   import layoutTwoRowTree from '../../../component/layout/twoRowTree/index.vue';
+
+  const api = require('../../../api/engine');
 
   export default {
     components: {
@@ -41,6 +43,7 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.treeNodeClick()
     },
     methods: {
       getActiveRoute(path, level) {
@@ -48,20 +51,25 @@
         return pathArr[level] || '';
       },
       clickAddGroup() {},
-      handleTreeNodeClick() {
+      treeNodeClick(node) {
+        console.log('click -->', node);
         const me = this;
         const param = {
           parentId: '',
           page: 1,
           pageSize: 200,
           fields: ''
-        }
+        };
 
-
+        api.listGroup(param).then((res) => {
+          me.treeData = res.data || [];
+        }).catch((error) => {
+          me.showErrorInfo(error);
+        });
       },
-      handleTreeNodeCurrentChange() {},
-      handleTreeNodeExpand() {},
-      handleTreeNodeCollapse() {},
+      treeNodeCurrentChange(node) {},
+      treeNodeExpand(node) {},
+      treeNodeCollapse(node) {},
     }
   }
 </script>
