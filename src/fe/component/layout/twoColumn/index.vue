@@ -6,6 +6,7 @@
     <div class="layout-two-column-right">
       <slot name="right"></slot>
     </div>
+    <slot></slot>
   </div>
 </template>
 <style>
