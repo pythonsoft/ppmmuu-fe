@@ -7,7 +7,7 @@ deploy_to_68_job:
   stage: deploy
   script:
     - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "git clone git@gitlab.szdev.cn:dev/UMP-FE.git"
+    - at_68 "git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git HEAD | (mkdir -p ~/UMP-FE && cd ~/UMP-FE && tar xf -)"
 
   environment:
     name: test
