@@ -1,0 +1,48 @@
+.personal-information {
+  margin-left: 20px;
+  margin-top: 10px;
+  background-color: #fff;
+}
+
+.personal-information-title {
+  font-size: 16px;
+  height:40px;
+  line-height: 40px;
+  color: #2A3E52;
+  position: relative;
+  border-bottom: 1px solid #EBF3FB;
+}
+
+.personal-information-base {
+  position: relative;
+  border-bottom: 1px solid #EBF3FB;
+  padding-top: 38px;
+  padding-bottom: 50px;
+}
+
+.personal-information-base-title {
+  color: #2A3E52;
+}
+
+.personal-information-base-left {
+   position: absolute;
+   top: 106px;
+   left: 26px;
+   text-align: center;
+}
+
+.personal-information-base-right {
+   margin-left: 145px;
+   margin-top: 38px;
+   width: 460px;
+   text-align: center;
+}
+
+.personal-information-operation {
+  margin-top: 30px;
+  margin-left: -120px;
+}
+
+.personal-information-no-border {
+  border: none;
+}

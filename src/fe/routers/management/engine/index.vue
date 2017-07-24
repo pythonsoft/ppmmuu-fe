@@ -28,7 +28,7 @@
   export default {
     components: {
       'layout-two-column': layoutTwoColumn,
-      'layout-two-row-tree': layoutTwoRowTree,
+      'layout-two-row-tree': layoutTwoRowTree
     },
     data() {
       const data = {
@@ -55,13 +55,11 @@
           page: 1,
           pageSize: 200,
           fields: ''
-        }
-
-
+        };
       },
       handleTreeNodeCurrentChange() {},
       handleTreeNodeExpand() {},
-      handleTreeNodeCollapse() {},
+      handleTreeNodeCollapse() {}
     }
-  }
+  };
 </script>
