@@ -9,14 +9,12 @@
         <template slot="tree">
           <div id=second-row-of-tree>
             <fj-tree
-              :data="treeData"
-              :topNodeIdArr= "treeTopIdArr"
-              :node-key="id"
-              :render-content="renderContent"
-              @node-click="handleTreeNodeClick"
-              @current-change="handleTreeNodeCurrentChange"
-              @node-expand="handleTreeNodeExpand"
-              @node-collapse="handleTreeNodeCollapse">
+                    :data="treeData"
+                    node-key="id"
+                    @node-click="handleTreeNodeClick"
+                    @current-change="handleTreeNodeCurrentChange"
+                    @node-expand="handleTreeNodeExpand"
+                    @node-collapse="handleTreeNodeCollapse">
             </fj-tree>
           </div>
         </template>
@@ -105,7 +103,7 @@
   </div>
 </template>
 <script>
-  import { formatQuery, formatTree } from '../../../common/utils';
+  import { formatQuery, getTree } from '../../../common/utils';
   import TwoRowTree from '../../../component/layout/twoRowTree/index';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import TreeNodeContent from './treeNodeContent';
@@ -121,9 +119,8 @@
     },
     data() {
       return {
-        treeTopIdArr: [],
         action: '',
-        treeData: {},
+        treeData: [],
         currentNode: {},
         currentConfig: {},
         defaultRoute: '/',
@@ -134,7 +131,7 @@
         tableData: [],
         currentPage: 1,
         total: 0,
-        pageSize: 15,
+        pageSize: 1,
         change: true,
         deleted: true,
         groupName: '',
@@ -176,52 +173,29 @@
         } else {
           query.parent = node.id;
         }
+        me.groupId = query.parent;
+        me.clickNodeSearch = true;
         apiConfig.getListGroup(formatQuery(query, true))
           .then((res) => {
-            const data = formatTree(res.data, 'id').node;
-            if (query.parent === '') {
-              const dataKeys = Object.keys(data);
-              me.treeTopIdArr = [];
-              for (let i = 0; i < dataKeys.length; i++) {
-                me.treeTopIdArr.push(data[dataKeys[i]].id);
-                me.treeData = Object.assign({}, me.treeData, data);
-              }
-            } else {
-              me.treeData = Object.assign({}, me.treeData, data);
-            }
+            me.treeData = getTree(me.treeData, res.data, query.parent, 'id');
           })
           .catch((err) => {
             me.showErrorInfo(err);
           });
         if (node !== undefined) {
           me.currentNode = node;
+          me.currentPage = 1;
           const searchObj = {
             page: me.currentPage,
             pageSize: me.pageSize,
             groupId: node.id
           };
-          apiConfig.getListConfig(formatQuery(searchObj, true))
-            .then((res) => {
-              const data = res.data;
-              me.tableData = data ? data.docs : [];
-              me.currentPage = data.page;
-              me.total = data.total;
-              me.pageSize = data.pageSize;
-              me.handleSelectionChange();
-            })
-            .catch((error) => {
-              me.showErrorInfo(error);
-            });
+          me.getListConfig(searchObj);
         }
       },
 
-      handleClickSearch() {
+      getListConfig(searchObj) {
         const me = this;
-        const searchObj = {
-          page: me.currentPage,
-          pageSize: me.pageSize,
-          name: me.name
-        };
         apiConfig.getListConfig(formatQuery(searchObj, true))
           .then((res) => {
             const data = res.data;
@@ -234,6 +208,16 @@
           .catch((error) => {
             me.showErrorInfo(error);
           });
+      },
+
+      handleClickSearch() {
+        this.clickNodeSearch = false;
+        const searchObj = {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          name: this.name
+        };
+        this.getListConfig(searchObj);
       },
 
       handleClickAdd() {
@@ -318,7 +302,17 @@
       },
 
       handleCurrentPageChange(val) {
-        this.handleTreeNodeClick();
+        if (this.clickNodeSearch === true) {
+          const searchObj = {
+            page: this.currentPage,
+            pageSize: this.pageSize,
+            name: this.name,
+            groupId: this.groupId
+          };
+          this.getListConfig(searchObj);
+        } else {
+          this.handleClickSearch();
+        }
       },
 
       showSuccessInfo(message) {
