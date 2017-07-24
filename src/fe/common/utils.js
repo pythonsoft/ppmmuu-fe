@@ -3,30 +3,39 @@ const utils = {};
 
 axios.defaults.withCredentials = true
 
-axios.interceptors.request.use(function (config) {
+axios.interceptors.request.use(function(config) {
   // Do something before request is sent
-  config.url += "?t=" + new Date().getTime();
+  if (config.method === 'get') {
+    config.params = config.params || {};
+    config.params['t'] = new Date().getTime();
+  } else if (config.method === 'post') {
+    config.data = config.data || {};
+    config.data['t'] = new Date().getTime();
+  }
+
   return config;
-}, function (error) {
+}, function(error) {
   // Do something with request error
   return Promise.reject(error);
 });
 
-axios.interceptors.response.use(function (response) {
+axios.interceptors.response.use(function(response) {
   // Do something with response data
   const res = response.data;
   const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004']
-  if(loginStatusCodeArr.indexOf(res.status) !== -1){
-    window.location.href= '/login';
+  if (loginStatusCodeArr.indexOf(res.status) !== -1) {
+    window.location.href = '/login';
   }
   return response;
-}, function (error) {
+}, function(error) {
   // Do something with response error
   return Promise.reject(error);
 });
 
 utils.formatQuery = function formatQuery(obj, isGet = false) {
-  return isGet ? { params: obj } : obj;
+  return isGet ? {
+    params: obj
+  } : obj;
 };
 
 utils.deepClone = function deepClone(obj) {
@@ -56,12 +65,15 @@ utils.hardMerge = function hardMerge(arr1, arr2) {
 function transferDataToTree(data, keyName) {
   keyName = keyName || '_id';
 
-  const format = function (d) {
+  const format = function(d) {
     if (d && d.constructor && d.constructor === Array) {
       if (d.length === 0 || (typeof d[0] !== 'object')) {
         return d;
       }
-      const rs = { indexs: [], infos: {} };
+      const rs = {
+        indexs: [],
+        infos: {}
+      };
       let index = '';
       for (let i = 0, len = d.length; i < len; i++) {
         if (typeof d[i][keyName] === 'undefined') {
@@ -97,7 +109,10 @@ utils.transferDataToTree = transferDataToTree;
 
 utils.formatTree = function formatTree(list, keyName) {
   if (list.length === 0) {
-    return ({ topNode: '', node: {} });
+    return ({
+      topNode: '',
+      node: {}
+    });
   }
   keyName = keyName || '_id';
   let topNode = '';
@@ -107,7 +122,10 @@ utils.formatTree = function formatTree(list, keyName) {
       break;
     }
   }
-  return ({ topNode: topNode, node: transferDataToTree(list, keyName).infos });
+  return ({
+    topNode: topNode,
+    node: transferDataToTree(list, keyName).infos
+  });
 };
 
 utils.checkEmail = function checkEmail(email) {

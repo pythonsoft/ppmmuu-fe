@@ -112,7 +112,7 @@
         const me = this;
         api.getUserDetail()
                 .then(function(res){
-                  //me.userInfo = res.data;
+                  me.userInfo = res.data;
                 }).catch(function(error){
           me.$message.error(error);
         })
