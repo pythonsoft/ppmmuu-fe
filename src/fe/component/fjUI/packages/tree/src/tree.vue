@@ -1,13 +1,13 @@
 <template>
   <ul class="fj-tree">
     <fj-tree-node
-      v-for="(id, index) in topNodeIdArr"
-      :id="id"
-      :nodes="data"
+      v-for="(item, index) in data"
+      :node="item"
       :node-key="nodeKey"
+      :node-style="nodeStyle"
       :indent="indent"
       :render-content="renderContent"
-      :key="id"></fj-tree-node>
+      :key="getNodeKey(item, index)"></fj-tree-node>
   </ul>
 </template>
 <script>
@@ -16,12 +16,12 @@
   export default {
     name: 'FjTree',
     props: {
-      data: {},
-      topNodeIdArr: Array,
+      data: Array,
       nodeKey: {
         type: String,
         default: '_id'
       },
+      nodeStyle: Object,
       indent: {
         type: String,
         default: '10'

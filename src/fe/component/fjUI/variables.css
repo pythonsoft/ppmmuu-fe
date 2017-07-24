@@ -1,6 +1,7 @@
 :root {
   --z-index-select-dropdown: 1000;
   --z-index-message: 2000;
+  --z-index-message: 1500;
 
   --base-color: #2A3E52;
   --danger-text-color: #FF3366;
@@ -77,6 +78,7 @@
   --select-dropdown-box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
 
   --select-option-height: 32px;
+  --select-option-line-height: 20px;
   --select-option-hover-background-color: #F2F6FA;
   --select-option-selected-background-color: #38B1EB;
 
@@ -98,14 +100,15 @@
   --dialog-body-color: #4C637B;
 
   --tag-color: #4C637B;
-  --tag-default-border-color: #38B1EB;
-  --tag-primary-border-color: #38B1EB;
+  --tag-primary-hover-color: #38B1EB;
+  --tag-default-border-color: #CED9E5;
+  --tag-primary-border-color: #CED9E5;
   --tag-success-border-color: #2EC4B6;
   --tag-warning-border-color: #9FB3CA;
   --tag-danger-border-color: #FF3366;
 
   --tag-default-bg-color: #fff;
-  --tag-primary-bg-color: rgba(56,176,235,0.10);
+  --tag-primary-bg-color: #F2F6FA;
   --tag-success-bg-color: rgba(46,196,182,0.10);
   --tag-warning-bg-color: rgba(159,179,202,0.10);
   --tag-danger-bg-color: rgba(255,50,101,0.10);

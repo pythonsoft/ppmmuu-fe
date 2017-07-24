@@ -1,5 +1,5 @@
 <template>
-  <form class="fj-form">
+  <form class="fj-form" :class="customClass">
     <slot></slot>
   </form>
 </template>
@@ -9,7 +9,9 @@
     props: {
       model: Object,
       rules: Object,
-      labelWidth: String
+      labelWidth: String,
+      labelPosition: String,
+      customClass: String
     },
     data() {
       return {
