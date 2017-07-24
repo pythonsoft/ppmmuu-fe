@@ -30,7 +30,7 @@
   export default {
     components: {
       'layout-two-column': layoutTwoColumn,
-      'layout-two-row-tree': layoutTwoRowTree,
+      'layout-two-row-tree': layoutTwoRowTree
     },
     data() {
       const data = {
@@ -43,7 +43,7 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
-      this.treeNodeClick()
+      this.treeNodeClick();
     },
     methods: {
       getActiveRoute(path, level) {
@@ -69,7 +69,7 @@
       },
       treeNodeCurrentChange(node) {},
       treeNodeExpand(node) {},
-      treeNodeCollapse(node) {},
+      treeNodeCollapse(node) {}
     }
-  }
+  };
 </script>
