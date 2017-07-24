@@ -36,7 +36,7 @@
         { text: '角色', index: 'role', route: 'role' },
         { text: '权限', index: 'permission', route: 'permission' }
       ] },
-    { text: '引擎管理', index: '4', route: '4' },
+    { text: '引擎管理', index: 'engine', route: 'engine' },
     { text: '存储管理', index: '5', route: '5' },
     { text: '设置', index: 'configuration', route: 'configuration' }
   ];
