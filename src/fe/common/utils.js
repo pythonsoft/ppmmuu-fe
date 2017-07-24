@@ -75,6 +75,37 @@ function transferDataToTree(data, keyName) {
 
 utils.transferDataToTree = transferDataToTree;
 
+
+/**
+ *
+ * @param treeData array
+ * @param data array 通过parentId去后台获取的数据
+ * @param parentId
+ * @param key
+ * @returns {*}
+ */
+utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
+  const loopTree = function loopTree(tree) {
+    for (let i = 0, len = tree.length; i < len; i++) {
+      if (tree[i][key] === parentId) {
+        tree[i].children = data;
+        return;
+      }
+      if (tree[i].children && tree[i].children.length) {
+        loopTree(tree[i].children);
+      }
+    }
+  };
+
+  if (parentId) {
+    loopTree(treeData);
+  } else {
+    treeData = data;
+  }
+
+  return treeData;
+};
+
 utils.formatTree = function formatTree(list, keyName) {
   if (list.length === 0) {
     return ({
