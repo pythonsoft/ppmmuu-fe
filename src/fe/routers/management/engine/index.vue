@@ -6,7 +6,7 @@
         <template slot="button">
           <fj-button size="mini" @click="clickAddGroup">添加组</fj-button>
         </template>
-        <template slot="tree" v-for="(item, index) in treeData">
+        <template slot="tree">
           <fj-tree
             :data="item"
             :node-key="id"

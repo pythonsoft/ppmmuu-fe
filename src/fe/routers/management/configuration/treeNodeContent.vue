@@ -16,7 +16,7 @@
     props: {
       node: {},
       treeData: {},
-      currentNode: {},
+      currentNode: {}
     },
     methods: {
       handleClickDropDownItem(command) {
@@ -39,7 +39,7 @@
         } else {
           this.showErrorInfo('未知操作');
         }
-      },
+      }
     }
   };
 </script>

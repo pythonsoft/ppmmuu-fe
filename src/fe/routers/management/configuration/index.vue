@@ -117,7 +117,7 @@
     components: {
       'two-row-tree': TwoRowTree,
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'tree-node-content': TreeNodeContent,
+      'tree-node-content': TreeNodeContent
     },
     data() {
       return {
@@ -400,13 +400,13 @@
           props: {
             node: node,
             treeData: this.treeData,
-            currentNode: this.currentNode,
+            currentNode: this.currentNode
           },
           methods: {
-            showErrorInfo: this.showErrorInfo,
+            showErrorInfo: this.showErrorInfo
           }
         });
-      },
+      }
     }
   };
 </script>

@@ -52,7 +52,7 @@
         return this.tree.currentNode === this;
       },
       innerNodeStyle() {
-        return Object.assign({}, this.nodeStyle, { paddingLeft: this.indent + 'px', position: 'relative' });
+        return Object.assign({}, this.nodeStyle, { paddingLeft: `${this.indent}px`, position: 'relative' });
       }
     },
     methods: {
