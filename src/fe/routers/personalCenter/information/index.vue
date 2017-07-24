@@ -37,16 +37,18 @@
       <div class="personal-information-base-title">联系信息</div>
       <div class="personal-information-base-right">
         <fj-form :model="userInfo" ref="form" label-width="80px">
-          <fj-form-item label="联系电话" prop="contact.phone">
-            <fj-input v-model="userInfo.contact.name" ></fj-input>
+          <fj-form-item label="联系电话" prop="phone">
+            <fj-input v-model="userInfo.phone" ></fj-input>
           </fj-form-item>
-          <fj-form-item label="邮箱" prop="contact.email">
-            <fj-input v-model="userInfo.contact.email" ></fj-input>
+          <fj-form-item label="邮箱" prop="email">
+            <fj-input v-model="userInfo.email" ></fj-input>
           </fj-form-item>
         </fj-form>
         <div class="personal-information-operation">
           <fj-button type="primary" @click="saveClick">保存</fj-button>
-          <fj-button @click="cancelClick">取消</fj-button>
+          <span class="personal-information-btn-margin">
+            <fj-button @click="cancelClick">取消</fj-button>
+          </span>
         </div>
       </div>
     </div>
@@ -113,7 +115,6 @@
         api.getUserDetail()
           .then((res) => {
             me.userInfo = res.data;
-            console.log(me.userInfo.name);
           }).catch((error) => {
             me.$message.error(error);
           });

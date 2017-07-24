@@ -22,8 +22,8 @@
   </layout-two-column>
 </template>
 <script>
-  import layoutTwoColumn from '../../../component/layout/twoColumn/index.vue';
-  import layoutTwoRowTree from '../../../component/layout/twoRowTree/index.vue';
+  import layoutTwoColumn from '../../../component/layout/twoColumn/index';
+  import layoutTwoRowTree from '../../../component/layout/twoRowTree/index';
 
   export default {
     components: {

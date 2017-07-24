@@ -133,7 +133,7 @@ utils.checkEmail = function checkEmail(email) {
   if ((email.length > 128) || (email.length < 6)) {
     return false;
   }
-  return !!email.match(/^[A-Za-z0-9+]+[A-Za-z0-9\.\_\-+]*@([A-Za-z0-9\-]+\.)+[A-Za-z0-9]+$/);
+  return !!email.match(/^[A-Za-z0-9+]+[A-Za-z0-9\.\_\-+]*@([A-Za-z0-9\-]+\.)+[A-Za-z0-9]+$/); //eslint-disable-line
 };
 
 utils.checkPhone = function checkPhone(phone) {
