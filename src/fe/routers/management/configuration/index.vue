@@ -11,7 +11,7 @@
             <fj-tree
               :data="treeData"
               :topNodeIdArr= "treeTopIdArr"
-              node-key="id"
+              :node-key="id"
               :render-content="renderContent"
               @node-click="handleTreeNodeClick"
               @current-change="handleTreeNodeCurrentChange"
@@ -106,8 +106,8 @@
 </template>
 <script>
   import { formatQuery, formatTree } from '../../../common/utils';
-  import TwoRowTree from '../../../component/layout/twoRowTree/twoRowTree';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
+  import TwoRowTree from '../../../component/layout/twoRowTree/index.vue';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index.vue';
   import TreeNodeContent from './treeNodeContent';
 
   const api = require('../../../api/role');

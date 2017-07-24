@@ -9,7 +9,6 @@
         <template slot="tree">
           <fj-tree
             :data="treeData"
-            :topNodeIdArr= "treeTopIdArr"
             :node-key="id"
             @node-click="handleTreeNodeClick"
             @current-change="handleTreeNodeCurrentChange"
@@ -33,7 +32,8 @@
     },
     data() {
       const data = {
-        treeData: {},
+        id: '',
+        treeData: [],
         items: {}
       };
 
@@ -47,7 +47,21 @@
         const pathArr = path.split('/');
         return pathArr[level] || '';
       },
-      clickAddGroup() {}
+      clickAddGroup() {},
+      handleTreeNodeClick() {
+        const me = this;
+        const param = {
+          parentId: '',
+          page: 1,
+          pageSize: 200,
+          fields: ''
+        }
+
+
+      },
+      handleTreeNodeCurrentChange() {},
+      handleTreeNodeExpand() {},
+      handleTreeNodeCollapse() {},
     }
   }
 </script>
