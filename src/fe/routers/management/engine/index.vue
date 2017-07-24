@@ -8,12 +8,12 @@
         </template>
         <template slot="tree">
           <fj-tree
-            :data="treeData"
+            :data="item"
             :node-key="id"
-            @node-click="handleTreeNodeClick"
-            @current-change="handleTreeNodeCurrentChange"
-            @node-expand="handleTreeNodeExpand"
-            @node-collapse="handleTreeNodeCollapse">
+            @node-click="treeNodeClick"
+            @current-change="treeNodeCurrentChange"
+            @node-expand="treeNodeExpand"
+            @node-collapse="treeNodeCollapse">
           </fj-tree>
         </template>
       </layout-two-row-tree>
@@ -25,10 +25,12 @@
   import layoutTwoColumn from '../../../component/layout/twoColumn/index';
   import layoutTwoRowTree from '../../../component/layout/twoRowTree/index';
 
+  const api = require('../../../api/engine');
+
   export default {
     components: {
       'layout-two-column': layoutTwoColumn,
-      'layout-two-row-tree': layoutTwoRowTree
+      'layout-two-row-tree': layoutTwoRowTree,
     },
     data() {
       const data = {
@@ -41,6 +43,7 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.treeNodeClick()
     },
     methods: {
       getActiveRoute(path, level) {
@@ -48,7 +51,8 @@
         return pathArr[level] || '';
       },
       clickAddGroup() {},
-      handleTreeNodeClick() {
+      treeNodeClick(node) {
+        console.log('click -->', node);
         const me = this;
         const param = {
           parentId: '',
@@ -56,10 +60,16 @@
           pageSize: 200,
           fields: ''
         };
+
+        api.listGroup(param).then((res) => {
+          me.treeData = res.data || [];
+        }).catch((error) => {
+          me.showErrorInfo(error);
+        });
       },
-      handleTreeNodeCurrentChange() {},
-      handleTreeNodeExpand() {},
-      handleTreeNodeCollapse() {}
+      treeNodeCurrentChange(node) {},
+      treeNodeExpand(node) {},
+      treeNodeCollapse(node) {},
     }
-  };
+  }
 </script>
