@@ -46,3 +46,7 @@
 .personal-information-no-border {
   border: none;
 }
+
+.personal-information-btn-margin {
+  margin-left: 10px;
+}

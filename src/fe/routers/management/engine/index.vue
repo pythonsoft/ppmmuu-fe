@@ -22,15 +22,15 @@
   </layout-two-column>
 </template>
 <script>
-  import layoutTwoColumn from '../../../component/layout/twoColumn/index.vue';
-  import layoutTwoRowTree from '../../../component/layout/twoRowTree/index.vue';
+  import layoutTwoColumn from '../../../component/layout/twoColumn/index';
+  import layoutTwoRowTree from '../../../component/layout/twoRowTree/index';
 
   const api = require('../../../api/engine');
 
   export default {
     components: {
       'layout-two-column': layoutTwoColumn,
-      'layout-two-row-tree': layoutTwoRowTree,
+      'layout-two-row-tree': layoutTwoRowTree
     },
     data() {
       const data = {
@@ -43,7 +43,7 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
-      this.treeNodeClick()
+      this.treeNodeClick();
     },
     methods: {
       getActiveRoute(path, level) {
@@ -69,7 +69,7 @@
       },
       treeNodeCurrentChange(node) {},
       treeNodeExpand(node) {},
-      treeNodeCollapse(node) {},
+      treeNodeCollapse(node) {}
     }
-  }
+  };
 </script>
