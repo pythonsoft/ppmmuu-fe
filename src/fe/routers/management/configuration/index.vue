@@ -1,15 +1,15 @@
 <template>
   <div>
     <two-row-tree id=two-row-tree>
-      <template slot="tworowtree-upper-title">分组结构</template>
-      <template slot="tworowtree-upper-button">
+      <template slot="title">分组结构</template>
+      <template slot="button">
         <fj-button size="mini" @click="clickAddGroup">添加组</fj-button>
       </template>
       <template slot="tree">
         <fj-tree
           :data="treeData"
           :topNodeIdArr= "treeTopIdArr"
-          node-key="id"
+          :node-key="id"
           @node-click="handleTreeNodeClick"
           @current-change="handleTreeNodeCurrentChange"
           @node-expand="handleTreeNodeExpand"
@@ -97,10 +97,53 @@
     </four-row-layout-right-content>
   </div>
 </template>
+<style>
+  #two-row-tree {
+    float: left;
+    min-width: 192px;
+  }
+
+  .permission-search-item{
+    float: left;
+    margin-left: 10px;
+  }
+
+  .permission-btn-mini-margin {
+    margin-left: 6px;
+    font-size: 12px;
+  }
+
+  .permission-table-pagination {
+    margin-top: 30px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    color: #4C637B;
+  }
+
+  .permission-status-span {
+    font-size: 12px;
+    color: #FFFFFF;
+    width: 48px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 2px;
+    text-align:center;
+    display: block;
+  }
+
+  .permission-enable {
+    background: #2EC4B6;
+  }
+
+  .permission-disable {
+    background: #FF3366;
+  }
+</style>
 <script>
   import { formatQuery, formatTree } from '../../../common/utils';
-  import TwoRowTree from '../../../component/layout/twoRowTree/twoRowTree';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
+  import TwoRowTree from '../../../component/layout/twoRowTree/index';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
 
   const api = require('../../../api/role');
   const apiConfig = require('../../../api/configuration');
@@ -366,46 +409,4 @@
     }
   };
 </script>
-<style>
-  #two-row-tree {
-    float: left;
-    min-width: 192px;
-  }
 
-  .permission-search-item{
-    float: left;
-    margin-left: 10px;
-  }
-
-  .permission-btn-mini-margin {
-    margin-left: 6px;
-    font-size: 12px;
-  }
-
-  .permission-table-pagination {
-    margin-top: 30px;
-    text-align: center;
-    height: 28px;
-    line-height: 28px;
-    color: #4C637B;
-  }
-
-  .permission-status-span {
-    font-size: 12px;
-    color: #FFFFFF;
-    width: 48px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 2px;
-    text-align:center;
-    display: block;
-  }
-
-  .permission-enable {
-    background: #2EC4B6;
-  }
-
-  .permission-disable {
-    background: #FF3366;
-  }
-</style>

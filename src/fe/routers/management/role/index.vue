@@ -80,7 +80,7 @@
 <script>
   import './role.css';
   import { formatQuery, deepClone } from '../../../common/utils';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import ConfigRole from './configRole';
   import ManageRole from './manageRole';
 

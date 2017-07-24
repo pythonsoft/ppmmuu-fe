@@ -55,7 +55,7 @@
 </template>
 <script>
   import { formatQuery } from '../../../common/utils';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/fourRowLayoutRightContent';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
 
   const api = require('../../../api/role');
 
