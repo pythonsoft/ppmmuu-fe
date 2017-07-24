@@ -106,8 +106,8 @@
 </template>
 <script>
   import { formatQuery, formatTree } from '../../../common/utils';
-  import TwoRowTree from '../../../component/layout/twoRowTree/index.vue';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index.vue';
+  import TwoRowTree from '../../../component/layout/twoRowTree/index';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import TreeNodeContent from './treeNodeContent';
 
   const api = require('../../../api/role');
