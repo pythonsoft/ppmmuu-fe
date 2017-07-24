@@ -3,6 +3,15 @@ const utils = {};
 
 axios.defaults.withCredentials = true
 
+axios.interceptors.request.use(function (config) {
+  // Do something before request is sent
+  config.url += "?t=" + new Date().getTime();
+  return config;
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
+
 axios.interceptors.response.use(function (response) {
   // Do something with response data
   const res = response.data;
@@ -17,10 +26,7 @@ axios.interceptors.response.use(function (response) {
 });
 
 utils.formatQuery = function formatQuery(obj, isGet = false) {
-  const rs = Object.assign(obj);
-  rs.timestamps = new Date().getTime();
-
-  return isGet ? { params: rs } : rs;
+  return isGet ? { params: obj } : obj;
 };
 
 utils.deepClone = function deepClone(obj) {

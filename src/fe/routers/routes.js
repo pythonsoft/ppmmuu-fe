@@ -2,10 +2,14 @@
 import Menu from './menu';
 
 const Management = resolve => require.ensure([], () => resolve(require('./management/index')), 'management');
-// const SubPage1 = resolve => require.ensure([], () => resolve(require('./page1/sub/sub_index')), 'page1');
 const Role = resolve => require.ensure([], () => resolve(require('./management/role/index')), 'role');
 const Permission = resolve => require.ensure([], () => resolve(require('./management/permission/index')), 'permission');
 const Configuration = resolve => require.ensure([], () => resolve(require('./management/configuration/index')), 'configuration');
+
+const PersonalCenter = resolve => require.ensure([], () => resolve(require('./personalCenter/index')), 'personalCenter');
+const Information = resolve => require.ensure([], () => resolve(require('./personalCenter/information/index')), 'information');
+const ChangePassword = resolve => require.ensure([], () => resolve(require('./personalCenter/changePassword/index')), 'changePassword');
+const Feedback = resolve => require.ensure([], () => resolve(require('./personalCenter/feedback/index')), 'feedback');
 
 const Root = {
   template: '<router-view></router-view>'
@@ -28,6 +32,15 @@ export default [{
       { path: 'role', component: Role, meta: { title: '角色' } },
       { path: 'permission', component: Permission, meta: { title: '权限' } },
       { path: 'configuration', component: Configuration, meta: { title: '设置' } }
+    ]
+  },{
+    path: 'personalCenter',
+    component: PersonalCenter,
+    meta: { title: '个人中心' },
+    children: [
+      { path: 'information', component: Information, meta: { title: '个人信息' } },
+      { path: 'changePassword', component: ChangePassword, meta: { title: '密码修改' } },
+      { path: 'feedback', component: Feedback, meta: { title: '意见反馈' } }
     ]
   }]
 }];
