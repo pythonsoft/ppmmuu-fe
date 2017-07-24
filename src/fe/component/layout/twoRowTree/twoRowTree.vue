@@ -21,7 +21,8 @@
 </script>
 <style>
   .tworowtree-content {
-    margin-left: 20px;
+    margin-left: 22px;
+    margin-right: 18px;
     margin-top: 10px;
   }
   .tworowtree-upper {
