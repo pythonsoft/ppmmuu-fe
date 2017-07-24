@@ -3,10 +3,9 @@
           :title="title"
           :visible.sync="addOwnerDialogVisible"
           @close="close">
-    <div v-if="treeTopIdArr.length" class="add-group-tree">
+    <div v-if="treeData.length" class="add-group-tree">
       <fj-tree
               :data="treeData"
-              :topNodeIdArr= "treeTopIdArr"
               node-key="_id"
               @node-click="handleTreeNodeClick"
               @current-change="handleTreeNodeCurrentChange"
@@ -21,7 +20,7 @@
   </fj-dialog>
 </template>
 <script>
-  import { formatQuery, formatTree } from '../../../common/utils';
+  import { formatQuery, getTree } from '../../../common/utils';
 
   const api = require('../../../api/role');
   const groupApi = require('../../../api/group');
@@ -43,8 +42,7 @@
         addOwnerDialogVisible: false,
         keyword3: '',
         searchOwner: [],
-        treeData: {},
-        treeTopIdArr: []
+        treeData: []
       };
     },
     mounted() {
@@ -54,8 +52,10 @@
         if (val) {
           this.handleTreeNodeClick();
           this.addOwnerDialogVisible = val;
+          this.treeData = [];
         } else {
           this.addOwnerDialogVisible = val;
+          this.treeData = [];
         }
       }
     },
@@ -83,17 +83,8 @@
         }
         groupApi.getGroupList(formatQuery(query, true))
           .then((res) => {
-            const data = formatTree(res.data.docs, '_id').node;
-            if (query.parentId === '') {
-              const dataKeys = Object.keys(data);
-              me.treeTopIdArr = [];
-              for (let i = 0; i < dataKeys.length; i++) {
-                me.treeTopIdArr.push(data[dataKeys[i]]._id);
-                me.treeData = Object.assign({}, me.treeData, data);
-              }
-            } else {
-              me.treeData = Object.assign({}, me.treeData, data);
-            }
+            const data = res.data.docs;
+            me.treeData = getTree(me.treeData, data, query.parentId);
           })
           .catch((err) => {
             me.showErrorInfo(err);

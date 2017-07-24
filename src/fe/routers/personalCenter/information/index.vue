@@ -120,7 +120,14 @@
           });
       },
       saveClick() {
-
+        const me = this;
+        api.postUserUpdate(this.userInfo)
+          .then((res) => {
+            me.$message.success('保存成功!');
+          })
+          .catch((error) => {
+            me.$message.error(error);
+          });
       },
       cancelClick() {
         this.getUserDetail();
