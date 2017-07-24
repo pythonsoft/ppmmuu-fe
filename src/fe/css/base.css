@@ -69,3 +69,4 @@ html,body,#app {
   bottom: 0;
   overflow: auto;
 }
+.clearfix:before, .clearfix:after { content: " "; display: table; clear: both; }
