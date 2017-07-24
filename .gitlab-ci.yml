@@ -20,18 +20,7 @@ setup_job:
   stage: setup
   script:
     - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "npm config set strict-ssl false"
-    - at_68 "npm config set registry 'http://registry.npm.taobao.org/'"
-    - at_68 "npm install"
-  cache:
-    key: ump-fe
-    paths:
-      - node_modules/
-  artifacts:
-    when: always
-    paths:
-      - node_modules/*
-    expire_in: "1 month"
+    - at_68 "cd UMP-FE && npm config set strict-ssl false && npm config set registry 'http://registry.npm.taobao.org/' && npm install"
   tags:
     - test
 
@@ -39,7 +28,7 @@ run_node_68:
   stage: run_node
   script:
     - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "killall -q node; nohup node UMP-FE/build/server.js >/dev/null 2>&1 &"
+    - at_68 "killall -q node; nohup node UMP-FE/build/dev-server.js >/dev/null 2>&1 &"
 
   environment:
     name: test
