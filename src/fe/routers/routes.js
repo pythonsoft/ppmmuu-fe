@@ -35,7 +35,7 @@ export default [{
       { path: 'engine', component: Engine, meta: { title: '引擎管理' } },
       { path: 'configuration', component: Configuration, meta: { title: '设置' } }
     ]
-  },{
+  }, {
     path: 'personalCenter',
     component: PersonalCenter,
     meta: { title: '个人中心' },

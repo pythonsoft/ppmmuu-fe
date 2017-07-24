@@ -1,36 +1,37 @@
 import axios from 'axios';
+
 const utils = {};
 
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
 
-axios.interceptors.request.use(function(config) {
+axios.interceptors.request.use((config) => {
   // Do something before request is sent
   if (config.method === 'get') {
     config.params = config.params || {};
-    config.params['t'] = new Date().getTime();
+    config.params.t = new Date().getTime();
   } else if (config.method === 'post') {
     config.data = config.data || {};
-    config.data['t'] = new Date().getTime();
+    config.data.t = new Date().getTime();
   }
 
   return config;
-}, function(error) {
+}, error =>
   // Do something with request error
-  return Promise.reject(error);
-});
+  Promise.reject(error)
+);
 
-axios.interceptors.response.use(function(response) {
+axios.interceptors.response.use((response) => {
   // Do something with response data
   const res = response.data;
-  const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004']
+  const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004'];
   if (loginStatusCodeArr.indexOf(res.status) !== -1) {
     window.location.href = '/login';
   }
   return response;
-}, function(error) {
+}, error =>
   // Do something with response error
-  return Promise.reject(error);
-});
+  Promise.reject(error)
+);
 
 utils.formatQuery = function formatQuery(obj, isGet = false) {
   return isGet ? {
@@ -65,7 +66,7 @@ utils.hardMerge = function hardMerge(arr1, arr2) {
 function transferDataToTree(data, keyName) {
   keyName = keyName || '_id';
 
-  const format = function(d) {
+  const format = function (d) {
     if (d && d.constructor && d.constructor === Array) {
       if (d.length === 0 || (typeof d[0] !== 'object')) {
         return d;

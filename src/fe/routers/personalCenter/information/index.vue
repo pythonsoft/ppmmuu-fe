@@ -64,7 +64,7 @@
     data() {
       return {
         defaultRoute: '/',
-        rules:{
+        rules: {
           name: [
             { required: true, message: '请输入中文名' }
           ],
@@ -94,9 +94,9 @@
             email: ''
           }
         }
-      }
+      };
     },
-    components:{
+    components: {
       'upload-img': UploadImg
     },
     created() {
@@ -111,11 +111,12 @@
       getUserDetail() {
         const me = this;
         api.getUserDetail()
-                .then(function(res){
-                  me.userInfo = res.data;
-                }).catch(function(error){
-          me.$message.error(error);
-        })
+          .then((res) => {
+            me.userInfo = res.data;
+            console.log(me.userInfo.name);
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       saveClick() {
 
