@@ -16,61 +16,13 @@
 <script>
   const api = require('../../../api/engine');
 
-  // 组操作
-  const groupHandle = {
-    createGroupAPI() {
-      const me = this;
-      const name = this.name;
-
-      if (!name) {
-        this.errorMessage = '请输入小组名称';
-        return false;
-      }
-
-      api.addGroup({
-        parentId: me.selectedNodeInfo._id,
-        name: name
-      }).then((res) => {
-
-      }).catch((err) => {
-        me.showErrorInfo(err);
-      });
-    }
-  };
-
-  // 对话框
-  const dialogHandle = {
-    cancelDialog() {
-      this.visible = false;
-      this.title = '';
-      this.name = '';
-      this.message = '';
-      this.errorMessage = '';
-    },
-    confirmDialog() {
-      const action = this[this.action];
-
-      if (action) {
-        action();
-      } else {
-        cancelDialog();
-      }
-    }
-  };
-
-  const helpHandle = {
-    showErrorInfo(message) {
-      this.$message.error(message);
-    }
-  };
-
   export default {
     name: 'engineDialogView',
     props: ['vueInstance'],
     data() {
       return {
         selectedNodeInfo: {},
-        myBus: this.vueInstance,
+        bubble: this.vueInstance,
         visible: false,
         title: '',
         name: '',
@@ -81,14 +33,59 @@
     },
     created() {
       const me = this;
-      this.myBus.$on('engine.addGroup', () => {
+
+      me.bubble.$on('engine.addGroup', (node) => {
+        me.selectedNodeInfo = node;
         me.visible = true;
         me.title = '添加分组';
         me.name = '';
         me.action = 'createGroupAPI';
       });
     },
-    methods: Object.assign({}, groupHandle, dialogHandle, helpHandle)
+    methods: {
+      showErrorInfo(message) {
+        this.$message.error(message);
+      },
+
+      cancelDialog() {
+        this.visible = false;
+        this.title = '';
+        this.name = '';
+        this.message = '';
+        this.errorMessage = '';
+      },
+      confirmDialog() {
+        const action = this[this.action];
+
+        if (action) {
+          action();
+        } else {
+          this.cancelDialog();
+        }
+      },
+      createGroupAPI() {
+        const me = this;
+        const name = this.name;
+
+        if (!name) {
+          this.errorMessage = '请输入小组名称';
+          return false;
+        }
+
+        api.addGroup({
+          parentId: me.selectedNodeInfo.id || '',
+          name: name
+        }).then((res) => {
+          me.$message.success('成功添加小组');
+          me.bubble.$emit('engine.addGroup.callback');
+          me.cancelDialog();
+        }).catch((err) => {
+          me.showErrorInfo(err);
+        });
+
+        return false;
+      }
+    }
   };
 </script>
 

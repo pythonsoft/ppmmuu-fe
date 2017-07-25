@@ -61,7 +61,6 @@
 
         api.upload(param, config)
                 .then((res) => {
-          console.log("asfas===>", res);
           me.imgPath = res.data;
           me.$emit('img-change', res.data);
         })

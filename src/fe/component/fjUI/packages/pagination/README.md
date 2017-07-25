@@ -11,4 +11,4 @@
 ### events
 | 事件名称 | 说明 | 回调参数 | 实现 |
 |---------|--------|---------|-------- |
-| current-change | currentPage改变时触发 | 当前页currentPage | ✅ |
+| current-change | currentPage改变时触发 | 当前页currentPage, 旧的currentPage | ✅ |

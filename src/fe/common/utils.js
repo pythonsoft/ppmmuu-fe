@@ -75,7 +75,6 @@ function transferDataToTree(data, keyName) {
 
 utils.transferDataToTree = transferDataToTree;
 
-
 /**
  *
  * @param treeData array
