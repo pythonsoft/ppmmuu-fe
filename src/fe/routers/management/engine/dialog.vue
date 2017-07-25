@@ -29,7 +29,7 @@
         message: '',
         errorMessage: '',
         action: ''
-      }
+      };
     },
     created() {
       const me = this;
@@ -60,7 +60,7 @@
         if (action) {
           action();
         } else {
-          cancelDialog();
+          this.cancelDialog();
         }
       },
       createGroupAPI() {
@@ -79,12 +79,13 @@
           me.$message.success('成功添加小组');
           me.bubble.$emit('engine.addGroup.callback');
           me.cancelDialog();
-
         }).catch((err) => {
           me.showErrorInfo(err);
         });
-      },
+
+        return false;
+      }
     }
-  }
+  };
 </script>
 

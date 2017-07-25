@@ -23,57 +23,55 @@
   import layoutTwoRowTree from '../../../component/layout/twoRowTree/index';
 
   const api = require('../../../api/engine');
-  const treeDataBase = (function(key) {
+
+  const treeDataBase = (function (key) {
     let td = [];
     let indexs = {};
     const indexKey = key;
 
     const composeData = (d) => {
+      const arr = [];
 
-      const td = [];
-
-      for(let i = 0, len = d.length; i < len; i++) {
-        td.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children });
+      for (let i = 0, len = d.length; i < len; i++) {
+        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children });
       }
 
-      console.log(td);
-
-      return td;
+      return arr;
     };
 
     return {
-      get: function(parentId) {
-        if(td.length === 0) { return null; }
+      get(parentId) {
+        if (td.length === 0) { return null; }
         const parentIndex = indexs[parentId];
 
-        if(!parentIndex) {
+        if (!parentIndex) {
           return null;
         }
 
         const indexArray = parentIndex.split('-');
         let info = null;
 
-        for(let i = 0, len = indexArray.length; i < len; i++) {
-          if(i === 0) {
+        for (let i = 0, len = indexArray.length; i < len; i++) {
+          if (i === 0) {
             info = td[indexArray[i]];
-          }else {
+          } else {
             info = td[indexArray[i]].children;
           }
         }
 
         return { info, parentIndex };
       },
-      insert: function(parentId, infos) {
-        if(!infos && infos.length === 0) {
+      insert(parentId, infos) {
+        if (!infos && infos.length === 0) {
           return false;
         }
 
-        if(!parentId) {
+        if (!parentId) {
           td = composeData(infos);
           indexs = {};
 
-          for(let i = 0, len = infos.length; i < len; i++) {
-            indexs[infos[i][indexKey]] = i + '';
+          for (let i = 0, len = infos.length; i < len; i++) {
+            indexs[infos[i][indexKey]] = `${i}`;
           }
 
           return false;
@@ -81,7 +79,7 @@
 
         const val = this.get(parentId);
 
-        if(!val) {
+        if (!val) {
           return false;
         }
 
@@ -90,38 +88,42 @@
 
         this.remove(parentId);
 
-        for(let i = 0, len = infos.length; i < len; i++) {
-          indexs[infos[i][indexKey]] = parentIndex + '-' + i;
+        for (let i = 0, len = infos.length; i < len; i++) {
+          indexs[infos[i][indexKey]] = `${parentIndex}-${i}`;
         }
 
         info.children = composeData(infos);
+
+        return true;
       },
-      remove: function(parentId) {
-        if(!parentId) {
+      remove(parentId) {
+        if (!parentId) {
           td = [];
           return false;
         }
         const val = this.get(parentId);
 
-        if(!val) {
+        if (!val) {
           return false;
         }
 
         const children = val.info.children;
 
-        for(let i = 0, len = children.length; i < len; i++) {
-          if(indexs[children[i][indexKey]]) {
+        for (let i = 0, len = children.length; i < len; i++) {
+          if (indexs[children[i][indexKey]]) {
             delete indexs[children[i][indexKey]];
           }
         }
 
         val.info.children = [];
+
+        return true;
       },
-      getTreeData: function() {
+      getTreeData() {
         return utils.deepClone(td);
       }
-    }
-  })('_id');
+    };
+  }('_id'));
 
   export default {
     name: 'treeView',
@@ -134,8 +136,8 @@
         treeData: [],
         items: {},
         selectedNodeInfo: {},
-        bubble: this.vueInstance,
-      }
+        bubble: this.vueInstance
+      };
     },
     props: ['vueInstance'],
     created() {
@@ -181,10 +183,9 @@
           treeDataBase.insert(param.parentId, res.data.docs);
           me.treeData = treeDataBase.getTreeData();
         }).catch((error) => {
-          console.log('error --->', error);
           me.showErrorInfo(error);
         });
       }
     }
-  }
+  };
 </script>
