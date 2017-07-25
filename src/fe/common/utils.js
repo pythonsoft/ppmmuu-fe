@@ -106,6 +106,30 @@ utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
   return treeData;
 };
 
+/**
+ *
+ * @param treeData
+ * @param treeNodeId
+ * @param key
+ */
+utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
+  const loopTree = function loopTree(tree) {
+    for (let i = 0, len = tree.length; i < len; i++) {
+      if (tree[i][key] === treeNodeId) {
+        return tree[i];
+      }
+      if (tree[i].children && tree[i].children.length) {
+        loopTree(tree[i].children);
+      }
+    }
+    return null;
+  };
+  if (!treeNodeId) {
+    return null;
+  }
+  return loopTree(treeData);
+};
+
 utils.formatTree = function formatTree(list, keyName) {
   if (list.length === 0) {
     return ({
