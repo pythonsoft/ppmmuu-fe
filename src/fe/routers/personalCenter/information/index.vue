@@ -4,7 +4,7 @@
     <div class="personal-information-base">
       <div class="personal-information-base-title">基本信息</div>
       <div class="personal-information-base-left">
-        <upload-img :imgPath="userInfo.photo"></upload-img>
+        <upload-img :imgPath="userInfo.photo" @img-change="imgChange"></upload-img>
       </div>
       <div class="personal-information-base-right">
         <fj-form :model="userInfo" :rules="rules" ref="form" label-width="80px">
@@ -130,6 +130,9 @@
       },
       cancelClick() {
         this.getUserDetail();
+      },
+      imgChange(imgpath) {
+        this.userInfo.photo = imgpath;
       }
     }
   };

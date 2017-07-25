@@ -36,9 +36,9 @@ axios.interceptors.response.use((response) => {
   Promise.reject(error)
 );
 
-api.upload = function upload(data) {
+api.upload = function upload(param, config) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/upload', data)
+    axios.post('http://localhost:8080/upload', param, config)
       .then((response) => {
         const res = response.data;
         if (res.status === '0') {

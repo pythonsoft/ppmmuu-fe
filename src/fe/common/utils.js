@@ -192,4 +192,6 @@ utils.checkPassword = function checkPassword(password) {
   return /^[0-9a-zA-Z_]{6,20}$/.test(password);
 };
 
+utils.url = 'http://localhost:8080/';
+
 module.exports = utils;
