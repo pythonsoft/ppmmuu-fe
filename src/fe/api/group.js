@@ -3,7 +3,7 @@
  */
 import axios from 'axios';
 
-const api = {};
+const api = {};         //eslint-disable-line
 
 axios.defaults.withCredentials = true;
 
@@ -148,25 +148,9 @@ api.postGroupAddUser = function postGroupAddUser(data) {
   });
 };
 
-api.postJustifyUserGroup = function postJustifyUserGroup(data) {
+api.postDeleteGroupUser = function postDeleteGroupUser(data) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/group/justifyUserGroup', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
-
-api.postJustifyUserGroup = function postJustifyUserGroup(data) {
-  return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/group/justifyUserGroup', data)
+    axios.post('http://localhost:8080/group/deleteGroupUser', data)
       .then((response) => {
         const res = response.data;
         if (res.status === '0') {

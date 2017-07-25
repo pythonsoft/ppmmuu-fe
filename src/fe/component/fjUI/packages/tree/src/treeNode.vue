@@ -17,6 +17,7 @@
     <ul v-if="isFolder" v-show="open">
       <fj-tree-node
         v-for="(item, index) in node.children"
+        v-if="item.name"
         :node-key="nodeKey"
         :node-style="nodeStyle"
         :node="item"
@@ -46,7 +47,7 @@
     },
     computed: {
       isFolder() {
-        return this.node.children && this.node.children.length;
+        return this.node.children;
       },
       isCurrentNode() {
         return this.tree.currentNode === this;

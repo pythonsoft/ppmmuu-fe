@@ -20,7 +20,7 @@
   </fj-dialog>
 </template>
 <script>
-  import { formatQuery, getTree } from '../../../common/utils';
+  import { formatQuery, getTree, getTreeNode } from '../../../common/utils';
 
   const api = require('../../../api/role');
   const groupApi = require('../../../api/group');
@@ -35,6 +35,14 @@
       title: {
         type: String,
         default: ''
+      },
+      parentId: {
+        type: String,
+        default: ''
+      },
+      type: {
+        type: String,
+        default: '0'
       }
     },
     data() {
@@ -68,7 +76,8 @@
           this.showErrorInfo('没有选中的组织');
           return false;
         }
-        this.$emit('add-owner', this.currentNode);
+        const parentNode = getTreeNode(this.treeData, this.currentNode.parentId);
+        this.$emit('add-owner', this.currentNode, parentNode);
         return true;
       },
       handleTreeNodeClick(node) {
@@ -76,8 +85,8 @@
         const query = {};
         this.currentNode = node;
         if (!node) {
-          query.parentId = '';
-          query.type = '0';
+          query.parentId = this.parentId;
+          query.type = this.type;
         } else {
           query.parentId = node._id;
         }

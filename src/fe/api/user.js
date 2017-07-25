@@ -3,7 +3,7 @@
  */
 import axios from 'axios';
 
-const api = {};
+const api = {};         //eslint-disable-line
 
 axios.defaults.withCredentials = true;
 
@@ -87,6 +87,22 @@ api.getUserDetail = function getUserDetail(data) {
 api.postUserLogout = function postUserLogout(data) {
   return new Promise((resolve, reject) => {
     axios.post('http://localhost:8080/user/logout', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.postUserChangePassword = function postUserChangePassword(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/user/changePassword', data)
       .then((response) => {
         const res = response.data;
         if (res.status === '0') {
