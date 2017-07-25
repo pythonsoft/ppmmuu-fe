@@ -30,9 +30,10 @@
     const indexKey = key;
 
     const composeData = (d) => {
-      const arr = [];
+      let arr = null;
 
       for (let i = 0, len = d.length; i < len; i++) {
+        if(!arr) { arr = []; }
         arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children });
       }
 
@@ -42,6 +43,7 @@
     return {
       get(parentId) {
         if (td.length === 0) { return null; }
+
         const parentIndex = indexs[parentId];
 
         if (!parentIndex) {
@@ -49,14 +51,16 @@
         }
 
         const indexArray = parentIndex.split('-');
+
         let info = null;
 
         for (let i = 0, len = indexArray.length; i < len; i++) {
-          if (i === 0) {
-            info = td[indexArray[i]];
-          } else {
-            info = td[indexArray[i]].children;
+          if(i === 0) {
+            info = td[indexArray[i] * 1];
+          }else {
+            info = info.children ? info.children[indexArray[i] * 1] : null;
           }
+
         }
 
         return { info, parentIndex };
@@ -109,6 +113,10 @@
 
         const children = val.info.children;
 
+        if(!children) {
+          return false;
+        }
+
         for (let i = 0, len = children.length; i < len; i++) {
           if (indexs[children[i][indexKey]]) {
             delete indexs[children[i][indexKey]];
@@ -147,6 +155,10 @@
       me.bubble.$on('engine.addGroup.callback', () => {
         me.listGroupAPI();
       });
+
+      me.bubble.$on('engine.getSelectedNodeInfo', () => {
+        this.bubble.$emit('engine.getSelectedNodeInfo.callback', me.selectedNodeInfo);
+      });
     },
     methods: {
       showErrorInfo(message) {
@@ -154,11 +166,14 @@
       },
 
       treeNodeClick(node) {
-
       },
       treeNodeCurrentChange(node) {
         const me = this;
         me.selectedNodeInfo = node;
+
+        this.bubble.$emit('engine.setViewRouter', 'engineListView');
+        this.bubble.$emit('engine.selectedNodeInfo', me.selectedNodeInfo);
+
         me.listGroupAPI();
       },
       treeNodeExpand(node) {},
@@ -183,7 +198,7 @@
           treeDataBase.insert(param.parentId, res.data.docs);
           me.treeData = treeDataBase.getTreeData();
         }).catch((error) => {
-          me.showErrorInfo(error);
+          me.showErrorInfo(error.message);
         });
       }
     }
