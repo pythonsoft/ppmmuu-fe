@@ -75,7 +75,7 @@
         selectEngineInfo: {},
         /* engine param */
         keyword: '',
-        page: 1,
+        page: 1
       };
     },
     created() {
@@ -122,7 +122,7 @@
           keyword: me.keyword,
           groupId: me.selectedNodeInfo.id || '',
           page: me.page,
-          pageSize: 20,
+          pageSize: 20
         };
 
         api.listGroup({ params: param }).then((res) => {

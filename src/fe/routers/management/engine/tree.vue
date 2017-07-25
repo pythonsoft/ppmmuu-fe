@@ -33,7 +33,7 @@
       let arr = null;
 
       for (let i = 0, len = d.length; i < len; i++) {
-        if(!arr) { arr = []; }
+        if (!arr) { arr = []; }
         arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children });
       }
 
@@ -55,12 +55,11 @@
         let info = null;
 
         for (let i = 0, len = indexArray.length; i < len; i++) {
-          if(i === 0) {
+          if (i === 0) {
             info = td[indexArray[i] * 1];
-          }else {
+          } else {
             info = info.children ? info.children[indexArray[i] * 1] : null;
           }
-
         }
 
         return { info, parentIndex };
@@ -113,7 +112,7 @@
 
         const children = val.info.children;
 
-        if(!children) {
+        if (!children) {
           return false;
         }
 

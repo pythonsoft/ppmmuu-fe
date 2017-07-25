@@ -18,8 +18,8 @@
   import layoutTwoColumn from '../../../component/layout/twoColumn/index';
   import treeView from './tree';
   import dialogView from './dialog';
-  import engineListView from './engineList.vue';
-  import engineBaseSlideDialogView from './engineBaseSlideDialog.vue';
+  import engineListView from './engineList';
+  import engineBaseSlideDialogView from './engineBaseSlideDialog';
 
   export default {
     components: {
@@ -40,10 +40,9 @@
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.vueInstance = new Vue();
 
-      this.vueInstance.$on('engine.setViewRouter', function (router) {
+      this.vueInstance.$on('engine.setViewRouter', (router) => {
         me.viewRouter = router;
       });
-
     },
     methods: {
       getActiveRoute(path, level) {

@@ -24,7 +24,7 @@
     },
     data() {
       return {
-        img: "",
+        img: ''
       };
     },
     mounted() {
@@ -46,27 +46,27 @@
           this.$message.error('文件不是图片类型!');
           return false;
         }
-        if(size > 1024 * this.maxSize){
-          this.$message.error('图片不能大于' + this.maxSize + 'M!');
+        if (size > 1024 * this.maxSize) {
+          this.$message.error(`图片不能大于${this.maxSize}M!`);
           return false;
         }
 
-        const param = new FormData(); //创建form对象
-        param.append('file', img, img.name);//通过append向form对象添加数据
-        param.append('chunk','0');//添加form表单中其他数据
+        const param = new FormData(); // 创建form对象
+        param.append('file', img, img.name);// 通过append向form对象添加数据
+        param.append('chunk', '0');// 添加form表单中其他数据
         console.log(param.get('file'));
         const config = {
-          headers:{'Content-Type':'multipart/form-data'}
-        };  //添加请求头
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }; // 添加请求头
 
         api.upload(param, config)
-                .then((res) => {
-          me.imgPath = res.data;
-          me.$emit('img-change', res.data);
-        })
-        .catch((error) => {
-          me.$message.error(error);
-        })
+          .then((res) => {
+            me.imgPath = res.data;
+            me.$emit('img-change', res.data);
+          })
+          .catch((error) => {
+            me.$message.error(error);
+          });
         return true;
       }
     }

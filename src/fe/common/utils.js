@@ -53,9 +53,9 @@ utils.merge = function merge(source, target) {
 
 utils.isIP = function isIP(strIP) {
   if (!(strIP)) return false;
-  const re=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g;
+  const re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g;
   if (re.test(strIP)) {
-    if( RegExp.$1 <256 && RegExp.$2<256 && RegExp.$3<256 && RegExp.$4<256) return true;
+    if (RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256) return true;
   }
   return false;
 };
@@ -116,7 +116,7 @@ utils.transferDataToTree = transferDataToTree;
 utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
   let flag = 0;
   const loopTree = function loopTree(tree) {
-    if(flag === 1){
+    if (flag === 1) {
       return;
     }
     for (let i = 0, len = tree.length; i < len; i++) {
@@ -150,7 +150,7 @@ utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
   let flag = 0;
   let treeNode = null;
   const loopTree = function loopTree(tree) {
-    if(flag === 1){
+    if (flag === 1) {
       return;
     }
     for (let i = 0, len = tree.length; i < len; i++) {
@@ -158,8 +158,7 @@ utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
         treeNode = tree[i];
         flag = 1;
         break;
-      }
-      else if (tree[i].children && tree[i].children.length) {
+      } else if (tree[i].children && tree[i].children.length) {
         loopTree(tree[i].children);
       }
     }

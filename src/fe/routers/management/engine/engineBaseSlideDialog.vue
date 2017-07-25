@@ -63,11 +63,12 @@
   </fj-slide-dialog>
 </template>
 <script>
-  const api = require('../../../api/engine');
   import utils from '../../../common/utils';
 
+  const api = require('../../../api/engine');
+
   export default {
-    name: 'engineDialogView',
+    name: 'engineBaseSlideDialogView',
     props: ['vueInstance', 'engineInfo'],
     data() {
       return {
@@ -86,7 +87,7 @@
           isTest: '0', // 0||1
           ip: '',
           intranetIp: '',
-          description: '',
+          description: ''
         },
         formDataRules: {
           code: [
@@ -100,31 +101,29 @@
           ],
           ip: [
             {
-              message: '请输入正确的ip格式', validator: (rule, value) => {
-              return !value ? true : utils.isIP(value);
-              }
+              message: '请输入正确的ip格式',
+              validator: (rule, value) => (!value ? true : utils.isIP(value))
             }
           ],
           intranetIp: [
             {
-              message: '请输入正确的ip格式', validator: (rule, value) => {
-                return !value ? true : utils.isIP(value);
-              }
+              message: '请输入正确的ip格式',
+              validator: (rule, value) => (!value ? true : utils.isIP(value))
             }
-          ],
+          ]
         },
         belongOptions: [
-          { value: '自有', label: '自有'},
-          { value: '客户', label: '客户'},
+          { value: '自有', label: '自有' },
+          { value: '客户', label: '客户' }
         ],
         isVirtualOptions: [
-          { value: '0', label: '否'},
-          { value: '1', label: '是'},
+          { value: '0', label: '否' },
+          { value: '1', label: '是' }
         ],
         isTestOptions: [
-          { value: '0', label: '否'},
-          { value: '1', label: '是'},
-        ],
+          { value: '0', label: '否' },
+          { value: '1', label: '是' }
+        ]
       };
     },
     created() {
@@ -143,9 +142,8 @@
           isTest: '0', // 0||1
           ip: '',
           intranetIp: '',
-          description: '',
+          description: ''
         };
-
       });
 
       me.bubble.$on('engine.getSelectedNodeInfo.callback', (node) => {
@@ -154,8 +152,8 @@
 
       this.bubble.$emit('engine.getSelectedNodeInfo');
 
-      if(me['engineInfo']) {
-        me.formData = utils.merge(utils.deepClone(me.formData), me['engineInfo']);
+      if (me.engineInfo) {
+        me.formData = utils.merge(utils.deepClone(me.formData), me.engineInfo);
       }
     },
     methods: {
@@ -167,7 +165,7 @@
       cancelSlideDialog() {
         this.visible = false;
       },
-      confirmSlideDialog() {},
+      confirmSlideDialog() {}
     }
-  }
+  };
 </script>
