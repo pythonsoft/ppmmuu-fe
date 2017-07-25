@@ -123,8 +123,8 @@
       },
       internalCurrentPage(newVal, oldVal) {
         if (oldVal !== newVal) {
-          this.$emit('update:currentPage', newVal);
-          this.$emit('current-change', newVal);
+          this.$emit('update:currentPage', newVal, oldVal);
+          this.$emit('current-change', newVal, oldVal);
         }
       },
       internalPageCount(val) {}

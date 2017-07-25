@@ -46,7 +46,6 @@
       });
       this.$on('remove-field', (field) => {
         if (field.prop) {
-          console.log('removeField');
           this.fields.splice(this.fields.indexOf(field), 1);
         }
       });
