@@ -85,11 +85,16 @@ utils.transferDataToTree = transferDataToTree;
  * @returns {*}
  */
 utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
+  let flag = 0;
   const loopTree = function loopTree(tree) {
+    if(flag === 1){
+      return;
+    }
     for (let i = 0, len = tree.length; i < len; i++) {
       if (tree[i][key] === parentId) {
         tree[i].children = data;
-        return;
+        flag = 1;
+        break;
       }
       if (tree[i].children && tree[i].children.length) {
         loopTree(tree[i].children);
@@ -113,21 +118,28 @@ utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
  * @param key
  */
 utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
+  let flag = 0;
+  let treeNode = null;
   const loopTree = function loopTree(tree) {
+    if(flag === 1){
+      return;
+    }
     for (let i = 0, len = tree.length; i < len; i++) {
       if (tree[i][key] === treeNodeId) {
-        return tree[i];
+        treeNode = tree[i];
+        flag = 1;
+        break;
       }
-      if (tree[i].children && tree[i].children.length) {
+      else if (tree[i].children && tree[i].children.length) {
         loopTree(tree[i].children);
       }
     }
-    return null;
   };
   if (!treeNodeId) {
-    return null;
+    return treeNode;
   }
-  return loopTree(treeData);
+  loopTree(treeData);
+  return treeNode;
 };
 
 utils.formatTree = function formatTree(list, keyName) {
