@@ -75,7 +75,6 @@ function transferDataToTree(data, keyName) {
 
 utils.transferDataToTree = transferDataToTree;
 
-
 /**
  *
  * @param treeData array
@@ -85,6 +84,7 @@ utils.transferDataToTree = transferDataToTree;
  * @returns {*}
  */
 utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
+
   const loopTree = function loopTree(tree) {
     for (let i = 0, len = tree.length; i < len; i++) {
       if (tree[i][key] === parentId) {
