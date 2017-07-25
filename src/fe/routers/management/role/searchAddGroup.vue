@@ -42,7 +42,7 @@
       },
       type: {
         type: String,
-        default: ''
+        default: '0'
       }
     },
     data() {

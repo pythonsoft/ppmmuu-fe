@@ -16,7 +16,7 @@
 <script>
   const api = require('../../../api/engine');
 
-  //组操作
+  // 组操作
   const groupHandle = {
     createGroupAPI() {
       const me = this;
@@ -35,10 +35,10 @@
       }).catch((err) => {
         me.showErrorInfo(err);
       });
-    },
+    }
   };
 
-  //对话框
+  // 对话框
   const dialogHandle = {
     cancelDialog() {
       this.visible = false;
@@ -55,13 +55,13 @@
       } else {
         cancelDialog();
       }
-    },
+    }
   };
 
   const helpHandle = {
     showErrorInfo(message) {
       this.$message.error(message);
-    },
+    }
   };
 
   export default {
@@ -77,7 +77,7 @@
         message: '',
         errorMessage: '',
         action: ''
-      }
+      };
     },
     created() {
       const me = this;
@@ -89,6 +89,6 @@
       });
     },
     methods: Object.assign({}, groupHandle, dialogHandle, helpHandle)
-  }
+  };
 </script>
 

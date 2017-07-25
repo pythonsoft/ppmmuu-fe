@@ -35,8 +35,8 @@
         data: [],
         items: {},
         selectedNodeInfo: {},
-        myBus: this.vueInstance,
-      }
+        myBus: this.vueInstance
+      };
     },
     props: ['vueInstance'],
     created() {
@@ -66,7 +66,7 @@
 
       clickAddGroup() {
         this.myBus.$emit('engine.addGroup');
-      },
-    },
-  }
+      }
+    }
+  };
 </script>

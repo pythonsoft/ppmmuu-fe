@@ -20,11 +20,11 @@
     components: {
       'layout-two-column': layoutTwoColumn,
       'tree-view': treeView,
-      'engine-dialog-view': dialogView,
+      'engine-dialog-view': dialogView
     },
     data() {
       return {
-        vueInstance: null,
+        vueInstance: null
       };
     },
     created() {
