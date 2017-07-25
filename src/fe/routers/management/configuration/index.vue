@@ -131,7 +131,7 @@
         tableData: [],
         currentPage: 1,
         total: 0,
-        pageSize: 1,
+        pageSize: 15,
         change: true,
         deleted: true,
         groupName: '',

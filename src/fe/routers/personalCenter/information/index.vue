@@ -58,7 +58,6 @@
   import './information.css';
   import UploadImg from './uploadImg';
 
-  const utils = require('../../../common/utils');
   const api = require('../../../api/user');
 
   export default {
