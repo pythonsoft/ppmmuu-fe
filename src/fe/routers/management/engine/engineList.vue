@@ -29,6 +29,9 @@
         <fj-button type="info" size="mini" v-bind:disabled="isSelected" @click="rebootBtnClick">重启</fj-button>
       </span>
       <span class="layout-engine-btn-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isSelected" @click="configBtnClick">配置管理</fj-button>
+      </span>
+      <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isSelected" @click="statusBtnClick">运行状态</fj-button>
       </span>
       <span class="layout-engine-btn-mini-margin">
@@ -37,9 +40,14 @@
     </template>
     <template slot="table">
       <fj-table :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
-        <fj-table-column prop="_id" label="标识"></fj-table-column>
-        <fj-table-column prop="name" label="名称" ></fj-table-column>
-        <fj-table-column prop="description" label="描述"></fj-table-column>
+        <fj-table-column prop="isInstallMonitor" width="90" align="center" label="是否安装"></fj-table-column>
+        <fj-table-column prop="status" width="90" align="center"  label="运行状态" ></fj-table-column>
+        <fj-table-column prop="code" width="100" label="编号"></fj-table-column>
+        <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="intranetIp" width="140" align="center" label="内网IP"></fj-table-column>
+        <fj-table-column prop="isTest" width="90" align="center" label="测试机"></fj-table-column>
+        <fj-table-column prop="isVirtual" width="90" align="center" label="虚拟机"></fj-table-column>
+        <fj-table-column prop="modifyTime" width="140" align="center" label="上次活跃"></fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination"></template>
@@ -48,6 +56,8 @@
 <script>
   import './index.css';
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
+
+  const api = require('../../../api/engine');
 
   export default {
     name: 'engineList',
@@ -62,7 +72,10 @@
         title: '',
         selectedNodeInfo: {},
         bubble: this.vueInstance,
+        selectEngineInfo: {},
+        /* engine param */
         keyword: '',
+        page: 1,
       };
     },
     created() {
@@ -70,6 +83,9 @@
 
       me.bubble.$on('engine.selectedNodeInfo', (node) => {
         me.selectedNodeInfo = node;
+        me.keyword = '';
+        me.page = 1;
+        me.selectEngineInfo = {};
       });
 
       me.bubble.$on('engine.getSelectedNodeInfo.callback', (node) => {
@@ -89,12 +105,31 @@
       installBtnClick() {},
       stopBtnClick() {},
       rebootBtnClick() {},
+      configBtnClick() {},
       statusBtnClick() {},
       monitorBtnClick() {},
 
       /* table */
       handleCurrentChange() {
 
+      },
+
+      /* api */
+      listEngine() {
+        const me = this;
+
+        const param = {
+          keyword: me.keyword,
+          groupId: me.selectedNodeInfo.id || '',
+          page: me.page,
+          pageSize: 20,
+        };
+
+        api.listGroup({ params: param }).then((res) => {
+          me.tableData = res.data.docs;
+        }).catch((error) => {
+          me.showErrorInfo(error.message);
+        });
       }
     }
   };

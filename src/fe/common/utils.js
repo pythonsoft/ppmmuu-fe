@@ -30,6 +30,36 @@ utils.hardMerge = function hardMerge(arr1, arr2) {
   return arr1;
 };
 
+utils.merge = function merge(source, target) {
+  if (utils.isEmptyObject(target)) { return source; }
+  if (utils.isEmptyObject(source)) {
+    if (typeof source === 'string') {
+      return '';
+    }
+
+    return {};
+  }
+
+  const s = Object.assign({}, source);
+
+  for (const k in s) {
+    if (target[k]) {
+      s[k] = target[k];
+    }
+  }
+
+  return s;
+};
+
+utils.isIP = function isIP(strIP) {
+  if (!(strIP)) return false;
+  const re=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g;
+  if (re.test(strIP)) {
+    if( RegExp.$1 <256 && RegExp.$2<256 && RegExp.$3<256 && RegExp.$4<256) return true;
+  }
+  return false;
+};
+
 function transferDataToTree(data, keyName) {
   keyName = keyName || '_id';
 

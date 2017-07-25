@@ -7,6 +7,7 @@
       <engine-list-view v-if="viewRouter === 'engineListView'" :vueInstance="vueInstance"></engine-list-view>
     </template>
     <engine-dialog-view :vueInstance="vueInstance"></engine-dialog-view>
+    <engine-base-slide-dialog-view :vueInstance="vueInstance"></engine-base-slide-dialog-view>
   </layout-two-column>
 </template>
 <style>
@@ -18,13 +19,15 @@
   import treeView from './tree';
   import dialogView from './dialog';
   import engineListView from './engineList.vue';
+  import engineBaseSlideDialogView from './engineBaseSlideDialog.vue';
 
   export default {
     components: {
       'layout-two-column': layoutTwoColumn,
       'tree-view': treeView,
       'engine-dialog-view': dialogView,
-      'engine-list-view': engineListView
+      'engine-list-view': engineListView,
+      'engine-base-slide-dialog-view': engineBaseSlideDialogView
     },
     data() {
       return {
