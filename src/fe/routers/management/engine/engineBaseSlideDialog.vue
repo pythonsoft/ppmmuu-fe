@@ -18,10 +18,10 @@
       <fj-form-item label="内网IP" prop="intranetIp">
         <fj-input v-model="formData.intranetIp"/>
       </fj-form-item>
-      <fj-form-item label="地区" prop="area">
+      <fj-form-item label="地区">
         <fj-input v-model="formData.area"/>
       </fj-form-item>
-      <fj-form-item label="所属" prop="belong">
+      <fj-form-item label="所属">
         <fj-select placeholder="请选择" v-model="formData.belong" clearable>
           <fj-option
             v-for="item in belongOptions"
@@ -31,7 +31,7 @@
           </fj-option>
         </fj-select>
       </fj-form-item>
-      <fj-form-item label="虚拟机" prop="isVirtual">
+      <fj-form-item label="虚拟机">
         <fj-select placeholder="请选择" v-model="formData.isVirtual" clearable>
           <fj-option
             v-for="item in isVirtualOptions"
@@ -41,7 +41,7 @@
           </fj-option>
         </fj-select>
       </fj-form-item>
-      <fj-form-item label="测试机" prop="isTest">
+      <fj-form-item label="测试机">
         <fj-select placeholder="请选择" v-model="formData.isTest" clearable>
           <fj-option
             v-for="item in isTestOptions"
@@ -74,6 +74,7 @@
       return {
         title: '引擎信息',
         visible: false,
+        bubble: this.vueInstance,
 
         selectedNodeInfo: {},
 
