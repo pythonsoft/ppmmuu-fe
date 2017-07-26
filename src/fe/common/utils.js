@@ -221,6 +221,17 @@ utils.checkPassword = function checkPassword(password) {
   return /^[0-9a-zA-Z_]{6,20}$/.test(password);
 };
 
-utils.url = 'http://localhost:8080/';
+utils.isEmptyObject = function isEmptyObject(obj) {
+  if (obj === null || typeof obj === 'undefined') return true;
+
+  if (obj.length && obj.length > 0) return false;
+  if (obj.length === 0) return true;
+
+  for (const key in obj) {
+    if (!hasOwnProperty.call(obj, key)) return false;
+  }
+
+  return true;
+};
 
 module.exports = utils;
