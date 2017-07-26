@@ -70,7 +70,7 @@ api.addGroup = function addGroup(data) {
 
 api.listEngine = function listEngine(data) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/engine/listEngine', data)
+    axios.get('http://localhost:8080/engine/listEngine', data)
       .then((response) => {
         const res = response.data;
         if (res.status === '0') {

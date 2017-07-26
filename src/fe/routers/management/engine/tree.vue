@@ -156,7 +156,7 @@
       });
 
       me.bubble.$on('engine.getSelectedNodeInfo', () => {
-        this.bubble.$emit('engine.getSelectedNodeInfo.callback', me.selectedNodeInfo);
+        me.bubble.$emit('engine.getSelectedNodeInfo.callback', me.selectedNodeInfo);
       });
     },
     methods: {

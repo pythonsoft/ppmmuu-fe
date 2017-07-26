@@ -57,8 +57,8 @@
     </fj-form>
 
     <div slot="footer">
-      <fj-button @click="cancelSlideDialog">取消</fj-button>
-      <fj-button type="primary" @click="confirmSlideDialog">确定</fj-button>
+      <fj-button @click="cancelClick">取消</fj-button>
+      <fj-button type="primary" :disabled="submitBtn.disabled" :loading="submitBtn.loading" @click="confirmClick" >{{submitBtn.text}}</fj-button>
     </div>
   </fj-slide-dialog>
 </template>
@@ -75,7 +75,6 @@
         title: '引擎信息',
         visible: false,
         bubble: this.vueInstance,
-
         selectedNodeInfo: {},
 
         formData: {
@@ -124,20 +123,53 @@
         isTestOptions: [
           { value: '0', label: '否' },
           { value: '1', label: '是' }
-        ]
+        ],
+
+        submitBtn: {
+          disabled: false,
+          loading: false,
+          text: '确定'
+        }
       };
     },
     created() {
       const me = this;
 
-      me.bubble.$on('engine.selectedNodeInfo', (node) => {
+      me.bubble.$on('engine.selectedNodeInfo', (info) => {
+        me.selectedNodeInfo = info;
+        me.formData.groupId = info.id;
+      });
+
+      me.bubble.$on('engine.getSelectedNodeInfo.callback', (info) => {
+        me.selectedNodeInfo = info;
+        me.formData.groupId = info.id;
+      });
+
+      me.bubble.$emit('engine.getSelectedNodeInfo');
+
+      // 传入需要渲染的engine信息
+      me.bubble.$on('engine.getEngineInfo', (info) => {
+        if (info && !utils.isEmptyObject(info)) {
+          utils.merge(utils.deepClone(me.formData), info);
+        }
+        me.visible = true;
+      });
+
+      if (me.engineInfo) {
+        me.formData = utils.merge(utils.deepClone(me.formData), me.engineInfo);
+      }
+    },
+    methods: {
+      initParam() {
+        const me = this;
         me.visible = false;
 
         me.formData = {
+          _id: '',
           code: '', // 编号
           name: '',
           belong: '',
-          groupId: '',
+          groupId: me.selectedNodeInfo.id || '',
           area: '',
           isVirtual: '0', // 0||1
           isTest: '0', // 0||1
@@ -145,28 +177,43 @@
           intranetIp: '',
           description: ''
         };
-      });
 
-      me.bubble.$on('engine.getSelectedNodeInfo.callback', (node) => {
-        me.selectedNodeInfo = node;
-      });
-
-      this.bubble.$emit('engine.getSelectedNodeInfo');
-
-      if (me.engineInfo) {
-        me.formData = utils.merge(utils.deepClone(me.formData), me.engineInfo);
-      }
-    },
-    methods: {
+        me.submitBtn = {
+          disabled: false,
+          loading: false,
+          text: '确定'
+        };
+      },
       showErrorInfo(message) {
         this.$message.error(message);
       },
       handleOpenSlideDialog() {},
       handleCloseSlideDialog() {},
-      cancelSlideDialog() {
+      cancelClick() {
         this.visible = false;
       },
-      confirmSlideDialog() {}
+      confirmClick() {
+        const me = this;
+        if (me.formData._id) {
+          // TODO
+        } else {
+          me.submitBtn.disabled = true;
+          me.submitBtn.loading = true;
+
+          console.log(me.formData);
+
+          api.addEngine(me.formData).then((res) => {
+            me.tableData = res.data.docs;
+            me.$message.success('添加服务器成功');
+            me.bubble.$emit('engine.reloadList');
+            me.initParam();
+          }).catch((error) => {
+            me.submitBtn.disabled = false;
+            me.submitBtn.loading = false;
+            me.showErrorInfo(error.message);
+          });
+        }
+      }
     }
   };
 </script>
