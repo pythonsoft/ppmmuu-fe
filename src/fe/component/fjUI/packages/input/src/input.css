@@ -56,9 +56,17 @@
   right: 0;
   top: 0;
   text-align: center;
-  color: #333;
+  color: #344C67;
   cursor: pointer;
+  border-radius: var(--input-border-radius);
 }
 .fj-input-icon+.fj-input-inner {
   padding-right: 35px;
+}
+.fj-input-icon:after {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
 }

@@ -1,6 +1,8 @@
 <template>
   <li class="fj-submenu-group">
     <div class="fj-submenu-group-title" @click="handleClick">
+      <i
+        :class="opened ? 'tri-bottom' : 'tri-right'"></i>
       <slot name="title"></slot>
     </div>
     <ul v-show="opened"><slot></slot></ul>

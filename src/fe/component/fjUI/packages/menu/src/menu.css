@@ -7,12 +7,11 @@
 }
 
 .fj-menu-item {
+  position: relative;
   height: 77px;
-  line-height: 77px;
   font-size: 12px;
   color: #9FB3CA;
   border-bottom: 1px solid #5B728A;
-  text-align: center;
   cursor: pointer;
   transition: background-color .3s, color .3s, border-bottom .3s;
 }

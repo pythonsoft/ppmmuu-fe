@@ -8,7 +8,7 @@
     clickable ? 'fj-clickable-tag' : ''
   ]">
     <slot></slot>
-    <i v-if="closable" @click="handleClose" class="fj-tag-close">X</i>
+    <i v-if="closable" @click="handleClose" class="iconfont fj-tag-close"></i>
   </span>
 </template>
 <script>
