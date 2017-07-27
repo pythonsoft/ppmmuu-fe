@@ -9,6 +9,7 @@
       <fj-tree
         :data="treeData"
         node-key="id"
+        :render-content="renderContent"
         @node-click="treeNodeClick"
         @current-change="treeNodeCurrentChange"
         @node-expand="treeNodeExpand"
@@ -21,6 +22,7 @@
   import './index.css';
   import utils from '../../../common/utils';
   import layoutTwoRowTree from '../../../component/layout/twoRowTree/index';
+  import TreeNodeContent from './treeNodeContent';
 
   const api = require('../../../api/engine');
 
@@ -135,7 +137,8 @@
   export default {
     name: 'treeView',
     components: {
-      'layout-two-row-tree': layoutTwoRowTree
+      TreeNodeContent,
+      'layout-two-row-tree': layoutTwoRowTree,
     },
     data() {
       return {
@@ -164,6 +167,7 @@
         this.$message.error(message);
       },
 
+      /* tree */
       treeNodeClick(node) {
       },
       treeNodeCurrentChange(node) {
@@ -177,6 +181,17 @@
       },
       treeNodeExpand(node) {},
       treeNodeCollapse(node) {},
+      renderContent(h, node) {
+        return h(TreeNodeContent, {
+          props: {
+            node: node,
+            settingBtnClick(n, event) {
+              console.log('settingBtnClick --->', n, event);
+            }
+          }
+        });
+      },
+      /* tree */
       clickAddGroup() {
         const me = this;
         this.bubble.$emit('engine.addGroup', me.selectedNodeInfo);
