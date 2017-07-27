@@ -39,16 +39,24 @@
       </span>
     </template>
     <template slot="table">
-      <fj-table :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
-        <fj-table-column prop="isInstallMonitor" width="90" align="center" label="是否安装"></fj-table-column>
-        <fj-table-column prop="status" width="90" align="center"  label="运行状态" ></fj-table-column>
+      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+        <fj-table-column prop="isInstallMonitor" width="90" align="center" label="是否安装">
+          <template scope="props">{{ getTextByValue(props.row.isInstallMonitor, 'isInstallMonitor') }}</template>
+        </fj-table-column>
+        <fj-table-column prop="status" width="90" align="center" label="运行状态" >
+          <template scope="props">{{ getRunStatus(props.row.command, props.row.modifyTime) }}</template>
+        </fj-table-column>
         <fj-table-column prop="code" width="100" label="编号"></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="intranetIp" width="140" align="center" label="内网IP"></fj-table-column>
-        <fj-table-column prop="isTest" width="90" align="center" label="测试机"></fj-table-column>
-        <fj-table-column prop="isVirtual" width="90" align="center" label="虚拟机"></fj-table-column>
-        <fj-table-column prop="modifyTime" width="140" align="center" label="上次活跃">
-          <template scope="props"><span>{{ props.row.modifyTime | formatTime }}</span></template>
+        <fj-table-column prop="isTest" width="90" align="center" label="测试机">
+          <template scope="props">{{ getTextByValue(props.row.isTest, 'isTest') }}</template>
+        </fj-table-column>
+        <fj-table-column prop="isVirtual" width="90" align="center" label="虚拟机">
+          <template scope="props">{{ getTextByValue(props.row.isVirtual, 'isVirtual') }}</template>
+        </fj-table-column>
+        <fj-table-column prop="modifyTime" width="160" align="center" label="上次活跃">
+          <template scope="props">{{ props.row.modifyTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>
@@ -63,10 +71,12 @@
   </layout-four-row>
 </template>
 <script>
+
   import './index.css';
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
 
   const api = require('../../../api/engine');
+  const status = require('./engineStatus');
 
   export default {
     name: 'engineList',
@@ -120,6 +130,15 @@
       handleClickSearch() {
 
       },
+
+      getTextByValue(v, st) {
+        return status.getTextByValue(v, st);
+      },
+
+      getRunStatus(command, time) {
+        return status.getRunStatus(command, time);
+      },
+
       /* btn */
       addBtnClick() {
         const me = this;

@@ -200,8 +200,6 @@
           me.submitBtn.disabled = true;
           me.submitBtn.loading = true;
 
-          console.log(me.formData);
-
           api.addEngine(me.formData).then((res) => {
             me.tableData = res.data.docs;
             me.$message.success('添加服务器成功');
