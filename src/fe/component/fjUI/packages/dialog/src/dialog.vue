@@ -7,7 +7,7 @@
           <slot name="title">
             <span class="fj-dialog-title">{{title}}</span>
           </slot>
-          <i v-if="showClose" class="fj-dialog-closebtn" @click="handleClose">X</i>
+          <i v-if="showClose" class="iconfont icon-close fj-dialog-closebtn" @click="handleClose"></i>
         </div>
         <div class="fj-dialog-body"><slot></slot></div>
         <div class="fj-dialog-footer" v-if="$slots.footer">

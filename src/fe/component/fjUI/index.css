@@ -1,3 +1,5 @@
+@import "./transition.css";
+@import "./font.css";
 @import "./packages/button/src/button.css";
 @import "./packages/radio/src/radio.css";
 @import "./packages/checkbox/src/checkbox.css";
@@ -15,4 +17,3 @@
 @import "./packages/tree/src/tree.css";
 @import "./packages/slideDialog/src/slideDialog.css";
 @import "./packages/dropdown/src/dropdown.css";
-@import "./transition.css";

@@ -16,3 +16,17 @@
   background-color: #9FB3CA;
   color: #fff;
 }
+
+.tri-bottom,
+.tri-right {
+  position: absolute;
+  border: 5px solid #4C637B;
+}
+.tri-bottom {
+  top: 8px;
+  border-color: #4C637B transparent transparent transparent;
+}
+.tri-right {
+  top: 5px;
+  border-color: transparent transparent transparent #4C637B;
+}

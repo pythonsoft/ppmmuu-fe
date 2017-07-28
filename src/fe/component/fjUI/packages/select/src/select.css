@@ -37,3 +37,9 @@
   color: #fff;
   background-color: var(--select-option-selected-background-color);
 }
+.select-delete-icon {
+  color: #CED9E5;
+}
+.select-delete-icon:hover {
+  color: #4C637B;
+}

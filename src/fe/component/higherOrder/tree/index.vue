@@ -302,7 +302,7 @@
         const me = this;
 
         this.listGroup && this.listGroup(this.selectedNodeInfo, (data) => {
-          me.insertNode(me.selectedNodeInfo.id, data);
+          me.insertNode(me.selectedNodeInfo.id || '', data);
         });
       }
 

@@ -42,7 +42,7 @@
       return {
         options: [],
         selectedLabel: '',
-        icon: '下',
+        icon: 'icon-fill-bottom',
         visible: false,
         inputWidth: 0,
         dropdownPosition: 'bottom',
@@ -77,7 +77,7 @@
         }
       },
       handleIconClick(e) {
-        if (this.iconClass.indexOf('x') > -1) {
+        if (this.iconClass.indexOf('icon-fill-close select-delete-icon') > -1) {
           this.deleteSelected(e);
         } else {
           this.visible = !this.visible;
@@ -106,10 +106,10 @@
         this.visible = false;
       },
       handleIconHide() {
-        this.icon = '下';
+        this.icon = 'icon-fill-bottom';
       },
       handleIconShow() {
-        this.icon = '上';
+        this.icon = 'icon-fill-top';
       },
       handleOptionClick(option) {
         this.$emit('input', option.value);
@@ -189,7 +189,7 @@
     },
     computed: {
       iconClass() {
-        return this.clearable && this.inputHovering && this.value !== '' ? 'x' : this.icon;
+        return this.clearable && this.inputHovering && this.value !== '' ? 'icon-fill-close select-delete-icon' : this.icon;
       }
     },
     components: {
