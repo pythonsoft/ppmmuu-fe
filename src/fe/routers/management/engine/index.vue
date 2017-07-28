@@ -121,7 +121,7 @@
       listGroup(treeNode, cb) {
         const me = this;
 
-        console.log('treeNode -->', treeNode)
+        console.log('treeNode -->', treeNode);
 
         const param = {
           parentId: treeNode.id || '',
