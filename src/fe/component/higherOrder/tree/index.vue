@@ -216,8 +216,8 @@
         me.insertNode(parentId, data);
       });
 
-      me.bubble.$on('tree.getParentsId', (parentId) => {
-        me.treeDataBaseInstance.getParentsId(parentId);
+      me.bubble.$on('tree.getParentsId', (parentId, cb) => {
+        cb && cb(me.treeDataBaseInstance.getParentsId(parentId));
       });
 
       this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey);
