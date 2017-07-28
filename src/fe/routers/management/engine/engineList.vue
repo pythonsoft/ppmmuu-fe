@@ -83,12 +83,16 @@
     components: {
       'layout-four-row': fourRowLayout
     },
-    props: ['vueInstance'],
+    props: {
+      vueInstance: { type: Object },
+      selectedNodeInfo: { type: Object },
+      displaySlideDialog: { type: Function },
+      selectFn: { type: Function }
+    },
     data() {
       return {
         isDisabled: true,
         tableData: [],
-        selectedNodeInfo: {},
         bubble: this.vueInstance,
         selectEngineInfo: {},
         /* engine param */
@@ -101,18 +105,7 @@
     created() {
       const me = this;
 
-      me.bubble.$on('engine.selectedNodeInfo', (node) => {
-        me.initParam();
-        me.selectedNodeInfo = node;
-      });
-
-      me.bubble.$on('engine.getSelectedNodeInfo.callback', (node) => {
-        me.selectedNodeInfo = node;
-      });
-
-      this.bubble.$emit('engine.getSelectedNodeInfo');
-
-      me.bubble.$on('engine.reloadList', () => {
+      me.bubble.$on('engine.listEngine', () => {
         me.initParam();
         me.listEngine();
       });
@@ -123,18 +116,15 @@
       initParam() {
         this.isDisabled = true;
         this.tableData = [];
-        this.selectEngineInfo = {};
         this.keyword = '';
         this.page = 1;
       },
       handleClickSearch() {
 
       },
-
       getTextByValue(v, st) {
         return status.getTextByValue(v, st);
       },
-
       getRunStatus(command, time) {
         return status.getRunStatus(command, time);
       },
@@ -142,7 +132,7 @@
       /* btn */
       addBtnClick() {
         const me = this;
-        me.bubble.$emit('engine.getEngineInfo', null);
+        me.displaySlideDialog && me.displaySlideDialog(true);
       },
       editBtnClick() {
 

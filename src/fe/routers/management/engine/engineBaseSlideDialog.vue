@@ -1,7 +1,7 @@
 <template>
   <fj-slide-dialog
     :title="title"
-    :visible.sync="visible"
+    :visible.sync="display"
     @open="handleOpenSlideDialog"
     @close="handleCloseSlideDialog">
 
@@ -58,7 +58,7 @@
 
     <div slot="footer">
       <fj-button @click="cancelClick">取消</fj-button>
-      <fj-button type="primary" :disabled="submitBtn.disabled" :loading="submitBtn.loading" @click="confirmClick" >{{submitBtn.text}}</fj-button>
+      <fj-button type="primary" :disabled="submitBtn.disabled" :loading="submitBtn.loading" @click="_confirmFn" >{{submitBtn.text}}</fj-button>
     </div>
   </fj-slide-dialog>
 </template>
@@ -69,19 +69,29 @@
 
   export default {
     name: 'engineBaseSlideDialogView',
-    props: ['vueInstance', 'engineInfo'],
+    props: {
+      vueInstance: { type: Object },
+      engineInfo: { type: Object },
+      visible: { type: Boolean, default: false },
+      selectedNodeInfo: { type: Object },
+      confirmFn: { type: Function }
+    },
+    watch: {
+      visible(v) {
+        this.display = v;
+      }
+    },
     data() {
       return {
         title: '引擎信息',
-        visible: false,
+        display: false,
         bubble: this.vueInstance,
-        selectedNodeInfo: {},
 
         formData: {
           code: '', // 编号
           name: '',
           belong: '',
-          groupId: '',
+          groupId: this.selectedNodeInfo.id || '',
           area: '',
           isVirtual: '0', // 0||1
           isTest: '0', // 0||1
@@ -134,27 +144,6 @@
     },
     created() {
       const me = this;
-
-      me.bubble.$on('engine.selectedNodeInfo', (info) => {
-        me.selectedNodeInfo = info;
-        me.formData.groupId = info.id;
-      });
-
-      me.bubble.$on('engine.getSelectedNodeInfo.callback', (info) => {
-        me.selectedNodeInfo = info;
-        me.formData.groupId = info.id;
-      });
-
-      me.bubble.$emit('engine.getSelectedNodeInfo');
-
-      // 传入需要渲染的engine信息
-      me.bubble.$on('engine.getEngineInfo', (info) => {
-        if (info && !utils.isEmptyObject(info)) {
-          utils.merge(utils.deepClone(me.formData), info);
-        }
-        me.visible = true;
-      });
-
       if (me.engineInfo) {
         me.formData = utils.merge(utils.deepClone(me.formData), me.engineInfo);
       }
@@ -162,7 +151,7 @@
     methods: {
       initParam() {
         const me = this;
-        me.visible = false;
+        me.display = false;
 
         me.formData = {
           _id: '',
@@ -190,9 +179,9 @@
       handleOpenSlideDialog() {},
       handleCloseSlideDialog() {},
       cancelClick() {
-        this.visible = false;
+        this.$emit('update:visible', false);
       },
-      confirmClick() {
+      _confirmFn() {
         const me = this;
         if (me.formData._id) {
           // TODO
@@ -203,8 +192,8 @@
           api.addEngine(me.formData).then((res) => {
             me.tableData = res.data.docs;
             me.$message.success('添加服务器成功');
-            me.bubble.$emit('engine.reloadList');
-            me.initParam();
+            me.confirmFn && me.confirmFn(res.data);
+          //            me.initParam();
           }).catch((error) => {
             me.submitBtn.disabled = false;
             me.submitBtn.loading = false;

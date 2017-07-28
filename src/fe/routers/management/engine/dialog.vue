@@ -1,5 +1,5 @@
 <template>
-  <fj-dialog :title="title" :visible.sync="visible" @close="cancelDialog">
+  <fj-dialog :title="title" :visible.sync="display" @close="cancelDialog">
     <template v-if="action === 'createGroupAPI'">
       请输入组名称 <span v-if="errorMessage !== ''" class="dialog-input-error">({{ errorMessage }})</span>
       <fj-input v-model.trim="name" autofocus />
@@ -18,57 +18,55 @@
 
   export default {
     name: 'engineDialogView',
-    props: ['vueInstance'],
+    props: {
+      vueInstance: { type: Object },
+      selectedNodeInfo: { type: Object },
+      visible: { type: Boolean, default: false },
+      confirmFn: { type: Function }
+    },
     data() {
       return {
-        selectedNodeInfo: {},
         bubble: this.vueInstance,
-        visible: false,
-        title: '',
+        title: '添加分组',
         name: '',
         message: '',
         errorMessage: '',
-        action: ''
+        action: 'createGroupAPI',
+        display: false
       };
     },
+    watch: {
+      visible(val) {
+        this.display = val;
+      }
+    },
     created() {
-      const me = this;
-
-      me.bubble.$on('engine.addGroup', (node) => {
-        me.selectedNodeInfo = node;
-        me.visible = true;
-        me.title = '添加分组';
-        me.name = '';
-        me.action = 'createGroupAPI';
-      });
     },
     methods: {
       showErrorInfo(message) {
         this.$message.error(message);
       },
-
       cancelDialog() {
-        this.visible = false;
-        this.title = '';
-        this.name = '';
-        this.message = '';
-        this.errorMessage = '';
+        this.$emit('update:visible', false);
       },
       confirmDialog() {
+        const me = this;
         const action = this[this.action];
 
         if (action) {
-          action();
+          action((data) => {
+            me.confirmFn && me.confirmFn(data);
+          });
         } else {
           this.cancelDialog();
         }
       },
-      createGroupAPI() {
+      createGroupAPI(cb) {
         const me = this;
         const name = this.name;
 
         if (!name) {
-          this.errorMessage = '请输入小组名称';
+          this.errorMessage = '请输入组名称';
           return false;
         }
 
@@ -76,8 +74,8 @@
           parentId: me.selectedNodeInfo.id || '',
           name: name
         }).then((res) => {
-          me.$message.success('成功添加小组');
-          me.bubble.$emit('engine.addGroup.callback');
+          me.$message.success('成功添加');
+          cb && cb(res.data);
           me.cancelDialog();
         }).catch((err) => {
           me.showErrorInfo(err);
