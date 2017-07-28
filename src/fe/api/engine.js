@@ -68,4 +68,36 @@ api.addGroup = function addGroup(data) {
   });
 };
 
+api.listEngine = function listEngine(data) {
+  return new Promise((resolve, reject) => {
+    axios.get('http://localhost:8080/engine/listEngine', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.addEngine = function addEngine(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/addEngine', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 module.exports = api;

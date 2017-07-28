@@ -8,3 +8,18 @@
 .dialog-input-error {
   color: red;
 }
+
+.layout-engine-four-row-search-item{
+  float: left;
+  margin-left: 10px;
+}
+
+.layout-engine-btn-mini-margin {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.layout-engine-btn-margin {
+  margin-left: 18px;
+  font-size: 12px;
+}

@@ -30,6 +30,36 @@ utils.hardMerge = function hardMerge(arr1, arr2) {
   return arr1;
 };
 
+utils.merge = function merge(source, target) {
+  if (utils.isEmptyObject(target)) { return source; }
+  if (utils.isEmptyObject(source)) {
+    if (typeof source === 'string') {
+      return '';
+    }
+
+    return {};
+  }
+
+  const s = Object.assign({}, source);
+
+  for (const k in s) {
+    if (target[k]) {
+      s[k] = target[k];
+    }
+  }
+
+  return s;
+};
+
+utils.isIP = function isIP(strIP) {
+  if (!(strIP)) return false;
+  const re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g;
+  if (re.test(strIP)) {
+    if (RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256) return true;
+  }
+  return false;
+};
+
 function transferDataToTree(data, keyName) {
   keyName = keyName || '_id';
 
@@ -86,7 +116,7 @@ utils.transferDataToTree = transferDataToTree;
 utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
   let flag = 0;
   const loopTree = function loopTree(tree) {
-    if(flag === 1){
+    if (flag === 1) {
       return;
     }
     for (let i = 0, len = tree.length; i < len; i++) {
@@ -120,7 +150,7 @@ utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
   let flag = 0;
   let treeNode = null;
   const loopTree = function loopTree(tree) {
-    if(flag === 1){
+    if (flag === 1) {
       return;
     }
     for (let i = 0, len = tree.length; i < len; i++) {
@@ -128,8 +158,7 @@ utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
         treeNode = tree[i];
         flag = 1;
         break;
-      }
-      else if (tree[i].children && tree[i].children.length) {
+      } else if (tree[i].children && tree[i].children.length) {
         loopTree(tree[i].children);
       }
     }
@@ -192,6 +221,18 @@ utils.checkPassword = function checkPassword(password) {
   return /^[0-9a-zA-Z_]{6,20}$/.test(password);
 };
 
-utils.url = 'http://localhost:8080/';
+utils.isEmptyObject = function isEmptyObject(obj) {
+  if (obj === null || typeof obj === 'undefined') return true;
+
+  if (obj.constructor === Array) {
+    return obj.length === 0;
+  }
+
+  if (Object.keys(obj).length === 0) {
+    return true;
+  }
+
+  return false;
+};
 
 module.exports = utils;

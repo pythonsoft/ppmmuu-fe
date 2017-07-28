@@ -12,7 +12,7 @@
 </template>
 <script>
   const menu = [
-    { text: '媒体库', index: 'router1', route: '/1' },
+    { text: '媒体库', index: 'router1', route: '/mediaCenter' },
     { text: '订阅', index: 'router2', route: '/2' },
     { text: '任务', index: 'router3', route: '/3' },
     { text: '个人中心', index: 'personalCenter', route: '/personalCenter' },

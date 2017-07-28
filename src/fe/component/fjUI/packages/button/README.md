@@ -5,7 +5,7 @@
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
 | size | 尺寸 | string | large,small,mini | - | ✅ |
 | type | 类型 | string | primary,success,info,danger,text | - | ✅ |
-| loading | 是否加载中状态 | boolean | — | false | ❌ |
+| loading | 是否加载中状态 | boolean | — | false | ✅ |
 | disabled | 是否禁用状态 | boolean | — | false | ✅ |
 
 ### events
