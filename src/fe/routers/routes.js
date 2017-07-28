@@ -11,6 +11,7 @@ const PersonalCenter = resolve => require.ensure([], () => resolve(require('./pe
 const Information = resolve => require.ensure([], () => resolve(require('./personalCenter/information/index')), 'information');
 const ChangePassword = resolve => require.ensure([], () => resolve(require('./personalCenter/changePassword/index')), 'changePassword');
 const Feedback = resolve => require.ensure([], () => resolve(require('./personalCenter/feedback/index')), 'feedback');
+const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
 
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 
@@ -32,7 +33,7 @@ export default [{
       component: Management,
       meta: { title: '管理' },
       children: [
-        { path: 'account', component: Role, meta: { title: '账户' } },
+        { path: 'account', component: Account, meta: { title: '账户' } },
         { path: 'role', component: Role, meta: { title: '角色' } },
         { path: 'permission', component: Permission, meta: { title: '权限' } },
         { path: 'engine', component: Engine, meta: { title: '引擎管理' } },

@@ -49,7 +49,7 @@
     },
     computed: {
       isFolder() {
-        return this.node.children;
+        return this.node.children && this.node.children.length > 0;
       },
       isCurrentNode() {
         return this.tree.currentNode === this;

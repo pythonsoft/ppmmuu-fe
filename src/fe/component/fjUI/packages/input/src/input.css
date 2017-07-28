@@ -58,7 +58,8 @@
   text-align: center;
   color: #344C67;
   cursor: pointer;
-  border-radius: var(--input-border-radius);
+  border-top-right-radius: var(--input-border-radius);
+  border-bottom-right-radius: var(--input-border-radius);
 }
 .fj-input-icon+.fj-input-inner {
   padding-right: 35px;

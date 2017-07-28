@@ -170,25 +170,57 @@ utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
   return treeNode;
 };
 
-utils.formatTree = function formatTree(list, keyName) {
+utils.formatTree = function formatTree(list, keyName = '_id', topNodeType = 2) {
   if (list.length === 0) {
-    return ({
-      topNode: '',
-      node: {}
-    });
+    return ({ topNode: [], node: {} });
   }
-  keyName = keyName || '_id';
-  let topNode = '';
+  const topNode = [];
   for (let i = 0; i < list.length; i++) {
-    if (list[i].type === 2) {
-      topNode = list[i][keyName];
-      break;
+    if (list[i].type === topNodeType) {
+      topNode.push(list[i][keyName]);
     }
   }
   return ({
     topNode: topNode,
     node: transferDataToTree(list, keyName).infos
   });
+};
+
+utils.transferDataToFP = function transferDataToFP(data, keyName) {
+  keyName = keyName || '_id';
+
+  const format = function (d) {
+    if (d && d.constructor && d.constructor === Array) {
+      const rs = { indexs: [], infos: {} };
+      let index = '';
+      for (let i = 0, len = d.length; i < len; i++) {
+        if (typeof d[i][keyName] === 'undefined') {
+          index = (i + 1) + '';
+        } else {
+          index = d[i][keyName];
+        }
+
+        rs.indexs.push(index);
+        rs.infos[index] = transferDataToFP(d[i], keyName);
+      }
+      return rs;
+    }
+    return d;
+  };
+
+  let newData = {};
+
+  if (data.constructor === Array) {
+    newData = format(data);
+  } else if (data.constructor === Object) {
+    for (const k in data) {
+      newData[k] = format(data[k]);
+    }
+  } else {
+    newData = data;
+  }
+
+  return newData;
 };
 
 utils.checkEmail = function checkEmail(email) {

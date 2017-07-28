@@ -6,17 +6,20 @@
       :key="item.index"
       :index="item.index"
       :route="item.route">
-      {{ item.text }}
+      <div class="menu-box">
+        <i class="iconfont menu-icon" :class="item.icon"></i>
+        <div>{{ item.text }}</div>
+      </div>
     </fj-menu-item>
   </fj-menu>
 </template>
 <script>
   const menu = [
-    { text: '媒体库', index: 'router1', route: '/mediaCenter' },
-    { text: '订阅', index: 'router2', route: '/2' },
-    { text: '任务', index: 'router3', route: '/3' },
-    { text: '个人中心', index: 'router4', route: '/personalCenter' },
-    { text: '管理', index: 'management', route: '/management' }
+    { text: '媒体库', index: 'router1', route: '/mediaCenter', icon: 'icon-media-library' },
+    { text: '订阅', index: 'router2', route: '/2', icon: 'icon-subscription' },
+    { text: '任务', index: 'router3', route: '/3', icon: 'icon-menu' },
+    { text: '个人中心', index: 'router4', route: '/personalCenter', icon: 'icon-person' },
+    { text: '管理', index: 'management', route: '/management', icon: 'icon-setting' }
   ];
   export default {
     data() {
@@ -49,5 +52,18 @@
     background: #344C67;
     color: #fff;
     text-align: center;
+  }
+  .menu-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 48px;
+  }
+  .menu-icon {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 4px;
   }
 </style>
