@@ -1,6 +1,6 @@
 <template>
   <div v-on:mouseenter="mouseenter" v-on:mouseleave="mouseLeave" class="ho-tree-tree-node">
-    <span class="ho-tree-node-text" title="node.name">{{node.name}}</span>
+    <span class="ho-tree-node-text" :title="node.name">{{node.name}}</span>
     <span v-if="visible && menus && menus.length > 0">
       <fj-dropdown @command="handleClickDropDownItem" class="ho-tree-node-tool">
         设置

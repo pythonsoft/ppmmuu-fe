@@ -128,8 +128,9 @@
     },
     methods: {
       execCommand(command, node) {
-        const title = this.TYPE_CONFIG[node.info.type];
         const childType = this.APPENDCHILD_CONFIG[node.info.type];
+        let title = this.TYPE_CONFIG[node.info.type];
+        console.log('execCommand');
         switch (command) {
           case 'delete':
             this.handleOpenDeleteDialog(title, node.info._id);
@@ -204,12 +205,14 @@
         this.permissionPanelType = node.type;
         this.permissionPanelId = node._id;
         this.permissionPanelParentIds = [];
+        this.vueInstance.$emit('tree.getParentsId', node._id, (ids) => this.permissionPanelParentIds = ids);
         // this.getParentIds(this.permissionPanelParentIds, node._id, this.treeData);
         this.permissionPanelName = node.name;
       },
       handleDeleteGroup() {
         groupAPI.postDeleteGroup({ _id: this.deleteGroupDialogId })
           .then((response) => {
+            this.vueInstance.$emit('tree.removeNode', this.deleteGroupDialogId);
             this.vueInstance.$emit('tree.listGroup');
             this.$message.success('删除成功');
             this.deleteGroupDialogVisible = false;

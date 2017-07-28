@@ -182,6 +182,17 @@
         this.roles = Object.assign({}, this.roles, tempRoles);
         this.dialogVisible = false;
       },
+      handleCloseTag(id) {
+        const keys = Object.keys(this.roles);
+        const tempRoles = {};
+        for (var i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (key !== id) {
+            tempRoles[key] = this.roles[key]
+          }
+        }
+        this.roles = Object.assign({}, tempRoles);
+      },
       cancel() {
         this.$emit('cancel');
       },
