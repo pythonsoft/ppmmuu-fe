@@ -4,7 +4,7 @@
     <span v-if="visible && menus && menus.length > 0">
       <fj-dropdown @command="handleClickDropDownItem" class="ho-tree-node-tool">
         设置
-        <fj-dropdown-menu slot="dropdown" >
+        <fj-dropdown-menu slot="dropdown" width="width">
           <fj-dropdown-item
             v-for="item in menus"
             :command="item.command"
@@ -29,7 +29,8 @@
     props: {
       node: {},
       menus: Array,
-      execCommand: Function
+      execCommand: Function,
+      width: String
     },
     methods: {
       mouseenter() {
