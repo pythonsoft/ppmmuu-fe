@@ -161,7 +161,7 @@
       treeNodeExpand: { type: Function },
       treeNodeCollapse: { type: Function },
       btnClick: { type: Function },
-      listGroup: { type: Function }
+      listGroup: { type: Function },
     },
     created() {
       const me = this;
@@ -170,6 +170,14 @@
 
       me.bubble.$on('tree.listGroup', () => {
         me._listGroup();
+      });
+
+      me.bubble.$on('tree.removeNode', (parentId) => {
+        me.removeNode(parentId);
+      });
+
+      me.bubble.$on('tree.insertNode', (parentId, data) => {
+        me.insertNode(parentId, data);
       });
 
       this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey);
