@@ -224,14 +224,15 @@ utils.checkPassword = function checkPassword(password) {
 utils.isEmptyObject = function isEmptyObject(obj) {
   if (obj === null || typeof obj === 'undefined') return true;
 
-  if (obj.length && obj.length > 0) return false;
-  if (obj.length === 0) return true;
-
-  for (const key in obj) {
-    if (!hasOwnProperty.call(obj, key)) return false;
+  if (obj.constructor === Array) {
+    return obj.length === 0;
   }
 
-  return true;
+  if (Object.keys(obj).length === 0) {
+    return true;
+  }
+
+  return false;
 };
 
 module.exports = utils;
