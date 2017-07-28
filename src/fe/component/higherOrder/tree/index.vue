@@ -135,14 +135,14 @@
       const ids = [];
 
       if (rs) {
-        let info = rs.info;
+        const info = rs.info;
         let parentId = info.parentId;
         let firstLoop = true;
         let tempRs = null;
 
-        if(parentId) {
+        if (parentId) {
           ids.push(parentId);
-        }else {
+        } else {
           return ids;
         }
 
@@ -150,21 +150,21 @@
           firstLoop = false;
           tempRs = me.get(parentId);
 
-          if(tempRs) {
+          if (tempRs) {
             parentId = tempRs.info.parentId;
-            if(parentId) {
+            if (parentId) {
               ids.push(parentId);
-            }else {
+            } else {
               return ids;
             }
-          }else {
+          } else {
             break;
           }
         }
       }
 
       return ids;
-    },
+    }
   };
 
   export default {
@@ -197,7 +197,7 @@
       treeNodeExpand: { type: Function },
       treeNodeCollapse: { type: Function },
       btnClick: { type: Function },
-      listGroup: { type: Function },
+      listGroup: { type: Function }
     },
     created() {
       const me = this;

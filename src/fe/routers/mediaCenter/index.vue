@@ -29,7 +29,7 @@
 </template>
 <script>
   const menu = [
-    { text: '个人信息', index: 'information', route: 'information' },
+    { text: '个人信息', index: 'information', route: 'information' }
   ];
   export default {
     data() {
