@@ -251,8 +251,8 @@
       _listGroup() {
         const me = this;
 
-        this.listGroup && this.listGroup(this.selectedNodeInfo.id || '', (data) => {
-          me.insertNode(me.selectedNodeInfo.id || '', data);
+        this.listGroup && this.listGroup(this.selectedNodeInfo, (data) => {
+          me.insertNode(me.selectedNodeInfo, data);
         });
       }
 
