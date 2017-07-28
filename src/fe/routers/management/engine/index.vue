@@ -118,11 +118,11 @@
         this.selectedNodeInfo = treeNode;
         this.vueInstance.$emit('engine.setViewRouter', 'engineListView');
       },
-      listGroup(treeNodeId, cb) {
+      listGroup(treeNode, cb) {
         const me = this;
 
         const param = {
-          parentId: treeNodeId || '',
+          parentId: treeNode.id || '',
           page: 1,
           pageSize: 200,
           fields: '',
