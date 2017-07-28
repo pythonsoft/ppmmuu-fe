@@ -30,13 +30,13 @@
     this.indexKey = key;
   };
   TreeDataBase.prototype = {
-    composeData(d) {
+    composeData(parentId, d) {
       let arr = null;
       const indexKey = this.indexKey;
 
       for (let i = 0, len = d.length; i < len; i++) {
         if (!arr) { arr = []; }
-        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children });
+        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || '' });
       }
 
       return arr;
@@ -70,7 +70,7 @@
       }
 
       if (!parentId) {
-        this.td = this.composeData(infos);
+        this.td = this.composeData(parentId, infos);
         this.indexs = {};
 
         for (let i = 0, len = infos.length; i < len; i++) {
@@ -95,7 +95,7 @@
         this.indexs[infos[i][this.indexKey]] = `${parentIndex}-${i}`;
       }
 
-      info.children = this.composeData(infos);
+      info.children = this.composeData(parentId, infos);
 
       return true;
     },
@@ -128,7 +128,43 @@
     },
     getTreeData() {
       return utils.deepClone(this.td);
-    }
+    },
+    getParentsId(nodeId) {
+      const me = this;
+      const rs = this.get(nodeId);
+      const ids = [];
+
+      if (rs) {
+        let info = rs.info;
+        let parentId = info.parentId;
+        let firstLoop = true;
+        let tempRs = null;
+
+        if(parentId) {
+          ids.push(parentId);
+        }else {
+          return ids;
+        }
+
+        while (firstLoop || parentId) {
+          firstLoop = false;
+          tempRs = me.get(parentId);
+
+          if(tempRs) {
+            parentId = tempRs.info.parentId;
+            if(parentId) {
+              ids.push(parentId);
+            }else {
+              return ids;
+            }
+          }else {
+            break;
+          }
+        }
+      }
+
+      return ids;
+    },
   };
 
   export default {
@@ -178,6 +214,10 @@
 
       me.bubble.$on('tree.insertNode', (parentId, data) => {
         me.insertNode(parentId, data);
+      });
+
+      me.bubble.$on('tree.getParentsId', (parentId) => {
+        me.treeDataBaseInstance.getParentsId(parentId);
       });
 
       this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey);
