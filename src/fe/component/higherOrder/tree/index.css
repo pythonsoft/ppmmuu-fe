@@ -5,7 +5,7 @@
   font-size: 12px;
   color: #ccc;
 }
-.ho-tree-layout .fj-tree-current-item .tree-node button {
+.ho-tree-layout .fj-tree-current-item .ho-tree-tree-node button {
   color: #fff;
 }
 .ho-tree-tree-node{
