@@ -153,6 +153,7 @@
       addBtnText: { type: String, default: '添加组' },
       vueInstance: { type: Object },
       menus: {},
+      menuWidth: { type: String },
       commandFieldName: { type: String },
       execCommand: { type: Function },
       treeNodeClick: { type: Function },
@@ -223,6 +224,7 @@
           props: {
             node: node,
             menus: menus,
+            width: me.menuWidth,
             execCommand(command) {
               me.execCommand && me.execCommand(command, node, {
                 insertNode: me.insertNode,
