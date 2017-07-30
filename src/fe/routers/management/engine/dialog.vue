@@ -51,6 +51,8 @@
       },
       cancelDialog() {
         this.$emit('update:visible', false);
+        this.$emit('update:actionName', 'createGroupAPI');
+        this.setConfig('createGroup');
       },
       setConfig(c) {
         const me = this;
@@ -110,7 +112,7 @@
           name: name
         }).then((res) => {
           me.$message.success('成功添加');
-          me.vueInstance.$emit('engine.listEngine');
+          me.vueInstance.$emit('tree.listGroup');
           cb && cb(res.data);
           me.cancelDialog();
         }).catch((err) => {
@@ -126,10 +128,11 @@
           me.showErrorInfo('当前没有可以删除的组');
           return false;
         }
-
-        api.removeGroup({ groupId: me.selectedNodeInfo.id }).then(() => {
-          me.vueInstance.$emit('tree.listGroup');
+        const id = me.selectedNodeInfo.id;
+        api.removeGroup({ groupId: id }).then(() => {
+          me.vueInstance.$emit('tree.removeNode', id);
           cb && cb();
+          me.cancelDialog();
         }).catch((err) => {
           me.showErrorInfo(err);
         });
