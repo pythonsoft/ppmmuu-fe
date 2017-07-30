@@ -195,7 +195,7 @@ utils.transferDataToFP = function transferDataToFP(data, keyName) {
       let index = '';
       for (let i = 0, len = d.length; i < len; i++) {
         if (typeof d[i][keyName] === 'undefined') {
-          index = (i + 1) + '';
+          index = `${i + 1}`;
         } else {
           index = d[i][keyName];
         }

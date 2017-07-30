@@ -205,14 +205,13 @@
         this.permissionPanelType = node.type;
         this.permissionPanelId = node._id;
         this.permissionPanelParentIds = [];
-        this.vueInstance.$emit('tree.getParentsId', node._id, (ids) => this.permissionPanelParentIds = ids);
+        this.vueInstance.$emit('tree.getParentsId', node._id, ids => this.permissionPanelParentIds = ids);
         // this.getParentIds(this.permissionPanelParentIds, node._id, this.treeData);
         this.permissionPanelName = node.name;
       },
       handleDeleteGroup() {
         groupAPI.postDeleteGroup({ _id: this.deleteGroupDialogId })
           .then((response) => {
-            this.vueInstance.$emit('tree.removeNode', this.deleteGroupDialogId);
             this.vueInstance.$emit('tree.listGroup');
             this.$message.success('删除成功');
             this.deleteGroupDialogVisible = false;
@@ -229,7 +228,6 @@
       this.APPENDCHILD_CONFIG = APPENDCHILD_CONFIG;
 
       this.vueInstance = new Vue();
-
     },
     mounted() {
     },
