@@ -31,7 +31,7 @@
   };
   TreeDataBase.prototype = {
     composeData(parentId, d) {
-      let arr = null;
+      let arr = [];
       const indexKey = this.indexKey;
 
       for (let i = 0, len = d.length; i < len; i++) {
@@ -65,10 +65,6 @@
       return { info, parentIndex };
     },
     insert(parentId, infos) {
-      if (!infos && infos.length === 0) {
-        return false;
-      }
-
       if (!parentId) {
         this.td = this.composeData(parentId, infos);
         this.indexs = {};
@@ -254,11 +250,10 @@
         if (this.commandFieldName && typeof node.info[this.commandFieldName] !== 'undefined') {
           array = this.menus[node.info[this.commandFieldName]];
         } else {
-          for (const k in this.menus) {
-            if (Object.prototype.hasOwnProperty.call(this.menus, k)) {
-              array = this.menus[k];
-            }
-            break;
+          const keys = Object.keys(this.menus);
+
+          if (keys.length > 0) {
+            array = this.menus[keys[0]];
           }
         }
 

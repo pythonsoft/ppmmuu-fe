@@ -185,10 +185,10 @@
       handleCloseTag(id) {
         const keys = Object.keys(this.roles);
         const tempRoles = {};
-        for (var i = 0; i < keys.length; i++) {
+        for (let i = 0; i < keys.length; i++) {
           const key = keys[i];
           if (key !== id) {
-            tempRoles[key] = this.roles[key]
+            tempRoles[key] = this.roles[key];
           }
         }
         this.roles = Object.assign({}, tempRoles);
