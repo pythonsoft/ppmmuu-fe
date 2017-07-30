@@ -67,7 +67,7 @@
   import engineListView from './engineList';
   import propertyView from './propertyView';
   import engineBaseSlideDialogView from './engineBaseSlideDialog';
-  import settingSlideDialogView from './settingSlideDialog.vue';
+  import settingSlideDialogView from './settingSlideDialog';
 
   const api = require('../../../api/engine');
 
@@ -126,7 +126,7 @@
         this.vueInstance.$emit('engine.listEngine');
       },
       settingSlideDialogConfirmFn() {
-//        this.vueInstance.$emit('engine.listEngine');
+      //        this.vueInstance.$emit('engine.listEngine');
       },
       /* engine list */
       /* slide dialog */

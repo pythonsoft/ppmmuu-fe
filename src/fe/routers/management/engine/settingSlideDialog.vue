@@ -89,7 +89,7 @@
       name: { type: String, default: '引擎配置' },
       visible: { type: Boolean, default: false },
       vueInstance: { type: Object },
-      engineInfo: { type: Object, default: {} },
+      engineInfo: { type: Object, default: {} }
     },
     data() {
       return {
@@ -99,13 +99,13 @@
         tableSelectInfo: {},
         configuration: [],
         dialog: {
-          visible: false,
+          visible: false
         },
         itemDialog: {
-          visible: false,
+          visible: false
         },
         itemInfo: {}
-      }
+      };
     },
     watch: {
       visible(v) {
@@ -126,18 +126,18 @@
         this.itemInfo = {
           key: '',
           value: '',
-          description: '',
+          description: ''
         };
       },
       initSubmitBtn() {
         this.submitBtn = {
           disabled: false,
-            loading: false,
-            text: '确定'
+          loading: false,
+          text: '确定'
         };
       },
       setTitle(engineName) {
-        this.title = this.name + '('+ engineName +')';
+        this.title = `${this.name}(${engineName})`;
       },
       handleOpenSlideDialog() {},
       handleCloseSlideDialog() {
@@ -173,8 +173,8 @@
       removeConfigurationItem() {
         const arr = [];
         const item = this.tableSelectInfo;
-        for(let i = 0; i < this.configuration.length; i++) {
-          if(this.configuration[i].key === item.key) {
+        for (let i = 0; i < this.configuration.length; i++) {
+          if (this.configuration[i].key === item.key) {
             continue;
           }
           arr.push(this.configuration[i]);
@@ -190,7 +190,7 @@
         if (this.engineInfo._id) {
           const params = {
             id: this.engineInfo._id,
-            fieldsNeed: 'configuration',
+            fieldsNeed: 'configuration'
           };
 
           api.getEngine({ params: params }).then((res) => {
@@ -207,7 +207,7 @@
         if (this.engineInfo._id) {
           const params = {
             _id: this.engineInfo._id,
-            configuration: JSON.stringify(this.configuration),
+            configuration: JSON.stringify(this.configuration)
           };
 
           this.submitBtn = {
@@ -217,7 +217,6 @@
           };
 
           api.updateEngineConfiguration(params).then((res) => {
-//            me.configuration = res.data.configuration;
             me.$message.success('添加配置成功');
             this.initSubmitBtn();
           }).catch((error) => {
@@ -225,7 +224,7 @@
             me.$message.error(error);
           });
         }
-      },
+      }
     }
-  }
+  };
 </script>
