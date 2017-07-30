@@ -84,6 +84,11 @@
       vueInstance: { type: Object },
       selectedNodeInfo: { type: Object, default: {} }
     },
+    watch: {
+      selectedNodeInfo(v) {
+        this.getGroup(v.id);
+      }
+    },
     data() {
       return {
         title: '属性',
@@ -103,16 +108,7 @@
       };
     },
     created() {
-      const me = this;
-
-      api.getGroup({ params: { groupId: me.selectedNodeInfo.id } }).then((res) => {
-        me.info = res.data;
-        me.formData.name = me.info.name || '';
-        me.formData.deleteDeny = me.info.deleteDeny;
-        me.formData.description = me.info.description;
-      }).catch((error) => {
-        me.$message.error(error);
-      });
+      this.getGroup(this.selectedNodeInfo.id);
     },
     methods: {
       submitForm() {
@@ -132,6 +128,18 @@
       },
       handleClose() {
         this.$emit('cancel');
+      },
+      getGroup(groupId) {
+        const me = this;
+
+        api.getGroup({ params: { groupId: groupId } }).then((res) => {
+          me.info = res.data;
+          me.formData.name = me.info.name || '';
+          me.formData.deleteDeny = me.info.deleteDeny;
+          me.formData.description = me.info.description;
+        }).catch((error) => {
+          me.$message.error(error);
+        });
       }
     }
   };

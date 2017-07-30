@@ -34,7 +34,7 @@
       :vueInstance="vueInstance"
       :selectedNodeInfo="selectedNodeInfo"
       :engineInfo="engineInfo"
-      :actionName="actionName"
+      :actionName.sync="actionName"
       :visible.sync="visible"
       :confirmFn="confirmFn"
     ></engine-dialog-view>
@@ -88,7 +88,7 @@
         viewRouter: '',
         /* dialog*/
         visible: false,
-        actionName: '',
+        actionName: 'createGroup',
         /* dialog*/
         slideDialogVisible: false,
         settingDialogVisible: false,
@@ -143,7 +143,8 @@
         this.selectedNodeInfo = treeNode;
         this.visible = true;
       },
-      confirmFn() {},
+      confirmFn() {
+      },
       displayDialog(flag, actionName) {
         this.visible = flag;
         this.actionName = actionName;
@@ -155,6 +156,7 @@
           this.selectedNodeInfo = node;
           this.visible = true;
           this.actionName = command;
+          this.vueInstance.$emit('tree.listGroup');
         } else {
           this.viewRouter = command;
         }

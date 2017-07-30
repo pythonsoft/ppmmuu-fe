@@ -174,10 +174,9 @@
         const arr = [];
         const item = this.tableSelectInfo;
         for (let i = 0; i < this.configuration.length; i++) {
-          if (this.configuration[i].key === item.key) {
-            continue;
+          if (this.configuration[i].key !== item.key) {
+            arr.push(this.configuration[i]);
           }
-          arr.push(this.configuration[i]);
         }
 
         this.configuration = arr;
