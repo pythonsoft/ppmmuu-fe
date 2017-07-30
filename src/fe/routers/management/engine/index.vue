@@ -17,6 +17,7 @@
         :vueInstance="vueInstance"
         :selectedNodeInfo="selectedNodeInfo"
         @display-slide-dialog="displaySlideDialog"
+        @display-setting-slide-dialog="displaySettingSlideDialog"
         @display-dialog="displayDialog"
         @engine-select="selectFn"
       ></engine-list-view>
@@ -47,6 +48,13 @@
       :confirmFn="slideDialogConfirmFn"
     ></engine-base-slide-dialog-view>
 
+    <setting-slide-dialog-view
+      :vueInstance="vueInstance"
+      :engineInfo="engineInfo"
+      :visible.sync="settingDialogVisible"
+      @confirm="settingSlideDialogConfirmFn"
+    ></setting-slide-dialog-view>
+
   </layout-two-column>
 </template>
 <script>
@@ -59,6 +67,7 @@
   import engineListView from './engineList';
   import propertyView from './propertyView';
   import engineBaseSlideDialogView from './engineBaseSlideDialog';
+  import settingSlideDialogView from './settingSlideDialog';
 
   const api = require('../../../api/engine');
 
@@ -69,6 +78,7 @@
       'engine-dialog-view': dialogView,
       'engine-list-view': engineListView,
       'engine-base-slide-dialog-view': engineBaseSlideDialogView,
+      'setting-slide-dialog-view': settingSlideDialogView,
       'engine-property-view': propertyView
     },
     data() {
@@ -81,13 +91,12 @@
         actionName: '',
         /* dialog*/
         slideDialogVisible: false,
+        settingDialogVisible: false,
         slideDialogType: 'add',
         selectedNodeInfo: {},
         engineInfo: {},
         dropMenus: { group: [
           { name: '删除分组', command: 'deleteGroup' },
-          { name: '状态', command: 'showStatus' },
-          { name: '配置', command: 'showConfigs' },
           { name: '属性', command: 'propertyView' }
         ] }
       };
@@ -116,11 +125,17 @@
       slideDialogConfirmFn() {
         this.vueInstance.$emit('engine.listEngine');
       },
+      settingSlideDialogConfirmFn() {
+      //        this.vueInstance.$emit('engine.listEngine');
+      },
       /* engine list */
       /* slide dialog */
       displaySlideDialog(flag, type) {
         this.slideDialogVisible = flag;
         this.slideDialogType = type;
+      },
+      displaySettingSlideDialog(flag) {
+        this.settingDialogVisible = flag;
       },
       /* slide dialog */
       /* dialog */

@@ -196,4 +196,20 @@ api.removeEngine = function removeEngine(data) {
   });
 };
 
+api.updateEngineConfiguration = function updateEngineConfiguration(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/updateEngineConfiguration', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 module.exports = api;

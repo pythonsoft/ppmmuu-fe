@@ -229,7 +229,9 @@
       },
       _treeNodeCurrentChange(node) {
         const me = this;
+
         me.selectedNodeInfo = node;
+
         me._listGroup();
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node);
       },
@@ -269,6 +271,7 @@
             menus: menus,
             width: me.menuWidth,
             execCommand(command) {
+              me.treeNodeCurrentChange && me.treeNodeCurrentChange(node);
               me.execCommand && me.execCommand(command, node, {
                 insertNode: me.insertNode,
                 removeNode: me.removeNode

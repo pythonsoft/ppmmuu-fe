@@ -147,6 +147,7 @@
         api.removeEngine({ id: me.engineInfo._id }).then(() => {
           me.vueInstance.$emit('tree.listGroup');
           cb && cb();
+          me.cancelDialog();
         }).catch((err) => {
           me.showErrorInfo(err);
         });
