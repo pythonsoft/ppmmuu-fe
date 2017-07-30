@@ -147,7 +147,9 @@
       installBtnClick() {},
       stopBtnClick() {},
       rebootBtnClick() {},
-      configBtnClick() {},
+      configBtnClick() {
+        this.$emit('display-setting-slide-dialog', true);
+      },
       statusBtnClick() {},
       monitorBtnClick() {},
 
