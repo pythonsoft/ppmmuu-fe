@@ -164,6 +164,22 @@ api.postDeleteGroupUser = function postDeleteGroupUser(data) {
   });
 };
 
+api.postJustifyUserGroup = function postJustifyUserGroup(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/group/justifyUserGroup', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 api.postEnableGroupUser = function postEnableGroupUser(data) {
   return new Promise((resolve, reject) => {
     axios.post('http://localhost:8080/group/enableUser', data)

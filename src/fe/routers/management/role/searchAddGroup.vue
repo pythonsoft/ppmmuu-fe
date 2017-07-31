@@ -99,6 +99,7 @@
         if (!query.parentId) {
           query.type = this.type || '0';
         }
+        console.log(query);
         groupApi.getGroupList(formatQuery(query, true))
           .then((res) => {
             cb && cb(res.data.docs);
