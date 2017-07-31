@@ -106,11 +106,19 @@
     },
     created() {
       const me = this;
+      let isFetchDataNow = false;
 
       me.bubble.$on('engine.listEngine', () => {
+        if(isFetchDataNow) { return; }
+        isFetchDataNow = true;
         me.initParam();
-        me.listEngine();
+        me.listEngine(() => {
+          isFetchDataNow = false;
+        });
       });
+    },
+    destroyed() {
+      this.bubble.$off('engine.listEngine');
     },
     methods: {
       initParam() {
@@ -166,7 +174,7 @@
       },
 
       /* api */
-      listEngine() {
+      listEngine(completeFn) {
         const me = this;
 
         const param = {
@@ -180,8 +188,10 @@
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
+          completeFn && completeFn();
         }).catch((error) => {
           me.showErrorInfo(error.message);
+          completeFn && completeFn();
         });
       }
     }

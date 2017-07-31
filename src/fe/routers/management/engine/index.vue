@@ -110,6 +110,9 @@
         me.viewRouter = router;
       });
     },
+    destroyed() {
+      this.vueInstance.$off('engine.setViewRouter');
+    },
     methods: {
       showErrorInfo(message) {
         this.$message.error(message);

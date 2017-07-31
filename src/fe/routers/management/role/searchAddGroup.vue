@@ -82,13 +82,13 @@
           return false;
         }
         this.currentNode._id = this.currentNode.id;
-        if(this.currentNodeParent){
+        if (this.currentNodeParent) {
           this.currentNodeParent._id = this.currentNodeParent.id;
         }
         this.$emit('add-owner', this.currentNode, this.currentNodeParent);
         return true;
       },
-      listGroup(node, cb){
+      listGroup(node, cb) {
         const me = this;
         const query = {};
         if (!node) {
@@ -96,17 +96,17 @@
         } else {
           query.parentId = node.id || '';
         }
-        if(!query.parentId){
+        if (!query.parentId) {
           query.type = this.type || '0';
         }
         console.log(query);
         groupApi.getGroupList(formatQuery(query, true))
-                .then((res) => {
-          cb && cb(res.data.docs);
-        })
-        .catch((err) => {
+          .then((res) => {
+            cb && cb(res.data.docs);
+          })
+          .catch((err) => {
             me.showErrorInfo(err);
-        });
+          });
       },
       treeNodeCurrentChange(treeNode, parentNode) {
         this.currentNode = treeNode;

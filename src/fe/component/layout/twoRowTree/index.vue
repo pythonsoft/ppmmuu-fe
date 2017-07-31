@@ -18,7 +18,7 @@
   export default {
     name: 'layoutTwoRowTree',
     props: {
-      showUpper: {type: Boolean, default: true}
+      showUpper: { type: Boolean, default: true }
     }
   };
 </script>

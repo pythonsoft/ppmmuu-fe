@@ -17,18 +17,21 @@
     },
     methods: {
       handleClick() {
+        console.log('dropdown click --->');
         this.visible = !this.visible;
+        this.$emit('handle-click');
       },
       handleClose() {
         this.visible = false;
       },
       handleItemClick(item, command) {
+        console.log('handleItemClick fj -->', item, command);
         this.visible = false;
         this.$emit('command', command);
       }
     },
-    mounted() {
-      this.$on('item-click', this.handleItemClick);
+    destroyed() {
+      this.$off('item-click');
     },
     components: {
       FjButton

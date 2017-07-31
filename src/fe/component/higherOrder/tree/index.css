@@ -28,9 +28,4 @@
   right: 0;
   margin-right: 10px;
 }
-.ho-tree-tree-node button {
-  display: none;
-}
-.ho-tree-tree-node:hover button {
-  display: inline-block;
-}
+
