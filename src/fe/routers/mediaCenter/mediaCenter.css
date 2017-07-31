@@ -49,6 +49,7 @@
   float: left;
   min-height: 1px;
   display: inline;
+  margin-top: 15px;
   margin-right: 26px;
   width: 240px;
 }
@@ -74,9 +75,10 @@
 }
 
 .media-format {
-  width: 32px;
-  height: 13px;
-  line-height: 13px;
+  width: 40px;
+  height: 15px;
+  display: inline-block;
+  line-height: 15px;
   text-align: center;
   font-size: 10px;
   border-radius: 2px;
@@ -106,5 +108,18 @@
   font-size: 12px;
 }
 
+.media-item-category {
+  margin-top: 13px;
+  color: #2A3E52;
+}
+
+.media-item-storage-time {
+  color: #2A3E52;
+}
+
+.media-pagination {
+  margin-top: 20px;
+  text-align: center;
+}
 
 

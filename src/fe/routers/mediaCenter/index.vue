@@ -40,8 +40,8 @@
         <div class="media-search-result">
           <span>耗时30秒,结果3000条</span>
         </div>
-        <div class="media-list" v-for="item in items">
-          <li class="media-item-li">
+        <ul class="media-list">
+          <li class="media-item-li" v-for="item in items">
             <div class="media-item">
               <img class="media-thumb" src="">
               <span class="media-duration">02:48:22</span>
@@ -53,6 +53,9 @@
             <div class="media-item-category">类别: 评论节目</div>
             <div class="media-item-storage-time">2017-04-14T22:40:09Z</div>
           </li>
+        </ul>
+        <div class="media-pagination">
+          <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
         </div>
       </div>
     </template>
@@ -73,11 +76,17 @@
     data() {
       return {
         defaultRoute: '/',
+        keyword: '',
         checkboxCategory: [],
         checkboxTime: [],
+        startTime: '',
+        endTime: '',
         categories: ['评论节目', '财经节目', '资讯节目'],
         times: ['不限', '3小时内', '5小时内', '7小时内'],
-        items: ['a', 'b', 'c', 'd']
+        items: ['a', 'b', 'c', 'd'],
+        pageSize: 15,
+        total: 0,
+        currentPage: 0
       };
     },
     created() {
@@ -92,6 +101,9 @@
         return pathArr[level] || '';
       },
       searchClick() {
+
+      },
+      handleCurrentPageChange(){
 
       }
     }
