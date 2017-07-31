@@ -22,45 +22,45 @@
   };
 </script>
 <style>
-    .layout-content {
-      margin-left: 20px;
-      margin-top: 10px;
-    }
+  .layout-content {
+    margin-left: 20px;
+    margin-top: 10px;
+  }
 
-    .layout-top-search {
-      height: 40px;
-      width: 100%;
-      line-height: 38px;
-      position: relative;
-      min-width: 700px;
-    }
+  .layout-top-search {
+    height: 40px;
+    width: 100%;
+    line-height: 38px;
+    position: relative;
+    min-width: 700px;
+  }
 
-    .layout-top-search .layout-search-title{
-      font-size: 16px;
-      color: #273F57;
-      position: absolute;
-      left: 20px;
-    }
+  .layout-top-search .layout-search-title{
+    font-size: 16px;
+    color: #273F57;
+    position: absolute;
+    left: 20px;
+  }
 
-    .layout-top-search .layout-search-right-content{
-      position: absolute;
-      right: 20px;
-    }
+  .layout-top-search .layout-search-right-content{
+    position: absolute;
+    right: 20px;
+  }
 
-    .layout-operation {
-      background: #F2F6FA;
-      line-height: 46px;
-      height: 46px;
-      margin-top: 10px;
-      padding-left: 14px;
-      overflow: hidden;
-    }
+  .layout-operation {
+    background: #F2F6FA;
+    line-height: 46px;
+    height: 46px;
+    margin-top: 10px;
+    padding-left: 14px;
+    overflow: hidden;
+  }
 
-    .layout-table-pagination {
-      margin-top: 30px;
-      text-align: center;
-      height: 28px;
-      line-height: 28px;
-      color: #4C637B;
-    }
+  .layout-table-pagination {
+    margin-top: 30px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    color: #4C637B;
+  }
 </style>

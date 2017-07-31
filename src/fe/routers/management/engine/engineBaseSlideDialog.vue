@@ -73,12 +73,27 @@
       vueInstance: { type: Object },
       engineInfo: { type: Object },
       visible: { type: Boolean, default: false },
+      type: { type: String, default: 'add' },
       selectedNodeInfo: { type: Object },
       confirmFn: { type: Function }
     },
     watch: {
       visible(v) {
         this.display = v;
+      },
+      engineInfo(v) {
+        if (this.type === 'add') {
+          this.initParam();
+        } else {
+          this.initEngineInfo(v);
+        }
+      },
+      type(v) {
+        if (v === 'add') {
+          this.initParam();
+        } else {
+          this.initEngineInfo(this.engineInfo);
+        }
       }
     },
     data() {
@@ -87,27 +102,13 @@
         display: false,
         bubble: this.vueInstance,
 
-        formData: {
-          code: '', // 编号
-          name: '',
-          belong: '',
-          groupId: this.selectedNodeInfo.id || '',
-          area: '',
-          isVirtual: '0', // 0||1
-          isTest: '0', // 0||1
-          ip: '',
-          intranetIp: '',
-          description: ''
-        },
+        formData: '',
         formDataRules: {
           code: [
             { required: true, message: '请输入引擎编号' }
           ],
           name: [
             { required: true, message: '请输入引擎名称' }
-          ],
-          groupId: [
-            { required: true, message: '请输入引擎所属组Id' }
           ],
           ip: [
             {
@@ -143,23 +144,19 @@
       };
     },
     created() {
-      const me = this;
-      if (me.engineInfo) {
-        me.formData = utils.merge(utils.deepClone(me.formData), me.engineInfo);
-      }
+      this.initParam();
     },
     methods: {
       initParam() {
         const me = this;
-        me.display = false;
 
         me.formData = {
           _id: '',
           code: '', // 编号
           name: '',
           belong: '',
-          groupId: me.selectedNodeInfo.id || '',
           area: '',
+          groupId: me.selectedNodeInfo.id,
           isVirtual: '0', // 0||1
           isTest: '0', // 0||1
           ip: '',
@@ -173,31 +170,68 @@
           text: '确定'
         };
       },
+      initEngineInfo(engineInfo = {}) {
+        if (utils.isEmptyObject(engineInfo)) {
+          this.initParam();
+        } else {
+          this.formData._id = engineInfo._id || '';
+          this.getEngine();
+        }
+      },
       showErrorInfo(message) {
         this.$message.error(message);
       },
-      handleOpenSlideDialog() {},
-      handleCloseSlideDialog() {},
+      handleOpenSlideDialog() {
+      },
+      handleCloseSlideDialog() {
+        this.cancelClick();
+      },
       cancelClick() {
         this.$emit('update:visible', false);
       },
       _confirmFn() {
         const me = this;
-        if (me.formData._id) {
-          // TODO
-        } else {
-          me.submitBtn.disabled = true;
-          me.submitBtn.loading = true;
+        me.submitBtn.disabled = true;
+        me.submitBtn.loading = true;
 
-          api.addEngine(me.formData).then((res) => {
-            me.tableData = res.data.docs;
-            me.$message.success('添加服务器成功');
+        if (me.formData._id) {
+          api.updateEngine(me.formData).then((res) => {
+            me.$message.success('已更新引擎信息');
             me.confirmFn && me.confirmFn(res.data);
-          //            me.initParam();
+            me.$emit('update:visible', false);
           }).catch((error) => {
             me.submitBtn.disabled = false;
             me.submitBtn.loading = false;
-            me.showErrorInfo(error.message);
+            me.showErrorInfo(error);
+          });
+        } else {
+          me.formData.groupId = me.selectedNodeInfo.id;
+          api.addEngine(me.formData).then((res) => {
+            me.$message.success('添加引擎成功');
+            me.confirmFn && me.confirmFn(res.data);
+            me.$emit('update:visible', false);
+          }).catch((error) => {
+            me.submitBtn.disabled = false;
+            me.submitBtn.loading = false;
+            me.showErrorInfo(error);
+          });
+        }
+      },
+      /* api */
+      getEngine() {
+        const me = this;
+        const id = this.formData._id;
+        if (id) {
+          const params = {
+            id: id
+          };
+
+          api.getEngine({ params: params }).then((res) => {
+            const data = utils.merge(utils.deepClone(me.formData), res.data);
+            data._id = res.data._id;
+            me.formData = data;
+          }).catch((error) => {
+            me.showErrorInfo(error);
           });
         }
       }

@@ -42,8 +42,12 @@
 }
 
 .fj-tag-close {
+  font-size: 12px;
   cursor: pointer;
 }
+.fj-tag-close:before { content: "\e677"; color: #9FB3CA; }
+.fj-tag:hover .fj-tag-close:before { content: "\e668"; color: inherit; }
+
 .fj-clickable-tag {
   cursor: pointer;
 }

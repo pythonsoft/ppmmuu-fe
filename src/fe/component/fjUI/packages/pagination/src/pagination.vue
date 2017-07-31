@@ -2,7 +2,7 @@
   <div>
     <div class="fj-pagination-total">共{{ total }}条</div><!--
     --><ul class="fj-page-list">
-      <li :class="['fj-pagination-prev', { 'disabled': internalCurrentPage <= 1 }]" @click="prev">上一页</li>
+      <li :class="['iconfont icon-arrow-left fj-pagination-prev', { 'disabled': internalCurrentPage <= 1 }]" @click="prev"></li>
       <li
         :class="{ active: internalCurrentPage === 1 }"
         v-if="internalPageCount > 0"
@@ -19,7 +19,7 @@
         :class="{ active: internalCurrentPage === internalPageCount }"
         v-if="internalPageCount > 1"
         @click="handlePageClick(internalPageCount)">{{ internalPageCount }}</li>
-      <li :class="['fj-pagination-next', { 'disabled': internalCurrentPage === internalPageCount || internalPageCount === 0 }]" @click="next">下一页</li>
+      <li :class="['iconfont icon-arrow-right fj-pagination-next', { 'disabled': internalCurrentPage === internalPageCount || internalPageCount === 0 }]" @click="next"></li>
     </ul><!--
     --><div class="fj-pagination-jump">
       第

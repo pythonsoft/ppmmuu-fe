@@ -30,21 +30,21 @@
     this.indexKey = key;
   };
   TreeDataBase.prototype = {
-    composeData(d) {
-      let arr = null;
+    composeData(parentId, d) {
+      let arr = [];
       const indexKey = this.indexKey;
 
       for (let i = 0, len = d.length; i < len; i++) {
         if (!arr) { arr = []; }
-        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children });
+        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || '' });
       }
 
       return arr;
     },
-    get(parentId) {
+    get(id) {
       if (this.td.length === 0) { return null; }
 
-      const parentIndex = this.indexs[parentId];
+      const parentIndex = this.indexs[id];
 
       if (!parentIndex) {
         return null;
@@ -65,12 +65,8 @@
       return { info, parentIndex };
     },
     insert(parentId, infos) {
-      if (!infos && infos.length === 0) {
-        return false;
-      }
-
       if (!parentId) {
-        this.td = this.composeData(infos);
+        this.td = this.composeData(parentId, infos);
         this.indexs = {};
 
         for (let i = 0, len = infos.length; i < len; i++) {
@@ -89,22 +85,23 @@
       const info = val.info;
       const parentIndex = val.parentIndex;
 
-      this.remove(parentId);
+      this.removeChildren(parentId);
 
       for (let i = 0, len = infos.length; i < len; i++) {
         this.indexs[infos[i][this.indexKey]] = `${parentIndex}-${i}`;
       }
 
-      info.children = this.composeData(infos);
+      info.children = this.composeData(parentId, infos);
 
       return true;
     },
-    remove(parentId) {
-      if (!parentId) {
+    removeChildren(id) {
+      if (!id) {
         this.td = [];
         return false;
       }
-      const val = this.get(parentId);
+
+      const val = this.get(id);
 
       if (!val) {
         return false;
@@ -112,22 +109,86 @@
 
       const children = val.info.children;
 
-      if (!children) {
-        return false;
-      }
-
-      for (let i = 0, len = children.length; i < len; i++) {
-        if (this.indexs[children[i][this.indexKey]]) {
-          delete this.indexs[children[i][this.indexKey]];
+      if (children && children.length > 0) {
+        for (let i = 0, len = children.length; i < len; i++) {
+          if (this.indexs[children[i][this.indexKey]]) {
+            delete this.indexs[children[i][this.indexKey]];
+          }
         }
       }
 
       val.info.children = [];
 
+      return val;
+    },
+    remove(id) {
+      const val = this.removeChildren(id);
+      // 移除本身
+      const parentIndex = val.parentIndex;
+      const indexs = parentIndex.split('-');
+      let info = null;
+      const tempTd = utils.deepClone(this.td);
+
+      for (let i = 0, len = indexs.length; i < len; i++) {
+        if (i === 0) {
+          if (i === len - 1) {
+            tempTd[indexs[i] * 1] = '--';
+          } else {
+            info = tempTd[indexs[i] * 1];
+          }
+        } else {
+          if (i === len - 1) {
+            info.children[indexs[i] * 1] = '--';
+          } else {
+            info = info.children ? info.children[indexs[i] * 1] : null;
+          }
+        }
+      }
+
+      let str = JSON.stringify({ key: tempTd });
+      str = str.replace(',"--",', ',').replace(',"--"', '').replace('"--",', '').replace('"--"', '');
+      this.td = JSON.parse(str).key;
+
       return true;
     },
     getTreeData() {
       return utils.deepClone(this.td);
+    },
+    getParentsId(nodeId) {
+      const me = this;
+      const rs = this.get(nodeId);
+      const ids = [];
+
+      if (rs) {
+        const info = rs.info;
+        let parentId = info.parentId;
+        let firstLoop = true;
+        let tempRs = null;
+
+        if (parentId) {
+          ids.push(parentId);
+        } else {
+          return ids;
+        }
+
+        while (firstLoop || parentId) {
+          firstLoop = false;
+          tempRs = me.get(parentId);
+
+          if (tempRs) {
+            parentId = tempRs.info.parentId;
+            if (parentId) {
+              ids.push(parentId);
+            } else {
+              return ids;
+            }
+          } else {
+            break;
+          }
+        }
+      }
+
+      return ids;
     }
   };
 
@@ -172,6 +233,18 @@
         me._listGroup();
       });
 
+      me.bubble.$on('tree.removeNode', (id) => {
+        me.removeNode(id);
+      });
+
+      me.bubble.$on('tree.insertNode', (parentId, data) => {
+        me.insertNode(parentId, data);
+      });
+
+      me.bubble.$on('tree.getParentsId', (parentId, cb) => {
+        cb && cb(me.treeDataBaseInstance.getParentsId(parentId));
+      });
+
       this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey);
     },
     methods: {
@@ -185,7 +258,9 @@
       },
       _treeNodeCurrentChange(node) {
         const me = this;
+
         me.selectedNodeInfo = node;
+
         me._listGroup();
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node);
       },
@@ -206,11 +281,10 @@
         if (this.commandFieldName && typeof node.info[this.commandFieldName] !== 'undefined') {
           array = this.menus[node.info[this.commandFieldName]];
         } else {
-          for (const k in this.menus) {
-            if (Object.prototype.hasOwnProperty.call(this.menus, k)) {
-              array = this.menus[k];
-            }
-            break;
+          const keys = Object.keys(this.menus);
+
+          if (keys.length > 0) {
+            array = this.menus[keys[0]];
           }
         }
 
@@ -226,6 +300,7 @@
             menus: menus,
             width: me.menuWidth,
             execCommand(command) {
+              me.treeNodeCurrentChange && me.treeNodeCurrentChange(node);
               me.execCommand && me.execCommand(command, node, {
                 insertNode: me.insertNode,
                 removeNode: me.removeNode
@@ -245,16 +320,17 @@
         this.treeData = this.treeDataBaseInstance.getTreeData();
       },
 
-      removeNode(parentId) {
-        this.treeDataBaseInstance.remove(parentId);
+      removeNode(id) {
+        this.treeDataBaseInstance.remove(id);
         this.treeData = this.treeDataBaseInstance.getTreeData();
+      //        this.selectedNodeInfo = {};
       },
 
       _listGroup() {
         const me = this;
 
         this.listGroup && this.listGroup(this.selectedNodeInfo, (data) => {
-          me.insertNode(me.selectedNodeInfo, data);
+          me.insertNode(me.selectedNodeInfo.id || '', data);
         });
       }
 

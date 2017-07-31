@@ -68,6 +68,54 @@ api.addGroup = function addGroup(data) {
   });
 };
 
+api.removeGroup = function removeGroup(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/removeGroup', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.getGroup = function getGroup(data) {
+  return new Promise((resolve, reject) => {
+    axios.get('http://localhost:8080/engine/getGroup', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.updateGroup = function updateGroup(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/updateGroup', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 api.listEngine = function listEngine(data) {
   return new Promise((resolve, reject) => {
     axios.get('http://localhost:8080/engine/listEngine', data)
@@ -87,6 +135,70 @@ api.listEngine = function listEngine(data) {
 api.addEngine = function addEngine(data) {
   return new Promise((resolve, reject) => {
     axios.post('http://localhost:8080/engine/addEngine', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.getEngine = function getEngine(data) {
+  return new Promise((resolve, reject) => {
+    axios.get('http://localhost:8080/engine/getEngine', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.updateEngine = function updateEngine(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/updateEngine', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.removeEngine = function removeEngine(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/removeEngine', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.updateEngineConfiguration = function updateEngineConfiguration(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/updateEngineConfiguration', data)
       .then((response) => {
         const res = response.data;
         if (res.status === '0') {

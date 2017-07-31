@@ -3,7 +3,7 @@
     <template slot="search-left">{{selectedNodeInfo.name}}</template>
     <template slot="search-right">
       <div class="layout-engine-four-row-search-item">
-        <fj-input placeholder="请输入名称、IP或Id" v-model="keyword"></fj-input>
+        <fj-input :rows="1" placeholder="请输入名称、IP或Id" v-model="keyword"></fj-input>
       </div>
       <div class="layout-engine-four-row-search-item">
         <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
@@ -75,6 +75,7 @@
   import './index.css';
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
 
+
   const api = require('../../../api/engine');
   const status = require('./engineStatus');
 
@@ -85,9 +86,7 @@
     },
     props: {
       vueInstance: { type: Object },
-      selectedNodeInfo: { type: Object },
-      displaySlideDialog: { type: Function },
-      selectFn: { type: Function }
+      selectedNodeInfo: { type: Object }
     },
     data() {
       return {
@@ -95,6 +94,9 @@
         tableData: [],
         bubble: this.vueInstance,
         selectEngineInfo: {},
+        table: {
+          currentRowInfo: {}
+        },
         /* engine param */
         keyword: '',
         page: 1,
@@ -109,8 +111,6 @@
         me.initParam();
         me.listEngine();
       });
-
-      me.listEngine();
     },
     methods: {
       initParam() {
@@ -118,6 +118,9 @@
         this.tableData = [];
         this.keyword = '';
         this.page = 1;
+        this.table = {
+          currentRowInfo: {}
+        };
       },
       handleClickSearch() {
 
@@ -128,26 +131,33 @@
       getRunStatus(command, time) {
         return status.getRunStatus(command, time);
       },
-
       /* btn */
       addBtnClick() {
         const me = this;
-        me.displaySlideDialog && me.displaySlideDialog(true);
+        me.$emit('display-slide-dialog', true, 'add');
       },
       editBtnClick() {
-
+        const me = this;
+        me.$emit('display-slide-dialog', true, 'edit');
       },
-      deleteBtnClick() {},
+      deleteBtnClick() {
+        const me = this;
+        me.$emit('display-dialog', true, 'deleteEngine');
+      },
       installBtnClick() {},
       stopBtnClick() {},
       rebootBtnClick() {},
-      configBtnClick() {},
+      configBtnClick() {
+        this.$emit('display-setting-slide-dialog', true);
+      },
       statusBtnClick() {},
       monitorBtnClick() {},
 
       /* table */
-      handleCurrentChange() {
-
+      handleCurrentChange(current, prev) {
+        this.table.currentRowInfo = current;
+        this.isDisabled = false;
+        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
       },
 
       pageChange(val) {

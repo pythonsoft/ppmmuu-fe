@@ -32,10 +32,11 @@ status.active = {
 method.getTextByValue = function (v, st) {
   let text = '';
   const target = status[st];
+  const keys = Object.keys(target);
 
-  for (const k in target) {
-    if (target[k].value === v) {
-      text = target[k].text;
+  for (let i = 0, len = keys.length; i < len; i++) {
+    if (target[keys[i]].value === v) {
+      text = target[keys[i]].text;
       break;
     }
   }

@@ -62,7 +62,10 @@ module.exports = {
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
-        loader: 'file-loader'
+        loader: 'file-loader',
+        query: {
+          name: '[name].[ext]?[hash]'
+        }
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
