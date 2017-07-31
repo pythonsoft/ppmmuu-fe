@@ -1,0 +1,31 @@
+.media-left {
+  padding: 20px 16px 0 16px;
+  width: 100%;
+  height: 100%;
+}
+
+.media-right {
+  position: absolute;
+  top: 0;
+  left: 201px;
+}
+
+.media-search {
+  height: 34px;
+  line-height: 34px;
+  font-size: 12px;
+  color: #9FB3CA;
+}
+
+.media-category {
+  margin-top: 20px;
+}
+
+.category-checkbox {
+  margin-top: 15px;
+  margin-left: 10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  color: #2A3E52;
+}

@@ -42,6 +42,7 @@ export default [{
     },
     {
       path: 'personalCenter',
+      redirect: 'personalCenter/information',
       component: PersonalCenter,
       meta: { title: '个人中心' },
       children: [

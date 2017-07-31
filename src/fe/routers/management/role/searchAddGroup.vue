@@ -3,15 +3,13 @@
           :title="title"
           :visible.sync="addOwnerDialogVisible"
           @close="close">
-    <div v-if="treeData.length" class="add-group-tree">
-      <fj-tree
-              :data="treeData"
-              node-key="_id"
-              @node-click="handleTreeNodeClick"
-              @current-change="handleTreeNodeCurrentChange"
-              @node-expand="handleTreeNodeExpand"
-              @node-collapse="handleTreeNodeCollapse">
-      </fj-tree>
+    <div class="add-group-tree">
+      <tree-view
+              :showUpper="false"
+              :vueInstance="vueInstance"
+              :listGroup="listGroup"
+              :treeNodeCurrentChange="treeNodeCurrentChange"
+      ></tree-view>
     </div>
     <div slot="footer">
       <fj-button @click="close">取消</fj-button>
@@ -20,6 +18,9 @@
   </fj-dialog>
 </template>
 <script>
+  import Vue from 'vue';
+
+  import treeView from '../../../component/higherOrder/tree/index';
   import { formatQuery, getTree, getTreeNode } from '../../../common/utils';
 
   const api = require('../../../api/role');
@@ -45,12 +46,15 @@
         default: '0'
       }
     },
+    components: {
+      'tree-view': treeView
+    },
     data() {
       return {
         addOwnerDialogVisible: false,
         keyword3: '',
         searchOwner: [],
-        treeData: []
+        vueInstance: null
       };
     },
     mounted() {
@@ -58,14 +62,15 @@
     watch: {
       visible(val) {
         if (val) {
-          this.handleTreeNodeClick();
+          this.vueInstance.$emit('tree.listGroup');
           this.addOwnerDialogVisible = val;
-          this.treeData = [];
         } else {
           this.addOwnerDialogVisible = val;
-          this.treeData = [];
         }
       }
+    },
+    created() {
+      this.vueInstance = new Vue();
     },
     methods: {
       close() {
@@ -76,31 +81,35 @@
           this.showErrorInfo('没有选中的组织');
           return false;
         }
-        const parentNode = getTreeNode(this.treeData, this.currentNode.parentId);
-        this.$emit('add-owner', this.currentNode, parentNode);
+        this.currentNode._id = this.currentNode.id;
+        if(this.currentNodeParent){
+          this.currentNodeParent._id = this.currentNodeParent.id;
+        }
+        this.$emit('add-owner', this.currentNode, this.currentNodeParent);
         return true;
       },
-      handleTreeNodeClick(node) {
+      listGroup(node, cb){
         const me = this;
         const query = {};
-        this.currentNode = node;
         if (!node) {
-          query.parentId = this.parentId;
-          query.type = this.type;
+          query.parentId = this.parentId || '';
         } else {
-          query.parentId = node._id;
+          query.parentId = node.id || '';
+        }
+        if(!query.parentId){
+          query.type = this.type || '0';
         }
         groupApi.getGroupList(formatQuery(query, true))
-          .then((res) => {
-            const data = res.data.docs;
-            me.treeData = getTree(me.treeData, data, query.parentId);
-          })
-          .catch((err) => {
+                .then((res) => {
+          cb && cb(res.data.docs);
+        })
+        .catch((err) => {
             me.showErrorInfo(err);
-          });
+        });
       },
-      handleTreeNodeCurrentChange() {
-
+      treeNodeCurrentChange(treeNode, parentNode) {
+        this.currentNode = treeNode;
+        this.currentNodeParent = parentNode;
       },
       handleTreeNodeExpand(node) {
       },
