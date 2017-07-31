@@ -56,7 +56,6 @@
       handleClickDropDownItem(e) {
         this.isShowDropDown = false;
         this.visible = false;
-        console.log('handleClickDropDownItem ===>', this.visible);
         this.execCommand(e);
       }
     }

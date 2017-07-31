@@ -17,6 +17,7 @@
     },
     methods: {
       handleClick() {
+        console.log('dropdown click --->');
         this.visible = !this.visible;
         this.$emit('handle-click');
       },
@@ -29,8 +30,8 @@
         this.$emit('command', command);
       }
     },
-    mounted() {
-      this.$on('item-click', this.handleItemClick);
+    destroyed() {
+      this.$off('item-click');
     },
     components: {
       FjButton
