@@ -254,11 +254,10 @@
 
       /* tree */
       _treeNodeClick(node) {
-        this.treeNodeClick && this.treeNodeClick(node);
+//        this.treeNodeClick && this.treeNodeClick(node);
       },
       _treeNodeCurrentChange(node) {
         const me = this;
-
         me.selectedNodeInfo = node;
 
         me._listGroup();
