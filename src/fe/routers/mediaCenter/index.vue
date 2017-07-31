@@ -1,5 +1,5 @@
 <template>
-  <two-column :leftWidth="201">
+  <layout-three-column :leftWidth="201" :rightWidth="439">
     <template slot="left">
       <div class="media-left">
         <div class="media-search">
@@ -27,17 +27,47 @@
         </div>
         <div class="media-category" v-if="times.length">
           <h4>开始时间</h4>
+          <fj-input v-model="startTime"></fj-input>
+        </div>
+        <div class="media-category" v-if="times.length">
+          <h4>结束时间</h4>
+          <fj-input v-model="endTime"></fj-input>
+        </div>
+      </div>
+    </template>
+    <template slot="center">
+      <div class="media-center">
+        <div class="media-search-result">
+          <span>耗时30秒,结果3000条</span>
+        </div>
+        <div class="media-list" v-for="item in items">
+          <li class="media-item-li">
+            <div class="media-item">
+              <img class="media-thumb" src="">
+              <span class="media-duration">02:48:22</span>
+            </div>
+            <div>
+              <span class="media-format _480P">480P</span>
+              <span class="media-title"><<铿锵三人行>>中国隐形富豪财富足够再建个北京城(许子东 梁文道)</span>
+            </div>
+            <div class="media-item-category">类别: 评论节目</div>
+            <div class="media-item-storage-time">2017-04-14T22:40:09Z</div>
+          </li>
         </div>
       </div>
     </template>
     <template slot="right">
+      <div class="media-right">
+        <div class="">
 
+        </div>
+      </div>
     </template>
-  </two-column>
+  </layout-three-column>
 </template>
 <script>
   import './mediaCenter.css';
-  import TwoColumn from '../../component/layout/twoColumn';
+  import threeColumn from '../../component/layout/threeColumn';
 
   export default {
     data() {
@@ -46,15 +76,15 @@
         checkboxCategory: [],
         checkboxTime: [],
         categories: ['评论节目', '财经节目', '资讯节目'],
-        times: ['不限', '3小时内', '5小时内', '7小时内']
-
+        times: ['不限', '3小时内', '5小时内', '7小时内'],
+        items: ['a', 'b', 'c', 'd']
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
     },
     components: {
-      'two-column': TwoColumn
+      'layout-three-column': threeColumn
     },
     methods: {
       getActiveRoute(path, level) {
