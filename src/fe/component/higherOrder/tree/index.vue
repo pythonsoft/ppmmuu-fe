@@ -1,5 +1,5 @@
 <template>
-  <layout-two-row-tree class="ho-tree-layout">
+  <layout-two-row-tree class="ho-tree-layout" :showUpper="showUpper">
     <template slot="title">{{ title }}</template>
     <template slot="button">
       <fj-button size="mini" @click="_btnClick">{{ addBtnText }}</fj-button>
@@ -212,6 +212,7 @@
       treeDataBaseKey: { type: String, default: '_id' },
       title: { type: String, default: '分组' },
       addBtnText: { type: String, default: '添加组' },
+      showUpper: { type: Boolean, default: true },
       vueInstance: { type: Object },
       menus: {},
       menuWidth: { type: String },
@@ -258,10 +259,19 @@
       },
       _treeNodeCurrentChange(node) {
         const me = this;
+        const treeData = this.treeData;
+        let parentNode = null;
+
+        for(let i = 0, length = treeData.length; i < length; i++){
+          if(treeData[i].id === node.parentId){
+            parentNode = treeData[i];
+          }
+        }
+
         me.selectedNodeInfo = node;
 
         me._listGroup();
-        me.treeNodeCurrentChange && me.treeNodeCurrentChange(node);
+        me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
       _treeNodeExpand(node) {
         this.treeNodeExpand && this.treeNodeExpand(node);
