@@ -157,6 +157,7 @@
           requestData.type = this.CHILD_NODE_CONFIG[treeNode.info.type];
           requestData.parentId = treeNode.info._id;
         }
+
         groupAPI.getGroupList({ params: requestData })
           .then((response) => {
             cb && cb(response.data.docs);
