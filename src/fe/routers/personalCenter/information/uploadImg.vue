@@ -1,7 +1,7 @@
 <template>
   <div style="position:relative;">
     <div class="upload-img-content">
-      <img :src="imgPath" class="upload-img-content-photo">
+      <img :src="path" class="upload-img-content-photo">
     </div>
     <input id="img-input" accept="image/*" class="upload-img-input" @change='chooseImg' type="file">
     <label for="img-input" class="upload-img-content-change">修改头像</label>
@@ -15,7 +15,7 @@
     props: {
       imgPath: {
         type: String,
-        default: 'https://console.szdev.cn/img/avatar.png'
+        default: ''
       },
       maxSize: {
         type: Number,
@@ -24,12 +24,15 @@
     },
     data() {
       return {
-        img: ''
+        path: this.imgPath,
       };
     },
     mounted() {
     },
     watch: {
+      imgPath(val) {
+        this.path = val;
+      }
     },
     methods: {
       showErrorInfo(message) {
@@ -41,11 +44,11 @@
       chooseImg(event) {
         const img = event.target.files[0];
         const me = this;
-        const size = Math.floor(img.size / 1024);
         if (!/^image/.test(img.type)) {
           this.$message.error('文件不是图片类型!');
           return false;
         }
+        const size = Math.floor(img.size / 1024);
         if (size > 1024 * this.maxSize) {
           this.$message.error(`图片不能大于${this.maxSize}M!`);
           return false;
@@ -60,7 +63,7 @@
 
         api.upload(param, config)
           .then((res) => {
-            me.imgPath = res.data;
+            me.path = res.data;
             me.$emit('img-change', res.data);
           })
           .catch((error) => {

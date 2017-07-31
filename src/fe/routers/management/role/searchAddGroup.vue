@@ -1,14 +1,13 @@
 <template>
   <fj-dialog
           :title="title"
-          :vueInstance="vueInstance"
           :visible.sync="addOwnerDialogVisible"
           @close="close">
     <div class="add-group-tree">
       <tree-view
-              title="组"
+              :showUpper="false"
+              :vueInstance="vueInstance"
               :listGroup="listGroup"
-              :btnClick="btnClick"
               :treeNodeCurrentChange="treeNodeCurrentChange"
       ></tree-view>
     </div>
@@ -63,7 +62,6 @@
     watch: {
       visible(val) {
         if (val) {
-          console.log("aaaaaaa");
           this.vueInstance.$emit('tree.listGroup');
           this.addOwnerDialogVisible = val;
         } else {
@@ -83,32 +81,35 @@
           this.showErrorInfo('没有选中的组织');
           return false;
         }
-        const parentNode = getTreeNode(this.treeData, this.currentNode.parentId);
-        this.$emit('add-owner', this.currentNode, parentNode);
+        this.currentNode._id = this.currentNode.id;
+        if(this.currentNodeParent){
+          this.currentNodeParent._id = this.currentNodeParent.id;
+        }
+        this.$emit('add-owner', this.currentNode, this.currentNodeParent);
         return true;
-      },
-      btnClick(node) {
-        this.currentNode = node;
       },
       listGroup(node, cb){
         const me = this;
         const query = {};
         if (!node) {
-          query.parentId = this.parentId;
-          query.type = this.type;
+          query.parentId = this.parentId || '';
         } else {
-          query.parentId = node._id;
+          query.parentId = node.id || '';
+        }
+        if(!query.parentId){
+          query.type = this.type || '0';
         }
         groupApi.getGroupList(formatQuery(query, true))
                 .then((res) => {
           cb && cb(res.data.docs);
-      })
-      .catch((err) => {
-          me.showErrorInfo(err);
-      });
+        })
+        .catch((err) => {
+            me.showErrorInfo(err);
+        });
       },
-      treeNodeCurrentChange(treeNode) {
+      treeNodeCurrentChange(treeNode, parentNode) {
         this.currentNode = treeNode;
+        this.currentNodeParent = parentNode;
       },
       handleTreeNodeExpand(node) {
       },
