@@ -1,17 +1,16 @@
 <template>
   <fj-dialog
           :title="title"
+          :vueInstance="vueInstance"
           :visible.sync="addOwnerDialogVisible"
           @close="close">
-    <div v-if="treeData.length" class="add-group-tree">
-      <fj-tree
-              :data="treeData"
-              node-key="_id"
-              @node-click="handleTreeNodeClick"
-              @current-change="handleTreeNodeCurrentChange"
-              @node-expand="handleTreeNodeExpand"
-              @node-collapse="handleTreeNodeCollapse">
-      </fj-tree>
+    <div class="add-group-tree">
+      <tree-view
+              title="组"
+              :listGroup="listGroup"
+              :btnClick="btnClick"
+              :treeNodeCurrentChange="treeNodeCurrentChange"
+      ></tree-view>
     </div>
     <div slot="footer">
       <fj-button @click="close">取消</fj-button>
@@ -20,6 +19,9 @@
   </fj-dialog>
 </template>
 <script>
+  import Vue from 'vue';
+
+  import treeView from '../../../component/higherOrder/tree/index';
   import { formatQuery, getTree, getTreeNode } from '../../../common/utils';
 
   const api = require('../../../api/role');
@@ -45,12 +47,15 @@
         default: '0'
       }
     },
+    components: {
+      'tree-view': treeView
+    },
     data() {
       return {
         addOwnerDialogVisible: false,
         keyword3: '',
         searchOwner: [],
-        treeData: []
+        vueInstance: null
       };
     },
     mounted() {
@@ -58,14 +63,16 @@
     watch: {
       visible(val) {
         if (val) {
-          this.handleTreeNodeClick();
+          console.log("aaaaaaa");
+          this.vueInstance.$emit('tree.listGroup');
           this.addOwnerDialogVisible = val;
-          this.treeData = [];
         } else {
           this.addOwnerDialogVisible = val;
-          this.treeData = [];
         }
       }
+    },
+    created() {
+      this.vueInstance = new Vue();
     },
     methods: {
       close() {
@@ -80,10 +87,12 @@
         this.$emit('add-owner', this.currentNode, parentNode);
         return true;
       },
-      handleTreeNodeClick(node) {
+      btnClick(node) {
+        this.currentNode = node;
+      },
+      listGroup(node, cb){
         const me = this;
         const query = {};
-        this.currentNode = node;
         if (!node) {
           query.parentId = this.parentId;
           query.type = this.type;
@@ -91,16 +100,15 @@
           query.parentId = node._id;
         }
         groupApi.getGroupList(formatQuery(query, true))
-          .then((res) => {
-            const data = res.data.docs;
-            me.treeData = getTree(me.treeData, data, query.parentId);
-          })
-          .catch((err) => {
-            me.showErrorInfo(err);
-          });
+                .then((res) => {
+          cb && cb(res.data.docs);
+      })
+      .catch((err) => {
+          me.showErrorInfo(err);
+      });
       },
-      handleTreeNodeCurrentChange() {
-
+      treeNodeCurrentChange(treeNode) {
+        this.currentNode = treeNode;
       },
       handleTreeNodeExpand(node) {
       },
