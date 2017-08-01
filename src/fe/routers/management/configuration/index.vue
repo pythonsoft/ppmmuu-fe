@@ -162,7 +162,6 @@
       this.handleTreeNodeClick();
     },
     methods: {
-
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
