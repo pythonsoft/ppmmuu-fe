@@ -228,8 +228,6 @@
     created() {
       const me = this;
 
-      console.log('bind tree --->');
-
       me.bubble.$on('tree.listGroup', () => {
         me._listGroup();
       });

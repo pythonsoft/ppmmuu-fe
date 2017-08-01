@@ -109,7 +109,7 @@
       let isFetchDataNow = false;
 
       me.bubble.$on('engine.listEngine', () => {
-        if(isFetchDataNow) { return; }
+        if (isFetchDataNow) { return; }
         isFetchDataNow = true;
         me.initParam();
         me.listEngine(() => {

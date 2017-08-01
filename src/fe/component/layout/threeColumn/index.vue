@@ -60,18 +60,18 @@
     computed: {
       leftStyle() {
         const style = {};
-        style.width = this.leftWidth + 'px';
+        style.width = `${this.leftWidth}px`;
         return style;
       },
       centerStyle() {
         const style = {};
-        style.left = this.leftWidth + 'px';
-        style.right = this.rightWidth + 'px';
+        style.left = `${this.leftWidth}px`;
+        style.right = `${this.rightWidth}px`;
         return style;
       },
       rightStyle() {
         const style = {};
-        style.width = this.rightWidth + 'px';
+        style.width = `${this.rightWidth}px`;
         return style;
       }
     }
