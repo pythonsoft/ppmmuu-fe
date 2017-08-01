@@ -16,38 +16,22 @@
     </template>
     <template slot="operation">
       <span class="layout-engine-btn-mini-margin">
-        <fj-button type="info" size="mini" @click="showProperty">属性</fj-button>
+        <fj-button type="info" size="mini" @click="showProperty" v-bind:disabled="isDisabled">属性</fj-button>
       </span>
     </template>
     <template slot="table">
-      <!--<fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>-->
-        <!--<fj-table-column prop="isInstallMonitor" width="90" align="center" label="是否安装">-->
-          <!--<template scope="props">{{ getTextByValue(props.row.isInstallMonitor, 'isInstallMonitor') }}</template>-->
-        <!--</fj-table-column>-->
-        <!--<fj-table-column prop="status" width="90" align="center" label="运行状态" >-->
-          <!--<template scope="props">{{ getRunStatus(props.row.command, props.row.modifyTime) }}</template>-->
-        <!--</fj-table-column>-->
-        <!--<fj-table-column prop="code" width="100" label="编号"></fj-table-column>-->
-        <!--<fj-table-column prop="name" label="名称"></fj-table-column>-->
-        <!--<fj-table-column prop="intranetIp" width="140" align="center" label="内网IP"></fj-table-column>-->
-        <!--<fj-table-column prop="isTest" width="90" align="center" label="测试机">-->
-          <!--<template scope="props">{{ getTextByValue(props.row.isTest, 'isTest') }}</template>-->
-        <!--</fj-table-column>-->
-        <!--<fj-table-column prop="isVirtual" width="90" align="center" label="虚拟机">-->
-          <!--<template scope="props">{{ getTextByValue(props.row.isVirtual, 'isVirtual') }}</template>-->
-        <!--</fj-table-column>-->
-        <!--<fj-table-column prop="modifyTime" width="160" align="center" label="上次活跃">-->
-          <!--<template scope="props">{{ props.row.modifyTime | formatTime }}</template>-->
-        <!--</fj-table-column>-->
-      <!--</fj-table>-->
-    </template>
-    <template slot="pagination">
-      <!--<fj-pagination-->
-        <!--:page-size="pageSize"-->
-        <!--:total="total"-->
-        <!--:current-page.sync="page"-->
-        <!--@current-change="pageChange">-->
-      <!--</fj-pagination>-->
+      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+        <fj-table-column prop="pid" width="90" align="center" label="进程号"></fj-table-column>
+        <fj-table-column prop="status" width="90" align="center" label="运行状态" >
+          <template scope="props">{{ getRunStatus(props.row.status) }}</template>
+        </fj-table-column>
+        <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="cpu" label="CPU使用"></fj-table-column>
+        <fj-table-column prop="memory" label="内存使用"></fj-table-column>
+        <fj-table-column prop="disk" label="磁盘使用"></fj-table-column>
+        <fj-table-column prop="net" label="网络使用"></fj-table-column>
+        <fj-table-column prop="runTime" label="已运行时间"></fj-table-column>
+      </fj-table>
     </template>
   </layout-four-row>
 </template>
@@ -55,6 +39,8 @@
   import './index.css';
 
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
+
+  const api = require('../../../api/engine');
 
   export default {
     name: 'serviceList',
@@ -64,6 +50,7 @@
     props: {
       vueInstance: { type: Object },
       selectedNodeInfo: { type: Object },
+      engineInfo: { type: Object },
       title: { type: String, default: '服务监控' },
       visible: { type: Boolean, default: false }
     },
@@ -74,16 +61,50 @@
     },
     data() {
       return {
+        isDisabled: true,
         formData: {
           keyword: ''
-        }
+        },
+        tableData: [],
+        currentProcessInfo: null
       };
     },
+    created() {
+      this.listProcess();
+    },
+    destroyed() {},
     methods: {
       handleClickSearch() {},
-      showProperty() {},
+      showProperty() {
+        this.$emit('display-process-slide-dialog', true);
+      },
       back() {
         this.$emit('cancel');
+      },
+      /* table */
+      handleCurrentChange(current) {
+        this.currentProcessInfo = current;
+        this.isDisabled = false;
+        this.$emit('select', this.currentProcessInfo)
+      },
+      getRunStatus(v) {
+        return v;
+      },
+      /* api */
+      listProcess(completeFn) {
+        const me = this;
+
+        const param = {
+          ip: me.engineInfo.intranetIp
+        };
+
+        api.listProcess({ params: param }).then((res) => {
+          me.tableData = res.data;
+          completeFn && completeFn();
+        }).catch((error) => {
+          me.showErrorInfo(error.message);
+          completeFn && completeFn();
+        });
       }
     }
   };
