@@ -7,7 +7,7 @@
       <fj-form-item label="邮箱" prop="email">
         <fj-input v-model="formData.email" :disabled="type==='edit'"></fj-input>
       </fj-form-item>
-      <fj-form-item label="姓名">
+      <fj-form-item label="姓名" prop="name">
         <fj-input v-model="formData.name"></fj-input>
       </fj-form-item>
       <fj-form-item label="英文名">
@@ -87,6 +87,9 @@
               }
             }
           ],
+          name: [
+            { required: true, message: '请输入姓名' }
+          ],
           verifyType: [
             { required: true, message: '请选择验证方式' }
           ],
@@ -146,6 +149,14 @@
             this.$message.error(error);
           });
       },
+      resetFormData() {
+        const keys = Object.keys(this.formData);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          this.formData[key] = '';
+        }
+        this.groupName = '';
+      },
       handleClose() {
         this.$emit('close');
       },
@@ -168,6 +179,7 @@
             this.$message.success('保存成功');
             this.$emit('updateList');
             this.isBtnLoading = false;
+            this.resetFormData();
             this.handleClose();
           })
           .catch((error) => {
@@ -188,6 +200,7 @@
             this.$message.success('保存成功');
             this.$emit('updateList');
             this.isBtnLoading = false;
+            this.resetFormData();
             this.handleClose();
           })
           .catch((error) => {
