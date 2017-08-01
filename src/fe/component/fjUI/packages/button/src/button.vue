@@ -12,7 +12,7 @@
     :disabled="disabled"
     @click="handleClick"
   >
-    <i class="fj-icon-loading" v-if="loading"></i>
+    <i class="iconfont fj-icon-loading" v-if="loading">&#xe674;</i>
     <slot></slot>
   </button>
 </template>

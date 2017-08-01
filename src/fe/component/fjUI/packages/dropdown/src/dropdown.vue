@@ -16,8 +16,9 @@
       };
     },
     methods: {
-      handleClick() {
+      handleClick(e) {
         this.visible = !this.visible;
+        this.$emit('handle-click', this.visible, e);
       },
       handleClose() {
         this.visible = false;

@@ -8,7 +8,9 @@
       @click.stop="handleClick">
       <div :style="innerNodeStyle">
         <template v-if="isFolder">
-          <span :style="{ position: 'absolute', left: indent + 'px' }">{{ open ? '-' : '+' }}</span>
+          <i
+            :style="{ left: (open ? indent - 5 : indent) + 'px' }"
+            :class="open ? 'tri-bottom' : 'tri-right'"></i>
           <div :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
         </template>
         <node-content v-else :node="node"></node-content>
@@ -17,6 +19,7 @@
     <ul v-if="isFolder" v-show="open">
       <fj-tree-node
         v-for="(item, index) in node.children"
+        v-if="item.name"
         :node-key="nodeKey"
         :node-style="nodeStyle"
         :node="item"
@@ -46,7 +49,7 @@
     },
     computed: {
       isFolder() {
-        return this.node.children && this.node.children.length;
+        return this.node.children && this.node.children.length > 0;
       },
       isCurrentNode() {
         return this.tree.currentNode === this;

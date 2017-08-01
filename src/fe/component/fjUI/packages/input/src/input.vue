@@ -8,7 +8,7 @@
     ]">
     <template v-if="type !== 'textarea'">
       <slot name="prepend"></slot>
-      <i class="fj-input-icon" @click="handleIconClick" v-if="icon">{{ icon }}</i>
+      <i class="fj-input-icon iconfont" :class="icon" @click="handleIconClick" v-if="icon"></i>
       <input
         ref="input"
         class="fj-input-inner"

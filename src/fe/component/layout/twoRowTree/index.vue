@@ -1,6 +1,6 @@
 <template>
   <div class="layout-two-row-tree">
-    <div class="layout-two-row-tree-upper">
+    <div class="layout-two-row-tree-upper" v-if="showUpper">
       <div class="layout-two-row-tree-upper-title">
         <slot name="title"></slot>
       </div>
@@ -16,7 +16,10 @@
 </template>
 <script>
   export default {
-    name: 'layoutTwoRowTree'
+    name: 'layoutTwoRowTree',
+    props: {
+      showUpper: { type: Boolean, default: true }
+    }
   };
 </script>
 <style>

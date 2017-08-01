@@ -1,37 +1,4 @@
-import axios from 'axios';
-
 const utils = {};
-
-axios.defaults.withCredentials = true;
-
-axios.interceptors.request.use((config) => {
-  // Do something before request is sent
-  if (config.method === 'get') {
-    config.params = config.params || {};
-    config.params.t = new Date().getTime();
-  } else if (config.method === 'post') {
-    config.data = config.data || {};
-    config.data.t = new Date().getTime();
-  }
-
-  return config;
-}, error =>
-  // Do something with request error
-  Promise.reject(error)
-);
-
-axios.interceptors.response.use((response) => {
-  // Do something with response data
-  const res = response.data;
-  const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004'];
-  if (loginStatusCodeArr.indexOf(res.status) !== -1) {
-    window.location.href = '/login';
-  }
-  return response;
-}, error =>
-  // Do something with response error
-  Promise.reject(error)
-);
 
 utils.formatQuery = function formatQuery(obj, isGet = false) {
   return isGet ? {
@@ -61,6 +28,36 @@ utils.hardMerge = function hardMerge(arr1, arr2) {
     arr1.push(arr2[i]);
   }
   return arr1;
+};
+
+utils.merge = function merge(source, target) {
+  if (utils.isEmptyObject(target)) { return source; }
+  if (utils.isEmptyObject(source)) {
+    if (typeof source === 'string') {
+      return '';
+    }
+
+    return {};
+  }
+
+  const s = Object.assign({}, source);
+
+  for (const k in s) {
+    if (target[k]) {
+      s[k] = target[k];
+    }
+  }
+
+  return s;
+};
+
+utils.isIP = function isIP(strIP) {
+  if (!(strIP)) return false;
+  const re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g;
+  if (re.test(strIP)) {
+    if (RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256) return true;
+  }
+  return false;
 };
 
 function transferDataToTree(data, keyName) {
@@ -108,19 +105,79 @@ function transferDataToTree(data, keyName) {
 
 utils.transferDataToTree = transferDataToTree;
 
-utils.formatTree = function formatTree(list, keyName) {
-  if (list.length === 0) {
-    return ({
-      topNode: '',
-      node: {}
-    });
+/**
+ *
+ * @param treeData array
+ * @param data array 通过parentId去后台获取的数据
+ * @param parentId
+ * @param key
+ * @returns {*}
+ */
+utils.getTree = function getTree(treeData, data, parentId = '', key = '_id') {
+  let flag = 0;
+  const loopTree = function loopTree(tree) {
+    if (flag === 1) {
+      return;
+    }
+    for (let i = 0, len = tree.length; i < len; i++) {
+      if (tree[i][key] === parentId) {
+        tree[i].children = data;
+        flag = 1;
+        break;
+      }
+      if (tree[i].children && tree[i].children.length) {
+        loopTree(tree[i].children);
+      }
+    }
+  };
+
+  if (parentId) {
+    loopTree(treeData);
+  } else {
+    treeData = data;
   }
-  keyName = keyName || '_id';
-  let topNode = '';
+
+  return treeData;
+};
+
+/**
+ *
+ * @param treeData
+ * @param treeNodeId
+ * @param key
+ */
+utils.getTreeNode = function getTreeNode(treeData, treeNodeId, key = '_id') {
+  let flag = 0;
+  let treeNode = null;
+  const loopTree = function loopTree(tree) {
+    if (flag === 1) {
+      return;
+    }
+    for (let i = 0, len = tree.length; i < len; i++) {
+      if (tree[i][key] === treeNodeId) {
+        treeNode = tree[i];
+        flag = 1;
+        break;
+      } else if (tree[i].children && tree[i].children.length) {
+        loopTree(tree[i].children);
+      }
+    }
+  };
+  if (!treeNodeId) {
+    return treeNode;
+  }
+  loopTree(treeData);
+  return treeNode;
+};
+
+utils.formatTree = function formatTree(list, keyName = '_id', topNodeType = 2) {
+  if (list.length === 0) {
+    return ({ topNode: [], node: {} });
+  }
+  const topNode = [];
   for (let i = 0; i < list.length; i++) {
-    if (list[i].type === 2) {
-      topNode = list[i][keyName];
-      break;
+    if (list[i].type === topNodeType) {
+      topNode.push(list[i][keyName]);
     }
   }
   return ({
@@ -129,11 +186,48 @@ utils.formatTree = function formatTree(list, keyName) {
   });
 };
 
+utils.transferDataToFP = function transferDataToFP(data, keyName) {
+  keyName = keyName || '_id';
+
+  const format = function (d) {
+    if (d && d.constructor && d.constructor === Array) {
+      const rs = { indexs: [], infos: {} };
+      let index = '';
+      for (let i = 0, len = d.length; i < len; i++) {
+        if (typeof d[i][keyName] === 'undefined') {
+          index = `${i + 1}`;
+        } else {
+          index = d[i][keyName];
+        }
+
+        rs.indexs.push(index);
+        rs.infos[index] = transferDataToFP(d[i], keyName);
+      }
+      return rs;
+    }
+    return d;
+  };
+
+  let newData = {};
+
+  if (data.constructor === Array) {
+    newData = format(data);
+  } else if (data.constructor === Object) {
+    for (const k in data) {
+      newData[k] = format(data[k]);
+    }
+  } else {
+    newData = data;
+  }
+
+  return newData;
+};
+
 utils.checkEmail = function checkEmail(email) {
   if ((email.length > 128) || (email.length < 6)) {
     return false;
   }
-  return !!email.match(/^[A-Za-z0-9+]+[A-Za-z0-9\.\_\-+]*@([A-Za-z0-9\-]+\.)+[A-Za-z0-9]+$/);
+  return !!email.match(/^[A-Za-z0-9+]+[A-Za-z0-9\.\_\-+]*@([A-Za-z0-9\-]+\.)+[A-Za-z0-9]+$/); //eslint-disable-line
 };
 
 utils.checkPhone = function checkPhone(phone) {
@@ -157,6 +251,20 @@ utils.checkVipName = function checkVipName(name) {
 
 utils.checkPassword = function checkPassword(password) {
   return /^[0-9a-zA-Z_]{6,20}$/.test(password);
+};
+
+utils.isEmptyObject = function isEmptyObject(obj) {
+  if (obj === null || typeof obj === 'undefined') return true;
+
+  if (obj.constructor === Array) {
+    return obj.length === 0;
+  }
+
+  if (Object.keys(obj).length === 0) {
+    return true;
+  }
+
+  return false;
 };
 
 module.exports = utils;

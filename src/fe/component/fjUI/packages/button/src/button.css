@@ -141,3 +141,29 @@
   border-color: var(--disabled-border-color);
   cursor: not-allowed;
 }
+
+.fj-button-loading {
+  position: relative;
+  pointer-events: none;
+}
+.fj-button-loading:before {
+  pointer-events: none;
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  border-radius: inherit;
+  background-color: rgba(255, 255, 255, .25);
+}
+.fj-icon-loading {
+  font-size: 14px;
+  display: inline-block;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}

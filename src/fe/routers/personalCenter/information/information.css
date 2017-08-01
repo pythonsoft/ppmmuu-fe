@@ -6,7 +6,7 @@
 
 .personal-information-title {
   font-size: 16px;
-  height:40px;
+  height:50px;
   line-height: 40px;
   color: #2A3E52;
   position: relative;
@@ -45,4 +45,8 @@
 
 .personal-information-no-border {
   border: none;
+}
+
+.personal-information-btn-margin {
+  margin-left: 10px;
 }

@@ -16,9 +16,9 @@
     <add-permission :visible.sync="addPermissionDialogVisible" @add-permission="addPermission"></add-permission>
 
     <fj-dialog
-            title="提示"
-            :visible.sync="deletePermissionDialogVisible"
-            @close="deletePermissionDialogVisible=false">
+      title="提示"
+      :visible.sync="deletePermissionDialogVisible"
+      @close="deletePermissionDialogVisible=false">
 
       <span>确定要删除这些权限吗?</span>
 

@@ -3,16 +3,13 @@
           :title="title"
           :visible.sync="addOwnerDialogVisible"
           @close="close">
-    <div v-if="treeTopIdArr.length" class="add-group-tree">
-      <fj-tree
-              :data="treeData"
-              :topNodeIdArr= "treeTopIdArr"
-              node-key="_id"
-              @node-click="handleTreeNodeClick"
-              @current-change="handleTreeNodeCurrentChange"
-              @node-expand="handleTreeNodeExpand"
-              @node-collapse="handleTreeNodeCollapse">
-      </fj-tree>
+    <div class="add-group-tree">
+      <tree-view
+              :showUpper="false"
+              :vueInstance="vueInstance"
+              :listGroup="listGroup"
+              :treeNodeCurrentChange="treeNodeCurrentChange"
+      ></tree-view>
     </div>
     <div slot="footer">
       <fj-button @click="close">取消</fj-button>
@@ -21,10 +18,17 @@
   </fj-dialog>
 </template>
 <script>
-  import { formatQuery, formatTree } from '../../../common/utils';
+  import Vue from 'vue';
+
+  import treeView from '../../../component/higherOrder/tree/index';
+  import { formatQuery, getTree, getTreeNode } from '../../../common/utils';
 
   const api = require('../../../api/role');
   const groupApi = require('../../../api/group');
+  const CHILD_NODE_CONFIG = {
+    0: '1',
+    1: '2'
+  };
 
   export default {
     name: 'addGroup',
@@ -36,15 +40,25 @@
       title: {
         type: String,
         default: ''
+      },
+      parentId: {
+        type: String,
+        default: ''
+      },
+      type: {
+        type: String,
+        default: '0'
       }
+    },
+    components: {
+      'tree-view': treeView
     },
     data() {
       return {
         addOwnerDialogVisible: false,
         keyword3: '',
         searchOwner: [],
-        treeData: {},
-        treeTopIdArr: []
+        vueInstance: null
       };
     },
     mounted() {
@@ -52,12 +66,18 @@
     watch: {
       visible(val) {
         if (val) {
-          this.handleTreeNodeClick();
+          this.vueInstance.$emit('tree.listGroup');
           this.addOwnerDialogVisible = val;
         } else {
           this.addOwnerDialogVisible = val;
         }
       }
+    },
+    created() {
+      this.CHILD_NODE_CONFIG = CHILD_NODE_CONFIG;
+      this.vueInstance = new Vue({
+        name: 'search'
+      });
     },
     methods: {
       close() {
@@ -68,39 +88,34 @@
           this.showErrorInfo('没有选中的组织');
           return false;
         }
-        this.$emit('add-owner', this.currentNode);
+        this.currentNode._id = this.currentNode.id;
+        if (this.currentNodeParent) {
+          this.currentNodeParent._id = this.currentNodeParent.id;
+        }
+        this.$emit('add-owner', this.currentNode, this.currentNodeParent);
         return true;
       },
-      handleTreeNodeClick(node) {
+      listGroup(node, cb) {
         const me = this;
-        const query = {};
-        this.currentNode = node;
-        if (!node) {
-          query.parentId = '';
-          query.type = '0';
-        } else {
-          query.parentId = node._id;
-        }
+
+        if(!this.visible) { return false; }
+
+        const query = {
+          type: (node && node.info) ? this.CHILD_NODE_CONFIG[node.info.type] : this.type,
+          parentId: node.id ? node.id : (this.parentId || '')
+        };
+
         groupApi.getGroupList(formatQuery(query, true))
           .then((res) => {
-            const data = formatTree(res.data.docs, '_id').node;
-            if (query.parentId === '') {
-              const dataKeys = Object.keys(data);
-              me.treeTopIdArr = [];
-              for (let i = 0; i < dataKeys.length; i++) {
-                me.treeTopIdArr.push(data[dataKeys[i]]._id);
-                me.treeData = Object.assign({}, me.treeData, data);
-              }
-            } else {
-              me.treeData = Object.assign({}, me.treeData, data);
-            }
+            cb && cb(res.data.docs);
           })
           .catch((err) => {
             me.showErrorInfo(err);
           });
       },
-      handleTreeNodeCurrentChange() {
-
+      treeNodeCurrentChange(treeNode, parentNode) {
+        this.currentNode = treeNode;
+        this.currentNodeParent = parentNode;
       },
       handleTreeNodeExpand(node) {
       },

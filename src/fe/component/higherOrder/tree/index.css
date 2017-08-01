@@ -1,0 +1,31 @@
+.ho-empty-line {
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #ccc;
+}
+.ho-tree-layout .fj-tree-current-item .ho-tree-tree-node button {
+  color: #fff;
+}
+.ho-tree-tree-node{
+  position: relative;
+  height: 20px;
+}
+
+.ho-tree-node-text {
+  position: absolute;
+  left: 0;
+  right: 38px;
+  line-height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+.ho-tree-node-tool {
+  position: absolute;
+  right: 0;
+  margin-right: 10px;
+}
+
