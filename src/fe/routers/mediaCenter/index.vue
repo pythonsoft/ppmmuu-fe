@@ -103,7 +103,7 @@
       searchClick() {
 
       },
-      handleCurrentPageChange(){
+      handleCurrentPageChange() {
 
       }
     }

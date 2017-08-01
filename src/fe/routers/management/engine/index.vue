@@ -18,6 +18,7 @@
         :selectedNodeInfo="selectedNodeInfo"
         @display-slide-dialog="displaySlideDialog"
         @display-setting-slide-dialog="displaySettingSlideDialog"
+        @display-service-list-view="displayServiceListView"
         @display-dialog="displayDialog"
         @engine-select="selectFn"
       ></engine-list-view>
@@ -27,6 +28,15 @@
         :selectedNodeInfo="selectedNodeInfo"
         @cancel="homeView"
       ></engine-property-view>
+
+      <service-list-view
+        v-if="viewRouter === 'serviceListView'"
+        :title="engineInfo.name"
+        :vueInstance="vueInstance"
+        :visible.sync="serviceListViewVisible"
+        @cancel="closeServiceListView"
+      >
+      </service-list-view>
 
     </template>
 
@@ -68,6 +78,7 @@
   import propertyView from './propertyView';
   import engineBaseSlideDialogView from './engineBaseSlideDialog';
   import settingSlideDialogView from './settingSlideDialog';
+  import serviceListView from './serviceList';
 
   const api = require('../../../api/engine');
 
@@ -79,7 +90,8 @@
       'engine-list-view': engineListView,
       'engine-base-slide-dialog-view': engineBaseSlideDialogView,
       'setting-slide-dialog-view': settingSlideDialogView,
-      'engine-property-view': propertyView
+      'engine-property-view': propertyView,
+      'service-list-view': serviceListView
     },
     data() {
       return {
@@ -92,6 +104,7 @@
         /* dialog*/
         slideDialogVisible: false,
         settingDialogVisible: false,
+        serviceListViewVisible: false,
         slideDialogType: 'add',
         selectedNodeInfo: {},
         engineInfo: {},
@@ -141,6 +154,23 @@
         this.settingDialogVisible = flag;
       },
       /* slide dialog */
+
+      /* service view */
+      displayServiceListView(flag) {
+        this.serviceListViewVisible = flag;
+
+        if (flag) {
+          this.vueInstance.$emit('engine.setViewRouter', 'serviceListView');
+        } else {
+          this.vueInstance.$emit('engine.setViewRouter', 'engineListView');
+        }
+      },
+      closeServiceListView() {
+        this.serviceListViewVisible = false;
+        this.vueInstance.$emit('engine.setViewRouter', 'engineListView');
+      },
+      /* service view */
+
       /* dialog */
       btnClick(treeNode) {
         this.selectedNodeInfo = treeNode;

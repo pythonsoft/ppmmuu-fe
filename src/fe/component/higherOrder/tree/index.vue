@@ -228,8 +228,6 @@
     created() {
       const me = this;
 
-      console.log('bind tree --->');
-
       me.bubble.$on('tree.listGroup', () => {
         me._listGroup();
       });
@@ -256,8 +254,6 @@
       me.bubble.$off('tree.removeNode');
       me.bubble.$off('tree.insertNode');
       me.bubble.$off('tree.getParentsId');
-
-      console.log('destroyed tree --->');
     },
     methods: {
       showErrorInfo(message) {

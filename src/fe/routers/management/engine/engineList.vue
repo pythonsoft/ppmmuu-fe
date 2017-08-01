@@ -109,7 +109,7 @@
       let isFetchDataNow = false;
 
       me.bubble.$on('engine.listEngine', () => {
-        if(isFetchDataNow) { return; }
+        if (isFetchDataNow) { return; }
         isFetchDataNow = true;
         me.initParam();
         me.listEngine(() => {
@@ -159,7 +159,9 @@
         this.$emit('display-setting-slide-dialog', true);
       },
       statusBtnClick() {},
-      monitorBtnClick() {},
+      monitorBtnClick() {
+        this.$emit('display-service-list-view', true);
+      },
 
       /* table */
       handleCurrentChange(current, prev) {
