@@ -25,6 +25,10 @@
 
   const api = require('../../../api/role');
   const groupApi = require('../../../api/group');
+  const CHILD_NODE_CONFIG = {
+    0: '1',
+    1: '2'
+  };
 
   export default {
     name: 'addGroup',
@@ -70,7 +74,10 @@
       }
     },
     created() {
-      this.vueInstance = new Vue();
+      this.CHILD_NODE_CONFIG = CHILD_NODE_CONFIG;
+      this.vueInstance = new Vue({
+        name: 'search'
+      });
     },
     methods: {
       close() {
@@ -90,16 +97,14 @@
       },
       listGroup(node, cb) {
         const me = this;
-        const query = {};
-        if (!node) {
-          query.parentId = this.parentId || '';
-        } else {
-          query.parentId = node.id || '';
-        }
-        if (!query.parentId) {
-          query.type = this.type || '0';
-        }
-        console.log(query);
+
+        if(!this.visible) { return false; }
+
+        const query = {
+          type: (node && node.info) ? this.CHILD_NODE_CONFIG[node.info.type] : this.type,
+          parentId: node.id ? node.id : (this.parentId || '')
+        };
+
         groupApi.getGroupList(formatQuery(query, true))
           .then((res) => {
             cb && cb(res.data.docs);

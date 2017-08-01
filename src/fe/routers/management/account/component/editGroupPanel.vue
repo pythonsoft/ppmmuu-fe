@@ -3,7 +3,9 @@
     <h1>属性（{{ name }}）</h1>
     <div class="edit-panel-section basic">
       <h2>基本信息</h2>
-      <div></div>
+      <div class="edit-group-logo">
+        <upload-img :imgPath="formData.logo" @img-change="imgChange"></upload-img>
+      </div>
       <fj-form :model="formData" :rules="rules" label-width="71px" ref="basicForm" custom-class="edit-group-form">
         <fj-form-item label="名称" prop="name">
           <fj-input v-model="formData.name" />
@@ -52,7 +54,7 @@
       </fj-form>
     </div>
     <div class="edit-group-btn-group">
-      <fj-button type="primary" @click.stop="submitForm">保存</fj-button><!--
+      <fj-button type="primary" :loading="isBtnLoading" @click.stop="submitForm">保存</fj-button><!--
       --><fj-button @click.stop="cancel">取消</fj-button>
     </div>
     <contact-dialog
@@ -64,21 +66,11 @@
   </div>
 </template>
 <script>
+  import UploadImg from '../../../personalCenter/information/uploadImg';
   import ContactDialog from '../../role/searchAddUser';
   import { formatQuery } from '../../../../common/utils';
   import groupAPI from '../../../../api/group';
-
-  const MEMBERCOUNT_LIST = [
-    { value: 50, label: '50' },
-    { value: 100, label: '100' },
-    { value: 500, label: '500' }
-  ];
-
-  const GROUP_CONFIG = {
-    company: { type: '0', text: '公司' },
-    department: { type: '1', text: '部门' },
-    group: { type: '2', text: '小组' }
-  };
+  import { MEMBERCOUNT_LIST, GROUP_CONFIG } from '../config';
 
   export default {
     props: {
@@ -92,6 +84,7 @@
         _id: '',
         searchResult: [],
         isShowContactDialog: false,
+        isBtnLoading: false,
         formData: {
           name: '',
           memberCount: '',
@@ -101,7 +94,8 @@
             email: ''
           },
           deleteDeny: '',
-          ad: ''
+          ad: '',
+          logo: ''
         },
         rules: {
           name: [
@@ -165,19 +159,26 @@
           if (valid) {
             const requestData = Object.assign({}, this.formData);
             requestData._id = this._id;
+            this.isBtnLoading = true;
             groupAPI.postUpdateGroupInfo(requestData)
               .then((res) => {
                 this.$message.success('保存成功');
+                this.isBtnLoading = false;
                 this.cancel();
               }).catch((error) => {
+                this.isBtnLoading = false;
                 this.$message.error(error);
               });
           }
         });
+      },
+      imgChange(imgpath) {
+        this.formData.logo = imgpath;
       }
     },
     components: {
-      ContactDialog
+      ContactDialog,
+      UploadImg
     }
   };
 </script>
@@ -192,6 +193,7 @@
     line-height: 62px;
   }
   .edit-panel-section {
+    position: relative;
     border-top: 1px solid #EBF3FB;
     padding-top: 30px;
   }
@@ -217,5 +219,10 @@
   }
   .radio-group label {
     margin-right: 34px;
+  }
+  .edit-group-logo {
+    position: absolute;
+    top: 97px;
+    left: 20px;
   }
 </style>

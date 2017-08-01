@@ -30,7 +30,7 @@
       </fj-form-item>
       <fj-form-item label="部门／小组">
         <div class="group-input"><fj-input v-model="groupName" :readonly="true"></fj-input></div>
-        <fj-button @click.stop="">修改</fj-button>
+        <fj-button @click.stop.prevent="addGroupDialogVisible=true">修改</fj-button>
       </fj-form-item>
       <fj-form-item label="备注">
         <fj-input type="textarea" :rows="5" v-model="formData.description"></fj-input>
@@ -38,20 +38,22 @@
     </fj-form>
     <div slot="footer" class="edit-user-dialog-footer">
       <fj-button @click="handleClose">取消</fj-button><!--
-      --><fj-button type="primary" @click="submitForm">保存</fj-button>
+      --><fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
     </div>
-    <add-group :visible.sync="addGroupDialogVisible" @add-owner="addOwner" title="调整部门"></add-group>
+    <add-group
+      :visible.sync="addGroupDialogVisible"
+      :parent-id="companyId"
+      type="1"
+      @add-owner="addOwner"
+      title="调整部门"></add-group>
   </div>
 </template>
 <script>
   import AddGroup from '../../role/searchAddGroup';
   import { checkEmail, checkPassword, formatQuery } from '../../../../common/utils';
   import groupAPI from '../../../../api/group';
+  import { VERIFY_TYPE_CONFIG } from '../config';
 
-  const VERIFY_TYPE_CONFIG = {
-    0: '密码',
-    1: '域'
-  };
   export default {
     props: {
       type: String,
@@ -60,6 +62,7 @@
     },
     data() {
       return {
+        isBtnLoading: false,
         formData: {
           email: '',
           name: '',
@@ -159,13 +162,16 @@
       },
       addUser() {
         const data = Object.assign({}, this.formData, { companyId: this.companyId });
+        this.isBtnLoading = true;
         groupAPI.postGroupAddUser(data)
           .then((response) => {
             this.$message.success('保存成功');
             this.$emit('updateList');
+            this.isBtnLoading = false;
             this.handleClose();
           })
           .catch((error) => {
+            this.isBtnLoading = false;
             this.$message.error(error);
           });
       },
@@ -176,18 +182,30 @@
           { companyId: this.companyId },
           { _id: this.id }
         );
+        this.isBtnLoading = true;
         groupAPI.postGroupUpdateUser(data)
           .then((response) => {
             this.$message.success('保存成功');
             this.$emit('updateList');
+            this.isBtnLoading = false;
             this.handleClose();
           })
           .catch((error) => {
+            this.isBtnLoading = false;
             this.$message.error(error);
           });
       },
-      addOwner(row) {
-        console.log('row', row);
+      addOwner(row, parentNode) {
+        if (parentNode) {
+          this.groupName = `${parentNode.name} / ${row.name}`;
+          this.formData.teamId = row.info._id;
+          this.formData.departmentId = parentNode.info._id;
+        } else {
+          this.groupName = row.name;
+          this.formData.teamId = row.info._id;
+          this.formData.departmentId = '';
+        }
+        this.addGroupDialogVisible = false;
       }
     },
     components: {
