@@ -159,7 +159,9 @@
         this.$emit('display-setting-slide-dialog', true);
       },
       statusBtnClick() {},
-      monitorBtnClick() {},
+      monitorBtnClick() {
+        this.$emit('display-service-list-view', true);
+      },
 
       /* table */
       handleCurrentChange(current, prev) {

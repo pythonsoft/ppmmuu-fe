@@ -254,8 +254,6 @@
       me.bubble.$off('tree.removeNode');
       me.bubble.$off('tree.insertNode');
       me.bubble.$off('tree.getParentsId');
-
-      console.log('destroyed tree --->');
     },
     methods: {
       showErrorInfo(message) {
