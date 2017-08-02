@@ -202,7 +202,7 @@
         const me = this;
 
         const param = {
-          ip: me.selectEngineInfo.intranetIp,
+          ip: me.selectEngineInfo.intranetIp
         };
 
         api.listEngine(param).then((res) => {

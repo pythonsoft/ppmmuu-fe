@@ -25,6 +25,7 @@
 
   const api = require('../../../api/role');
   const groupApi = require('../../../api/group');
+
   const CHILD_NODE_CONFIG = {
     0: '1',
     1: '2'
@@ -98,20 +99,20 @@
       listGroup(node, cb) {
         const me = this;
 
-        if(!this.visible) { return false; }
+        if (!this.visible) { return false; }
 
         const query = {
           type: (node && node.info) ? this.CHILD_NODE_CONFIG[node.info.type] : this.type,
           parentId: node.id ? node.id : (this.parentId || '')
         };
 
-        groupApi.getGroupList(formatQuery(query, true))
-          .then((res) => {
-            cb && cb(res.data.docs);
-          })
-          .catch((err) => {
-            me.showErrorInfo(err);
-          });
+        groupApi.getGroupList(formatQuery(query, true)).then((res) => {
+          cb && cb(res.data.docs);
+        }).catch((err) => {
+          me.showErrorInfo(err);
+        });
+
+        return false;
       },
       treeNodeCurrentChange(treeNode, parentNode) {
         this.currentNode = treeNode;

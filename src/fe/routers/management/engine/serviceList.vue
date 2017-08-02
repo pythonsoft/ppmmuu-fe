@@ -85,7 +85,7 @@
       handleCurrentChange(current) {
         this.currentProcessInfo = current;
         this.isDisabled = false;
-        this.$emit('select', this.currentProcessInfo)
+        this.$emit('select', this.currentProcessInfo);
       },
       getRunStatus(v) {
         return v;
