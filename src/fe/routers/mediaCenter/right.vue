@@ -2,7 +2,7 @@
   <div class="media-right">
     <div class="media-video">
       <video controls="controls" autoplay="autoplay" :poster="poster" height="246px" width="439px">
-        <source src="blob:https://www.youtube.com/543f657b-4ed5-4546-88a1-fb3a149d00e7" />
+        <source src=""http://hkss3.phoenixtv.com/live/pic.stream_360p/playlist.m3u8" />
         Your browser does not support the video tag.
       </video>
     </div>
