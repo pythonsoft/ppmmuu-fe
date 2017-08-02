@@ -262,8 +262,8 @@
         const treeData = this.treeData;
         let parentNode = null;
 
-        for(let i = 0, length = treeData.length; i < length; i++){
-          if(treeData[i].id === node.parentId){
+        for (let i = 0, length = treeData.length; i < length; i++) {
+          if (treeData[i].id === node.parentId) {
             parentNode = treeData[i];
           }
         }

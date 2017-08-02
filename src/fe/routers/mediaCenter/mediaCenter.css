@@ -26,7 +26,6 @@
 }
 
 .media-center {
-  max-width: 1140px;
   height: 100%;
   position:relative;
   padding: 20px 23px 0 49px;
@@ -45,6 +44,11 @@
   border-left: 4px solid  #F2F6FA;
 }
 
+.media-list {
+  overflow: hidden;
+  zoom: 1;
+}
+
 .media-item-li {
   float: left;
   min-height: 1px;
@@ -52,6 +56,12 @@
   margin-top: 15px;
   margin-right: 26px;
   width: 240px;
+  height: 220px;
+  cursor: pointer
+}
+
+.media-item-li em {
+  color: #FF3366;
 }
 
 .media-item {

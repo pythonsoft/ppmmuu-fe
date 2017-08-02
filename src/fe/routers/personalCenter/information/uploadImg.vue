@@ -24,7 +24,7 @@
     },
     data() {
       return {
-        path: this.imgPath,
+        path: this.imgPath
       };
     },
     mounted() {

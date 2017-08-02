@@ -3,7 +3,7 @@
     <template slot="left">
       <div class="media-left">
         <div class="media-search">
-          <fj-input placeholder="铿锵三人行" size="mini" v-model="keyword" icon="搜索" @on-icon-click="searchClick" @keydown.native.enter.prevent="searchClick"></fj-input>
+          <fj-input placeholder="铿锵三人行" size="mini" v-model="keyword" icon="icon-search input-search-icon" @on-icon-click="searchClick" @keydown.native.enter.prevent="searchClick"></fj-input>
         </div>
         <div class="media-category" v-if="categories.length">
           <h4>类别</h4>
@@ -17,13 +17,13 @@
         </div>
         <div class="media-category" v-if="times.length">
           <h4>高级</h4>
-          <fj-checkbox-group v-model="checkboxTime">
+          <fj-radio-group v-model="checkboxTime">
             <template v-for="time in times">
               <div class="category-checkbox">
-                <fj-checkbox :label="time">{{time}}</fj-checkbox>
+                <fj-radio :label="time">{{time}}</fj-radio>
               </div>
             </template>
-          </fj-checkbox-group>
+          </fj-radio-group>
         </div>
         <div class="media-category" v-if="times.length">
           <h4>开始时间</h4>
@@ -38,20 +38,20 @@
     <template slot="center">
       <div class="media-center">
         <div class="media-search-result">
-          <span>耗时30秒,结果3000条</span>
+          <span>{{searchResult}}</span>
         </div>
         <ul class="media-list">
-          <li class="media-item-li" v-for="item in items">
+          <li class="media-item-li" v-for="item in items" @click="currentItemChange(item)">
             <div class="media-item">
-              <img class="media-thumb" src="">
-              <span class="media-duration">02:48:22</span>
+              <img class="media-thumb" v-lazy="getThumb(item)" :alt="item.name">
+              <span class="media-duration">{{getDuration(item)}}</span>
             </div>
             <div>
-              <span class="media-format _480P">480P</span>
-              <span class="media-title"><<铿锵三人行>>中国隐形富豪财富足够再建个北京城(许子东 梁文道)</span>
+              <span :class="getMediaFormatStyle(item)">{{getMediaFormat(item)}}</span>
+              <span class="media-title" v-html="item.program_name_en || item.name"></span>
             </div>
-            <div class="media-item-category">类别: 评论节目</div>
-            <div class="media-item-storage-time">2017-04-14T22:40:09Z</div>
+            <div class="media-item-category" v-html="'类别: ' + item.program_type"></div>
+            <div class="media-item-storage-time">{{item.last_modify}}</div>
           </li>
         </ul>
         <div class="media-pagination">
@@ -60,17 +60,27 @@
       </div>
     </template>
     <template slot="right">
-      <div class="media-right">
-        <div class="">
-
-        </div>
-      </div>
+      <media-right :currentVideo="currentVideo"></media-right>
     </template>
   </layout-three-column>
 </template>
 <script>
+  import Vue from 'vue';
+  import VueLazyload from 'vue-lazyload';
   import './mediaCenter.css';
   import threeColumn from '../../component/layout/threeColumn';
+  import mediaRight from './right';
+  import { getTimeByStr, formatDuration } from '../../common/utils';
+
+  const api = require('../../api/media');
+
+  Vue.use(VueLazyload);
+  Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: 'dist/error.png',
+    loading: 'dist/loading.gif',
+    attempt: 1
+  });
 
   export default {
     data() {
@@ -78,22 +88,27 @@
         defaultRoute: '/',
         keyword: '',
         checkboxCategory: [],
-        checkboxTime: [],
+        checkboxTime: '',
         startTime: '',
         endTime: '',
-        categories: ['评论节目', '财经节目', '资讯节目'],
+        categories: ['宣傳', '素材', '廣告'],
         times: ['不限', '3小时内', '5小时内', '7小时内'],
-        items: ['a', 'b', 'c', 'd'],
-        pageSize: 15,
+        items: [],
+        pageSize: 24,
         total: 0,
-        currentPage: 0
+        currentPage: 1,
+        currentVideo: {},
+        searchResult: ''
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.getSearchConfig();
+      this.searchClick();
     },
     components: {
-      'layout-three-column': threeColumn
+      'layout-three-column': threeColumn,
+      'media-right': mediaRight
     },
     methods: {
       getActiveRoute(path, level) {
@@ -101,10 +116,107 @@
         return pathArr[level] || '';
       },
       searchClick() {
-
+        this.getMediaList();
       },
-      handleCurrentPageChange(){
-
+      getSearchConfig() {
+        const me = this;
+        api.getSearchConfig()
+          .then((res) => {
+            me.categories = res.data.category;
+            me.times = res.data.duration;
+          })
+          .catch((error) => {
+            me.$message.error(error);
+          });
+      },
+      getMediaList() {
+        const me = this;
+        const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
+        let program_type = '';
+        let duration = '';
+        let last_modify = '';
+        let q = '';
+        if (me.checkboxCategory.length) {
+          program_type = me.checkboxCategory.join(' OR ');
+        }
+        if (me.startTime && !me.endTime) {
+          last_modify = `[${me.startTime} TO *]`;
+        } else if (!me.startTime && me.endTime) {
+          last_modify = `[0 TO ${me.endTime}]`;
+        } else if (me.startTime && me.endTime) {
+          last_modify = `[${me.startTime} TO ${me.endTime}]`;
+        }
+        duration = `[0 TO ${getTimeByStr(me.checkboxTime)}]`;
+        if (program_type) {
+          q = `(program_type:${program_type})`;
+        }
+        if (duration) {
+          if (q) {
+            q += ` AND duration:${duration}`;
+          } else {
+            q = `duration:${duration}`;
+          }
+        }
+        if (this.keyword) {
+          if (q) {
+            q += ` AND full_text:${this.keyword}`;
+          } else {
+            q = `full_text:${this.keyword}`;
+          }
+        }
+        if (last_modify) {
+          if (q) {
+            q += ` AND last_modify:${last_modify}`;
+          } else {
+            q = `last_modify:${last_modify}`;
+          }
+        }
+        const options = {
+          q: q,
+          fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify',
+          sort: 'last_modify desc',
+          start: start,
+          hl: 'on',
+          indent: 'on',
+          'hl.fl': 'program_type,name,program_name_cn,program_name_en',
+          rows: this.pageSize
+        };
+        api.solrSearch({ params: options })
+          .then((res) => {
+            me.items = res.data.docs;
+            me.total = res.data.numFound;
+            me.searchResult = `耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
+            if (me.items.length) {
+              me.currentVideo = me.items[0];
+            }
+          })
+          .catch((error) => {
+            me.$message.error(error);
+          });
+      },
+      handleCurrentPageChange(page) {
+        this.getMediaList();
+      },
+      currentItemChange(item) {
+        this.currentVideo = item;
+      },
+      getThumb(item) {
+        return api.getIcon(item.id);
+      },
+      getDuration(item) {
+        return formatDuration(item.duration);
+      },
+      getMediaFormatStyle(item) {
+        if (item.hd_flag === 0) {
+          return 'media-format _480P';
+        }
+        return 'media-format _1080P';
+      },
+      getMediaFormat(item) {
+        if (item.hd_flag === 0) {
+          return '480P';
+        }
+        return '1080P';
       }
     }
   };

@@ -1,4 +1,5 @@
 const utils = {};
+const moment = require('moment');
 
 utils.formatQuery = function formatQuery(obj, isGet = false) {
   return isGet ? {
@@ -265,6 +266,49 @@ utils.isEmptyObject = function isEmptyObject(obj) {
   }
 
   return false;
+};
+
+/**
+ *
+ * @param str 比如"30分钟内","2小时内"
+ * @returns {*}
+ */
+utils.getTimeByStr = function getTimeByStr(str) {
+  str = str.trim();
+  if (str.indexOf('分钟') !== -1) {
+    return str[0] * 60 * 1000;
+  } else if (str.indexOf('小时') !== -1) {
+    return str[0] * 60 * 60 * 1000;
+  }
+  return '*';
+};
+
+/**
+ *
+ * @param duration
+ * @returns {string}
+ */
+utils.formatDuration = function formatDuration(duration) {
+  const sec = moment.duration(duration).seconds();
+  const min = moment.duration(duration).minutes();
+  const hour = moment.duration(duration).hours();
+  let str = '';
+  if (hour < 10) {
+    str = `0${hour}:`;
+  } else {
+    str = `${hour}:`;
+  }
+  if (min < 10) {
+    str += `0${min}:`;
+  } else {
+    str += `${min}:`;
+  }
+  if (sec < 10) {
+    str += `0${sec}`;
+  } else {
+    str += `${sec}`;
+  }
+  return str;
 };
 
 module.exports = utils;

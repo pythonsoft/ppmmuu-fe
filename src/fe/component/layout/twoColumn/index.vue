@@ -39,14 +39,14 @@
       }
     },
     computed: {
-      leftStyle(){
+      leftStyle() {
         const style = {};
-        style.width = this.leftWidth + 'px';
+        style.width = `${this.leftWidth}px`;
         return style;
       },
-      rightStyle(){
+      rightStyle() {
         const style = {};
-        style.left = this.leftWidth + 'px';
+        style.left = `${this.leftWidth}px`;
         return style;
       }
     }
