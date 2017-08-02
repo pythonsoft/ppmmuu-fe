@@ -69,6 +69,20 @@
   background-color: #FFF;
 }
 
+.media-item img[lazy=loading] {
+  background-image: url('../../img/rolling.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+.media-item img[lazy=error] {
+  background-image: url('../../img/photoBreak.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50% 50%;
+}
+
 .media-thumb {
   position: relative;
   overflow: hidden;
