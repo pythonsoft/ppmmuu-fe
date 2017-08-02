@@ -76,9 +76,20 @@
         this.$emit('update:visible', false);
       },
       exec() {
-        console.log(this.actionInfo);
+        const me = this;
+        const params = {
+          engineId: this.engineInfo._id,
+          processId: this.processInfo.pid,
+          action: this.actionInfo.command,
+        };
+
+        api.emitAction(params).then((res) => {
+          me.$message.success('执行成功');
+        }).catch((error) => {
+          me.$message.error(error);
+        });
       },
-      selectionChange(current, prev) {
+      selectionChange(current) {
         this.actionInfo = current;
         this.isDisable = false;
       },

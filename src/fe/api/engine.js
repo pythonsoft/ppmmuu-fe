@@ -244,4 +244,36 @@ api.listAction = function listAction(data) {
   });
 };
 
+api.emitAction = function emitAction(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/emitAction', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+api.installMonitor = function installMonitor(data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:8080/engine/installMonitor', data)
+      .then((response) => {
+        const res = response.data;
+        if (res.status === '0') {
+          resolve(res);
+        }
+        reject(res.statusInfo.message);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 module.exports = api;
