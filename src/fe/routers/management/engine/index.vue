@@ -128,7 +128,7 @@
         ] },
         /* process */
         processInfo: {},
-        processSlideDialogVisible: false,
+        processSlideDialogVisible: false
       };
     },
     created() {

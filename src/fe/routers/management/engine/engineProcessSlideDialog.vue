@@ -44,7 +44,7 @@
         isDisable: true,
         title: '',
         tableData: [],
-        actionInfo: {},
+        actionInfo: {}
       };
     },
     watch: {
@@ -55,10 +55,6 @@
       engineInfo(v) {
         this.setTitle(v.name);
         this.listAction();
-      },
-      processInfo(v) {
-        console.log(v);
-        return v;
       }
     },
     created() {
@@ -76,9 +72,20 @@
         this.$emit('update:visible', false);
       },
       exec() {
-        console.log(this.actionInfo);
+        const me = this;
+        const params = {
+          engineId: this.engineInfo._id,
+          processId: this.processInfo.pid,
+          action: this.actionInfo.command
+        };
+
+        api.emitAction(params).then((res) => {
+          me.$message.success('执行成功');
+        }).catch((error) => {
+          me.$message.error(error);
+        });
       },
-      selectionChange(current, prev) {
+      selectionChange(current) {
         this.actionInfo = current;
         this.isDisable = false;
       },
@@ -96,9 +103,9 @@
             const len = res.data.length;
             let keys = [];
 
-            for(let i = 0; i < len; i++) {
+            for (let i = 0; i < len; i++) {
               keys = Object.keys(res.data[i]);
-              for(let j = 0, l = keys.length; j < l; j++) {
+              for (let j = 0, l = keys.length; j < l; j++) {
                 arr.push(res.data[i][keys[j]]);
               }
             }
@@ -108,7 +115,7 @@
             me.$message.error(error);
           });
         }
-      },
+      }
     }
   };
 </script>
