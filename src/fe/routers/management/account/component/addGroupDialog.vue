@@ -10,7 +10,7 @@
       </fj-form>
       <div slot="footer" class="dialog-footer">
         <fj-button @click="handleClose">取消</fj-button><!--
-        --><fj-button type="primary" @click="submitForm('form')">确定</fj-button>
+        --><fj-button type="primary" :loading="isBtnLoading" @click="submitForm('form')">确定</fj-button>
       </div>
     </fj-dialog>
 </template>
@@ -28,6 +28,7 @@
     data() {
       return {
         visible: this.dialogVisible,
+        isBtnLoading: false,
         formData: {
           name: ''
         },
@@ -55,15 +56,17 @@
             postData.name = this.formData.name;
             postData.parentId = this.parentId;
             postData.type = this.type;
-            console.log('postData', postData);
+            this.isBtnLoading = true;
             groupAPI.postAddGroup(postData)
               .then((response) => {
                 this.formData.name = '';
                 this.$emit('added');
                 this.$message.success('保存成功');
+                this.isBtnLoading = false;
                 this.handleClose();
               })
               .catch((error) => {
+                this.isBtnLoading = false;
                 this.$message.error(error);
               });
           }

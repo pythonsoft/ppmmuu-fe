@@ -228,8 +228,6 @@
     created() {
       const me = this;
 
-      me._listGroup();
-
       me.bubble.$on('tree.listGroup', () => {
         me._listGroup();
       });
@@ -247,6 +245,15 @@
       });
 
       this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey);
+
+      me.vueInstance.$emit('tree.listGroup');
+    },
+    destroyed() {
+      const me = this;
+      me.bubble.$off('tree.listGroup');
+      me.bubble.$off('tree.removeNode');
+      me.bubble.$off('tree.insertNode');
+      me.bubble.$off('tree.getParentsId');
     },
     methods: {
       showErrorInfo(message) {
@@ -255,21 +262,14 @@
 
       /* tree */
       _treeNodeClick(node) {
-        this.treeNodeClick && this.treeNodeClick(node);
+      //        this.treeNodeClick && this.treeNodeClick(node);
       },
       _treeNodeCurrentChange(node) {
         const me = this;
-        const treeData = this.treeData;
-        let parentNode = null;
-
-        for (let i = 0, length = treeData.length; i < length; i++) {
-          if (treeData[i].id === node.parentId) {
-            parentNode = treeData[i];
-          }
-        }
+        const rs = this.treeDataBaseInstance.get(node.parentId);
+        const parentNode = rs ? rs.info : null;
 
         me.selectedNodeInfo = node;
-
         me._listGroup();
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
@@ -309,7 +309,10 @@
             menus: menus,
             width: me.menuWidth,
             execCommand(command) {
-              me.treeNodeCurrentChange && me.treeNodeCurrentChange(node);
+              const rs = me.treeDataBaseInstance.get(node.parentId);
+              const parentNode = rs ? rs.info : null;
+
+              me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
               me.execCommand && me.execCommand(command, node, {
                 insertNode: me.insertNode,
                 removeNode: me.removeNode

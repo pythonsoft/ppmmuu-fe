@@ -106,11 +106,19 @@
     },
     created() {
       const me = this;
+      let isFetchDataNow = false;
 
       me.bubble.$on('engine.listEngine', () => {
+        if (isFetchDataNow) { return; }
+        isFetchDataNow = true;
         me.initParam();
-        me.listEngine();
+        me.listEngine(() => {
+          isFetchDataNow = false;
+        });
       });
+    },
+    destroyed() {
+      this.bubble.$off('engine.listEngine');
     },
     methods: {
       initParam() {
@@ -144,14 +152,18 @@
         const me = this;
         me.$emit('display-dialog', true, 'deleteEngine');
       },
-      installBtnClick() {},
+      installBtnClick() {
+        this.installMonitor();
+      },
       stopBtnClick() {},
       rebootBtnClick() {},
       configBtnClick() {
         this.$emit('display-setting-slide-dialog', true);
       },
       statusBtnClick() {},
-      monitorBtnClick() {},
+      monitorBtnClick() {
+        this.$emit('display-service-list-view', true);
+      },
 
       /* table */
       handleCurrentChange(current, prev) {
@@ -166,7 +178,7 @@
       },
 
       /* api */
-      listEngine() {
+      listEngine(completeFn) {
         const me = this;
 
         const param = {
@@ -180,6 +192,21 @@
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
+          completeFn && completeFn();
+        }).catch((error) => {
+          me.showErrorInfo(error.message);
+          completeFn && completeFn();
+        });
+      },
+      installMonitor() {
+        const me = this;
+
+        const param = {
+          ip: me.selectEngineInfo.intranetIp
+        };
+
+        api.listEngine(param).then((res) => {
+          me.$message.success('正在安装引擎');
         }).catch((error) => {
           me.showErrorInfo(error.message);
         });

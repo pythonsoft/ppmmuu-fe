@@ -1,7 +1,17 @@
 <template>
   <div class="layout-content">
     <div class="layout-top-search">
-      <div class="layout-search-title"><slot name="search-left"></slot></div>
+
+      <div v-if="isIncludeArrow"  class="layout-search-title title-left">
+        <span class="iconfont icon-arrow-left arrow-left" @click="back">
+          <span class="layout-search-title-color"><slot name="search-left"></slot></span>
+        </span>
+      </div>
+
+      <div class="layout-search-title layout-search-title-color" v-else>
+        <slot name="search-left"></slot>
+      </div>
+
       <div class="layout-search-right-content">
           <slot name="search-right"></slot>
       </div>
@@ -18,7 +28,19 @@
 </template>
 <script>
   export default {
-    name: 'fourRowLayoutRightContent'
+    name: 'fourRowLayoutRightContent',
+    props: {
+      isIncludeArrow: { type: Boolean, default: false }
+    },
+    data() {
+      return {
+      };
+    },
+    methods: {
+      back() {
+        this.$emit('back');
+      }
+    }
   };
 </script>
 <style>
@@ -35,11 +57,27 @@
     min-width: 700px;
   }
 
+  .layout-top-search .layout-search-title-color {
+    color: #273F57;
+  }
+
   .layout-top-search .layout-search-title{
     font-size: 16px;
-    color: #273F57;
     position: absolute;
     left: 20px;
+  }
+
+  .layout-top-search .title-left {
+    left:4px;
+  }
+
+  .layout-top-search .arrow-left {
+    cursor: default;
+    color: #9fb3ca;
+  }
+
+  .layout-top-search .arrow-left:hover{
+    color: #4c637b;
   }
 
   .layout-top-search .layout-search-right-content{

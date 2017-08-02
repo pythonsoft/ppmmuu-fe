@@ -12,12 +12,14 @@
       ></tree-view>
     </template>
     <template slot="right">
+
       <engine-list-view
         v-if="viewRouter === 'engineListView'"
         :vueInstance="vueInstance"
         :selectedNodeInfo="selectedNodeInfo"
         @display-slide-dialog="displaySlideDialog"
         @display-setting-slide-dialog="displaySettingSlideDialog"
+        @display-service-list-view="displayServiceListView"
         @display-dialog="displayDialog"
         @engine-select="selectFn"
       ></engine-list-view>
@@ -27,6 +29,18 @@
         :selectedNodeInfo="selectedNodeInfo"
         @cancel="homeView"
       ></engine-property-view>
+
+      <service-list-view
+        v-if="viewRouter === 'serviceListView'"
+        :title="engineInfo.name"
+        :vueInstance="vueInstance"
+        :engineInfo="engineInfo"
+        :visible.sync="serviceListViewVisible"
+        @cancel="closeServiceListView"
+        @select="processSelectFn"
+        @display-process-slide-dialog="displayProcessSlideDialog"
+      >
+      </service-list-view>
 
     </template>
 
@@ -55,6 +69,14 @@
       @confirm="settingSlideDialogConfirmFn"
     ></setting-slide-dialog-view>
 
+    <engine-process-slide-dialog-view
+      :vueInstance="vueInstance"
+      :engineInfo="engineInfo"
+      :processInfo="processInfo"
+      :visible.sync="processSlideDialogVisible"
+      @confirm="processSlideDialogConfirmFn"
+    ></engine-process-slide-dialog-view>
+
   </layout-two-column>
 </template>
 <script>
@@ -68,6 +90,8 @@
   import propertyView from './propertyView';
   import engineBaseSlideDialogView from './engineBaseSlideDialog';
   import settingSlideDialogView from './settingSlideDialog';
+  import engineProcessSlideDialogView from './engineProcessSlideDialog';
+  import serviceListView from './serviceList';
 
   const api = require('../../../api/engine');
 
@@ -79,7 +103,9 @@
       'engine-list-view': engineListView,
       'engine-base-slide-dialog-view': engineBaseSlideDialogView,
       'setting-slide-dialog-view': settingSlideDialogView,
-      'engine-property-view': propertyView
+      'engine-process-slide-dialog-view': engineProcessSlideDialogView,
+      'engine-property-view': propertyView,
+      'service-list-view': serviceListView
     },
     data() {
       return {
@@ -92,13 +118,17 @@
         /* dialog*/
         slideDialogVisible: false,
         settingDialogVisible: false,
+        serviceListViewVisible: false,
         slideDialogType: 'add',
         selectedNodeInfo: {},
         engineInfo: {},
         dropMenus: { group: [
           { name: '删除分组', command: 'deleteGroup' },
           { name: '属性', command: 'propertyView' }
-        ] }
+        ] },
+        /* process */
+        processInfo: {},
+        processSlideDialogVisible: false
       };
     },
     created() {
@@ -109,6 +139,9 @@
       this.vueInstance.$on('engine.setViewRouter', (router) => {
         me.viewRouter = router;
       });
+    },
+    destroyed() {
+      this.vueInstance.$off('engine.setViewRouter');
     },
     methods: {
       showErrorInfo(message) {
@@ -138,6 +171,23 @@
         this.settingDialogVisible = flag;
       },
       /* slide dialog */
+
+      /* service view */
+      displayServiceListView(flag) {
+        this.serviceListViewVisible = flag;
+
+        if (flag) {
+          this.vueInstance.$emit('engine.setViewRouter', 'serviceListView');
+        } else {
+          this.vueInstance.$emit('engine.setViewRouter', 'engineListView');
+        }
+      },
+      closeServiceListView() {
+        this.serviceListViewVisible = false;
+        this.vueInstance.$emit('engine.setViewRouter', 'engineListView');
+      },
+      /* service view */
+
       /* dialog */
       btnClick(treeNode) {
         this.selectedNodeInfo = treeNode;
@@ -165,6 +215,18 @@
         this.selectedNodeInfo = treeNode;
         this.vueInstance.$emit('engine.setViewRouter', 'engineListView');
       },
+
+      /* process */
+      processSlideDialogConfirmFn() {
+
+      },
+      processSelectFn(info) {
+        this.processInfo = info || {};
+      },
+      displayProcessSlideDialog(flag) {
+        this.processSlideDialogVisible = flag;
+      },
+
       listGroup(treeNode, cb) {
         const me = this;
 

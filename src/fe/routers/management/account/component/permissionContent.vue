@@ -26,7 +26,7 @@
               @delete-permission="deletePermission"></permission-list>
             <div class="edit-permission-btn-group" v-if="index === 0">
               <fj-button @click="cancel">取消</fj-button><!--
-              --><fj-button type="primary" @click="updatePermission">保存</fj-button>
+              --><fj-button type="primary" :loading="isUpdatePermissionBtnLoading" @click="updatePermission">保存</fj-button>
             </div>
           </div>
           <div v-else>无</div>
@@ -56,28 +56,7 @@
   import roleAPI from '../../../../api/role';
   import { formatQuery, transferDataToFP } from '../../../../common/utils';
   import PermissionList from '../../role/permissionList';
-
-  const TYPE_TO_MENU_CONFIG = {
-    0: [{ label: '公司', name: 'company' }],
-    1: [
-      { label: '部门', name: 'department' },
-      { label: '公司', name: 'company' },
-      { label: '最终权限', name: 'effective' }
-    ],
-    2: [
-      { label: '小组', name: 'group' },
-      { label: '部门', name: 'department' },
-      { label: '公司', name: 'company' },
-      { label: '最终权限', name: 'effective' }
-    ],
-    3: [
-      { label: '账户', name: 'account' },
-      { label: '小组', name: 'group' },
-      { label: '部门', name: 'department' },
-      { label: '公司', name: 'company' },
-      { label: '最终权限', name: 'effective' }
-    ]
-  };
+  import { TYPE_TO_MENU_CONFIG } from '../config';
 
   export default {
     props: {
@@ -93,7 +72,8 @@
         permissions: [],
         dialogVisible: false,
         roleList: [],
-        selectedRoles: []
+        selectedRoles: [],
+        isUpdatePermissionBtnLoading: false
       };
     },
     watch: {
@@ -202,12 +182,15 @@
         requestData.type = this.type;
         requestData.roles = Object.values(this.roles);
         requestData.permissions = this.permissions;
+        this.isUpdatePermissionBtnLoading = true;
         groupAPI.postUpdateOwnerPermission(requestData)
           .then((response) => {
             this.$message.success('保存成功');
+            this.isUpdatePermissionBtnLoading = false;
             this.cancel();
           })
           .catch((error) => {
+            this.isUpdatePermissionBtnLoading = false;
             this.$message.error(error);
           });
       }

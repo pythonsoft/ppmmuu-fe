@@ -48,7 +48,7 @@
 
       <div slot="footer" class="dialog-footer">
         <fj-button @click.stop="deleteGroupDialogVisible=false">取消</fj-button><!--
-        --><fj-button type="primary" @click.stop="handleDeleteGroup">确定</fj-button>
+        --><fj-button type="primary" :loading="isDeleteBtnLoading" @click.stop="handleDeleteGroup">确定</fj-button>
       </div>
 
     </fj-dialog>
@@ -63,44 +63,7 @@
   import AccountList from './component/accountList';
   import groupAPI from '../../../api/group';
   import { formatTree, formatQuery, getTreeNode } from '../../../common/utils';
-
-  const TYPE_CONFIG = {
-    0: '公司',
-    1: '部门',
-    2: '小组'
-  };
-  const APPENDCHILD_CONFIG = {
-    0: '1',
-    1: '2'
-  };
-  const GROUP_CONFIG = {
-    company: { type: '0', text: '公司' },
-    department: { type: '1', text: '部门' },
-    group: { type: '2', text: '小组' }
-  };
-  const CHILD_NODE_CONFIG = {
-    0: '1',
-    1: '2'
-  };
-  const MENU_CONFIG = {
-    0: [
-      { command: 'delete', name: '删除公司' },
-      { command: 'new', name: '新建部门' },
-      { command: 'permission', name: '权限信息' },
-      { command: 'edit', name: '属性' }
-    ],
-    1: [
-      { command: 'delete', name: '删除部门' },
-      { command: 'new', name: '新建小组' },
-      { command: 'permission', name: '权限信息' },
-      { command: 'edit', name: '属性' }
-    ],
-    2: [
-      { command: 'delete', name: '删除小组' },
-      { command: 'permission', name: '权限信息' },
-      { command: 'edit', name: '属性' }
-    ]
-  };
+  import { TYPE_CONFIG, APPENDCHILD_CONFIG, GROUP_CONFIG, CHILD_NODE_CONFIG, MENU_CONFIG } from './config';
 
   export default {
     data() {
@@ -114,6 +77,7 @@
         deleteGroupDialogTitle: '',
         deleteGroupDialogId: '',
         deleteGroupDialogVisible: false,
+        isDeleteBtnLoading: false,
         mainContent: 'default',
         editPanelType: '',
         editPanelName: '',
@@ -130,7 +94,6 @@
       execCommand(command, node) {
         const childType = this.APPENDCHILD_CONFIG[node.info.type];
         let title = this.TYPE_CONFIG[node.info.type];
-        console.log('execCommand');
         switch (command) {
           case 'delete':
             this.handleOpenDeleteDialog(title, node.info._id);
@@ -157,6 +120,7 @@
           requestData.type = this.CHILD_NODE_CONFIG[treeNode.info.type];
           requestData.parentId = treeNode.info._id;
         }
+
         groupAPI.getGroupList({ params: requestData })
           .then((response) => {
             cb && cb(response.data.docs);
@@ -205,18 +169,23 @@
         this.permissionPanelType = node.type;
         this.permissionPanelId = node._id;
         this.permissionPanelParentIds = [];
-        this.vueInstance.$emit('tree.getParentsId', node._id, ids => this.permissionPanelParentIds = ids);
+        this.vueInstance.$emit('tree.getParentsId', node._id, (ids) => {
+          this.permissionPanelParentIds = ids;
+        });
         // this.getParentIds(this.permissionPanelParentIds, node._id, this.treeData);
         this.permissionPanelName = node.name;
       },
       handleDeleteGroup() {
+        this.isDeleteBtnLoading = true;
         groupAPI.postDeleteGroup({ _id: this.deleteGroupDialogId })
           .then((response) => {
-            this.vueInstance.$emit('tree.listGroup');
+            this.vueInstance.$emit('tree.removeNode', this.deleteGroupDialogId);
             this.$message.success('删除成功');
+            this.isDeleteBtnLoading = false;
             this.deleteGroupDialogVisible = false;
           })
           .catch((error) => {
+            this.isDeleteBtnLoading = false;
             this.$message.error(error);
           });
       }
@@ -227,7 +196,9 @@
       this.TYPE_CONFIG = TYPE_CONFIG;
       this.APPENDCHILD_CONFIG = APPENDCHILD_CONFIG;
 
-      this.vueInstance = new Vue();
+      this.vueInstance = new Vue({
+        name: 'account'
+      });
     },
     mounted() {
     },

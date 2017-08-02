@@ -21,7 +21,7 @@
     <template slot="operation">
       <div class="operation-btn-group">
         <fj-button size="mini" type="primary" @click="showEditUserDialog('add')">增加</fj-button>
-        <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="">调整部门</fj-button>
+        <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="addGroupDialogVisible=true">调整部门</fj-button>
         <fj-button size="mini" type="primary" :disabled="selectedItems.length!=1" @click="showEditUserDialog('edit')">修改</fj-button>
         <fj-button size="mini" type="primary" :disabled="selectedItems.length!=1" @click="showPermissionDialog">修改权限</fj-button>
       </div>
@@ -73,15 +73,18 @@
     <fj-dialog
       :title="editUserStatusDialogTitle"
       :visible.sync="editUserStatusDialogVisible">
-
       <p>您确定要{{ editUserStatusDialogTitle }}吗？</p>
-
       <div slot="footer" class="dialog-footer">
         <fj-button @click.stop="editUserStatusDialogVisible=false">取消</fj-button><!--
-        --><fj-button type="primary" @click.stop="editUserStatusFn">确定</fj-button>
+        --><fj-button type="primary" :loading="isEditUserStatusBtnLoading" @click.stop="editUserStatusFn">确定</fj-button>
       </div>
-
     </fj-dialog>
+    <add-group
+      :visible.sync="addGroupDialogVisible"
+      :parent-id="companyId"
+      type="1"
+      @add-owner="addOwner"
+      title="调整部门"></add-group>
   </four-row-layout-right-content>
 </template>
 <script>
@@ -90,26 +93,8 @@
   import PermissionContent from './permissionContent';
   import groupAPI from '../../../../api/group';
   import { formatQuery } from '../../../../common/utils';
-
-  const STATUS_OPTIONS = [
-    { value: 'all', label: '全部' },
-    { value: '1', label: '启用' },
-    { value: '0', label: '禁用' }
-  ];
-  const STATUS_CONFIG = {
-    0: { class: 'status-danger', text: '禁用' },
-    1: { class: 'status-success', text: '启用' }
-  };
-  const VERIFY_TYPE_CONFIG = {
-    0: '密码',
-    1: '域'
-  };
-  const PERMISSION_TYPE_CONFIG = {
-    company: { type: '0', text: '公司' },
-    department: { type: '1', text: '部门' },
-    group: { type: '2', text: '小组' },
-    user: { type: '3', text: '账户' }
-  };
+  import AddGroup from '../../role/searchAddGroup';
+  import { STATUS_OPTIONS, STATUS_CONFIG, VERIFY_TYPE_CONFIG, PERMISSION_TYPE_CONFIG } from '../config';
 
   export default {
     props: {
@@ -125,6 +110,7 @@
         total: 0,
         currentPage: 0,
         pageSize: 20,
+        addGroupDialogVisible: false,
         editUserDialogVisible: false,
         permissionDialogId: '',
         permissionDialogParentIds: [],
@@ -135,6 +121,7 @@
         editUserStatusDialogVisible: false,
         editUserStatusDialogTitle: '删除成员',
         editUserStatusIds: [],
+        isEditUserStatusBtnLoading: false,
         editUserStatusFn: () => {}
       };
     },
@@ -193,15 +180,6 @@
           });
       },
       handleSearch() {
-        // const data = {
-        //   _id: this.group._id,
-        //   type: this.group.type,
-        //   status: this.status === 'all' ? '' : this.status,
-        //   keyword: this.keyword,
-        //   page: this.currentPage,
-        //   pageSize: this.pageSize
-        // };
-        // this.updateList(data);
         this.updateList();
       },
       handleSelectionChange(val) {
@@ -209,15 +187,6 @@
       },
       handleCurrentPageChange(newPage, oldPage) {
         if (oldPage !== 0 && newPage > 0) {
-          // const data = {
-          //   _id: this.group._id,
-          //   type: this.group.type,
-          //   status: this.status === 'all' ? '' : this.status,
-          //   keyword: this.keyword,
-          //   page: newPage,
-          //   pageSize: this.pageSize
-          // };
-          // this.updateList(data);
           this.updateList();
         }
       },
@@ -245,21 +214,46 @@
         this.editUserStatusIds = this.selectedItems.map(item => item._id);
       },
       deleteUser() {
+        this.isEditUserStatusBtnLoading = true;
         groupAPI.postDeleteGroupUser({ _ids: this.editUserStatusIds.join(',') })
           .then((response) => {
             this.updateList();
+            this.isEditUserStatusBtnLoading = false;
             this.editUserStatusDialogVisible = false;
             this.$message.success('保存成功');
           })
           .catch((error) => {
+            this.isEditUserStatusBtnLoading = false;
             this.$message.error(error);
           });
       },
       enableUser(status) {
+        this.isEditUserStatusBtnLoading = true;
         groupAPI.postEnableGroupUser({ _ids: this.editUserStatusIds.join(','), status: status })
           .then((response) => {
             this.updateList();
+            this.isEditUserStatusBtnLoading = false;
             this.editUserStatusDialogVisible = false;
+            this.$message.success('保存成功');
+          })
+          .catch((error) => {
+            this.isEditUserStatusBtnLoading = false;
+            this.$message.error(error);
+          });
+      },
+      addOwner(row, parentNode) {
+        const requestData = {};
+        requestData._ids = this.selectedItems.map(item => item._id).join(',');
+        if (parentNode) {
+          requestData.teamId = row.info._id;
+          requestData.departmentId = parentNode.info._id;
+        } else {
+          requestData.departmentId = row.info._id;
+        }
+        groupAPI.postJustifyUserGroup(requestData)
+          .then((response) => {
+            this.updateList();
+            this.addGroupDialogVisible = false;
             this.$message.success('保存成功');
           })
           .catch((error) => {
@@ -270,7 +264,8 @@
     components: {
       FourRowLayoutRightContent,
       EditUserContent,
-      PermissionContent
+      PermissionContent,
+      AddGroup
     }
   };
 </script>
