@@ -60,7 +60,7 @@
             </div>
           </li>
         </ul>
-        <div class="media-pagination">
+        <div class="media-pagination" v-if="items.length">
           <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
         </div>
       </div>

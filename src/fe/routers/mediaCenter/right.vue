@@ -105,6 +105,7 @@
     color: #2A3E52;
     height: 100%;
     width: 100%;
+    overflow: scroll;
   }
 
   .item-infos {
