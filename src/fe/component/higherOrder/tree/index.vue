@@ -270,7 +270,6 @@
         const parentNode = rs ? rs.info : null;
 
         me.selectedNodeInfo = node;
-
         me._listGroup();
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
