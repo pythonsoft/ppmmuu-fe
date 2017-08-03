@@ -27,6 +27,7 @@
   import FjInput from '../../input';
   import FjSelectDropdown from './selectDropdown';
   import Clickoutside from '../../../utils/clickoutside';
+  import scrollIntoView from '../../../utils/scrollIntoView';
 
   export default {
     name: 'FjSelect',
@@ -109,7 +110,7 @@
         this.icon = 'icon-fill-bottom';
       },
       handleIconShow() {
-        this.icon = 'icon-fill-top';
+        this.icon = 'icon-fill-bottom is-reverse';
       },
       handleOptionClick(option) {
         this.$emit('input', option.value);
@@ -118,6 +119,7 @@
       navigateOptions(direction) {
         if (!this.visible) return;
         if (this.options.length === 0) return;
+
         if (direction === 'next') {
           this.hoverIndex += 1;
           if (this.hoverIndex === this.options.length) {
@@ -129,10 +131,10 @@
             this.hoverIndex = this.options.length - 1;
           }
         }
-        // console.log('this.options[this.hoverIndex].$el.getBoundingClientRect().bottom', this.options[this.hoverIndex].$el.getBoundingClientRect().bottom);
-        // console.log('this.$refs.popper.$el.getBoundingClientRect().bottom', this.$refs.popper.$el.getBoundingClientRect().bottom);
-        // console.log('this.options[this.hoverIndex].$el.getBoundingClientRect().top', this.options[this.hoverIndex].$el.getBoundingClientRect().top);
-        // console.log('this.$refs.popper.$el.getBoundingClientRect().top', this.$refs.popper.$el.getBoundingClientRect().top);
+
+        const container = this.$refs.popper.$el;
+        const selected = this.options[this.hoverIndex].$el;
+        scrollIntoView(container, selected);
       },
       setSelected() {
         const option = this.getOption(this.value);

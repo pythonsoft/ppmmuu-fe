@@ -11,7 +11,7 @@
 .fj-select-dropdown {
   position: absolute;
   max-height: var(--select-dropdown-max-height);
-  overflow: scroll;
+  overflow: auto;
   margin: 4px 0;
   padding: 8px 0;
   border: var(--input-border);
@@ -42,4 +42,11 @@
 }
 .select-delete-icon:hover {
   color: #4C637B;
+}
+
+.fj-select .fj-input-icon {
+  transition: transform .3s;
+}
+.fj-select .fj-input-icon.is-reverse {
+  transform: rotate(180deg);
 }

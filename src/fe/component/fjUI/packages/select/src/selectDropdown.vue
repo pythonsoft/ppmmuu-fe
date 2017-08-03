@@ -1,13 +1,15 @@
 <template>
-  <div
-    ref="dropdown"
-    class="fj-select-dropdown"
-    :style="{
-      'minWidth': minWidth + 'px',
-      'top': top + 'px'
-    }">
-    <slot></slot>
-  </div>
+  <transition :name="transitionName">
+    <div
+      ref="dropdown"
+      class="fj-select-dropdown"
+      :style="{
+        'minWidth': minWidth + 'px',
+        'top': top + 'px'
+      }">
+      <slot></slot>
+    </div>
+  </transition>
 </template>
 <script>
   export default {
@@ -22,12 +24,20 @@
     },
     data() {
       return {
-        top: 0
+        top: 0,
+        transitionName: 'fj-zoom-in-top'
       };
     },
     watch: {
       '$parent.dropdownPosition'(val) {
         this.handlePositionChange(val);
+      },
+      '$parent.visible'(val) {
+        if (val) {
+          this.handlePositionChange(this.$parent.dropdownPosition);
+        } else {
+          this.transitionName = 'fj-zoom-in-top';
+        }
       }
     },
     mounted() {
@@ -35,12 +45,14 @@
     },
     methods: {
       handlePositionChange(val) {
-        if (val === 'top') {
-          const top = this.$refs.dropdown.getBoundingClientRect().height;
+        const dropdownMenuHeight = this.$refs.dropdown.getBoundingClientRect().height;
+        if (val === 'top' && dropdownMenuHeight > 0) {
+          this.transitionName = 'fj-zoom-in-bottom';
           let marginTop = window.getComputedStyle(this.$refs.dropdown).marginTop || 0;
           marginTop = parseInt(marginTop, 10);
-          this.top = -top - (marginTop * 2);
+          this.top = -dropdownMenuHeight - (marginTop * 2);
         } else {
+          this.transitionName = 'fj-zoom-in-top';
           const parentHeight = this.$parent.$el.getBoundingClientRect().height;
           this.top = parentHeight;
         }
