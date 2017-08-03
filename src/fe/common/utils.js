@@ -312,4 +312,19 @@ utils.formatDuration = function formatDuration(duration) {
   return str;
 };
 
+utils.getTextByValue = function getTextByValue(col, v, st) {
+  let text = '';
+  const target = col[st];
+  const keys = Object.keys(target);
+
+  for (let i = 0, len = keys.length; i < len; i++) {
+    if (target[keys[i]].value === v) {
+      text = target[keys[i]].text;
+      break;
+    }
+  }
+
+  return text;
+};
+
 module.exports = utils;

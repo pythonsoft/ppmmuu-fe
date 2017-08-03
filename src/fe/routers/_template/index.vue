@@ -6,14 +6,6 @@
         <fj-input :rows="1" placeholder="请输入存储区名称" v-model="formData.keyword"></fj-input>
       </div>
       <div class="layout-four-row-search-item">
-        <fj-select placeholder="请选择" v-model="formData.status">
-          <fj-option
-            v-for="item in status"
-            :key="item.value"
-            :label="item.text"
-            :value="item.value">
-          </fj-option>
-        </fj-select>
         <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
       </div>
     </template>
@@ -80,7 +72,6 @@
   import utils from '../../../common/utils';
 
   const api = require('../../../api/engine');
-  const config = require('./config');
 
   export default {
     components: {
@@ -89,10 +80,8 @@
     data() {
       return {
         isDisabled: true,
-        status: config.config.STATUS,
         formData: {
-          keyword: '',
-          status: ''
+          keyword: ''
         },
         table: {
           currentRowInfo: {}
@@ -103,8 +92,6 @@
         pageSize: 20,
         total: 0
       };
-    },
-    created() {
     },
     methods: {
       handleClickSearch(v) {

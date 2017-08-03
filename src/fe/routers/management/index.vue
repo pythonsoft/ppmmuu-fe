@@ -37,7 +37,7 @@
         { text: '权限', index: 'permission', route: 'permission' }
       ] },
     { text: '引擎管理', index: 'engine', route: 'engine' },
-    { text: '存储管理',
+    { title: '存储管理',
       index: 'storageManager',
       children: [
       { text: '存储区', index: 'bucket', route: 'bucket' },
