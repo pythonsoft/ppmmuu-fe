@@ -7,15 +7,16 @@
       </video>
     </div>
     <div class="media-video-title">
-      {{currentVideo.program_name_en || currentVideo.name}}
+      {{getShortName()}}
     </div>
     <div class="media-video-panel">
       <fj-tabs v-model="activeTabName" @tab-click="handleTabClick">
         <fj-tab-pane label="条目信息" name="tab1">
           <div class="item-infos">
             <div class="item-info" v-for="infoItem in program">
-              <span class="item-info-key">{{infoItem.cn + ': '}}</span>
-              <span class="item-info-value">{{infoItem.value}}</span>
+              <div class="item-info-key">{{infoItem.cn + ': '}}</div>
+              <div class="item-info-value">{{infoItem.value}}</div>
+              <div class="clearfix"></div>
             </div>
           </div>
         </fj-tab-pane>
@@ -38,14 +39,7 @@
     data() {
       return {
         program: {
-          a: {
-            cn: '素材名字',
-            value: 'testtttt'
-          },
-          b: {
-            cn: '素材名字',
-            value: 'testtttt'
-          } },
+        },
         poster: '',
         activeTabName: 'tab1',
         item: {}
@@ -70,12 +64,6 @@
         console.log(tab);
       },
       getDetail() {
-        for (let i = 0; i < 300; i++) {
-          this.program[`a${i}`] = {
-            cn: '素材名字',
-            value: 'testtttt'
-          };
-        }
         const me = this;
         api.getObject({ params: { objectid: this.item.id } })
           .then((res) => {
@@ -84,6 +72,13 @@
           }).catch((error) => {
             me.$message.error(error);
           });
+      },
+      getShortName() {
+        let name = this.item.program_name_en || '';
+        if(name && name.length > 15) {
+          name = name.substr(0, 10) + '...';
+        }
+        return name;
       }
     }
   };
@@ -110,24 +105,29 @@
     color: #2A3E52;
     height: 100%;
     width: 100%;
-    overflow: scroll;
   }
 
   .item-infos {
     padding: 8px 30px 0 0px;
+    width: 100%;
+    height: 800px;
+    overflow-y: scroll;
   }
 
   .item-info {
     margin-top: 6px;
+    position:relative;
   }
 
   .item-info-key {
-    display: inline-block;
     text-align: right;
     width: 80px;
+    float:left;
   }
 
   .item-info-value {
-    display: inline-block;
+    float: left;
+    width: 320px;
+    margin-left: 5px;
   }
 </style>
