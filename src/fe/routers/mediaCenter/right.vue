@@ -80,6 +80,7 @@
         api.getObject({ params: { objectid: this.item.id } })
           .then((res) => {
             me.program = res.result.detail.program;
+            delete me.program.OBJECTID;
           }).catch((error) => {
             me.$message.error(error);
           });
