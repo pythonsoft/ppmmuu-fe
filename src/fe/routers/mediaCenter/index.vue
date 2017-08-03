@@ -46,7 +46,7 @@
               <img class="media-thumb" v-lazy="getThumb(item)" :alt="item.name">
               <span class="media-duration">{{getDuration(item)}}</span>
             </div>
-            <div>
+            <div class="media-item-name">
               <span :class="getMediaFormatStyle(item)">{{getMediaFormat(item)}}</span>
               <span class="media-title" v-html="item.program_name_en || item.name"></span>
             </div>

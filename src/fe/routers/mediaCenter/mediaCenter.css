@@ -69,6 +69,10 @@
   background-color: #FFF;
 }
 
+.media-item-name {
+  height: 40px;
+}
+
 .media-item img[lazy=loading] {
   background-image: url('../../img/rolling.gif');
   background-repeat: no-repeat;
