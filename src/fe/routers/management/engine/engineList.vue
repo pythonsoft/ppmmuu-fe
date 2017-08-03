@@ -152,7 +152,9 @@
         const me = this;
         me.$emit('display-dialog', true, 'deleteEngine');
       },
-      installBtnClick() {},
+      installBtnClick() {
+        this.installMonitor();
+      },
       stopBtnClick() {},
       rebootBtnClick() {},
       configBtnClick() {
@@ -194,6 +196,19 @@
         }).catch((error) => {
           me.showErrorInfo(error.message);
           completeFn && completeFn();
+        });
+      },
+      installMonitor() {
+        const me = this;
+
+        const param = {
+          ip: me.selectEngineInfo.intranetIp
+        };
+
+        api.listEngine(param).then((res) => {
+          me.$message.success('正在安装引擎');
+        }).catch((error) => {
+          me.showErrorInfo(error.message);
         });
       }
     }

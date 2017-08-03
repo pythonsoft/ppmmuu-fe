@@ -64,18 +64,8 @@
 
   </fj-slide-dialog>
 </template>
-<style>
-  .engine-setting-bar{
-    padding: 20px;
-  }
-  .engine-setting-bar-title{
-    padding-right: 20px;
-  }
-  .engine-setting-dialog-item{
-    padding-bottom: 24px;
-  }
-</style>
 <script>
+  import './index.css';
   import utils from '../../../common/utils';
 
   const api = require('../../../api/engine');

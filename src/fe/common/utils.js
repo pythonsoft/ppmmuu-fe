@@ -41,10 +41,10 @@ utils.merge = function merge(source, target) {
   }
 
   const s = Object.assign({}, source);
-
-  for (const k in s) {
-    if (target[k]) {
-      s[k] = target[k];
+  const keys = Object.keys(s);
+  for (let i = 0, len = keys.length; i < len; i++) {
+    if (target[keys[i]]) {
+      s[keys[i]] = target[keys[i]];
     }
   }
 
@@ -213,8 +213,9 @@ utils.transferDataToFP = function transferDataToFP(data, keyName) {
   if (data.constructor === Array) {
     newData = format(data);
   } else if (data.constructor === Object) {
-    for (const k in data) {
-      newData[k] = format(data[k]);
+    const keys = Object.keys(data);
+    for (let i = 0, len = keys.length; i < len; i++) {
+      newData[keys[i]] = format(data[keys[i]]);
     }
   } else {
     newData = data;

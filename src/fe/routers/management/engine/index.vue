@@ -12,6 +12,7 @@
       ></tree-view>
     </template>
     <template slot="right">
+
       <engine-list-view
         v-if="viewRouter === 'engineListView'"
         :vueInstance="vueInstance"
@@ -33,8 +34,11 @@
         v-if="viewRouter === 'serviceListView'"
         :title="engineInfo.name"
         :vueInstance="vueInstance"
+        :engineInfo="engineInfo"
         :visible.sync="serviceListViewVisible"
         @cancel="closeServiceListView"
+        @select="processSelectFn"
+        @display-process-slide-dialog="displayProcessSlideDialog"
       >
       </service-list-view>
 
@@ -65,6 +69,14 @@
       @confirm="settingSlideDialogConfirmFn"
     ></setting-slide-dialog-view>
 
+    <engine-process-slide-dialog-view
+      :vueInstance="vueInstance"
+      :engineInfo="engineInfo"
+      :processInfo="processInfo"
+      :visible.sync="processSlideDialogVisible"
+      @confirm="processSlideDialogConfirmFn"
+    ></engine-process-slide-dialog-view>
+
   </layout-two-column>
 </template>
 <script>
@@ -78,6 +90,7 @@
   import propertyView from './propertyView';
   import engineBaseSlideDialogView from './engineBaseSlideDialog';
   import settingSlideDialogView from './settingSlideDialog';
+  import engineProcessSlideDialogView from './engineProcessSlideDialog';
   import serviceListView from './serviceList';
 
   const api = require('../../../api/engine');
@@ -90,6 +103,7 @@
       'engine-list-view': engineListView,
       'engine-base-slide-dialog-view': engineBaseSlideDialogView,
       'setting-slide-dialog-view': settingSlideDialogView,
+      'engine-process-slide-dialog-view': engineProcessSlideDialogView,
       'engine-property-view': propertyView,
       'service-list-view': serviceListView
     },
@@ -111,7 +125,10 @@
         dropMenus: { group: [
           { name: '删除分组', command: 'deleteGroup' },
           { name: '属性', command: 'propertyView' }
-        ] }
+        ] },
+        /* process */
+        processInfo: {},
+        processSlideDialogVisible: false
       };
     },
     created() {
@@ -198,6 +215,18 @@
         this.selectedNodeInfo = treeNode;
         this.vueInstance.$emit('engine.setViewRouter', 'engineListView');
       },
+
+      /* process */
+      processSlideDialogConfirmFn() {
+
+      },
+      processSelectFn(info) {
+        this.processInfo = info || {};
+      },
+      displayProcessSlideDialog(flag) {
+        this.processSlideDialogVisible = flag;
+      },
+
       listGroup(treeNode, cb) {
         const me = this;
 
