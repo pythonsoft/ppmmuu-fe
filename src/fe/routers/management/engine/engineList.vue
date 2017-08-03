@@ -74,7 +74,7 @@
 
   import './index.css';
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
-
+  import utils from '../../../common/utils';
 
   const api = require('../../../api/engine');
   const status = require('./engineStatus');
@@ -93,7 +93,6 @@
         isDisabled: true,
         tableData: [],
         bubble: this.vueInstance,
-        selectEngineInfo: {},
         table: {
           currentRowInfo: {}
         },
@@ -167,6 +166,7 @@
 
       /* table */
       handleCurrentChange(current, prev) {
+
         this.table.currentRowInfo = current;
         this.isDisabled = false;
         this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
@@ -200,16 +200,23 @@
       },
       installMonitor() {
         const me = this;
+        if(utils.isEmptyObject(me.table.currentRowInfo)) {
+          me.$message.error('请先选择需要安装的引擎');
+          return false
+        }
 
         const param = {
-          ip: me.selectEngineInfo.intranetIp
+          ip: me.table.currentRowInfo.intranetIp
         };
 
-        api.listEngine(param).then((res) => {
+        api.installMonitor(param).then((res) => {
           me.$message.success('正在安装引擎');
         }).catch((error) => {
-          me.showErrorInfo(error.message);
+          me.showErrorInfo(error);
         });
+      },
+      showErrorInfo(message) {
+        this.$message.error(message || '');
       }
     }
   };
