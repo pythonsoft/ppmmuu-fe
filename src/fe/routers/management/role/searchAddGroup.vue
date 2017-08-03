@@ -98,7 +98,6 @@
       },
       listGroup(node, cb) {
         const me = this;
-
         if (!this.visible) { return false; }
 
         const query = {
@@ -111,7 +110,6 @@
         }).catch((err) => {
           me.showErrorInfo(err);
         });
-
         return false;
       },
       treeNodeCurrentChange(treeNode, parentNode) {
