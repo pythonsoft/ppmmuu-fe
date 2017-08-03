@@ -7,7 +7,7 @@
       </video>
     </div>
     <div class="media-video-title">
-      {{currentVideo.program_name_en || currentVideo.name}}
+      {{getShortName()}}
     </div>
     <div class="media-video-panel">
       <fj-tabs v-model="activeTabName" @tab-click="handleTabClick">
@@ -72,6 +72,13 @@
           }).catch((error) => {
             me.$message.error(error);
           });
+      },
+      getShortName() {
+        let name = this.item.program_name_en || '';
+        if(name && name.length > 15) {
+          name = name.substr(0, 10) + '...';
+        }
+        return name;
       }
     }
   };
@@ -98,14 +105,13 @@
     color: #2A3E52;
     height: 100%;
     width: 100%;
-    overflow: scroll;
   }
 
   .item-infos {
     padding: 8px 30px 0 0px;
     width: 100%;
     height: 100%;
-    position:relative;
+    overflow: scroll;
   }
 
   .item-info {
