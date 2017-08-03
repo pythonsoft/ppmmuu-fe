@@ -22,7 +22,7 @@
 
   .layout-three-column-left {
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
     position: absolute;
     top: 0;
     left: 0;
@@ -33,7 +33,7 @@
     position: absolute;
     top: 0;
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
   }
 
   .layout-three-column-right {
