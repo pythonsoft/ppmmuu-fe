@@ -102,7 +102,7 @@
           me.tableData = res.data;
           completeFn && completeFn();
         }).catch((error) => {
-          me.showErrorInfo(error.message);
+          me.$message.error(error);
           completeFn && completeFn();
         });
       }
