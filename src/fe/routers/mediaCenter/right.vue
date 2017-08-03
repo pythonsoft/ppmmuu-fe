@@ -105,14 +105,13 @@
     color: #2A3E52;
     height: 100%;
     width: 100%;
-    overflow: scroll;
   }
 
   .item-infos {
     padding: 8px 30px 0 0px;
     width: 100%;
-    height: 100%;
-    overflow: scroll;
+    height: 800px;
+    overflow-y: scroll;
   }
 
   .item-info {
