@@ -83,7 +83,7 @@
           }
         };
         const t = cfg[c];
-
+        console.log('const --->', t);
         return t && t();
       },
       confirmDialog() {
