@@ -43,18 +43,24 @@
         <ul class="media-list">
           <li class="media-item-li" v-for="item in items" @click="currentItemChange(item)">
             <div class="media-item">
-              <img class="media-thumb" v-lazy="getThumb(item)" :alt="item.name">
+              <img class="media-thumb" v-lazy="getThumb(item)" :alt="getReplaceName(item)">
               <span class="media-duration">{{getDuration(item)}}</span>
             </div>
-            <div>
+            <div class="media-item-name" :title="getReplaceName(item)">
               <span :class="getMediaFormatStyle(item)">{{getMediaFormat(item)}}</span>
-              <span class="media-title" v-html="item.program_name_en || item.name"></span>
+              <span class="media-title" v-html="getShortName(item)"></span>
             </div>
-            <div class="media-item-category" v-html="'类别: ' + item.program_type"></div>
-            <div class="media-item-storage-time">{{item.last_modify}}</div>
+            <div class="media-item-category">
+              <span class="media-item-category-title">类别: </span>
+              <span class="media-item-category-value" v-html="item.program_type || ''"></span>
+            </div>
+            <div class="media-item-storage-time">
+              <span class="media-item-category-title">入库时间: </span>
+              <span class="media-item-category-value">{{item.last_modify}}</span>
+            </div>
           </li>
         </ul>
-        <div class="media-pagination">
+        <div class="media-pagination" v-if="items.length">
           <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
         </div>
       </div>
@@ -217,6 +223,21 @@
           return '480P';
         }
         return '1080P';
+      },
+      getReplaceName(item) {
+        let name = item.program_name_en || '';
+        if(name) {
+          name = name.replace('<em>', '');
+          name = name.replace('</em>', '');
+        }
+        return name
+      },
+      getShortName(item) {
+        let name = item.program_name_en || '';
+        if(name && name.length > 15) {
+          name = name.substr(0, 15) + '...';
+        }
+        return name;
       }
     }
   };
