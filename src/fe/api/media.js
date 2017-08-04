@@ -33,59 +33,77 @@ axios.interceptors.response.use((response) => {
   return response;
 }, error =>
   // Do something with response error
-  Promise.reject(error)
+  Promise.reject(typeof error === 'object' ? error.message ? error.message === 'Network Error' ? '网络连接出错，请检查网络是否连接正常' : error.message : '出错了' : error)
 );
 
-api.solrSearch = function solrSearch(data) {
+api.solrSearch = function solrSearch (data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/media/solrSearch', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
+    if(scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/media/solrSearch', data).then((response) => {
+      if(!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if(scope) { scope.$progress.finish(); }
+        resolve(res)
+      }
+      if(scope) { scope.$progress.fail(); }
+      reject(res.statusInfo.message);
+    }).catch(error =>{
+        if(scope) { scope.$progress.fail(); }
         reject(error);
-      });
-  });
-};
-
-api.getSearchConfig = function getSearchConfig(data) {
+     });
+   });
+ };
+ 
+ api.getSearchConfig = function getSearchConfig (data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/media/getSearchConfig', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
+    if(scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/media/getSearchConfig', data).then((response) => {
+      if(!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if(scope) { scope.$progress.finish(); }
+        resolve(res)
+      }
+      if(scope) { scope.$progress.fail(); }
+      reject(res.statusInfo.message);
+    }).catch(error =>{
+        if(scope) { scope.$progress.fail(); }
         reject(error);
-      });
-  });
+     });
+   });
+ };
+ 
+ api.getIcon = function getIcon(id) {
+  return 'http://localhost:8080/media/getIcon?objectid=' + id;
 };
 
-api.getIcon = function getIcon(id) {
-  return `http://localhost:8080/media/getIcon?objectid=${id}`;
-};
-
-api.getObject = function getObject(data) {
+api.getObject = function getObject (data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/media/getObject', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
+    if(scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/media/getObject', data).then((response) => {
+      if(!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if(scope) { scope.$progress.finish(); }
+        resolve(res)
+      }
+      if(scope) { scope.$progress.fail(); }
+      reject(res.statusInfo.message);
+    }).catch(error =>{
+        if(scope) { scope.$progress.fail(); }
         reject(error);
-      });
-  });
-};
-
-module.exports = api;
+     });
+   });
+ };
+ 
+ module.exports = api;
