@@ -15,6 +15,7 @@ import TableColumn from './packages/tableColumn';
 import Dialog from './packages/dialog';
 import Tag from './packages/tag';
 import Message from './packages/message';
+import ProgressBar from './packages/progressBar';
 import Pagination from './packages/pagination';
 import Tabs from './packages/tabs';
 import TabPane from './packages/tabPane';
@@ -58,7 +59,8 @@ const components = [
   SlideDialog,
   Dropdown,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  ProgressBar.component
 ];
 
 const install = function (vue, options = {}) {
@@ -66,6 +68,7 @@ const install = function (vue, options = {}) {
     vue.component(component.name, component);
   });
   vue.prototype.$message = Message;
+  vue.prototype.$progress = ProgressBar.service;
 };
 
 if (typeof window !== 'undefined' && window.Vue) {
@@ -91,6 +94,7 @@ const FjUI = {
   Dialog,
   Tag,
   Message,
+  ProgressBar,
   Pagination,
   Tabs,
   TabPane,

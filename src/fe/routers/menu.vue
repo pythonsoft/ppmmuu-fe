@@ -15,10 +15,10 @@
 </template>
 <script>
   const menu = [
-    { text: '媒体库', index: 'router1', route: '/mediaCenter', icon: 'icon-media-library' },
-    { text: '订阅', index: 'router2', route: '/2', icon: 'icon-subscription' },
-    { text: '任务', index: 'router3', route: '/3', icon: 'icon-menu' },
-    { text: '个人中心', index: 'router4', route: '/personalCenter', icon: 'icon-person' },
+    { text: '媒体库', index: 'mediaCenter', route: '/mediaCenter', icon: 'icon-media-library' },
+    { text: '订阅', index: '2', route: '/2', icon: 'icon-subscription' },
+    { text: '任务', index: '3', route: '/3', icon: 'icon-menu' },
+    { text: '个人中心', index: 'personalCenter', route: '/personalCenter', icon: 'icon-person' },
     { text: '管理', index: 'management', route: '/management', icon: 'icon-setting' }
   ];
   export default {
@@ -33,8 +33,8 @@
     },
     watch: {
       '$route'(to, from) {
-        console.log('to', to);
-        console.log('from', from);
+        // console.log('to', to);
+        // console.log('from', from);
       }
     },
     methods: {
