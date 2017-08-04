@@ -188,7 +188,7 @@
           pageSize: me.pageSize
         };
 
-        api.listEngine({ params: param }).then((res) => {
+        api.listEngine({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
@@ -209,7 +209,7 @@
           ip: me.table.currentRowInfo.intranetIp
         };
 
-        api.installMonitor(param).then((res) => {
+        api.installMonitor(param, me).then((res) => {
           me.$message.success('正在安装引擎');
         }).catch((error) => {
           me.showErrorInfo(error);
