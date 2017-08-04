@@ -33,22 +33,22 @@ axios.interceptors.response.use((response) => {
   return response;
 }, error =>
   // Do something with response error
-  Promise.reject(error)
+  /* eslint-disable no-nested-ternary */
+  Promise.reject(typeof error === 'object' ? error.message ? error.message === 'Network Error' ? '网络连接出错，请检查网络是否连接正常' : error.message : '出错了' : error)
+  /* eslint-enable no-nested-ternary */
 );
 
 api.upload = function upload(param, config) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/upload', param, config)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    axios.post('http://localhost:8080/upload', param, config).then((response) => {
+      const res = response.data;
+      if (res.status === '0') {
+        resolve(res);
+      }
+      reject(res.statusInfo.message);
+    }).catch((error) => {
+      reject(error);
+    });
   });
 };
 

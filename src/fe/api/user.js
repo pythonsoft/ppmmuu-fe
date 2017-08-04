@@ -33,86 +33,118 @@ axios.interceptors.response.use((response) => {
   return response;
 }, error =>
   // Do something with response error
-  Promise.reject(error)
+  /* eslint-disable no-nested-ternary */
+  Promise.reject(typeof error === 'object' ? error.message ? error.message === 'Network Error' ? '网络连接出错，请检查网络是否连接正常' : error.message : '出错了' : error)
+  /* eslint-enable no-nested-ternary */
 );
 
-api.postUserLogin = function postUserLogin(data) {
+api.postUserLogin = function postUserLogin(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/user/login', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/user/login', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postUserUpdate = function postUserUpdate(data) {
+api.postUserUpdate = function postUserUpdate(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/user/update', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/user/update', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.getUserDetail = function getUserDetail(data) {
+api.getUserDetail = function getUserDetail(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/user/detail', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/user/detail', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postUserLogout = function postUserLogout(data) {
+api.postUserLogout = function postUserLogout(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/user/logout', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/user/logout', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postUserChangePassword = function postUserChangePassword(data) {
+api.postUserChangePassword = function postUserChangePassword(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/user/changePassword', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/user/changePassword', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 

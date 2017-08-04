@@ -166,7 +166,6 @@
 
       /* table */
       handleCurrentChange(current, prev) {
-
         this.table.currentRowInfo = current;
         this.isDisabled = false;
         this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
@@ -200,9 +199,9 @@
       },
       installMonitor() {
         const me = this;
-        if(utils.isEmptyObject(me.table.currentRowInfo)) {
+        if (utils.isEmptyObject(me.table.currentRowInfo)) {
           me.$message.error('请先选择需要安装的引擎');
-          return false
+          return false;
         }
 
         const param = {

@@ -33,214 +33,294 @@ axios.interceptors.response.use((response) => {
   return response;
 }, error =>
   // Do something with response error
-  Promise.reject(error)
+  /* eslint-disable no-nested-ternary */
+  Promise.reject(typeof error === 'object' ? error.message ? error.message === 'Network Error' ? '网络连接出错，请检查网络是否连接正常' : error.message : '出错了' : error)
+  /* eslint-enable no-nested-ternary */
 );
 
-api.getRoleList = function getRoleList(data) {
+api.getRoleList = function getRoleList(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/role/list', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/role/list', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.getRoleDetail = function getRoleDetail(data) {
+api.getRoleDetail = function getRoleDetail(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/role/getDetail', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/role/getDetail', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postAddRole = function postAddRole(data) {
+api.postAddRole = function postAddRole(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/add', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/add', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postUpdateRole = function postUpdateRole(data) {
+api.postUpdateRole = function postUpdateRole(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/update', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/update', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data) {
+api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/updateRoleAddPermission', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/updateRoleAddPermission', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(data) {
+api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/updateRoleDeletePermission', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/updateRoleDeletePermission', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postDeleteRole = function postDeleteRole(data) {
+api.postDeleteRole = function postDeleteRole(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/delete', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/delete', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.getPermissionList = function getPermissionList(data) {
+api.getPermissionList = function getPermissionList(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/role/listPermission', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/role/listPermission', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postAssignRole = function postAssignRole(data) {
+api.postAssignRole = function postAssignRole(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/assignRole', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/assignRole', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postDeleteOwnerRole = function postDeleteOwnerRole(data) {
+api.postDeleteOwnerRole = function postDeleteOwnerRole(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/deleteOwnerRole', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/deleteOwnerRole', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.postEnablePermission = function postEnablePermission(data) {
+api.postEnablePermission = function postEnablePermission(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.post('http://localhost:8080/role/enablePermission', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.post('http://localhost:8080/role/enablePermission', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.getRoleOwners = function getRoleOwners(data) {
+api.getRoleOwners = function getRoleOwners(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/role/getRoleOwners', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/role/getRoleOwners', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
-api.getRoleSearchUserOrGroup = function getRoleSearchUserOrGroup(data) {
+api.getRoleSearchUserOrGroup = function getRoleSearchUserOrGroup(data, scope) {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8080/role/search/userOrGroup', data)
-      .then((response) => {
-        const res = response.data;
-        if (res.status === '0') {
-          resolve(res);
-        }
-        reject(res.statusInfo.message);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    if (scope) { scope.$progress.start(); }
+    axios.get('http://localhost:8080/role/search/userOrGroup', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
   });
 };
 
