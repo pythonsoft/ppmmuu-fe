@@ -3,10 +3,14 @@ const utils = require('../../../../common/utils');
 const config = {};
 const method = {};
 
+//generateIndex //帧索引创建  divideFile, //文件分割 transcoding, //转码 mergeFile //文件合并
+
 config.STATUS = {
-  All: { text: '全部', value: '-1', key: 'ALL' },
-  NORMAL: { text: '正常', value: '0', key: 'NORMAL' },
-  HAND_UP: { text: '挂起', value: '1', key: 'HAND_UP' },
+  All: { text: '全部', value: '', key: 'ALL' },
+  generateIndex: { text: '帧索引创建', value: 'generateIndex', key: 'generateIndex' },
+  divideFile: { text: '文件分割', value: 'divideFile', key: 'divideFile' },
+  transcoding: { text: '转码', value: 'transcoding', key: 'transcoding' },
+  mergeFile: { text: '文件合并', value: 'mergeFile', key: 'mergeFile' },
 };
 
 config.PERMISSION = {

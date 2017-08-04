@@ -38,58 +38,10 @@ axios.interceptors.response.use((response) => {
   /* eslint-enable no-nested-ternary */
 );
 
-api.solrSearch = function solrSearch(data, scope) {
+api.list = function list(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('http://localhost:8080/media/solrSearch', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getSearchConfig = function getSearchConfig(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('http://localhost:8080/media/getSearchConfig', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getIcon = function getIcon(id) {
-  return 'http://localhost:8080/media/getIcon?objectid=' + id;
-};
-
-api.getObject = function getObject(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('http://localhost:8080/media/getObject', data).then((response) => {
+    axios.get('http://localhost:8080/transcode/list', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;

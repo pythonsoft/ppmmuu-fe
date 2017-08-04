@@ -1,8 +1,8 @@
 <template>
   <layout-four-row>
-    <template slot="search-left">存储区</template>
+    <template slot="search-left">转码任务</template>
     <template slot="search-right">
-      <div class="layout-four-row-search-item" :style="{ width: '78px' }">
+      <div class="layout-four-row-search-item" :style="{ width: '88px' }">
         <fj-select placeholder="请选择" v-model="formData.status">
           <fj-option
             v-for="item in status"
@@ -13,56 +13,32 @@
         </fj-select>
       </div>
       <div class="layout-four-row-search-item" :style="{ width: '190px' }">
-        <fj-input :rows="1" placeholder="请输入存储区名称" v-model="formData.keyword"></fj-input>
+        <fj-input :rows="1" placeholder="请输入任务名称" v-model="formData.keyword"></fj-input>
       </div>
       <div class="layout-four-row-search-item">
         <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
       </div>
     </template>
     <template slot="operation">
-        <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">停止</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">重启</fj-button>
       </span>
       <span class="layout-btn-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editPathClick">配置路径</fj-button>
       </span>
-      <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editTacticsClick">配置策略</fj-button>
-      </span>
-      <span class="layout-btn-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
-      </span>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
-        <fj-table-column prop="status" width="90" align="center" label="状态">
-          <template scope="props">{{ formatStatus(props.row.status) }}</template>
+        <fj-table-column prop="status" width="90" align="center" label="状态"></fj-table-column>
+        <fj-table-column prop="filePath" label="名称"></fj-table-column>
+        <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
+          <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="_id" width="90" label="标识" ></fj-table-column>
-        <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="type" width="90" label="存储类型">
-          <template scope="props">{{ formatType(props.row.type) }}</template>
-        </fj-table-column>
-        <fj-table-column prop="permission" width="90" label="读写权限">
-          <template scope="props">{{ formatPermission(props.row.permission) }}</template>
-        </fj-table-column>
-        <fj-table-column prop="creator" width="90" label="创建人">
-          <template scope="props">{{ props.row.creator.name }}</template>
-        </fj-table-column>
-        <fj-table-column prop="createdTime" width="160" align="center" label="创建时间">
-          <template scope="props">{{ props.row.createdTime | formatTime }}</template>
-        </fj-table-column>
-        <fj-table-column prop="modifyTime" width="160" align="center" label="修改时间">
-          <template scope="props">{{ props.row.modifyTime | formatTime }}</template>
+        <fj-table-column prop="lastModify" width="160" align="center" label="修改时间">
+          <template scope="props">{{ props.row.lastModify | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>
@@ -81,7 +57,7 @@
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
   import utils from '../../../../common/utils';
 
-  const api = require('../../../../api/engine');
+  const api = require('../../../../api/transcode');
   const config = require('./config');
 
   export default {
@@ -94,7 +70,8 @@
         status: config.config.STATUS,
         formData: {
           keyword: '',
-          status: '-1'
+          status: '',
+          currentStep: '',
         },
         table: {
           currentRowInfo: {}
@@ -107,10 +84,11 @@
       };
     },
     created() {
+      this.listTask();
     },
     methods: {
       handleClickSearch(v) {
-
+        this.listTask();
       },
       addBtnClick() {},
       editBtnClick() {},
@@ -123,7 +101,7 @@
       handleCurrentChange(current) {
         this.table.currentRowInfo = current;
         this.isDisabled = false;
-        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
+//        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
       },
       formatStatus(v) {
         return v;
@@ -136,7 +114,28 @@
       },
       pageChange(val) {
         this.page = val;
-//        this.listEngine();
+        this.listTask();
+      },
+
+      /* api */
+      listTask() {
+        const me = this;
+
+        const param = {
+          status: this.formData.status,
+          currentStep: this.formData.currentStep,
+          page: this.page,
+          pageSize: this.pageSize,
+        };
+
+        api.list({ params: param }, me).then((res) => {
+          me.tableData = res.data.docs;
+//          me.tableData = res.data.docs;
+//          me.page = res.data.page;
+//          me.total = res.data.total;
+        }).catch((error) => {
+          me.$message.error(error);
+        });
       },
     }
   }
