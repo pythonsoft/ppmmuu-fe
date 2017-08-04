@@ -44,6 +44,12 @@
       { text: '路径', index: 'storagePath', route: 'storagePath' },
       { text: '策略', index: 'storageTactics', route: 'storageTactics' }
     ] },
+    { title: '任务管理',
+      index: 'taskManager',
+      children: [
+        { text: '转码任务', index: 'transcode', route: 'transcode' },
+        { text: '传输任务', index: 'transfer', route: 'transfer' },
+      ] },
     { text: '设置', index: 'configuration', route: 'configuration' }
   ];
   export default {

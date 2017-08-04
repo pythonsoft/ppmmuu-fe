@@ -75,8 +75,8 @@
       },
       getShortName() {
         let name = this.item.program_name_en || '';
-        if(name && name.length > 15) {
-          name = name.substr(0, 10) + '...';
+        if (name && name.length > 15) {
+          name = `${name.substr(0, 15)}...`;
         }
         return name;
       }
