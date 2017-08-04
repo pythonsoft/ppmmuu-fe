@@ -1,3 +1,5 @@
+const utils = require('../../../common/utils');
+
 const method = {};
 const status = {};
 
@@ -30,18 +32,7 @@ status.active = {
 };
 
 method.getTextByValue = function (v, st) {
-  let text = '';
-  const target = status[st];
-  const keys = Object.keys(target);
-
-  for (let i = 0, len = keys.length; i < len; i++) {
-    if (target[keys[i]].value === v) {
-      text = target[keys[i]].text;
-      break;
-    }
-  }
-
-  return text;
+  return utils.getTextByValue(status, v, st);
 };
 /**
  * 显示当前引擎状态

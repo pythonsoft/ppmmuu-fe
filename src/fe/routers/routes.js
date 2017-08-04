@@ -1,4 +1,4 @@
-// import Root from './root';
+import Root from './root';
 import Menu from './menu';
 
 const Management = resolve => require.ensure([], () => resolve(require('./management/index')), 'management');
@@ -6,6 +6,9 @@ const Role = resolve => require.ensure([], () => resolve(require('./management/r
 const Permission = resolve => require.ensure([], () => resolve(require('./management/permission/index')), 'permission');
 const Configuration = resolve => require.ensure([], () => resolve(require('./management/configuration/index')), 'configuration');
 const Engine = resolve => require.ensure([], () => resolve(require('./management/engine/index')), 'engine');
+const Bucket = resolve => require.ensure([], () => resolve(require('./management/bucket/index')), 'bucket');
+const StoragePath = resolve => require.ensure([], () => resolve(require('./management/storagePath/index')), 'storagePath');
+const StorageTactics = resolve => require.ensure([], () => resolve(require('./management/storageTactics/index')), 'storageTactics');
 
 const PersonalCenter = resolve => require.ensure([], () => resolve(require('./personalCenter/index')), 'personalCenter');
 const Information = resolve => require.ensure([], () => resolve(require('./personalCenter/information/index')), 'information');
@@ -15,13 +18,9 @@ const Account = resolve => require.ensure([], () => resolve(require('./managemen
 
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 
-const Root = {
-  template: '<router-view></router-view>'
-};
-
 export default [{
   path: '/',
-  redirect: '/management',
+  redirect: 'management',
   components: {
     default: Root,
     menu: Menu
@@ -30,6 +29,7 @@ export default [{
   children: [
     {
       path: 'management',
+      redirect: 'management/account',
       component: Management,
       meta: { title: '管理' },
       children: [
@@ -37,6 +37,9 @@ export default [{
         { path: 'role', component: Role, meta: { title: '角色' } },
         { path: 'permission', component: Permission, meta: { title: '权限' } },
         { path: 'engine', component: Engine, meta: { title: '引擎管理' } },
+        { path: 'bucket', component: Bucket, meta: { title: '存储区' } },
+        { path: 'storagePath', component: StoragePath, meta: { title: '路径' } },
+        { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' } },
         { path: 'configuration', component: Configuration, meta: { title: '设置' } }
       ]
     },
