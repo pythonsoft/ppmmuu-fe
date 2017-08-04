@@ -74,9 +74,10 @@
       exec() {
         const me = this;
         const params = {
-          engineId: this.engineInfo._id,
-          processId: this.processInfo.pid,
-          action: this.actionInfo.command
+          ip: this.engineInfo.intranetIp,
+          configProcessName: this.processInfo.configPn,
+          pid: this.processInfo.pid,
+          action: this.actionInfo.name
         };
 
         api.emitAction(params).then((res) => {
@@ -94,21 +95,17 @@
 
         if (this.processInfo.pid) {
           const params = {
-            processId: this.processInfo.pid
+            processId: this.processInfo.pid,
+            ip: this.engineInfo.intranetIp,
+            configProcessName: this.processInfo.configPn
           };
 
           const arr = [];
 
           api.listAction({ params: params }).then((res) => {
-            const len = res.data.length;
-            let keys = [];
-
-            for (let i = 0; i < len; i++) {
-              keys = Object.keys(res.data[i]);
-              for (let j = 0, l = keys.length; j < l; j++) {
-                arr.push(res.data[i][keys[j]]);
-              }
-            }
+            res.data.forEach((i) => {
+              arr.push(i);
+            });
 
             me.tableData = arr;
           }).catch((error) => {
