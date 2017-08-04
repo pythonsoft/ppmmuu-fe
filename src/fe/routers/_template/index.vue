@@ -2,7 +2,17 @@
   <layout-four-row>
     <template slot="search-left">存储区</template>
     <template slot="search-right">
-      <div class="layout-four-row-search-item">
+      <div class="layout-four-row-search-item" :style="{ width: '78px' }">
+        <fj-select placeholder="请选择" v-model="formData.status">
+          <fj-option
+            v-for="item in status"
+            :key="item.value"
+            :label="item.text"
+            :value="item.value">
+          </fj-option>
+        </fj-select>
+      </div>
+      <div class="layout-four-row-search-item" :style="{ width: '190px' }">
         <fj-input :rows="1" placeholder="请输入存储区名称" v-model="formData.keyword"></fj-input>
       </div>
       <div class="layout-four-row-search-item">
@@ -72,6 +82,7 @@
   import utils from '../../../common/utils';
 
   const api = require('../../../api/engine');
+  const config = require('./config');
 
   export default {
     components: {
@@ -80,8 +91,10 @@
     data() {
       return {
         isDisabled: true,
+        status: config.config.STATUS,
         formData: {
-          keyword: ''
+          keyword: '',
+          status: '-1'
         },
         table: {
           currentRowInfo: {}
@@ -92,6 +105,8 @@
         pageSize: 20,
         total: 0
       };
+    },
+    created() {
     },
     methods: {
       handleClickSearch(v) {
