@@ -10,6 +10,9 @@ const Bucket = resolve => require.ensure([], () => resolve(require('./management
 const StoragePath = resolve => require.ensure([], () => resolve(require('./management/storagePath/index')), 'storagePath');
 const StorageTactics = resolve => require.ensure([], () => resolve(require('./management/storageTactics/index')), 'storageTactics');
 
+const Transcode = resolve => require.ensure([], () => resolve(require('./management/task/transcode/index')), 'transcode');
+const Transfer = resolve => require.ensure([], () => resolve(require('./management/task/transfer/index')), 'transfer');
+
 const PersonalCenter = resolve => require.ensure([], () => resolve(require('./personalCenter/index')), 'personalCenter');
 const Information = resolve => require.ensure([], () => resolve(require('./personalCenter/information/index')), 'information');
 const ChangePassword = resolve => require.ensure([], () => resolve(require('./personalCenter/changePassword/index')), 'changePassword');
@@ -40,6 +43,8 @@ export default [{
         { path: 'bucket', component: Bucket, meta: { title: '存储区' } },
         { path: 'storagePath', component: StoragePath, meta: { title: '路径' } },
         { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' } },
+        { path: 'transcode', component: Transcode, meta: { title: '转码任务' } },
+        { path: 'transfer', component: Transfer, meta: { title: '传输任务' } },
         { path: 'configuration', component: Configuration, meta: { title: '设置' } }
       ]
     },
