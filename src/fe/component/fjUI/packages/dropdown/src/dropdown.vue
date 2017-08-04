@@ -18,6 +18,7 @@
     methods: {
       handleClick() {
         this.visible = !this.visible;
+        this.$emit('handle-click');
       },
       handleClose() {
         this.visible = false;
