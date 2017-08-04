@@ -83,7 +83,6 @@
           }
         };
         const t = cfg[c];
-        console.log('const --->', t);
         return t && t();
       },
       confirmDialog() {
@@ -110,7 +109,7 @@
         api.addGroup({
           parentId: me.selectedNodeInfo.id || '',
           name: name
-        }).then((res) => {
+        }, me).then((res) => {
           me.$message.success('成功添加');
           me.vueInstance.$emit('tree.listGroup');
           cb && cb(res.data);
@@ -129,11 +128,12 @@
           return false;
         }
         const id = me.selectedNodeInfo.id;
-        api.removeGroup({ groupId: id }).then(() => {
+        api.removeGroup({ groupId: id }, me).then(() => {
           me.vueInstance.$emit('tree.removeNode', id);
           cb && cb();
           me.cancelDialog();
         }).catch((err) => {
+          console.log(err);
           me.showErrorInfo(err);
         });
 
@@ -147,7 +147,7 @@
           return false;
         }
 
-        api.removeEngine({ id: me.engineInfo._id }).then(() => {
+        api.removeEngine({ id: me.engineInfo._id }, me).then(() => {
           me.vueInstance.$emit('tree.listGroup');
           cb && cb();
           me.cancelDialog();
