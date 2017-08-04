@@ -7,7 +7,7 @@ deploy_to_68_job:
   stage: deploy
   script:
     - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git HEAD | (mkdir -p ~/UMP-FE && cd ~/UMP-FE && tar xf -)"
+    - at_68 "git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git HEAD | (rm -rf ~/UMP-FE && mkdir -p ~/UMP-FE && cd ~/UMP-FE && tar xf -)"
 
   environment:
     name: test
@@ -28,7 +28,7 @@ run_node_68:
   stage: run_node
   script:
     - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "killall -q node; nohup node UMP-FE/build/dev-server.js >/dev/null 2>&1 &"
+    - at_68 "killall -q node; cd ~/UMP-FE && nohup npm run dev >/dev/null 2>&1 &"
 
   environment:
     name: test

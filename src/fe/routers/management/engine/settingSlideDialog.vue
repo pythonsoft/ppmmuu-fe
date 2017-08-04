@@ -196,7 +196,8 @@
         if (this.engineInfo._id) {
           const params = {
             _id: this.engineInfo._id,
-            configuration: JSON.stringify(this.configuration)
+            configuration: JSON.stringify(this.configuration),
+            ip: this.engineInfo.intranetIp
           };
 
           this.submitBtn = {
