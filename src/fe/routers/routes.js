@@ -1,4 +1,4 @@
-// import Root from './root';
+import Root from './root';
 import Menu from './menu';
 
 const Management = resolve => require.ensure([], () => resolve(require('./management/index')), 'management');
@@ -18,13 +18,9 @@ const Account = resolve => require.ensure([], () => resolve(require('./managemen
 
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 
-const Root = {
-  template: '<router-view></router-view>'
-};
-
 export default [{
   path: '/',
-  redirect: '/management',
+  redirect: 'management',
   components: {
     default: Root,
     menu: Menu
@@ -33,6 +29,7 @@ export default [{
   children: [
     {
       path: 'management',
+      redirect: 'management/account',
       component: Management,
       meta: { title: '管理' },
       children: [
