@@ -226,16 +226,16 @@
       },
       getReplaceName(item) {
         let name = item.program_name_en || '';
-        if(name) {
+        if (name) {
           name = name.replace('<em>', '');
           name = name.replace('</em>', '');
         }
-        return name
+        return name;
       },
       getShortName(item) {
         let name = item.program_name_en || '';
-        if(name && name.length > 15) {
-          name = name.substr(0, 15) + '...';
+        if (name && name.length > 15) {
+          name = `${name.substr(0, 15)}...`;
         }
         return name;
       }
