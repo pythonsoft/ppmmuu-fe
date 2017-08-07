@@ -1,6 +1,6 @@
-import Root from './root';
-import Menu from './menu';
+import Home from './home';
 
+const Login = resolve => require.ensure([], () => resolve(require('./login/index')), 'login');
 const Management = resolve => require.ensure([], () => resolve(require('./management/index')), 'management');
 const Role = resolve => require.ensure([], () => resolve(require('./management/role/index')), 'role');
 const Permission = resolve => require.ensure([], () => resolve(require('./management/permission/index')), 'permission');
@@ -23,12 +23,8 @@ const MediaCenter = resolve => require.ensure([], () => resolve(require('./media
 
 export default [{
   path: '/',
-  redirect: 'management',
-  components: {
-    default: Root,
-    menu: Menu
-  },
-  meta: { title: 'UMP' },
+  redirect: '/management/account',
+  component: Home,
   children: [
     {
       path: 'management',
@@ -66,4 +62,9 @@ export default [{
       children: []
     }
   ]
-}];
+},  {
+  path: '/login',
+  component: Login,
+  meta: { title: '登录' },
+}
+];
