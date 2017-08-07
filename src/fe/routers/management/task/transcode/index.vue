@@ -130,9 +130,8 @@
 
         api.list({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
-//          me.tableData = res.data.docs;
-//          me.page = res.data.page;
-//          me.total = res.data.total;
+          me.page = res.data.page;
+          me.total = res.data.total;
         }).catch((error) => {
           me.$message.error(error);
         });
