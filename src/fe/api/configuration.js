@@ -1,47 +1,12 @@
-/**
- * Created by steven on 2017/7/24.
- */
 import axios from 'axios';
 
-const api = {};         //eslint-disable-line
-
-axios.defaults.withCredentials = true;
-
-axios.interceptors.request.use((config) => {
-  // Do something before request is sent
-  if (config.method === 'get') {
-    config.params = config.params || {};
-    config.params.t = new Date().getTime();
-  } else if (config.method === 'post') {
-    config.data = config.data || {};
-    config.data.t = new Date().getTime();
-  }
-
-  return config;
-}, error =>
-  // Do something with request error
-  Promise.reject(error)
-);
-
-axios.interceptors.response.use((response) => {
-  // Do something with response data
-  const res = response.data;
-  const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004'];
-  if (loginStatusCodeArr.indexOf(res.status) !== -1) {
-    window.location.href = '/login';
-  }
-  return response;
-}, error =>
-  // Do something with response error
-  /* eslint-disable no-nested-ternary */
-  Promise.reject(typeof error === 'object' ? error.message ? error.message === 'Network Error' ? '网络连接出错，请检查网络是否连接正常' : error.message : '出错了' : error)
-  /* eslint-enable no-nested-ternary */
-);
+const api = {};
+const apiDomain = require('../config');
 
 api.postAddConfig = function postAddConfig(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('http://localhost:8080/configuration/add', data).then((response) => {
+    axios.post(apiDomain + '/configuration/add', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -63,7 +28,7 @@ api.postAddConfig = function postAddConfig(data, scope) {
 api.postUpdateConfig = function postUpdateConfig(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('http://localhost:8080/configuration/update', data).then((response) => {
+    axios.post(apiDomain + '/configuration/update', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -85,7 +50,7 @@ api.postUpdateConfig = function postUpdateConfig(data, scope) {
 api.getListConfig = function getListConfig(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('http://localhost:8080/configuration/list', data).then((response) => {
+    axios.get(apiDomain + '/configuration/list', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -107,7 +72,7 @@ api.getListConfig = function getListConfig(data, scope) {
 api.postDeleteConfig = function postDeleteConfig(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('http://localhost:8080/configuration/delete', data).then((response) => {
+    axios.post(apiDomain + '/configuration/delete', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -129,7 +94,7 @@ api.postDeleteConfig = function postDeleteConfig(data, scope) {
 api.postAddGroup = function postAddGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('http://localhost:8080/configuration/addGroup', data).then((response) => {
+    axios.post(apiDomain + '/configuration/addGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -151,7 +116,7 @@ api.postAddGroup = function postAddGroup(data, scope) {
 api.postUpdateGroup = function postUpdateGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('http://localhost:8080/configuration/updateGroup', data).then((response) => {
+    axios.post(apiDomain + '/configuration/updateGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -173,7 +138,7 @@ api.postUpdateGroup = function postUpdateGroup(data, scope) {
 api.getListGroup = function getListGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('http://localhost:8080/configuration/listGroup', data).then((response) => {
+    axios.get(apiDomain + '/configuration/listGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -195,7 +160,7 @@ api.getListGroup = function getListGroup(data, scope) {
 api.postDeleteGroup = function postDeleteGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('http://localhost:8080/configuration/deleteGroup', data).then((response) => {
+    axios.post(apiDomain + '/configuration/deleteGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
