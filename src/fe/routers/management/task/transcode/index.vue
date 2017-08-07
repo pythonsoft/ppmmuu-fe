@@ -21,18 +21,25 @@
     </template>
     <template slot="operation">
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">停止</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">重启</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
       </span>
       <span class="layout-btn-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editPathClick">配置路径</fj-button>
+        <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
       </span>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
-        <fj-table-column prop="status" width="90" align="center" label="状态"></fj-table-column>
+        <fj-table-column prop="status" width="90" align="center" label="状态">
+          <template scope="props">
+            <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
+          </template>
+        </fj-table-column>
         <fj-table-column prop="filePath" label="名称"></fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
@@ -50,11 +57,18 @@
         @current-change="pageChange">
       </fj-pagination>
     </template>
+
+    <child-task-slide-dialog-view
+      :parentInfo="table.currentRowInfo"
+      :visible.sync="childTaskDialogVisible"
+    ></child-task-slide-dialog-view>
+
   </layout-four-row>
 </template>
 <script>
   import './index.css';
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
+  import childTaskDialogView from './childTaskDialog';
   import utils from '../../../../common/utils';
 
   const api = require('../../../../api/transcode');
@@ -62,12 +76,16 @@
 
   export default {
     components: {
-      'layout-four-row': fourRowLayout
+      'layout-four-row': fourRowLayout,
+      'child-task-slide-dialog-view': childTaskDialogView
     },
     data() {
       return {
         isDisabled: true,
-        status: config.config.STATUS,
+        stopDisable: true,
+        restartDisable: true,
+
+        status: config.getConfig('STATUS'),
         formData: {
           keyword: '',
           status: '',
@@ -80,31 +98,46 @@
         /* bucket param */
         page: 1,
         pageSize: 20,
-        total: 0
+        total: 0,
+
+        /* child task */
+        childTaskDialogVisible: false,
       };
     },
     created() {
       this.listTask();
     },
     methods: {
-      handleClickSearch(v) {
+      handleClickSearch() {
         this.listTask();
       },
-      addBtnClick() {},
-      editBtnClick() {},
-      deleteBtnClick() {},
-      editPathClick() {},
-      editTacticsClick() {},
-      setEnableClick() {},
-      setDisableClick() {},
+      stopClick() {},
+      restartClick() {},
+      childTaskClick() {
+        this.childTaskDialogVisible = true;
+      },
+      refreshClick() {
+        this.listTask();
+        this.isDisabled = true;
+        this.table.currentRowInfo = {};
+        this.childTaskDialogVisible = false;
+      },
       /* table */
       handleCurrentChange(current) {
         this.table.currentRowInfo = current;
         this.isDisabled = false;
+        const st = config.getConfig('STATUS');
+        if(st[current.status].value.indexOf([ 'created', 'dealing' ]) !== -1) {
+          this.stopDisable = false;
+          this.restartDisable = false;
+        }else if( st[current.status].value.indexOf(['error', 'complete']) !== -1) {
+          this.stopDisable = true;
+          this.restartDisable = true;
+        }
 //        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
       },
-      formatStatus(v) {
-        return v;
+      getStatus(v) {
+        return config.getConfig('STATUS', v);
       },
       formatType(v) {
         return v;
@@ -122,11 +155,17 @@
         const me = this;
 
         const param = {
-          status: this.formData.status,
-          currentStep: this.formData.currentStep,
           page: this.page,
           pageSize: this.pageSize,
         };
+
+        if(this.formData.status) {
+          param.status = this.formData.status
+        }
+
+        if(this.formData.currentStep) {
+          param.currentStep = this.formData.currentStep
+        }
 
         api.list({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;

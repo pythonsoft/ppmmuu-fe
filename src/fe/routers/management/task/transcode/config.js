@@ -3,14 +3,21 @@ const utils = require('../../../../common/utils');
 const config = {};
 const method = {};
 
-//generateIndex //帧索引创建  divideFile, //文件分割 transcoding, //转码 mergeFile //文件合并
-
-config.STATUS = {
-  All: { text: '全部', value: '', key: 'ALL' },
+config.CURRENT_STEP = {
+  all: { text: '全部', value: '', key: 'all' },
   generateIndex: { text: '帧索引创建', value: 'generateIndex', key: 'generateIndex' },
   divideFile: { text: '文件分割', value: 'divideFile', key: 'divideFile' },
   transcoding: { text: '转码', value: 'transcoding', key: 'transcoding' },
   mergeFile: { text: '文件合并', value: 'mergeFile', key: 'mergeFile' },
+};
+
+//created, //创建 dealing, //处理中 error,//错误 complete //完成
+config.STATUS = {
+  all: { text: '全部', value: '', key: 'all' },
+  created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
+  dealing: { text: '处理中', value: 'dealing', key: 'dealing', css: 'task-status-base task-status-dealing' },
+  error: { text: '错误', value: 'error', key: 'error', css: 'task-status-base task-status-error' },
+  complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' },
 };
 
 config.PERMISSION = {
@@ -31,7 +38,15 @@ config.DELETE_DENY = {
 };
 
 method.getTextByValue = function (v, st) {
-  return utils.getTextByValue(status, v, st);
+  return utils.getTextByValue(config, v, st) || {};
 };
 
-module.exports = { config, method };
+method.getConfig = function (configName, key) {
+  const cfg = config[configName];
+  if(cfg && key) {
+    return cfg[key];
+  }
+  return cfg;
+};
+
+module.exports = method;
