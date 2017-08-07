@@ -3,9 +3,9 @@
  */
 import axios from 'axios';
 
-const apiDomain = 'http://localhost:8080';
-
 axios.defaults.withCredentials = true;
+
+axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
     // Do something before request is sent
@@ -38,4 +38,4 @@ axios.interceptors.response.use((response) => {
   /* eslint-enable no-nested-ternary */
 );
 
-module.exports = apiDomain;
+module.exports = axios;

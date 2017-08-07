@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 const api = {};
-const apiDomain = require('../config');
+const axios = require('../config');
 
 api.solrSearch = function solrSearch(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/media/solrSearch', data).then((response) => {
+    axios.get('/media/solrSearch', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -28,7 +26,7 @@ api.solrSearch = function solrSearch(data, scope) {
 api.getSearchConfig = function getSearchConfig(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/media/getSearchConfig', data).then((response) => {
+    axios.get('/media/getSearchConfig', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -48,13 +46,13 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
 };
 
 api.getIcon = function getIcon(id) {
-  return apiDomain + '/media/getIcon?objectid=' + id;
+  return '/media/getIcon?objectid=' + id;
 };
 
 api.getObject = function getObject(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/media/getObject', data).then((response) => {
+    axios.get('/media/getObject', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;

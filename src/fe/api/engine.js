@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 const api = {};
-const apiDomain = require('../config');
+const axios = require('../config');
 
 api.listGroup = function listGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/engine/listGroup', data).then((response) => {
+    axios.get('/engine/listGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -28,7 +26,7 @@ api.listGroup = function listGroup(data, scope) {
 api.addGroup = function addGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/addGroup', data).then((response) => {
+    axios.post('/engine/addGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -50,7 +48,7 @@ api.addGroup = function addGroup(data, scope) {
 api.removeGroup = function removeGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/removeGroup', data).then((response) => {
+    axios.post('/engine/removeGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -72,7 +70,7 @@ api.removeGroup = function removeGroup(data, scope) {
 api.getGroup = function getGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/engine/getGroup', data).then((response) => {
+    axios.get('/engine/getGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -94,7 +92,7 @@ api.getGroup = function getGroup(data, scope) {
 api.updateGroup = function updateGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/updateGroup', data).then((response) => {
+    axios.post('/engine/updateGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -116,7 +114,7 @@ api.updateGroup = function updateGroup(data, scope) {
 api.listEngine = function listEngine(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/engine/listEngine', data).then((response) => {
+    axios.get('/engine/listEngine', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -138,7 +136,7 @@ api.listEngine = function listEngine(data, scope) {
 api.addEngine = function addEngine(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/addEngine', data).then((response) => {
+    axios.post('/engine/addEngine', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -160,7 +158,7 @@ api.addEngine = function addEngine(data, scope) {
 api.getEngine = function getEngine(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/engine/getEngine', data).then((response) => {
+    axios.get('/engine/getEngine', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -182,7 +180,7 @@ api.getEngine = function getEngine(data, scope) {
 api.updateEngine = function updateEngine(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/updateEngine', data).then((response) => {
+    axios.post('/engine/updateEngine', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -204,7 +202,7 @@ api.updateEngine = function updateEngine(data, scope) {
 api.removeEngine = function removeEngine(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/removeEngine', data).then((response) => {
+    axios.post('/engine/removeEngine', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -226,7 +224,7 @@ api.removeEngine = function removeEngine(data, scope) {
 api.updateEngineConfiguration = function updateEngineConfiguration(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/updateEngineConfiguration', data).then((response) => {
+    axios.post('/engine/updateEngineConfiguration', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -248,7 +246,7 @@ api.updateEngineConfiguration = function updateEngineConfiguration(data, scope) 
 api.listProcess = function listProcess(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/engine/listProcess', data).then((response) => {
+    axios.get('/engine/listProcess', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -270,7 +268,7 @@ api.listProcess = function listProcess(data, scope) {
 api.listAction = function listAction(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/engine/listAction', data).then((response) => {
+    axios.get('/engine/listAction', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -292,7 +290,7 @@ api.listAction = function listAction(data, scope) {
 api.emitAction = function emitAction(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/emitAction', data).then((response) => {
+    axios.post('/engine/emitAction', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -314,7 +312,7 @@ api.emitAction = function emitAction(data, scope) {
 api.installMonitor = function installMonitor(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/engine/installMonitor', data).then((response) => {
+    axios.post('/engine/installMonitor', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;

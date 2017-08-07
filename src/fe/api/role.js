@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 const api = {};
-const apiDomain = require('../config');
+const axios = require('../config');
 
 api.getRoleList = function getRoleList(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/role/list', data).then((response) => {
+    axios.get('/role/list', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -28,7 +26,7 @@ api.getRoleList = function getRoleList(data, scope) {
 api.getRoleDetail = function getRoleDetail(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/role/getDetail', data).then((response) => {
+    axios.get('/role/getDetail', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -50,7 +48,7 @@ api.getRoleDetail = function getRoleDetail(data, scope) {
 api.postAddRole = function postAddRole(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/add', data).then((response) => {
+    axios.post('/role/add', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -72,7 +70,7 @@ api.postAddRole = function postAddRole(data, scope) {
 api.postUpdateRole = function postUpdateRole(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/update', data).then((response) => {
+    axios.post('/role/update', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -94,7 +92,7 @@ api.postUpdateRole = function postUpdateRole(data, scope) {
 api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/updateRoleAddPermission', data).then((response) => {
+    axios.post('/role/updateRoleAddPermission', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -116,7 +114,7 @@ api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data, sco
 api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/updateRoleDeletePermission', data).then((response) => {
+    axios.post('/role/updateRoleDeletePermission', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -138,7 +136,7 @@ api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(dat
 api.postDeleteRole = function postDeleteRole(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/delete', data).then((response) => {
+    axios.post('/role/delete', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -160,7 +158,7 @@ api.postDeleteRole = function postDeleteRole(data, scope) {
 api.getPermissionList = function getPermissionList(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/role/listPermission', data).then((response) => {
+    axios.get('/role/listPermission', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -182,7 +180,7 @@ api.getPermissionList = function getPermissionList(data, scope) {
 api.postAssignRole = function postAssignRole(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/assignRole', data).then((response) => {
+    axios.post('/role/assignRole', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -204,7 +202,7 @@ api.postAssignRole = function postAssignRole(data, scope) {
 api.postDeleteOwnerRole = function postDeleteOwnerRole(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/deleteOwnerRole', data).then((response) => {
+    axios.post('/role/deleteOwnerRole', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -226,7 +224,7 @@ api.postDeleteOwnerRole = function postDeleteOwnerRole(data, scope) {
 api.postEnablePermission = function postEnablePermission(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/role/enablePermission', data).then((response) => {
+    axios.post('/role/enablePermission', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -248,7 +246,7 @@ api.postEnablePermission = function postEnablePermission(data, scope) {
 api.getRoleOwners = function getRoleOwners(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/role/getRoleOwners', data).then((response) => {
+    axios.get('/role/getRoleOwners', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -270,7 +268,7 @@ api.getRoleOwners = function getRoleOwners(data, scope) {
 api.getRoleSearchUserOrGroup = function getRoleSearchUserOrGroup(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/role/search/userOrGroup', data).then((response) => {
+    axios.get('/role/search/userOrGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;

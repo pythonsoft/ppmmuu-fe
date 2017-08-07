@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 const api = {};
-const apiDomain = require('../config');
+const axios = require('../config');
 
 api.postUserLogin = function postUserLogin(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/user/login', data).then((response) => {
+    axios.post('/user/login', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -29,7 +27,7 @@ api.postUserLogin = function postUserLogin(data, scope) {
 api.postUserUpdate = function postUserUpdate(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/user/update', data).then((response) => {
+    axios.post('/user/update', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -51,7 +49,7 @@ api.postUserUpdate = function postUserUpdate(data, scope) {
 api.getUserDetail = function getUserDetail(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get(apiDomain + '/user/detail', data).then((response) => {
+    axios.get('/user/detail', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -73,7 +71,7 @@ api.getUserDetail = function getUserDetail(data, scope) {
 api.postUserLogout = function postUserLogout(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/user/logout', data).then((response) => {
+    axios.post('/user/logout', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -95,7 +93,7 @@ api.postUserLogout = function postUserLogout(data, scope) {
 api.postUserChangePassword = function postUserChangePassword(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post(apiDomain + '/user/changePassword', data).then((response) => {
+    axios.post('/user/changePassword', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
