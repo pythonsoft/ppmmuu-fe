@@ -28,9 +28,7 @@ new Vue({
   router,
   template: `
     <div id="app">
-      <fj-progress-bar></fj-progress-bar>
-      <div class="menu"><router-view name="menu"></router-view></div>
-      <div class="main"><router-view></router-view></div>
+      <router-view></router-view>
     </div>
   `
 }).$mount('#app');

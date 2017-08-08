@@ -1,0 +1,25 @@
+.login-content {
+  margin: 0 auto;
+  height: auto;
+  min-height: 450px;
+  position: relative
+}
+
+.login-form {
+  top: 200px;
+  width: 200px;
+  position: absolute;
+  right: 30%;
+}
+
+.login-form-item {
+  font-size: 12px;
+  line-height: 1.5;
+  position: relative;
+  width: 100%;
+  zoom: 1;
+}
+
+.login-form-button {
+  text-align: center;
+}
