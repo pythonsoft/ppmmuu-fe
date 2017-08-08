@@ -103,9 +103,6 @@
           this.formData[key] = '';
         }
       },
-      handleClose() {
-        this.$emit('close');
-      },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
           if (valid) {
@@ -118,19 +115,19 @@
         });
       },
       addUser() {
-        const data = Object.assign({}, this.formData, { companyId: this.companyId });
         this.isBtnLoading = true;
-        groupAPI.postGroupAddUser(data)
+        const me = this;
+        api.addBucket(this.formData)
           .then((response) => {
-            this.$message.success('保存成功');
-            this.$emit('updateList');
-            this.isBtnLoading = false;
-            this.resetFormData();
-            this.handleClose();
+            me.$message.success('保存成功');
+            me.$emit('updateList');
+            me.isBtnLoading = false;
+            me.resetFormData();
+            me.dialogVisible = false;
           })
           .catch((error) => {
-            this.isBtnLoading = false;
-            this.$message.error(error);
+            me.isBtnLoading = false;
+            me.$message.error(error);
           });
       },
       editUser() {

@@ -31,7 +31,7 @@ axios.interceptors.response.use((response) => {
     window.location.href = '/login';
   }
   if (response.config && response.config.url.indexOf('/user/login') !== -1) {
-    if(res.status === '0'){
+    if (res.status === '0') {
       window.location.href = '/management/account';
     }
   }
