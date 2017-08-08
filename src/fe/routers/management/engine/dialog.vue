@@ -133,7 +133,6 @@
           cb && cb();
           me.cancelDialog();
         }).catch((err) => {
-          console.log(err);
           me.showErrorInfo(err);
         });
 
