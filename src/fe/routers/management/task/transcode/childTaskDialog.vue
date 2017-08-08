@@ -116,7 +116,7 @@
 
         childSlideDialogVisible: false,
         childTaskData: [],
-        childTaskTitle: '子任务详细信息'
+        childTaskTitle: ''
       };
     },
     created() {
@@ -202,6 +202,7 @@
       detailClick() {
         const childTaskData = [];
         const keys = Object.keys(this.table.currentRowInfo);
+        this.childTaskTitle = this.getCurrentStepConfig(this.table.currentRowInfo._type).text;
         let tempValue = '';
 
         for (let i = 0, len = keys.length; i < len; i++) {
