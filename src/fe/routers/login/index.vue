@@ -53,8 +53,7 @@
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
-        console.log(router.push);
-            me.$router.push({ name: 'management'});
+            me.$router.push({ name: 'management' });
           })
           .catch((error) => {
             me.$message.error(error);

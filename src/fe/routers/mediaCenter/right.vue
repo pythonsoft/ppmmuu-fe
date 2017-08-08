@@ -61,7 +61,6 @@
         return api.getIcon(this.item.id);
       },
       handleTabClick(tab) {
-        console.log(tab);
       },
       getDetail() {
         const me = this;

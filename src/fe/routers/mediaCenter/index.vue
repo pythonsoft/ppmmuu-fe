@@ -191,7 +191,7 @@
           .then((res) => {
             me.items = res.data.docs;
             me.total = res.data.numFound;
-            console.log("fafgasfasfas");
+            console.log('fafgasfasfas');
             me.searchResult = `耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
             if (me.items.length) {
               me.currentVideo = me.items[0];

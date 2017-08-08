@@ -62,9 +62,9 @@ export default [{
       children: []
     }
   ]
-},  {
+}, {
   path: '/login',
   component: Login,
-  meta: { title: '登录' },
+  meta: { title: '登录' }
 }
 ];

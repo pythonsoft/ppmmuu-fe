@@ -78,10 +78,10 @@
 </template>
 <script>
   import './index.css';
-  import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
-  import utils from '../../../common/utils';
+  import fourRowLayout from '../../component/layout/fourRowLayoutRightContent/index';
+  import utils from '../../common/utils';
 
-  const api = require('../../../api/engine');
+  const api = require('../../api/engine');
   const config = require('./config');
 
   export default {
@@ -136,8 +136,8 @@
       },
       pageChange(val) {
         this.page = val;
-//        this.listEngine();
-      },
+      //        this.listEngine();
+      }
     }
-  }
+  };
 </script>
