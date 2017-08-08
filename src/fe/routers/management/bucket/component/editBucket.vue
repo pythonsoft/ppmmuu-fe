@@ -131,37 +131,20 @@
           });
       },
       editUser() {
-        const data = Object.assign(
-          {},
-          this.formData,
-          { companyId: this.companyId },
-          { _id: this.id }
-        );
         this.isBtnLoading = true;
-        groupAPI.postGroupUpdateUser(data)
+        const me = this;
+        api.updateBucket(this.formData)
           .then((response) => {
             this.$message.success('保存成功');
-            this.$emit('updateList');
-            this.isBtnLoading = false;
-            this.resetFormData();
-            this.handleClose();
+            me.$emit('updateList');
+            me.isBtnLoading = false;
+            me.resetFormData();
+            me.dialogVisible = false;
           })
           .catch((error) => {
             this.isBtnLoading = false;
             this.$message.error(error);
           });
-      },
-      addOwner(row, parentNode) {
-        if (parentNode) {
-          this.groupName = `${parentNode.name} / ${row.name}`;
-          this.formData.teamId = row.info._id;
-          this.formData.departmentId = parentNode.info._id;
-        } else {
-          this.groupName = row.name;
-          this.formData.teamId = row.info._id;
-          this.formData.departmentId = '';
-        }
-        this.addGroupDialogVisible = false;
       }
     },
     components: {
