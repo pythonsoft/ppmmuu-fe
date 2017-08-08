@@ -121,7 +121,7 @@
         childTaskData: [],
         childTaskTitle: '',
 
-        runTimer: false,
+        runTimer: false
       };
     },
     created() {
@@ -183,7 +183,7 @@
 
         for (let i = 0, len = order.length; i < len; i++) {
           temp = data[order[i]];
-          if(!temp) { continue; }
+          if (!temp) { continue; }
           for (let j = 0, l = temp.length; j < l; j++) {
             temp[j]._type = order[i];
             temp[j]._path = temp[j].filePath || temp[j].orgFilePath || temp[j].mergerdFilePath || '-';
@@ -229,14 +229,16 @@
       },
       autoRefreshList() {
         const me = this;
-        if(!me.runTimer) {
+        if (!me.runTimer) {
           return false;
         }
-        setTimeout(function() {
-          me.listChildTask(true, function() {
+        setTimeout(() => {
+          me.listChildTask(true, () => {
             me.autoRefreshList();
           });
         }, 3000);
+
+        return false;
       },
       /* api */
       listChildTask(notNeedProcess, completeFn) {
@@ -247,14 +249,14 @@
         };
 
         api.listChildTask({ params: param }, notNeedProcess ? '' : me).then((res) => {
-          if(!notNeedProcess) {
+          if (!notNeedProcess) {
             me.refreshBtn.loading = false;
             me.resetBtnStatus();
           }
           me.tableData = me.formatData(res.data);
           completeFn && completeFn();
         }).catch((error) => {
-          if(!notNeedProcess) {
+          if (!notNeedProcess) {
             me.refreshBtn.loading = false;
             me.$message.error(error);
           }
@@ -267,7 +269,7 @@
         const param = {
           parentId: this.parentInfo.id,
           childTaskId: this.table.currentRowInfo.id,
-          type: this.table.currentRowInfo._type,
+          type: this.table.currentRowInfo._type
         };
 
         if (!param.childTaskId) {
@@ -296,7 +298,7 @@
         const param = {
           parentId: this.parentInfo.id,
           childTaskId: this.table.currentRowInfo.id,
-          type: this.table.currentRowInfo._type,
+          type: this.table.currentRowInfo._type
         };
 
         if (!param.childTaskId) {

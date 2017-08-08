@@ -113,7 +113,6 @@
       this.autoRefreshList();
     },
     destroyed() {
-      console.log('destroyed');
       this.runTimer = false;
     },
     methods: {
@@ -157,14 +156,16 @@
       },
       autoRefreshList() {
         const me = this;
-        if(!me.runTimer) {
+        if (!me.runTimer) {
           return false;
         }
-        setTimeout(function() {
-          me.listTask(true, function() {
+        setTimeout(() => {
+          me.listTask(true, () => {
             me.autoRefreshList();
           });
         }, 3000);
+
+        return false;
       },
       /* api */
       listTask(notNeedProcess, completeFn) {
@@ -189,7 +190,7 @@
           me.total = res.data.total;
           completeFn && completeFn();
         }).catch((error) => {
-          if(!notNeedProcess) {
+          if (!notNeedProcess) {
             me.$message.error(error);
           }
           completeFn && completeFn();
@@ -199,7 +200,7 @@
         const me = this;
 
         const param = {
-          parentId: this.table.currentRowInfo.id,
+          parentId: this.table.currentRowInfo.id
         };
 
         api.stop({ params: param }).then((res) => {
@@ -216,7 +217,7 @@
         const me = this;
 
         const param = {
-          parentId: this.table.currentRowInfo.id,
+          parentId: this.table.currentRowInfo.id
         };
 
         api.restart({ params: param }).then((res) => {
