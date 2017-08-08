@@ -39,7 +39,7 @@
         </template>
       </fj-table-column>
       <fj-table-column prop="_totalTime" label="时长"></fj-table-column>
-      <fj-table-column prop="processRate" width="80" label="进度" align="center"></fj-table-column>
+      <fj-table-column prop="processRate" width="80" label="进度(%)" align="center"></fj-table-column>
       <fj-table-column prop="createTime" width="140" align="center" label="创建时间">
         <template scope="props">{{ props.row.createTime | formatTime }}</template>
       </fj-table-column>
@@ -78,9 +78,12 @@
         this.display = v;
         if (this.display) {
           this.listChildTask();
+          this.runTimer = true;
+          this.autoRefreshList();
         } else {
           this.tableData = [];
           this.childTaskData = [];
+          this.runTimer = false;
         }
       }
     },
@@ -116,7 +119,9 @@
 
         childSlideDialogVisible: false,
         childTaskData: [],
-        childTaskTitle: ''
+        childTaskTitle: '',
+
+        runTimer: false,
       };
     },
     created() {
@@ -178,6 +183,7 @@
 
         for (let i = 0, len = order.length; i < len; i++) {
           temp = data[order[i]];
+          if(!temp) { continue; }
           for (let j = 0, l = temp.length; j < l; j++) {
             temp[j]._type = order[i];
             temp[j]._path = temp[j].filePath || temp[j].orgFilePath || temp[j].mergerdFilePath || '-';
@@ -221,21 +227,38 @@
         this.childTaskData = childTaskData;
         this.childSlideDialogVisible = true;
       },
-
+      autoRefreshList() {
+        const me = this;
+        if(!me.runTimer) {
+          return false;
+        }
+        setTimeout(function() {
+          me.listChildTask(true, function() {
+            me.autoRefreshList();
+          });
+        }, 3000);
+      },
       /* api */
-      listChildTask() {
+      listChildTask(notNeedProcess, completeFn) {
         const me = this;
 
         const param = {
           parentId: this.parentInfo.id
         };
 
-        api.listChildTask({ params: param }, me).then((res) => {
-          me.refreshBtn.loading = false;
+        api.listChildTask({ params: param }, notNeedProcess ? '' : me).then((res) => {
+          if(!notNeedProcess) {
+            me.refreshBtn.loading = false;
+            me.resetBtnStatus();
+          }
           me.tableData = me.formatData(res.data);
+          completeFn && completeFn();
         }).catch((error) => {
-          me.refreshBtn.loading = false;
-          me.$message.error(error);
+          if(!notNeedProcess) {
+            me.refreshBtn.loading = false;
+            me.$message.error(error);
+          }
+          completeFn && completeFn();
         });
       },
       stop() {
@@ -244,7 +267,7 @@
         const param = {
           parentId: this.parentInfo.id,
           childTaskId: this.table.currentRowInfo.id,
-          type: 'generateIndex'
+          type: this.table.currentRowInfo._type,
         };
 
         if (!param.childTaskId) {
@@ -258,6 +281,7 @@
         api.stop({ params: param }).then((res) => {
           me.$message.success('任务已成功停止');
           me.stopBtn.loading = false;
+          me.listChildTask();
         }).catch((error) => {
           me.stopBtn.loading = false;
           me.$message.error(error);
@@ -272,7 +296,7 @@
         const param = {
           parentId: this.parentInfo.id,
           childTaskId: this.table.currentRowInfo.id,
-          type: 'generateIndex'
+          type: this.table.currentRowInfo._type,
         };
 
         if (!param.childTaskId) {
@@ -284,8 +308,9 @@
         this.restartBtn.loading = true;
 
         api.restart({ params: param }).then((res) => {
-          me.$message.success('任务已成功停止');
+          me.$message.success('任务已成功重启');
           me.restartBtn.loading = false;
+          me.listChildTask();
         }).catch((error) => {
           me.restartBtn.loading = false;
           me.$message.error(error);
