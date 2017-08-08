@@ -102,18 +102,29 @@
         total: 0,
 
         /* child task */
-        childTaskDialogVisible: false
+        childTaskDialogVisible: false,
+
+        runTimer: false
       };
     },
     created() {
       this.listTask();
+      this.runTimer = true;
+      this.autoRefreshList();
+    },
+    destroyed() {
+      this.runTimer = false;
     },
     methods: {
       handleClickSearch() {
         this.listTask();
       },
-      stopClick() {},
-      restartClick() {},
+      stopClick() {
+        this.stop();
+      },
+      restartClick() {
+        this.restart();
+      },
       childTaskClick() {
         this.childTaskDialogVisible = true;
       },
@@ -129,7 +140,6 @@
         this.isDisabled = false;
         this.stopDisable = !common.isTaskCanStop(current.status);
         this.restartDisable = !common.isTaskCanRestart(current.status);
-      //        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
       },
       getStatus(v) {
         return config.getConfig('STATUS', v);
@@ -144,9 +154,21 @@
         this.page = val;
         this.listTask();
       },
+      autoRefreshList() {
+        const me = this;
+        if (!me.runTimer) {
+          return false;
+        }
+        setTimeout(() => {
+          me.listTask(true, () => {
+            me.autoRefreshList();
+          });
+        }, 3000);
 
+        return false;
+      },
       /* api */
-      listTask() {
+      listTask(notNeedProcess, completeFn) {
         const me = this;
 
         const param = {
@@ -162,13 +184,50 @@
           param.currentStep = this.formData.currentStep;
         }
 
-        api.list({ params: param }, me).then((res) => {
+        api.list({ params: param }, notNeedProcess ? '' : me).then((res) => {
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
+          completeFn && completeFn();
+        }).catch((error) => {
+          if (!notNeedProcess) {
+            me.$message.error(error);
+          }
+          completeFn && completeFn();
+        });
+      },
+      stop() {
+        const me = this;
+
+        const param = {
+          parentId: this.table.currentRowInfo.id
+        };
+
+        api.stop({ params: param }).then((res) => {
+          me.$message.success('任务已成功停止');
+          me.listTask();
         }).catch((error) => {
           me.$message.error(error);
         });
+
+        return false;
+      },
+
+      restart() {
+        const me = this;
+
+        const param = {
+          parentId: this.table.currentRowInfo.id
+        };
+
+        api.restart({ params: param }).then((res) => {
+          me.$message.success('任务已成功重启');
+          me.listTask();
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
       }
     }
   };
