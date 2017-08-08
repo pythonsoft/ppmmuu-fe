@@ -11,7 +11,7 @@ api.postUserLogin = function postUserLogin(data, scope) {
       }
       const res = response.data;
       if (res.status === '0') {
-        window.location.href = '/management/account';
+        //window.location.href = '/management/account';
         if (scope) { scope.$progress.finish(); }
         return resolve(res);
       }

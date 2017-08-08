@@ -30,12 +30,11 @@ axios.interceptors.response.use((response) => {
   if (loginStatusCodeArr.indexOf(res.status) !== -1) {
     window.location.href = '/login';
   }
-  // console.log("response", response);
-  // if (response.config && response.config.url.indexOf('/login') !== -1) {
-  //   if(res.status === '0'){
-  //     window.location.href = '/management/account';
-  //   }
-  // }
+  if (response.config && response.config.url.indexOf('/user/login') !== -1) {
+    if(res.status === '0'){
+      window.location.href = '/management/account';
+    }
+  }
   return response;
 }, error =>
   // Do something with response error

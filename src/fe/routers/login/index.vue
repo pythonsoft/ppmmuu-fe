@@ -8,10 +8,10 @@
           <fj-form-item label="密码" prop="password">
             <fj-input v-model="userInfo.password" type="password"></fj-input>
           </fj-form-item>
-          <div class="login-form-button">
-            <fj-button type="primary" @click="login">登录</fj-button>
-          </div>
         </fj-form>
+        <div class="login-form-button">
+          <fj-button type="primary" @click="login">登录</fj-button>
+        </div>
     </div>
     <router-view></router-view>
   </div>
