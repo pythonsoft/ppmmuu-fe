@@ -28,7 +28,7 @@ run_node_68:
   stage: run_node
   script:
     - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "sed -i -re \"s/(^\s*axios\.defaults\.baseURL)\s*=.*/\1='http:\/\/api\.szdev\.cn'/\" src/fe/config.js"
+    - at_68 "cd ~/UMP-FE && sed -i -re \"s/(^\s*axios\.defaults\.baseURL)\s*=.*/\1='http:\/\/api\.szdev\.cn'/\" src/fe/config.js"
     - at_68 "killall -q node; cd ~/UMP-FE && nohup npm run dev >/dev/null 2>&1 &"
 
   environment:
