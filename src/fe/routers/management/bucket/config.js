@@ -6,7 +6,7 @@ const method = {};
 config.STATUS = {
   All: { text: '全部', value: '-1', key: 'ALL' },
   NORMAL: { text: '正常', value: '0', key: 'NORMAL' },
-  HAND_UP: { text: '挂起', value: '1', key: 'HAND_UP' },
+  HAND_UP: { text: '挂起', value: '1', key: 'HAND_UP' }
 };
 
 config.PERMISSION = {
@@ -18,7 +18,7 @@ config.PERMISSION = {
 config.TYPE = {
   STANDARD: { text: '标准存储', value: '0', key: 'STANDARD' },
   IA: { text: '低频存储', value: '1', key: 'IA' },
-  ARCHIVE: { text: '归档存储', value: '2', key: 'ARCHIVE' },
+  ARCHIVE: { text: '归档存储', value: '2', key: 'ARCHIVE' }
 };
 
 config.DELETE_DENY = {

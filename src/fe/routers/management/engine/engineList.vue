@@ -213,6 +213,8 @@
         }).catch((error) => {
           me.showErrorInfo(error);
         });
+
+        return false;
       },
       showErrorInfo(message) {
         this.$message.error(message || '');

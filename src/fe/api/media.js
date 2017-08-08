@@ -83,7 +83,7 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
 };
 
 api.getIcon = function getIcon(id) {
-  return 'http://localhost:8080/media/getIcon?objectid=' + id;
+  return `http://localhost:8080/media/getIcon?objectid=${id}`;
 };
 
 api.getObject = function getObject(data, scope) {

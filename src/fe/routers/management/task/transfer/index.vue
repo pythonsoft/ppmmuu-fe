@@ -136,8 +136,8 @@
       },
       pageChange(val) {
         this.page = val;
-//        this.listEngine();
-      },
+      //        this.listEngine();
+      }
     }
-  }
+  };
 </script>

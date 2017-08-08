@@ -327,4 +327,8 @@ utils.getTextByValue = function getTextByValue(col, v, st) {
   return text;
 };
 
+utils.formatTime = function (value, formatString = 'YYYY-MM-DD HH:mm:ss') {
+  return moment(value).format(formatString);
+};
+
 module.exports = utils;

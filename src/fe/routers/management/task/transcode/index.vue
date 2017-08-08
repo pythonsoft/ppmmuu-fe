@@ -8,8 +8,8 @@
             v-for="item in status"
             :key="item.value"
             :label="item.text"
-            :value="item.value">
-          </fj-option>
+            :value="item.value"
+          ></fj-option>
         </fj-select>
       </div>
       <div class="layout-four-row-search-item" :style="{ width: '190px' }">
@@ -73,6 +73,7 @@
 
   const api = require('../../../../api/transcode');
   const config = require('./config');
+  const common = require('./common');
 
   export default {
     components: {
@@ -89,7 +90,7 @@
         formData: {
           keyword: '',
           status: '',
-          currentStep: '',
+          currentStep: ''
         },
         table: {
           currentRowInfo: {}
@@ -101,7 +102,7 @@
         total: 0,
 
         /* child task */
-        childTaskDialogVisible: false,
+        childTaskDialogVisible: false
       };
     },
     created() {
@@ -126,15 +127,9 @@
       handleCurrentChange(current) {
         this.table.currentRowInfo = current;
         this.isDisabled = false;
-        const st = config.getConfig('STATUS');
-        if(st[current.status].value.indexOf([ 'created', 'dealing' ]) !== -1) {
-          this.stopDisable = false;
-          this.restartDisable = false;
-        }else if( st[current.status].value.indexOf(['error', 'complete']) !== -1) {
-          this.stopDisable = true;
-          this.restartDisable = true;
-        }
-//        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
+        this.stopDisable = !common.isTaskCanStop(current.status);
+        this.restartDisable = !common.isTaskCanRestart(current.status);
+      //        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
       },
       getStatus(v) {
         return config.getConfig('STATUS', v);
@@ -156,15 +151,15 @@
 
         const param = {
           page: this.page,
-          pageSize: this.pageSize,
+          pageSize: this.pageSize
         };
 
-        if(this.formData.status) {
-          param.status = this.formData.status
+        if (this.formData.status) {
+          param.status = this.formData.status;
         }
 
-        if(this.formData.currentStep) {
-          param.currentStep = this.formData.currentStep
+        if (this.formData.currentStep) {
+          param.currentStep = this.formData.currentStep;
         }
 
         api.list({ params: param }, me).then((res) => {
@@ -174,7 +169,7 @@
         }).catch((error) => {
           me.$message.error(error);
         });
-      },
+      }
     }
-  }
+  };
 </script>
