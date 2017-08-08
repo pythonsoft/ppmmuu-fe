@@ -81,7 +81,7 @@
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
   import utils from '../../../common/utils';
 
-  const api = require('../../../api/engine');
+  const api = require('../../../api/storage');
   const config = require('./config');
 
   export default {
@@ -94,7 +94,7 @@
         status: config.config.STATUS,
         formData: {
           keyword: '',
-          status: '-1'
+          status: ''
         },
         table: {
           currentRowInfo: {}
@@ -107,10 +107,18 @@
       };
     },
     created() {
+      this.handleClickSearch();
     },
     methods: {
-      handleClickSearch(v) {
-
+      handleClickSearch() {
+        const me = this;
+        api.listBucket({ params: me.formData })
+          .then((res) => {
+            me.tableData = res.data.docs;
+            me.total = res.data.total;
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       addBtnClick() {},
       editBtnClick() {},
