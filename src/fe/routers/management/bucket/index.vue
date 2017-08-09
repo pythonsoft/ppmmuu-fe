@@ -112,6 +112,7 @@
     },
     data() {
       return {
+        defaultRoute: '/',
         deleteDialogVisible: false,
         isDisabled: true,
         status: config.STATUS,
@@ -131,9 +132,14 @@
       };
     },
     created() {
+      this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.handleClickSearch();
     },
     methods: {
+      getActiveRoute(path, level) {
+        const pathArr = path.split('/');
+        return pathArr[level] || '';
+      },
       handleClickSearch() {
         const me = this;
         api.listBucket({ params: me.formData })
@@ -146,14 +152,21 @@
           });
       },
       addBtnClick() {
+        this.resetEditDialog();
         this.editDialogVisible = true;
         this.title = '添加存储区信息';
         this.type = 'add';
       },
       editBtnClick() {
+        this.resetEditDialog();
         this.editDialogVisible = true;
         this.title = '编辑存储区信息';
         this.type = 'edit';
+      },
+      resetEditDialog() {
+        this.editDialogVisible = false;
+        this.title = '';
+        this.type = '';
       },
       deleteBtnClick() {
         this.deleteDialogVisible = true;
@@ -192,6 +205,7 @@
       handleCurrentChange(current) {
         this.currentRow = current;
         this.isDisabled = false;
+        this.resetEditDialog();
       },
       formatStatus(v) {
         if (v === config.STATUS.NORMAL.value) {

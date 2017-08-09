@@ -4,8 +4,8 @@
           :visible.sync="dialogVisible"
           @close="close">
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
-      <fj-form-item label="标志" v-if="type === 'edit'">
-        <fj-input v-model="formData._id" :disabled="true"></fj-input>
+      <fj-form-item label="标志">
+        <fj-input v-model="formData._id" :disabled="type==='edit'? true: false"></fj-input>
       </fj-form-item>
       <fj-form-item label="名称" prop="name">
         <fj-input v-model="formData.name"></fj-input>
@@ -69,6 +69,9 @@
           status: '0'
         },
         rules: {
+          _id: [
+            { required: true, message: '请输入标识' }
+          ],
           name: [
             { required: true, message: '请输入名称' }
           ]
@@ -79,16 +82,11 @@
       };
     },
     watch: {
-      id(val) {
-        if ( val && this.type === 'edit') {
-          this.initEditUser();
-        }
-      },
       type(val) {
-        if (this.type === 'add') {
-
-        } else {
+        if (this.type === 'edit' && this.dialogVisible === true) {
           this.initEditUser();
+        }else{
+          this.resetFormData();
         }
       },
       visible(val) {
@@ -106,7 +104,6 @@
     },
     methods: {
       initEditUser() {
-        this.dialogVisible = true;
         const me = this;
         api.getBucketDetail({ params: { _id: this.id } })
           .then((res) => {
@@ -170,6 +167,7 @@
           });
       },
       close() {
+        this.dialogVisible = false;
         this.resetFormData();
         this.$emit('update:visible', false);
       }

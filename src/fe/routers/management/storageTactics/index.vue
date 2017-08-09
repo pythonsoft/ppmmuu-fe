@@ -1,96 +1,153 @@
 <template>
-  <four-row-layout-right-content>
-    <template slot="search-left">权限</template>
+  <layout-four-row>
+    <template slot="search-left">
+      <div class="iconfont icon-arrow-left storage-path-return" v-if="showBack"></div>
+      <div class="storage-path-back" v-if="showBack">
+        <router-link to="/management/bucket">
+          <span>返回</span>
+        </router-link>
+      </div>
+      <span>路径</span>
+    </template>
     <template slot="search-right">
-      <div class="permission-search-item">
-        <fj-select placeholder="请选择" v-model="status" size="mini">
+      <div class="layout-four-row-search-item" :style="{ width: '78px' }">
+        <fj-select placeholder="请选择" v-model="formData.status">
           <fj-option
-            v-for="item in options"
+            v-for="item in status"
             :key="item.value"
-            :label="item.label"
+            :label="item.text"
             :value="item.value">
           </fj-option>
         </fj-select>
       </div>
-      <div class="permission-search-item">
-        <fj-input placeholder="请输入权限名" v-model="name"></fj-input>
+      <div class="layout-four-row-search-item" :style="{ width: '190px' }">
+        <fj-input :rows="1" placeholder="请输入名称" v-model="formData.keyword"></fj-input>
       </div>
-      <div class="permission-search-item">
-        <fj-button type="primary" @click="handleClickSearch">搜索</fj-button>
+      <div class="layout-four-row-search-item">
+        <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
       </div>
     </template>
-     <template slot="operation">
-       <span class="permission-btn-mini-margin">
-         <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
-       </span>
-       <span class="permission-btn-mini-margin">
-         <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
-       </span>
-     </template>
-      <template slot="table">
-        <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
-          <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-          <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
-          <fj-table-column prop="name" label="名称" ></fj-table-column>
-          <fj-table-column prop="description" label="描述"></fj-table-column>
-        </fj-table>
-      </template>
-      <template slot="pagination">
-        <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
-      </template>
+    <template slot="operation">
+        <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editTacticsClick">配置策略</fj-button>
+      </span>
+      <span class="layout-btn-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
+      </span>
+    </template>
+    <template slot="table">
+      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+        <fj-table-column prop="status" width="90" align="center" label="状态" >
+          <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
+        </fj-table-column>
+        <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="path" width="90" label="路径"></fj-table-column>
+        <fj-table-column prop="maxSize" width="90" label="容量 | 已使用">
+          <template scope="props">{{ formatSize(props.row) }}</template>
+        </fj-table-column>
+        <fj-table-column prop="bucket" width="90" label="存储区名称">
+          <template scope="props">{{ props.row.bucket.name }}</template>
+        </fj-table-column>
+        <fj-table-column prop="creator" width="90" label="创建人">
+          <template scope="props">{{ props.row.creator.name }}</template>
+        </fj-table-column>
+        <fj-table-column prop="createdTime" width="160" align="center" label="创建时间">
+          <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+        </fj-table-column>
+        <fj-table-column prop="modifyTime" width="160" align="center" label="修改时间">
+          <template scope="props">{{ props.row.modifyTime | formatTime }}</template>
+        </fj-table-column>
+      </fj-table>
+    </template>
+    <template slot="pagination">
+      <fj-pagination
+        :page-size="pageSize"
+        :total="total"
+        :current-page.sync="page"
+        @current-change="pageChange">
+      </fj-pagination>
+    </template>
+    <edit-path
+            :id="currentRow._id"
+            :title="title"
+            :type="type"
+            :visible.sync="editDialogVisible"
+            @updateList="handleClickSearch">
+    </edit-path>
     <fj-dialog
             title="提示"
-            :visible.sync="dialogVisible"
-            @close="cancelDialog">
+            :visible.sync="deleteDialogVisible"
+            @close="deleteDialogVisible=false">
 
-      <span>{{dialogMessage}}</span>
+      <span>确定要删除这个存储区吗?</span>
 
       <div slot="footer">
-        <fj-button @click="cancelDialog">取消</fj-button>
-        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+        <fj-button @click="deleteDialogVisible=false">取消</fj-button>
+        <fj-button type="primary" @click="confirmDeleteDialog">确定</fj-button>
       </div>
 
     </fj-dialog>
-  </four-row-layout-right-content>
+  </layout-four-row>
 </template>
 <script>
-  import { formatQuery } from '../../../common/utils';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
+  import './index.css';
+  import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
+  import editPath from './component/editTactics';
+  import utils from '../../../common/utils';
 
-  const api = require('../../../api/role');
+  const config = require('./config');
+  const api = require('../../../api/storage');
 
   export default {
     components: {
-      'four-row-layout-right-content': FourRowLayoutRightContent
+      'layout-four-row': fourRowLayout,
+      'edit-path': editPath
+    },
+    props: {
+      showBack: {
+        type: Boolean,
+        default: false
+      },
+      props: {
+        bucketId: {
+          type: String,
+          default: ''
+        }
+      }
     },
     data() {
       return {
-        defaultRoute: '/',
-        status: '',
-        dialogVisible: false,
-        dialogMessage: '',
-        enableOrDisable: '',
-        options: [{
-          value: '0',
-          label: '启用'
-        }, {
-          value: '1',
-          label: '禁用'
-        }, {
-          value: '',
-          label: '全部'
-        }],
-        name: '',
-        enabled: true,
-        disabled: true,
+        deleteDialogVisible: false,
+        isDisabled: true,
+        status: config.STATUS,
+        formData: {
+          keyword: '',
+          status: ''
+        },
+        currentRow: {},
         tableData: [],
-        currentPage: 1,
+        /* bucket param */
+        page: 1,
+        pageSize: 20,
         total: 0,
-        pageSize: 15
+        editDialogVisible: false,
+        title: '',
+        type: '',
       };
     },
     created() {
-      this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.handleClickSearch();
     },
     methods: {
@@ -100,140 +157,86 @@
       },
       handleClickSearch() {
         const me = this;
-        const searchObj = {
-          page: me.currentPage,
-          pageSize: me.pageSize,
-          keyword: me.name,
-          status: me.status
-        };
-        api.getPermissionList(formatQuery(searchObj, true))
-          .then((res) => {
-            const data = res.data;
-            me.tableData = data ? data.docs : [];
-            me.currentPage = data.page;
-            me.total = data.total;
-            me.pageSize = data.pageSize;
-            me.handleSelectionChange();
-          })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
+        me.formData.bucketId = this.bucketId;
+        api.listPath({ params: me.formData })
+                .then((res) => {
+          me.tableData = res.data.docs;
+        me.total = res.data.total;
+        me.isDisabled = true;
+      }).catch((error) => {
+          me.$message.error(error);
+      });
       },
-      handleClickEnable() {
-        this.dialogMessage = '确定要启用这些权限吗?';
-        this.dialogVisible = true;
-        this.enableOrDisable = 'enable';
+      addBtnClick() {
+        this.resetEditDialog();
+        this.editDialogVisible = true;
+        this.title = '添加路径信息';
+        this.type = 'add';
       },
-      handleClickDisable() {
-        this.dialogMessage = '确定要禁用这些权限吗?';
-        this.dialogVisible = true;
-        this.enableOrDisable = 'disable';
+      editBtnClick() {
+        this.resetEditDialog();
+        this.editDialogVisible = true;
+        this.title = '编辑路径信息';
+        this.type = 'edit';
       },
-      resetDialog() {
-        this.dialogMessage = '';
-        this.dialogVisible = false;
-        this.enableOrDisable = '';
+      resetEditDialog() {
+        this.editDialogVisible = false;
+        this.title = '';
+        this.type = '';
       },
-      cancelDialog() {
-        this.resetDialog();
+      deleteBtnClick() {
+        this.deleteDialogVisible = true;
       },
-      confirmDialog() {
+      confirmDeleteDialog() {
         const me = this;
-        let postData = {};
-        let message = '';
-        if (this.enableOrDisable === 'enable') {
-          postData = {
-            paths: this.selectedEnablePaths.join(','),
-            status: '0'
-          };
-          message = '启用';
-        } else if (this.enableOrDisable === 'disable') {
-          postData = {
-            paths: this.selectedDisablePaths.join(','),
-            status: '1'
-          };
-          message = '禁用';
-        } else {
-          this.resetDialog();
-          return;
+        api.deletePath({ _id: this.currentRow._id })
+                .then((res) => {
+          me.$message.success('删除成功');
+        me.deleteDialogVisible = false;
+        me.handleClickSearch();
+      }).catch((error) =>{
+          me.$message.error(error);
+      })
+      },
+      editPathClick() {},
+      editTacticsClick() {},
+      setEnableClick() {
+        this.updateStatus('0');
+      },
+      setDisableClick() {
+        this.updateStatus('1');
+      },
+      updateStatus(status) {
+        const me = this;
+        const info = status === '0' ? '启用成功' : '挂起成功';
+        api.enablePath( {_id: this.currentRow._id, status: status })
+                .then((res) => {
+          me.$message.success(info);
+          me.handleClickSearch();
+      }).catch((error) => {
+          me.$message.error(error);
+      })
+      },
+      /* table */
+      handleCurrentChange(current) {
+        this.currentRow = current;
+        this.isDisabled = false;
+        this.resetEditDialog();
+      },
+      formatStatus(v) {
+        if (v === config.STATUS.NORMAL.value) {
+          return '<span class="bucket-status-span bucket-enable">正常</span>';
+        }else{
+          return '<span class="bucket-status-span bucket-disable">挂起</span>';
         }
-
-        api.postEnablePermission(postData)
-          .then((response) => {
-            me.showSuccessInfo(`${message}成功!`);
-            me.resetDialog();
-            me.handleClickSearch();
-          })
-          .catch((error) => {
-            me.showErrorInfo(error);
-            me.resetDialog();
-          });
       },
-      handleSelectionChange(rows) {
-        this.selectedDisablePaths = [];
-        this.selectedEnablePaths = [];
-        if (rows && rows.length) {
-          for (let i = 0, len = rows.length; i < len; i++) {
-            const row = rows[i];
-            if (row.status === '0') {
-              this.selectedDisablePaths.push(row.path);
-            } else {
-              this.selectedEnablePaths.push(row.path);
-            }
-          }
-        }
-        this.enabled = !this.selectedEnablePaths.length;
-        this.disabled = !this.selectedDisablePaths.length;
+      formatSize(row) {
+        return row.maxSize + ' | ' + row.usage;
       },
-      clearTableSelection() {
-        this.$refs.table.clearSelection();
-      },
-      handleCurrentPageChange(val) {
-        this.handleClickSearch();
-      },
-      showSuccessInfo(message) {
-        this.$message.success(message);
-      },
-      showErrorInfo(message) {
-        this.$message.error(message);
+      pageChange(val) {
+        this.page = val;
+        //        this.listEngine();
       }
     }
   };
 </script>
-<style>
-    .permission-search-item{
-      float: left;
-      margin-left: 10px;
-    }
-
-    .permission-btn-mini-margin {
-      margin-left: 6px;
-      font-size: 12px;
-    }
-
-    .permission-table-pagination {
-      margin-top: 30px;
-      text-align: center;
-      height: 28px;
-      line-height: 28px;
-      color: #4C637B;
-    }
-
-    .permission-status-span {
-      font-size: 12px;
-      color: #FFFFFF;
-      width: 48px;
-      height: 20px;
-      line-height: 20px;
-      border-radius: 2px;
-      text-align:center;
-      display: block;
-    }
-    .permission-enable {
-      background: #2EC4B6;
-    }
-
-    .permission-disable {
-      background: #FF3366;
-    }
-</style>
