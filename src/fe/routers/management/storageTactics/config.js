@@ -1,7 +1,4 @@
-const utils = require('../../../common/utils');
-
 const config = {};
-const method = {};
 
 config.STATUS = {
   All: { text: '全部', value: '-1', key: 'ALL' },
@@ -50,19 +47,5 @@ config.ORDER_BY = {
   1: { text: '最后访问时间', value: '1', key: 'LAST_VISIT_TIME' },
   2: { text: '访问次数', value: '2', key: 'VISIT_COUNT' },
 };
-
-
-config.LEVELS = [
-  { text: '5%', value: 5},
-  { text: '10%', value: 10},
-  { text: '20%', value: 20},
-  { text: '30%', value: 30},
-  { text: '40%', value: 40},
-  { text: '50%', value: 50},
-  { text: '60%', value: 60},
-  { text: '70%', value: 70},
-  { text: '80%', value: 80},
-  { text: '90%', value: 90}
-];
 
 module.exports = config;

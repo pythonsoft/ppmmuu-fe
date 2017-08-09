@@ -42,6 +42,7 @@
             <fj-select v-model="formData.warningLine">
               <fj-option
                       v-for="item in LEVELS"
+                      :key="item.key"
                       :value="item.value"
                       :label="item.text"></fj-option>
             </fj-select>
@@ -50,6 +51,7 @@
             <fj-select v-model="formData.triggerLine">
               <fj-option
                       v-for="item in LEVELS"
+                      :key="item.key"
                       :value="item.value"
                       :label="item.text"></fj-option>
             </fj-select>
@@ -58,6 +60,7 @@
             <fj-select v-model="formData.minLine">
               <fj-option
                       v-for="item in LEVELS"
+                      :key="item.key"
                       :value="item.value"
                       :label="item.text"></fj-option>
             </fj-select>

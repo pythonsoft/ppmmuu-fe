@@ -47,15 +47,15 @@
         <fj-table-column prop="status" width="90" align="center" label="状态" >
           <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
-        <fj-table-column prop="_id" width="90" label="标识" ></fj-table-column>
+        <fj-table-column prop="_id" width="150" label="标识" ></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="type" width="90" label="存储类型">
+        <fj-table-column prop="type" label="存储类型">
           <template scope="props">{{ formatType(props.row.type) }}</template>
         </fj-table-column>
-        <fj-table-column prop="permission" width="90" label="读写权限">
+        <fj-table-column prop="permission" label="读写权限">
           <template scope="props">{{ formatPermission(props.row.permission) }}</template>
         </fj-table-column>
-        <fj-table-column prop="creator" width="90" label="创建人">
+        <fj-table-column prop="creator" label="创建人">
           <template scope="props">{{ props.row.creator.name }}</template>
         </fj-table-column>
         <fj-table-column prop="createdTime" width="160" align="center" label="创建时间">

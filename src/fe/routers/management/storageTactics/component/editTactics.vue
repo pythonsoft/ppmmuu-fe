@@ -3,8 +3,8 @@
           :title="title"
           :visible.sync="dialogVisible"
           @close="close">
-    <fj-tabs v-model="activeTabName" @tab-click="handleTabClick">
-      <fj-tab-pane label="基本信息" name="tab1">
+    <fj-tabs v-model="activeTabName">
+      <fj-tab-pane label="基本信息" name="tab1" @tab-click="handleTabClick">
         <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
           <fj-form-item label="标志" v-if="type === 'edit'">
             <fj-input v-model="formData._id" :disabled="true"></fj-input>
@@ -44,32 +44,44 @@
                       :label="item.text"></fj-option>
             </fj-select>
           </fj-form-item>
-          <fj-form-item label="触发方式" prop="priority">
-            <fj-select v-model="formData.priority">
+          <fj-form-item label="触发方式" prop="triggerType">
+            <fj-select v-model="formData.triggerType">
               <fj-option
-                      v-for="item in PRIORITY"
+                      v-for="item in TRIGGER_TYPE"
                       :key="item.key"
                       :value="item.value"
                       :label="item.text"></fj-option>
             </fj-select>
           </fj-form-item>
-          <fj-form-item label="警告水位线" prop="priority">
-            <fj-select v-model="formData.priority">
+          <fj-form-item label="计划周期" prop="scheduleType">
+            <fj-select v-model="formData.scheduleType">
               <fj-option
-                      v-for="item in PRIORITY"
+                      v-for="item in SCHEDULE_TYPE"
                       :key="item.key"
                       :value="item.value"
                       :label="item.text"></fj-option>
             </fj-select>
           </fj-form-item>
-          <fj-form-item label="警告水位线" prop="priority">
-            <fj-select v-model="formData.priority">
+          <fj-form-item label="计划时间" prop="scheduleTime">
+            <fj-input v-model="formData.scheduleTime"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="执行顺序" prop="orderBy">
+            <fj-select v-model="formData.orderBy">
               <fj-option
-                      v-for="item in PRIORITY"
+                      v-for="item in ORDER_BY"
                       :key="item.key"
                       :value="item.value"
                       :label="item.text"></fj-option>
             </fj-select>
+          </fj-form-item>
+          <fj-form-item label="每次提交数" prop="itemCount">
+            <fj-input v-model="formData.itemCount"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="提交频率" prop="frequency">
+            <fj-input v-model="formData.frequency"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="执行脚本" prop="script">
+            <fj-input type="textarea" :rows="5" v-model="formData.script"></fj-input>
           </fj-form-item>
         </fj-form>
       </fj-tab-pane>
@@ -111,7 +123,12 @@
             _id: '',
             name: '',
             type: ''
-          }
+          },
+          type: '',
+          priority: '',
+          triggerType: '',
+          scheduleType: '',
+          orderBy: ''
         },
         rules: {
           name: [
@@ -119,25 +136,18 @@
           ],
           source: [
             { required: true, message: '请选择目标' },
-            {
-              message: '请选择目标',
-              validator: (rule, value, callback) => {
-                if (value.name) {
-                  return true;
-                }
-                return false;
-              }
-            }
+
           ]
         },
         dialogVisible: false,
         bucketDialogVisible: false,
         pathDialogVisible: false,
         activeTabName: 'tab1',
+              TYPE: config.TYPE,
         PRIORITY: config.PRIORITY,
               TRIGGER_TYPE: config.TRIGGER_TYPE,
               SCHEDULE_TYPE: config.SCHEDULE_TYPE,
-              ORDER_BY: config.ORDER_BY,
+              ORDER_BY: config.ORDER_BY
       };
     },
     watch: {
@@ -165,7 +175,7 @@
       initEditUser() {
         this.dialogVisible = true;
         const me = this;
-        api.getPathDetail({ params: { _id: this.id } })
+        api.getTacticDetail({ params: { _id: this.id } })
           .then((res) => {
             me.formData = res.data;
           })
@@ -179,26 +189,37 @@
             _id: '',
             name: '',
             type: ''
-          }
+          },
+          type: '',
+          priority: '',
+          triggerType: '',
+          scheduleType: '',
+          orderBy: ''
         };
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
           if (valid) {
             if (this.type === 'add') {
-              this.addUser();
+              this.add();
             } else {
-              this.editUser();
+              this.edit();
             }
           }
         });
       },
-      addUser() {
+      add() {
+        console.log(this.formData);
         this.isBtnLoading = true;
         const me = this;
         this.formData.status = '0';
-        this.formData.maxSize = parseInt(this.formData.maxSize);
-        api.addPath(this.formData)
+        if(this.formData.itemCount) {
+          this.formData.itemCount = parseInt(this.formData.itemCount);
+        }
+        if(this.formData.frequency) {
+          this.formData.frequency = parseInt(this.formData.frequency);
+        }
+        api.addTactics(this.formData)
           .then((response) => {
             me.$message.success('保存成功');
             me.$emit('updateList');
@@ -211,11 +232,12 @@
             me.$message.error(error);
           });
       },
-      editUser() {
+      edit() {
         this.isBtnLoading = true;
         const me = this;
-        this.formData.maxSize = parseInt(this.formData.maxSize);
-        api.updatePath(this.formData)
+        this.formData.itemCount = parseInt(this.formData.itemCount);
+        this.formData.frequency = parseInt(this.formData.frequency);
+        api.updateTactics(this.formData)
           .then((response) => {
             this.$message.success('保存成功');
             me.$emit('updateList');
@@ -228,15 +250,27 @@
             this.$message.error(error);
           });
       },
+      handleTabClick() {
+
+      },
       close() {
         this.dialogVisible = false;
         this.resetFormData();
         this.$emit('update:visible', false);
       },
       addBucket(row) {
-        this.formData.bucket = {
+        this.formData.source = {
           _id: row._id,
-          name: row.name
+          name: row.name,
+          type: '0',
+        }
+      },
+      addPath(row) {
+        console.log(row);
+        this.formData.source = {
+          _id: row._id,
+          name: row.name,
+          type: '1',
         }
       }
     }

@@ -7,7 +7,7 @@
           <span>返回</span>
         </router-link>
       </div>
-      <span>路径</span>
+      <span>策略</span>
     </template>
     <template slot="search-right">
       <div class="layout-four-row-search-item" :style="{ width: '78px' }">
@@ -37,9 +37,6 @@
       <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
       </span>
-      <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editTacticsClick">配置策略</fj-button>
-      </span>
       <span class="layout-btn-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
       </span>
@@ -53,14 +50,13 @@
           <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="path" width="90" label="路径"></fj-table-column>
-        <fj-table-column prop="maxSize" width="90" label="容量 | 已使用">
-          <template scope="props">{{ formatSize(props.row) }}</template>
+        <fj-table-column prop="source" label="目标">
+          <template scope="props">{{ props.row.source.name }}</template>
         </fj-table-column>
-        <fj-table-column prop="bucket" width="90" label="存储区名称">
-          <template scope="props">{{ props.row.bucket.name }}</template>
+        <fj-table-column prop="maxSize"  label="类型">
+          <template scope="props">{{ formatType(props.row.type) }}</template>
         </fj-table-column>
-        <fj-table-column prop="creator" width="90" label="创建人">
+        <fj-table-column prop="creator" label="创建人">
           <template scope="props">{{ props.row.creator.name }}</template>
         </fj-table-column>
         <fj-table-column prop="createdTime" width="160" align="center" label="创建时间">
@@ -79,13 +75,13 @@
         @current-change="pageChange">
       </fj-pagination>
     </template>
-    <edit-path
+    <edit-tactics
             :id="currentRow._id"
             :title="title"
             :type="type"
             :visible.sync="editDialogVisible"
             @updateList="handleClickSearch">
-    </edit-path>
+    </edit-tactics>
     <fj-dialog
             title="提示"
             :visible.sync="deleteDialogVisible"
@@ -104,7 +100,7 @@
 <script>
   import './index.css';
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
-  import editPath from './component/editTactics';
+  import editTactics from './component/editTactics';
   import utils from '../../../common/utils';
 
   const config = require('./config');
@@ -113,7 +109,7 @@
   export default {
     components: {
       'layout-four-row': fourRowLayout,
-      'edit-path': editPath
+      'edit-tactics': editTactics
     },
     props: {
       showBack: {
@@ -158,7 +154,7 @@
       handleClickSearch() {
         const me = this;
         me.formData.bucketId = this.bucketId;
-        api.listPath({ params: me.formData })
+        api.listTactics({ params: me.formData })
                 .then((res) => {
           me.tableData = res.data.docs;
         me.total = res.data.total;
@@ -170,13 +166,13 @@
       addBtnClick() {
         this.resetEditDialog();
         this.editDialogVisible = true;
-        this.title = '添加路径信息';
+        this.title = '添加策略信息';
         this.type = 'add';
       },
       editBtnClick() {
         this.resetEditDialog();
         this.editDialogVisible = true;
-        this.title = '编辑路径信息';
+        this.title = '编辑策略信息';
         this.type = 'edit';
       },
       resetEditDialog() {
@@ -189,7 +185,7 @@
       },
       confirmDeleteDialog() {
         const me = this;
-        api.deletePath({ _id: this.currentRow._id })
+        api.deleteTactics({ _id: this.currentRow._id })
                 .then((res) => {
           me.$message.success('删除成功');
         me.deleteDialogVisible = false;
@@ -209,7 +205,7 @@
       updateStatus(status) {
         const me = this;
         const info = status === '0' ? '启用成功' : '挂起成功';
-        api.enablePath( {_id: this.currentRow._id, status: status })
+        api.enableTactics( {_id: this.currentRow._id, status: status })
                 .then((res) => {
           me.$message.success(info);
           me.handleClickSearch();
@@ -230,8 +226,8 @@
           return '<span class="bucket-status-span bucket-disable">挂起</span>';
         }
       },
-      formatSize(row) {
-        return row.maxSize + ' | ' + row.usage;
+      formatType(v) {
+        return utils.getTextByValue(config, v, 'TYPE');
       },
       pageChange(val) {
         this.page = val;

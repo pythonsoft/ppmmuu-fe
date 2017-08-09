@@ -30,16 +30,16 @@ config.DELETE_DENY = {
 };
 
 config.LEVELS = [
-  { text: '5%', value: 5},
-  { text: '10%', value: 10},
-  { text: '20%', value: 20},
-  { text: '30%', value: 30},
-  { text: '40%', value: 40},
-  { text: '50%', value: 50},
-  { text: '60%', value: 60},
-  { text: '70%', value: 70},
-  { text: '80%', value: 80},
-  { text: '90%', value: 90}
+  { text: '5%', value: 5, key: '5'},
+  { text: '10%', value: 10, key: '10'},
+  { text: '20%', value: 20, key: '20'},
+  { text: '30%', value: 30, key: '30'},
+  { text: '40%', value: 40, key: '40'},
+  { text: '50%', value: 50, key: '50'},
+  { text: '60%', value: 60, key: '60'},
+  { text: '70%', value: 70, key: '70'},
+  { text: '80%', value: 80, key: '80'},
+  { text: '90%', value: 90, key: '90'}
 ];
 
 module.exports = config;
