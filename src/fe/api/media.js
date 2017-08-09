@@ -46,7 +46,8 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
 };
 
 api.getIcon = function getIcon(id) {
-  return `/media/getIcon?objectid=${id}`;
+  const t = new Date().getTime();
+  return `/media/getIcon?objectid=${id}&t=${t}`;
 };
 
 api.getObject = function getObject(data, scope) {

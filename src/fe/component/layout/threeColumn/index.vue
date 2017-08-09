@@ -12,39 +12,8 @@
     <slot></slot>
   </div>
 </template>
-<style>
-  .layout-three-column {
-    width: 100%;
-    height: 100%;
-    min-width: 1100px;
-    position: relative;
-  }
-
-  .layout-three-column-left {
-    height: 100%;
-    overflow: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-  }
-
-  .layout-three-column-center {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    overflow: auto;
-  }
-
-  .layout-three-column-right {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
-</style>
 <script>
+  import './index.css'
   export default {
     name: 'layoutThreeColumn',
     props: {
