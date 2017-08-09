@@ -44,8 +44,8 @@
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
-        <fj-table-column prop="status" width="90" align="center" label="状态">
-          <template scope="props">{{ formatStatus(props.row.status) }}</template>
+        <fj-table-column prop="status" width="90" align="center" label="状态" >
+          <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
         <fj-table-column prop="_id" width="90" label="标识" ></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
@@ -74,36 +74,60 @@
         @current-change="pageChange">
       </fj-pagination>
     </template>
+    <edit-bucket
+            :id="currentRow._id"
+            :title="title"
+            :type="type"
+            :visible.sync="editDialogVisible"
+            @updateList="handleClickSearch">
+    </edit-bucket>
+    <fj-dialog
+            title="提示"
+            :visible.sync="deleteDialogVisible"
+            @close="deleteDialogVisible=false">
+
+      <span>确定要删除这个存储区吗?</span>
+
+      <div slot="footer">
+        <fj-button @click="deleteDialogVisible=false">取消</fj-button>
+        <fj-button type="primary" @click="confirmDeleteDialog">确定</fj-button>
+      </div>
+
+    </fj-dialog>
   </layout-four-row>
 </template>
 <script>
   import './index.css';
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
+  import editBucket from './component/editBucket';
   import utils from '../../../common/utils';
 
-  const api = require('../../../api/storage');
   const config = require('./config');
+  const api = require('../../../api/storage');
 
   export default {
     components: {
-      'layout-four-row': fourRowLayout
+      'layout-four-row': fourRowLayout,
+      'edit-bucket': editBucket
     },
     data() {
       return {
+        deleteDialogVisible: false,
         isDisabled: true,
-        status: config.config.STATUS,
+        status: config.STATUS,
         formData: {
           keyword: '',
           status: ''
         },
-        table: {
-          currentRowInfo: {}
-        },
+        currentRow: {},
         tableData: [],
         /* bucket param */
         page: 1,
         pageSize: 20,
-        total: 0
+        total: 0,
+        editDialogVisible: false,
+        title: '',
+        type: '',
       };
     },
     created() {
@@ -116,31 +140,71 @@
           .then((res) => {
             me.tableData = res.data.docs;
             me.total = res.data.total;
+            me.isDisabled = true;
           }).catch((error) => {
             me.$message.error(error);
           });
       },
-      addBtnClick() {},
-      editBtnClick() {},
-      deleteBtnClick() {},
+      addBtnClick() {
+        this.editDialogVisible = true;
+        this.title = '添加存储区信息';
+        this.type = 'add';
+      },
+      editBtnClick() {
+        this.editDialogVisible = true;
+        this.title = '编辑存储区信息';
+        this.type = 'edit';
+      },
+      deleteBtnClick() {
+        this.deleteDialogVisible = true;
+      },
+      confirmDeleteDialog() {
+        const me = this;
+        api.deleteBucket({ _id: this.currentRow._id })
+                .then((res) => {
+          me.$message.success('删除成功');
+          me.deleteDialogVisible = false;
+          me.handleClickSearch();
+        }).catch((error) =>{
+            me.$message.error(error);
+        })
+      },
       editPathClick() {},
       editTacticsClick() {},
-      setEnableClick() {},
-      setDisableClick() {},
+      setEnableClick() {
+        this.updateStatus('0');
+      },
+      setDisableClick() {
+        this.updateStatus('1');
+      },
+      updateStatus(status) {
+        const me = this;
+        const info = status === '0' ? '启用成功' : '挂起成功';
+        api.enableBucket( {_id: this.currentRow._id, status: status })
+                .then((res) => {
+          me.$message.success(info);
+          me.handleClickSearch();
+        }).catch((error) => {
+          me.$message.error(error);
+        })
+      },
       /* table */
       handleCurrentChange(current) {
-        this.table.currentRowInfo = current;
+        this.currentRow = current;
         this.isDisabled = false;
-        this.$emit('engine-select', current); // 将选中的当前引擎信息传到父组件
       },
       formatStatus(v) {
-        return v;
+        if (v === config.STATUS.NORMAL.value) {
+          return '<span class="bucket-status-span bucket-enable">正常</span>';
+        }else{
+          return '<span class="bucket-status-span bucket-disable">挂起</span>';
+        }
       },
       formatType(v) {
-        return v;
+        return utils.getTextByValue(config, v, 'TYPE');
       },
       formatPermission(v) {
-        return v;
+        return utils.getTextByValue(config, v, 'PERMISSION');
       },
       pageChange(val) {
         this.page = val;
