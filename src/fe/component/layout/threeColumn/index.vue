@@ -13,7 +13,8 @@
   </div>
 </template>
 <script>
-  import './index.css'
+  import './index.css';
+
   export default {
     name: 'layoutThreeColumn',
     props: {

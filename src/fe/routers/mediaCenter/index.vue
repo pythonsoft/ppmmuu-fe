@@ -48,30 +48,19 @@
           <div class="media-center-result-bar">
             <span class="media-center-result-count">{{searchResult}}</span>
           </div>
+
           <div v-if="items.length === 0" class="media-center-empty-result">
             <div class="iconfont icon-media-library media-center-empty-result-bg"></div>
             <p class="media-center-empty-result-text">暂无搜索结果</p>
           </div>
-          <ul v-else class="media-center-list" :style="{ width: !listWidth ? '100%' : listWidth + 'px' }">
-            <li v-for="item in items" @click="currentItemChange(item)">
-              <div class="iconfont icon-phoenixtv media-center-list-image">
-                <img class="media-center-thumb" v-lazy="getThumb(item)" :alt="getReplaceName(item)">
-                <div class="media-center-duration">{{getDuration(item)}}</div>
-              </div>
-              <div class="media-item-name" :title="getReplaceName(item)">
-                <span :class="getMediaFormatStyle(item)">{{getMediaFormat(item)}}</span>
-                {{ getTitle(item) }}
-              </div>
-              <div class="media-item-category">
-                类别：
-                <span class="media-item-category-value" v-html="item.program_type || '无分类'"></span>
-              </div>
-              <div class="media-item-category media-item-time">
-                入库时间：
-                <span class="media-item-category-value">{{ item.last_modify | formatTime }}</span>
-              </div>
-            </li>
-          </ul>
+
+          <grid-view
+            v-else
+            :width="listWidth"
+            :items="items"
+            @currentItemChange="currentItemChange"
+          ></grid-view>
+
           <div class="media-pagination" v-if="items.length">
             <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
           </div>
@@ -80,30 +69,27 @@
     </template>
     <template slot="right">
       <media-right
-        :currentVideo="currentVideo"
+        :videoInfo="currentVideo"
       ></media-right>
     </template>
   </layout-three-column>
 </template>
 <script>
-  import Vue from 'vue';
-  import VueLazyload from 'vue-lazyload';
   import './index.css';
+
   import threeColumn from '../../component/layout/threeColumn';
+  import gridView from './grid';
   import mediaRight from './right';
   import { getTimeByStr, formatDuration } from '../../common/utils';
 
   const api = require('../../api/media');
 
-  Vue.use(VueLazyload);
-  Vue.use(VueLazyload, {
-    preLoad: 1.3,
-    error: 'dist/error.png',
-    loading: 'dist/loading.gif',
-    attempt: 1
-  });
-
   export default {
+    components: {
+      'layout-three-column': threeColumn,
+      'media-right': mediaRight,
+      'grid-view': gridView
+    },
     data() {
       return {
         defaultRoute: '/',
@@ -124,38 +110,27 @@
 
         offsetWidth: 0,
         offsetHeight: 0,
-        listWidth: '',
+        listWidth: 0,
         itemSize: { width: 266, height: 224 },
-        timeId: '',
+        timeId: ''
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.getSearchConfig();
     },
-    mounted() {
-      const me = this;
-//      this.resize();
-      window.addEventListener('resize',  me.resize);
-    },
-    destroyed() {
-      const me = this;
-      window.removeEventListener('resize', me.resize);
-    },
-    components: {
-      'layout-three-column': threeColumn,
-      'media-right': mediaRight
-    },
     methods: {
       resize() {
         clearTimeout(this.timer);
         const me = this;
-        me.timer = setTimeout(function() {
+        me.timer = setTimeout(() => {
           me.offsetWidth = me.$refs.mediaCenter.offsetWidth - 26 * 2;
           me.offsetHeight = document.body.clientHeight - 53;
           me.listWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
-          me.pageSize = (me.offsetWidth / me.itemSize.width | 0) * (me.offsetHeight / me.itemSize.height | 0);
-          me.searchClick();
+          const pageSize = (me.offsetWidth / me.itemSize.width | 0) * (me.offsetHeight / me.itemSize.height | 0);
+          me.pageSize = pageSize < 20 ? 20 : pageSize;
+
+          me.getMediaList();
         }, 400);
       },
       getActiveRoute(path, level) {
@@ -163,7 +138,7 @@
         return pathArr[level] || '';
       },
       searchClick() {
-        this.getMediaList();
+        this.resize();
       },
       getSearchConfig() {
         const me = this;
@@ -239,37 +214,8 @@
         this.getMediaList();
       },
       currentItemChange(item) {
+        console.log('click item -->', item);
         this.currentVideo = item;
-      },
-      getThumb(item) {
-        return api.getIcon(item.id);
-      },
-      getDuration(item) {
-        return formatDuration(item.duration / 25 * 1000);
-      },
-      getMediaFormatStyle(item) {
-        if (item.hd_flag === 0) {
-          return 'media-center-color-span _480P';
-        }
-        return 'media-center-color-span _1080P';
-      },
-      getMediaFormat(item) {
-        if (item.hd_flag === 0) {
-          return '480P';
-        }
-        return '1080P';
-      },
-      getReplaceName(item) {
-        let name = this.getTitle(item);
-
-        if (name) {
-          name = name.replace('<em>', '');
-          name = name.replace('</em>', '');
-        }
-        return name;
-      },
-      getTitle(item) {
-        return item.program_name_en || item.program_name_cn || item.name || '(此视频不包含标题信息)';
       }
     }
   };
