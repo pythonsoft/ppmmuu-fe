@@ -26,8 +26,5 @@ config.DELETE_DENY = {
   1: { text: '是', value: '1', key: 'YES' }
 };
 
-method.getTextByValue = function (v, st) {
-  return utils.getTextByValue(status, v, st);
-};
 
-module.exports = { config, method };
+module.exports = config;

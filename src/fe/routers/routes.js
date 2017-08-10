@@ -36,9 +36,9 @@ export default [{
         { path: 'role', component: Role, meta: { title: '角色' } },
         { path: 'permission', component: Permission, meta: { title: '权限' } },
         { path: 'engine', component: Engine, meta: { title: '引擎管理' } },
-        { path: 'bucket', component: Bucket, meta: { title: '存储区' } },
-        { path: 'storagePath', component: StoragePath, meta: { title: '路径' } },
-        { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' } },
+        { path: 'bucket', name: 'bucket', component: Bucket, meta: { title: '存储区' } },
+        { path: 'storagePath', name: 'storagePath', component: StoragePath, meta: { title: '路径' } },
+        { path: 'storageTactics', name: 'storageTactics', component: StorageTactics, meta: { title: '策略' } },
         { path: 'transcode', component: Transcode, meta: { title: '转码任务' } },
         { path: 'transfer', component: Transfer, meta: { title: '传输任务' } },
         { path: 'configuration', component: Configuration, meta: { title: '设置' } }

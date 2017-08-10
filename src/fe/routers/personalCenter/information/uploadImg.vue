@@ -3,7 +3,7 @@
     <div class="upload-img-content">
       <img :src="path" class="upload-img-content-photo">
     </div>
-    <input id="img-input" accept="image/*" class="upload-img-input" @change='chooseImg' type="file">
+    <input id="img-input" accept="image/gif,image/png,image/jpeg,image/bmp" class="upload-img-input" @change='chooseImg' type="file">
     <label for="img-input" class="upload-img-content-change">修改头像</label>
   </div>
 </template>
