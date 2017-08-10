@@ -286,7 +286,7 @@ utils.getTimeByStr = function getTimeByStr(str) {
 
 /**
  *
- * @param duration
+ * @param duration 毫秒
  * @returns {string}
  */
 utils.formatDuration = function formatDuration(duration) {
