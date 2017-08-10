@@ -24,7 +24,28 @@
           </div>
         </fj-tab-pane>
         <fj-tab-pane label="文件信息" name="tab2">
-
+          <div class="media-center-file-item" v-for="file in files">
+            <div class="item-info">
+              <div class="item-info-key">文件名:</div>
+              <div class="item-info-value">{{ file.FILENAME }}</div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="item-info">
+              <div class="item-info-key">文件大小:</div>
+              <div class="item-info-value">{{ formatSize(file.FILENAME) }}</div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="item-info">
+              <div class="item-info-key">时长:</div>
+              <div class="item-info-value">{{ file.FILENAME }}</div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="item-info">
+              <div class="item-info-key">文件名:</div>
+              <div class="item-info-value">{{ file.FILENAME }}</div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
         </fj-tab-pane>
       </fj-tabs>
     </div>
@@ -33,7 +54,7 @@
 <script>
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject } from '../../common/utils';
+  import { isEmptyObject, formatSize } from '../../common/utils';
 
   const api = require('../../api/media');
 
@@ -46,6 +67,7 @@
       return {
         title: '',
         program: {},
+        files: [],
         poster: '',
         activeTabName: 'tab1',
         item: {}
@@ -70,6 +92,7 @@
         const me = this;
         api.getObject({ params: { objectid: this.item.id } }).then((res) => {
           me.program = res.data.result.detail.program;
+          me.files = res.data.result.files;
           delete me.program.OBJECTID;
         }).catch((error) => {
           me.$message.error(error);
@@ -77,7 +100,8 @@
       },
       getThumb,
       getTitle,
-      isEmptyObject
+      isEmptyObject,
+      formatSize,
     }
   };
 </script>

@@ -331,4 +331,18 @@ utils.formatTime = function (value, formatString = 'YYYY-MM-DD HH:mm:ss') {
   return moment(value).format(formatString);
 };
 
+utils.formatSize = function formatSize(size) {
+  let str = '';
+  if (size < 1000) {
+    str = size + ' Bytes';
+  } else if (size < 1000 * 1000) {
+    str = Math.round(100 * (size / 1024)) / 100 + ' KB';
+  } else if (size < 1000 * 1000 * 1000) {
+    str = Math.round(100 * (size / (1024 * 1024))) / 100 + ' MB';
+  } else {
+    str = Math.round(100 * (size / (1024 * 1024 * 1024))) / 100 + ' GB';
+  }
+  return str;
+};
+
 module.exports = utils;

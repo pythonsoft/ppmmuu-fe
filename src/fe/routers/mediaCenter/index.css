@@ -133,11 +133,8 @@
   top: 0;
 }
 
-.media-item img[lazy=error] {
-  background-image: url('../../img/photoBreak.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 50% 50%;
+.media-center-title-selected{
+  color: #38B1EB;
 }
 
 .media-center-duration {
