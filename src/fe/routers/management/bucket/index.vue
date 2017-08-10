@@ -19,7 +19,7 @@
 
   export default {
     components: {
-      'bucket': bucket,
+      bucket: bucket,
       'storage-path': storagePath,
       'storage-tactics': storageTactics
     },
@@ -31,32 +31,29 @@
         bucket: '',
         source: '',
         backType: 'bucket',
-        sourceType: '',
-      }
+        sourceType: ''
+      };
     },
     methods: {
-      editPath(bucket) {
-        console.log("bucket click path==>", bucket);
+      editPath(row) {
         this.showBucket = false;
         this.showPath = true;
         this.showTactics = false;
-        this.bucket = bucket;
+        this.bucket = row;
       },
-      editTactics(bucket) {
-        console.log("bucket click tactics==>", bucket);
+      editTactics(row) {
         this.showBucket = false;
         this.showPath = false;
         this.showTactics = true;
-        this.source = bucket;
+        this.source = row;
         this.backType = 'bucket';
         this.sourceType = '0';
       },
-      editPathTactics(bucket) {
-        console.log("path click tactics==>", bucket);
+      editPathTactics(row) {
         this.showBucket = false;
         this.showPath = false;
         this.showTactics = true;
-        this.source = bucket;
+        this.source = row;
         this.backType = 'path';
         this.sourceType = '1';
       },
@@ -65,16 +62,16 @@
         this.showPath = false;
       },
       showTacticsBackClick() {
-        if(this.backType === 'bucket'){
+        if (this.backType === 'bucket') {
           this.showBucket = true;
           this.showPath = false;
           this.showTactics = false;
-        }else{
+        } else {
           this.showBucket = false;
           this.showPath = true;
           this.showTactics = false;
         }
       }
     }
-  }
+  };
 </script>

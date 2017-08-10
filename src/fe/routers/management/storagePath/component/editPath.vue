@@ -99,12 +99,12 @@
       }
     },
     components: {
-      'search-add-bucket': searchAddBucket,
+      'search-add-bucket': searchAddBucket
     },
     data() {
       return {
         isBtnLoading: false,
-        formData:  {
+        formData: {
           bucket: {
             _id: '',
             name: ''
@@ -112,9 +112,21 @@
           type: '',
           name: '',
           status: '0',
-          maxSize: '',
+          maxSize: ''
         },
         rules: {
+          bucket: [
+            { required: true, message: '请选择存储区' },
+            {
+              message: '请选择存储区',
+              validator: (rule, value, callback) => {
+                if (value && value._id) {
+                  return true;
+                }
+                return false;
+              }
+            }
+          ],
           name: [
             { required: true, message: '请输入名称' }
           ]
@@ -131,17 +143,17 @@
       type(val) {
         if (this.type === 'edit' && this.dialogVisible === true) {
           this.initEditUser();
-        }else{
+        } else {
           this.resetFormData();
         }
       },
       visible(val) {
-        if(val){
+        if (val) {
           this.dialogVisible = true;
-          if(this.type === 'edit'){
+          if (this.type === 'edit') {
             this.initEditUser();
           }
-        }else{
+        } else {
           this.dialogVisible = false;
         }
       }
@@ -169,7 +181,7 @@
           type: '',
           name: '',
           status: '0',
-          maxSize: '',
+          maxSize: ''
         };
       },
       submitForm() {
@@ -187,12 +199,12 @@
         this.isBtnLoading = true;
         const me = this;
         this.formData.status = '0';
-        this.formData.maxSize = parseInt(this.formData.maxSize);
-        if(this.bucket && this.bucket._id){
+        this.formData.maxSize = parseInt(this.formData.maxSize, 10);
+        if (this.bucket && this.bucket._id) {
           this.formData.bucket = {
             _id: this.bucket._id,
             name: this.bucket.name
-          }
+          };
         }
         api.addPath(this.formData)
           .then((response) => {
@@ -210,7 +222,7 @@
       editUser() {
         this.isBtnLoading = true;
         const me = this;
-        this.formData.maxSize = parseInt(this.formData.maxSize);
+        this.formData.maxSize = parseInt(this.formData.maxSize, 10);
         api.updatePath(this.formData)
           .then((response) => {
             this.$message.success('保存成功');
@@ -233,9 +245,9 @@
         this.formData.bucket = {
           _id: row._id,
           name: row.name
-        }
+        };
       },
-      handleTabClick(){
+      handleTabClick() {
 
       }
     }

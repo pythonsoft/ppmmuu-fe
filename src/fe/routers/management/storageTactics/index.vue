@@ -8,14 +8,15 @@
 
 <script>
   import storageTactics from './component/storageTactics';
+
   export default {
     components: {
       'storage-tactics': storageTactics
     },
-    methods:{
-      showBackClick(){
+    methods: {
+      showBackClick() {
 
-      },
+      }
     }
-  }
+  };
 </script>

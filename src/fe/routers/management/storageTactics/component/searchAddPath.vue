@@ -71,12 +71,12 @@
           pageSize: 6
         };
 
-        api.listPath({ params: query})
-                .then((res) => {
-          me.tableData = res.data.docs;
-        }).catch((error) => {
-          me.showErrorInfo(error);
-        })
+        api.listPath({ params: query })
+          .then((res) => {
+            me.tableData = res.data.docs;
+          }).catch((error) => {
+            me.showErrorInfo(error);
+          });
       },
       searchOwnerHandleCurrentChange(row) {
         this.searchOwnerCurrentRow = row;
@@ -91,9 +91,8 @@
       formatStatus(v) {
         if (v === config.STATUS.NORMAL.value) {
           return '<span class="bucket-status-span bucket-enable">正常</span>';
-        }else{
-          return '<span class="bucket-status-span bucket-disable">挂起</span>';
         }
+        return '<span class="bucket-status-span bucket-disable">挂起</span>';
       }
     }
   };

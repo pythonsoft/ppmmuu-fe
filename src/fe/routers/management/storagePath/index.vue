@@ -24,21 +24,21 @@
         showTactics: false,
         source: null,
         sourceType: '1'
-      }
+      };
     },
-    methods:{
-      showPathBackClick(){
+    methods: {
+      showPathBackClick() {
       },
-      editPathTactics(row){
-        console.log("hello");
+      editPathTactics(row) {
+        console.log('hello');
         this.showPath = false;
         this.showTactics = true;
         this.source = row;
       },
-      showTacticsBackClick(){
+      showTacticsBackClick() {
         this.showPath = true;
         this.showTactics = false;
       }
     }
-  }
+  };
 </script>

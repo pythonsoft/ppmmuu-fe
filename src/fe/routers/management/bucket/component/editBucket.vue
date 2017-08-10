@@ -85,17 +85,17 @@
       type(val) {
         if (this.type === 'edit' && this.dialogVisible === true) {
           this.initEditUser();
-        }else{
+        } else {
           this.resetFormData();
         }
       },
       visible(val) {
-        if(val){
+        if (val) {
           this.dialogVisible = true;
-          if(this.type === 'edit'){
+          if (this.type === 'edit') {
             this.initEditUser();
           }
-        }else{
+        } else {
           this.dialogVisible = false;
         }
       }

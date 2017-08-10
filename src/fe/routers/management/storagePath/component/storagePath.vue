@@ -140,7 +140,7 @@
         total: 0,
         editDialogVisible: false,
         title: '',
-        type: '',
+        type: ''
       };
     },
     created() {
@@ -156,17 +156,17 @@
       },
       handleClickSearch() {
         const me = this;
-        if(this.bucket && this.bucket._id){
+        if (this.bucket && this.bucket._id) {
           me.formData.bucketId = this.bucket._id;
         }
         api.listPath({ params: me.formData })
-                .then((res) => {
-          me.tableData = res.data.docs;
-        me.total = res.data.total;
-        me.isDisabled = true;
-      }).catch((error) => {
-          me.$message.error(error);
-      });
+          .then((res) => {
+            me.tableData = res.data.docs;
+            me.total = res.data.total;
+            me.isDisabled = true;
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       addBtnClick() {
         this.resetEditDialog();
@@ -191,13 +191,13 @@
       confirmDeleteDialog() {
         const me = this;
         api.deletePath({ _id: this.currentRow._id })
-                .then((res) => {
-          me.$message.success('删除成功');
-        me.deleteDialogVisible = false;
-        me.handleClickSearch();
-      }).catch((error) =>{
-          me.$message.error(error);
-      })
+          .then((res) => {
+            me.$message.success('删除成功');
+            me.deleteDialogVisible = false;
+            me.handleClickSearch();
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       editTacticsClick() {
         this.$emit('edit-tactics', this.currentRow);
@@ -211,13 +211,13 @@
       updateStatus(status) {
         const me = this;
         const info = status === '0' ? '启用成功' : '挂起成功';
-        api.enablePath( {_id: this.currentRow._id, status: status })
-                .then((res) => {
-          me.$message.success(info);
-          me.handleClickSearch();
-      }).catch((error) => {
-          me.$message.error(error);
-      })
+        api.enablePath({ _id: this.currentRow._id, status: status })
+          .then((res) => {
+            me.$message.success(info);
+            me.handleClickSearch();
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       /* table */
       handleCurrentChange(current) {
@@ -228,12 +228,11 @@
       formatStatus(v) {
         if (v === config.STATUS.NORMAL.value) {
           return '<span class="bucket-status-span bucket-enable">正常</span>';
-        }else{
-          return '<span class="bucket-status-span bucket-disable">挂起</span>';
         }
+        return '<span class="bucket-status-span bucket-disable">挂起</span>';
       },
       formatSize(row) {
-        return row.maxSize + ' | ' + row.usage;
+        return `${row.maxSize} | ${row.usage}`;
       },
       pageChange(val) {
         this.page = val;

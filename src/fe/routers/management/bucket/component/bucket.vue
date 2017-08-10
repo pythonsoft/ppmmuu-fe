@@ -134,7 +134,7 @@
         total: 0,
         editDialogVisible: false,
         title: '',
-        type: '',
+        type: ''
       };
     },
     created() {
@@ -180,13 +180,13 @@
       confirmDeleteDialog() {
         const me = this;
         api.deleteBucket({ _id: this.currentRow._id })
-                .then((res) => {
-          me.$message.success('删除成功');
-          me.deleteDialogVisible = false;
-          me.handleClickSearch();
-        }).catch((error) =>{
+          .then((res) => {
+            me.$message.success('删除成功');
+            me.deleteDialogVisible = false;
+            me.handleClickSearch();
+          }).catch((error) => {
             me.$message.error(error);
-        })
+          });
       },
       editPathClick() {
         this.$emit('edit-path', this.currentRow);
@@ -203,13 +203,13 @@
       updateStatus(status) {
         const me = this;
         const info = status === '0' ? '启用成功' : '挂起成功';
-        api.enableBucket( {_id: this.currentRow._id, status: status })
-                .then((res) => {
-          me.$message.success(info);
-          me.handleClickSearch();
-        }).catch((error) => {
-          me.$message.error(error);
-        })
+        api.enableBucket({ _id: this.currentRow._id, status: status })
+          .then((res) => {
+            me.$message.success(info);
+            me.handleClickSearch();
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       /* table */
       handleCurrentChange(current) {
@@ -220,9 +220,8 @@
       formatStatus(v) {
         if (v === config.STATUS.NORMAL.value) {
           return '<span class="bucket-status-span bucket-enable">正常</span>';
-        }else{
-          return '<span class="bucket-status-span bucket-disable">挂起</span>';
         }
+        return '<span class="bucket-status-span bucket-disable">挂起</span>';
       },
       formatType(v) {
         return utils.getTextByValue(config, v, 'TYPE');

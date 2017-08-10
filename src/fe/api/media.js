@@ -46,7 +46,7 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
 };
 
 api.getIcon = function getIcon(id) {
-  return `/media/getIcon?objectid=${id}`;
+  return axios.defaults.baseURL + '/media/getIcon?t=' + new Date().getTime() + '&objectid=' + id;
 };
 
 api.getObject = function getObject(data, scope) {

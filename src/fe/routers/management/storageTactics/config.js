@@ -45,7 +45,7 @@ config.SCHEDULE_TYPE = {
 config.ORDER_BY = {
   0: { text: '创建时间', value: '0', key: 'CREATE_TIME' },
   1: { text: '最后访问时间', value: '1', key: 'LAST_VISIT_TIME' },
-  2: { text: '访问次数', value: '2', key: 'VISIT_COUNT' },
+  2: { text: '访问次数', value: '2', key: 'VISIT_COUNT' }
 };
 
 module.exports = config;

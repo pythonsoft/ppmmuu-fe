@@ -129,7 +129,7 @@
     data() {
       return {
         isBtnLoading: false,
-        formData:  {
+        formData: {
           source: {
             _id: '',
             name: '',
@@ -147,7 +147,15 @@
           ],
           source: [
             { required: true, message: '请选择目标' },
-
+            {
+              message: '请选择目标',
+              validator: (rule, value, callback) => {
+                if (value && value._id) {
+                  return true;
+                }
+                return false;
+              }
+            }
           ]
         },
         dialogVisible: false,
@@ -165,28 +173,28 @@
       type(val) {
         if (this.type === 'edit' && this.dialogVisible === true) {
           this.initEditUser();
-        }else{
+        } else {
           this.resetFormData();
         }
       },
       visible(val) {
-        if(val){
+        if (val) {
           this.dialogVisible = true;
-          if(this.type === 'edit'){
+          if (this.type === 'edit') {
             this.initEditUser();
           }
-        }else{
+        } else {
           this.dialogVisible = false;
         }
       }
     },
     created() {
-      if(this.source && this.source._id){
+      if (this.source && this.source._id) {
         this.formData.source = {
           _id: this.source._id,
           name: this.source.name,
           type: this.sourceType
-        }
+        };
       }
     },
     methods: {
@@ -214,23 +222,22 @@
           scheduleType: '3',
           orderBy: '0'
         };
-        if(this.source && this.source._id){
+        if (this.source && this.source._id) {
           this.formData.source = {
             _id: this.source._id,
             name: this.source.name,
             type: this.sourceType
-          }
+          };
         }
       },
-      formatSourceName(){
+      formatSourceName() {
         const source = this.formData.source;
-        if(source && source.type === '0'){
-          return '存储区-' + source.name;
-        }else if(source && source.type === '1'){
-          return '路径-' + source.name;
-        }else{
-          return '';
+        if (source && source.type === '0') {
+          return `存储区-${source.name}`;
+        } else if (source && source.type === '1') {
+          return `路径-${source.name}`;
         }
+        return '';
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
@@ -247,11 +254,11 @@
         this.isBtnLoading = true;
         const me = this;
         this.formData.status = '0';
-        if(this.formData.itemCount) {
-          this.formData.itemCount = parseInt(this.formData.itemCount);
+        if (this.formData.itemCount) {
+          this.formData.itemCount = parseInt(this.formData.itemCount, 10);
         }
-        if(this.formData.frequency) {
-          this.formData.frequency = parseInt(this.formData.frequency);
+        if (this.formData.frequency) {
+          this.formData.frequency = parseInt(this.formData.frequency, 10);
         }
         api.addTactics(this.formData)
           .then((response) => {
@@ -269,8 +276,8 @@
       edit() {
         this.isBtnLoading = true;
         const me = this;
-        this.formData.itemCount = parseInt(this.formData.itemCount);
-        this.formData.frequency = parseInt(this.formData.frequency);
+        this.formData.itemCount = parseInt(this.formData.itemCount, 10);
+        this.formData.frequency = parseInt(this.formData.frequency, 10);
         api.updateTactics(this.formData)
           .then((response) => {
             this.$message.success('保存成功');
@@ -296,18 +303,15 @@
         this.formData.source = {
           _id: row._id,
           name: row.name,
-          type: '0',
-        }
+          type: '0'
+        };
       },
       addPath(row) {
         this.formData.source = {
           _id: row._id,
           name: row.name,
-          type: '1',
-        }
-      },
-      handleTabClick() {
-
+          type: '1'
+        };
       }
     }
   };

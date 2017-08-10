@@ -142,7 +142,7 @@
         total: 0,
         editDialogVisible: false,
         title: '',
-        type: '',
+        type: ''
       };
     },
     created() {
@@ -158,17 +158,17 @@
       },
       handleClickSearch() {
         const me = this;
-        if(this.source) {
+        if (this.source) {
           me.formData.sourceId = this.source._id;
         }
         api.listTactics({ params: me.formData })
-                .then((res) => {
-          me.tableData = res.data.docs;
-        me.total = res.data.total;
-        me.isDisabled = true;
-      }).catch((error) => {
-          me.$message.error(error);
-      });
+          .then((res) => {
+            me.tableData = res.data.docs;
+            me.total = res.data.total;
+            me.isDisabled = true;
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       addBtnClick() {
         this.resetEditDialog();
@@ -193,13 +193,13 @@
       confirmDeleteDialog() {
         const me = this;
         api.deleteTactics({ _id: this.currentRow._id })
-                .then((res) => {
-          me.$message.success('删除成功');
-        me.deleteDialogVisible = false;
-        me.handleClickSearch();
-      }).catch((error) =>{
-          me.$message.error(error);
-      })
+          .then((res) => {
+            me.$message.success('删除成功');
+            me.deleteDialogVisible = false;
+            me.handleClickSearch();
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       setEnableClick() {
         this.updateStatus('0');
@@ -210,13 +210,13 @@
       updateStatus(status) {
         const me = this;
         const info = status === '0' ? '启用成功' : '挂起成功';
-        api.enableTactics( {_id: this.currentRow._id, status: status })
-                .then((res) => {
-          me.$message.success(info);
-          me.handleClickSearch();
-      }).catch((error) => {
-          me.$message.error(error);
-      })
+        api.enableTactics({ _id: this.currentRow._id, status: status })
+          .then((res) => {
+            me.$message.success(info);
+            me.handleClickSearch();
+          }).catch((error) => {
+            me.$message.error(error);
+          });
       },
       /* table */
       handleCurrentChange(current) {
@@ -227,18 +227,16 @@
       formatStatus(v) {
         if (v === config.STATUS.NORMAL.value) {
           return '<span class="bucket-status-span bucket-enable">正常</span>';
-        }else{
-          return '<span class="bucket-status-span bucket-disable">挂起</span>';
         }
+        return '<span class="bucket-status-span bucket-disable">挂起</span>';
       },
-      formatSourceName(source){
-        if(source && source.type === '0'){
-          return '存储区-' + source.name;
-        }else if(source && source.type === '1'){
-          return '路径-' + source.name;
-        }else{
-          return '';
+      formatSourceName(source) {
+        if (source && source.type === '0') {
+          return `存储区-${source.name}`;
+        } else if (source && source.type === '1') {
+          return `路径-${source.name}`;
         }
+        return '';
       },
       formatType(v) {
         return utils.getTextByValue(config, v, 'TYPE');
