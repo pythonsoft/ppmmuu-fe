@@ -1,10 +1,11 @@
 <template>
   <fj-slide-dialog
           :title="title"
-          :visible.sync="dialogVisible">
+          :visible.sync="dialogVisible"
+          @close="close">
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
-      <fj-form-item label="标志" v-if="type === 'edit'">
-        <fj-input v-model="id" :disabled="true"></fj-input>
+      <fj-form-item label="标志">
+        <fj-input v-model="formData._id" :disabled="type==='edit'? true: false"></fj-input>
       </fj-form-item>
       <fj-form-item label="名称" prop="name">
         <fj-input v-model="formData.name"></fj-input>
@@ -12,23 +13,23 @@
       <fj-form-item label="存储类型" prop="type">
         <fj-select v-model="formData.type">
           <fj-option
-            v-for="(value, key) in TYPE"
-            :key="key"
-            :value="value"
-            :label="key"></fj-option>
+            v-for="item in TYPE"
+            :key="item.key"
+            :value="item.value"
+            :label="item.text"></fj-option>
         </fj-select>
       </fj-form-item>
       <fj-form-item label="读写权限" prop="permission">
         <fj-select v-model="formData.permission">
           <fj-option
-                  v-for="(value, key) in PERMISSION"
-                  :key="key"
-                  :value="value"
-                  :label="key"></fj-option>
+                  v-for="item in PERMISSION"
+                  :key="item.key"
+                  :value="item.value"
+                  :label="item.text"></fj-option>
         </fj-select>
       </fj-form-item>
       <fj-form-item label="删除保护">
-        <fj-radio-group v-model="formData.deleteDeny" custom-class="radio-group">
+        <fj-radio-group v-model="formData.deleteDeny" custom-class="edit-bucket-radio-group">
           <fj-radio label="1">开启</fj-radio>
           <fj-radio label="0">关闭</fj-radio>
         </fj-radio-group>
@@ -38,47 +39,64 @@
       </fj-form-item>
     </fj-form>
     <div slot="footer">
-      <fj-button @click="dialogVisible=false">取消</fj-button>
+      <fj-button @click="close">取消</fj-button>
       <fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
     </div>
-
   </fj-slide-dialog>
 </template>
 <script>
-  import { TYPE, PERMISSION } from '../config';
-
+  const config = require('../config');
   const api = require('../../../../api/storage');
 
   export default {
     props: {
       type: String,
       title: String,
-      id: String
+      id: String,
+      visible: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {
         isBtnLoading: false,
         formData: {
+          deleteDeny: '1',
+          type: '',
+          permission: '',
+          name: '',
+          status: '0'
         },
         rules: {
+          _id: [
+            { required: true, message: '请输入标识' }
+          ],
           name: [
             { required: true, message: '请输入名称' }
           ]
         },
+        TYPE: config.TYPE,
+        PERMISSION: config.PERMISSION,
         dialogVisible: false
       };
     },
     watch: {
-      id(val) {
-        if (this.type === 'edit') {
+      type(val) {
+        if (this.type === 'edit' && this.dialogVisible === true) {
           this.initEditUser();
+        } else {
+          this.resetFormData();
         }
       },
-      type(val) {
-        if (this.type === 'add') {
-
+      visible(val) {
+        if (val) {
+          this.dialogVisible = true;
+          if (this.type === 'edit') {
+            this.initEditUser();
+          }
         } else {
-          this.initEditUser();
+          this.dialogVisible = false;
         }
       }
     },
@@ -86,7 +104,6 @@
     },
     methods: {
       initEditUser() {
-        this.dialogVisible = true;
         const me = this;
         api.getBucketDetail({ params: { _id: this.id } })
           .then((res) => {
@@ -97,11 +114,13 @@
           });
       },
       resetFormData() {
-        const keys = Object.keys(this.formData);
-        for (let i = 0; i < keys.length; i++) {
-          const key = keys[i];
-          this.formData[key] = '';
-        }
+        this.formData = {
+          deleteDeny: '1',
+          type: '',
+          permission: '',
+          name: '',
+          status: '0'
+        };
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
@@ -117,13 +136,14 @@
       addUser() {
         this.isBtnLoading = true;
         const me = this;
+        this.formData.status = '0';
         api.addBucket(this.formData)
           .then((response) => {
             me.$message.success('保存成功');
             me.$emit('updateList');
+            me.close();
             me.isBtnLoading = false;
             me.resetFormData();
-            me.dialogVisible = false;
           })
           .catch((error) => {
             me.isBtnLoading = false;
@@ -131,54 +151,35 @@
           });
       },
       editUser() {
-        const data = Object.assign(
-          {},
-          this.formData,
-          { companyId: this.companyId },
-          { _id: this.id }
-        );
         this.isBtnLoading = true;
-        groupAPI.postGroupUpdateUser(data)
+        const me = this;
+        api.updateBucket(this.formData)
           .then((response) => {
             this.$message.success('保存成功');
-            this.$emit('updateList');
-            this.isBtnLoading = false;
-            this.resetFormData();
-            this.handleClose();
+            me.$emit('updateList');
+            me.close();
+            me.isBtnLoading = false;
+            me.resetFormData();
           })
           .catch((error) => {
             this.isBtnLoading = false;
             this.$message.error(error);
           });
       },
-      addOwner(row, parentNode) {
-        if (parentNode) {
-          this.groupName = `${parentNode.name} / ${row.name}`;
-          this.formData.teamId = row.info._id;
-          this.formData.departmentId = parentNode.info._id;
-        } else {
-          this.groupName = row.name;
-          this.formData.teamId = row.info._id;
-          this.formData.departmentId = '';
-        }
-        this.addGroupDialogVisible = false;
+      close() {
+        this.dialogVisible = false;
+        this.resetFormData();
+        this.$emit('update:visible', false);
       }
-    },
-    components: {
-      AddGroup
     }
   };
 </script>
 <style>
-  .edit-user-dialog-footer {
-    text-align: right;
+  .edit-bucket-radio-group {
+    line-height: 36px;
   }
-  .edit-user-dialog-footer button {
-    margin-left: 10px;
-  }
-  .group-input {
-    float: left;
-    width: 215px;
-    margin-right: 10px;
+  .edit-bucket-radio-group label {
+    margin-right: 34px;
   }
 </style>
+

@@ -5,7 +5,7 @@
           @close="close">
 
     <div class="manage-search">
-      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword" icon="搜索" @on-icon-click="searchOwnerClick" @keydown.native.enter.prevent="searchOwnerClick"></fj-input>
+      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword" icon="icon-search input-search-icon" @on-icon-click="searchOwnerClick" @keydown.native.enter.prevent="searchOwnerClick"></fj-input>
     </div>
     <div v-if="searchOwner.length" class="manage-search-content">
       <fj-table :data="searchOwner" name="table" ref="table" @current-change="searchOwnerHandleCurrentChange" :showThead=false highlight-current-row>

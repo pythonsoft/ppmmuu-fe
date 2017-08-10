@@ -10,7 +10,7 @@
           </fj-form-item>
         </fj-form>
         <div class="login-form-button">
-          <fj-button type="primary" @click="login">登录</fj-button>
+          <fj-button type="primary" :loading="isBtnLoading" @click="login">登录</fj-button>
         </div>
     </div>
     <router-view></router-view>
@@ -26,6 +26,7 @@
     data() {
       return {
         defaultRoute: '/',
+        isBtnLoading: false,
         rules: {
           username: [
             { required: true, message: '请输入用户名' }
@@ -50,6 +51,7 @@
       },
       login() {
         const me = this;
+        me.isBtnLoading = true;
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
