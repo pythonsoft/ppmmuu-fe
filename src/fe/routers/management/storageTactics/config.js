@@ -38,8 +38,8 @@ config.SCHEDULE_TYPE = {
   0: { text: '现在', value: '0', key: 'NOW' },
   1: { text: '每天', value: '1', key: 'EVERY_DAY' },
   2: { text: '每周', value: '2', key: 'EVERY_WEEK' },
-  3: { text: '每月', value: '2', key: 'EVERY_MONTH' },
-  4: { text: '每年', value: '2', key: 'EVERY_YEAR' }
+  3: { text: '每月', value: '3', key: 'EVERY_MONTH' },
+  4: { text: '每年', value: '4', key: 'EVERY_YEAR' }
 };
 
 config.ORDER_BY = {

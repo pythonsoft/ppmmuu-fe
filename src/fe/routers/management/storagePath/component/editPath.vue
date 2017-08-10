@@ -89,6 +89,10 @@
       type: String,
       title: String,
       id: String,
+      bucket: {
+        type: String,
+        default: null
+      },
       visible: {
         type: Boolean,
         default: false
@@ -184,6 +188,12 @@
         const me = this;
         this.formData.status = '0';
         this.formData.maxSize = parseInt(this.formData.maxSize);
+        if(this.bucket && this.bucket._id){
+          this.formData.bucket = {
+            _id: this.bucket._id,
+            name: this.bucket.name
+          }
+        }
         api.addPath(this.formData)
           .then((response) => {
             me.$message.success('保存成功');
@@ -224,11 +234,14 @@
           _id: row._id,
           name: row.name
         }
+      },
+      handleTabClick(){
+
       }
     }
   };
 </script>
-<style>
+<style scope>
   .group-input {
     float: left;
     width: 215px;

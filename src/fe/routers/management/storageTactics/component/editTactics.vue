@@ -3,7 +3,7 @@
           :title="title"
           :visible.sync="dialogVisible"
           @close="close">
-    <fj-tabs v-model="activeTabName">
+    <fj-tabs v-model="activeTabName" @tab-click="handleTabClick">
       <fj-tab-pane label="基本信息" name="tab1" @tab-click="handleTabClick">
         <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
           <fj-form-item label="标志" v-if="type === 'edit'">
@@ -23,7 +23,7 @@
           </fj-form-item>
           <fj-form-item label="目标" prop="source.name">
             <div class="group-input">
-              <fj-input v-model="formData.source.name" :readonly="true"></fj-input>
+              <fj-input :readonly="true" :value="formatSourceName()"></fj-input>
             </div>
             <fj-button type="primary" @click.stop.prevent="bucketDialogVisible=true">存储区</fj-button>
             <fj-button type="primary" @click.stop.prevent="pathDialogVisible=true">路径</fj-button>
@@ -94,10 +94,15 @@
             @add-bucket="addBucket"
             :visible.sync="bucketDialogVisible">
     </search-add-bucket>
+    <search-add-path
+            @add-path="addPath"
+            :visible.sync="pathDialogVisible">
+    </search-add-path>
   </fj-slide-dialog>
 </template>
 <script>
   import searchAddBucket from './searchAddBucket';
+  import searchAddPath from './searchAddPath';
 
   const config = require('../config');
   const api = require('../../../../api/storage');
@@ -107,6 +112,11 @@
       type: String,
       title: String,
       id: String,
+      source: {
+        type: Object,
+        default: null
+      },
+      sourceType: String,
       visible: {
         type: Boolean,
         default: false
@@ -114,6 +124,7 @@
     },
     components: {
       'search-add-bucket': searchAddBucket,
+      'search-add-path': searchAddPath
     },
     data() {
       return {
@@ -124,11 +135,11 @@
             name: '',
             type: ''
           },
-          type: '',
-          priority: '',
-          triggerType: '',
-          scheduleType: '',
-          orderBy: ''
+          type: '0',
+          priority: '1',
+          triggerType: '0',
+          scheduleType: '3',
+          orderBy: '0'
         },
         rules: {
           name: [
@@ -143,11 +154,11 @@
         bucketDialogVisible: false,
         pathDialogVisible: false,
         activeTabName: 'tab1',
-              TYPE: config.TYPE,
+        TYPE: config.TYPE,
         PRIORITY: config.PRIORITY,
-              TRIGGER_TYPE: config.TRIGGER_TYPE,
-              SCHEDULE_TYPE: config.SCHEDULE_TYPE,
-              ORDER_BY: config.ORDER_BY
+        TRIGGER_TYPE: config.TRIGGER_TYPE,
+        SCHEDULE_TYPE: config.SCHEDULE_TYPE,
+        ORDER_BY: config.ORDER_BY
       };
     },
     watch: {
@@ -170,6 +181,13 @@
       }
     },
     created() {
+      if(this.source && this.source._id){
+        this.formData.source = {
+          _id: this.source._id,
+          name: this.source.name,
+          type: this.sourceType
+        }
+      }
     },
     methods: {
       initEditUser() {
@@ -190,12 +208,29 @@
             name: '',
             type: ''
           },
-          type: '',
-          priority: '',
-          triggerType: '',
-          scheduleType: '',
-          orderBy: ''
+          type: '0',
+          priority: '1',
+          triggerType: '0',
+          scheduleType: '3',
+          orderBy: '0'
         };
+        if(this.source && this.source._id){
+          this.formData.source = {
+            _id: this.source._id,
+            name: this.source.name,
+            type: this.sourceType
+          }
+        }
+      },
+      formatSourceName(){
+        const source = this.formData.source;
+        if(source && source.type === '0'){
+          return '存储区-' + source.name;
+        }else if(source && source.type === '1'){
+          return '路径-' + source.name;
+        }else{
+          return '';
+        }
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
@@ -209,7 +244,6 @@
         });
       },
       add() {
-        console.log(this.formData);
         this.isBtnLoading = true;
         const me = this;
         this.formData.status = '0';
@@ -266,12 +300,14 @@
         }
       },
       addPath(row) {
-        console.log(row);
         this.formData.source = {
           _id: row._id,
           name: row.name,
           type: '1',
         }
+      },
+      handleTabClick() {
+
       }
     }
   };
