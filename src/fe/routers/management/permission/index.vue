@@ -106,7 +106,7 @@
           keyword: me.name,
           status: me.status
         };
-        api.getPermissionList(formatQuery(searchObj, true))
+        api.getPermissionList(formatQuery(searchObj, true), me)
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];

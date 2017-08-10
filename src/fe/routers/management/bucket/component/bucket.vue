@@ -148,7 +148,7 @@
       },
       handleClickSearch() {
         const me = this;
-        api.listBucket({ params: me.formData })
+        api.listBucket({ params: me.formData }, me)
           .then((res) => {
             me.tableData = res.data.docs;
             me.total = res.data.total;
