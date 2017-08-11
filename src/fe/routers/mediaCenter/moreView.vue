@@ -23,7 +23,7 @@
   export default {
     name: 'mediaCenterMore',
     props: {
-      info: { type: Object, default: {} },
+      info: { type: Object, default: {} }
     },
     data() {
       return {
@@ -33,15 +33,14 @@
     },
     methods: {
       moreClick() {
-        if(this.visible === 'none') {
+        if (this.visible === 'none') {
           this.visible = 'block';
           this.arrowClass = 'media-center-arrow-down';
-        }else {
+        } else {
           this.visible = 'none';
           this.arrowClass = 'media-center-arrow-right';
         }
-
-      },
+      }
     }
-  }
+  };
 </script>

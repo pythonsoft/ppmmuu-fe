@@ -67,16 +67,12 @@
   import { getTitle, getThumb } from './common';
   import { isEmptyObject, formatSize, formatDuration, formatContent } from '../../common/utils';
   import moreView from './moreView';
-  import MoreView from "./moreView.vue";
-  import FjButton from "../../component/fjUI/packages/button/src/button.vue";
 
   const api = require('../../api/media');
 
   export default {
     name: 'right',
     components: {
-      FjButton,
-      MoreView,
       'more-view': moreView
     },
     props: {
@@ -123,11 +119,11 @@
       formatSize,
       formatContent,
       formatDuration(input, output) {
-        return formatDuration((output-input)/25 *1000);
+        return formatDuration((output - input) / 25 * 1000);
       },
       downloadClick() {
 
-      },
+      }
     }
   };
 </script>

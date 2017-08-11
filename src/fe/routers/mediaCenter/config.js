@@ -46,7 +46,7 @@ config.FIELD_NAME = {
   STREAMTYPE: { cn: '' },
   TAPECODE: { cn: '' },
   UNCPATH: { cn: '' },
-  VIDEOSTANDARD: { cn: '' },
+  VIDEOSTANDARD: { cn: '' }
 };
 
 method.getTextByValue = function (v, st) {

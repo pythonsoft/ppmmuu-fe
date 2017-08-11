@@ -29,7 +29,7 @@
   Vue.use(VueLazyload, {
     preLoad: 1.3,
     error: '../../img/photoBreak.png',
-    attempt: 1,
+    attempt: 1
   });
 
   export default {
@@ -51,7 +51,7 @@
       setThumbClass(id) {
         let className = '';
 
-        if(this.selectInfoId && this.selectInfoId === id) {
+        if (this.selectInfoId && this.selectInfoId === id) {
           className = 'media-center-title-selected';
         }
 
@@ -63,7 +63,7 @@
       getMediaFormatStyle,
       getReplaceName,
       getTitle,
-      deepClone,
+      deepClone
     }
   };
 </script>
