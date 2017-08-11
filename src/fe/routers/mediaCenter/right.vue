@@ -15,35 +15,46 @@
     <div class="media-video-panel">
       <fj-tabs v-if="!isEmptyObject(item)" v-model="activeTabName" @tab-click="handleTabClick" class="media-video-panel-wrap">
         <fj-tab-pane label="条目信息" name="tab1">
-          <div class="item-infos">
-            <div class="item-info" v-for="info in program" v-if="info.value">
-              <div class="item-info-key">{{ info.cn + ': ' || '空KEY:' }}</div>
-              <div class="item-info-value">{{ info.value }}</div>
-              <div class="clearfix"></div>
-            </div>
+          <div class="media-center-file-item">
+            <table class="media-center-table">
+              <tr v-for="info in program" v-if="info.value" >
+                <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
+                <td class="item-info-value" v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></td>
+                <td class="item-info-value" v-else >
+                  {{ info.value }}
+                </td>
+              </tr>
+            </table>
           </div>
         </fj-tab-pane>
         <fj-tab-pane label="文件信息" name="tab2">
-          <div class="media-center-file-item" v-for="file in files">
-            <div class="item-info">
-              <div class="item-info-key">文件名:</div>
-              <div class="item-info-value">{{ file.FILENAME }}</div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="item-info">
-              <div class="item-info-key">文件大小:</div>
-              <div class="item-info-value">{{ formatSize(file.FILENAME) }}</div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="item-info">
-              <div class="item-info-key">时长:</div>
-              <div class="item-info-value">{{ file.FILENAME }}</div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="item-info">
-              <div class="item-info-key">文件名:</div>
-              <div class="item-info-value">{{ file.FILENAME }}</div>
-              <div class="clearfix"></div>
+          <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in files">
+            <table class="media-center-table">
+              <tr>
+                <td class="item-info-key" width="80">文件名: </td>
+                <td class="item-info-value">
+                  <div class="media-center-file-name">
+                    {{ file.FILENAME }}
+                    <span class="media-center-file-type">
+                      {{ file.SANAME }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="item-info-key" width="80">文件大小: </td>
+                <td class="item-info-value">{{ formatSize(file.FILESIZE) }}</td>
+              </tr>
+              <tr>
+                <td class="item-info-key" width="80">时长: </td>
+                <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
+              </tr>
+            </table>
+            <more-view
+              :info=file
+            ></more-view>
+            <div class="media-center-operation-bar">
+              <fj-button type="info" size="mini" @click="downloadClick">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>
@@ -54,12 +65,20 @@
 <script>
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject, formatSize } from '../../common/utils';
+  import { isEmptyObject, formatSize, formatDuration, formatContent } from '../../common/utils';
+  import moreView from './moreView';
+  import MoreView from "./moreView.vue";
+  import FjButton from "../../component/fjUI/packages/button/src/button.vue";
 
   const api = require('../../api/media');
 
   export default {
     name: 'right',
+    components: {
+      FjButton,
+      MoreView,
+      'more-view': moreView
+    },
     props: {
       videoInfo: { type: Object, default: {} }
     },
@@ -102,6 +121,13 @@
       getTitle,
       isEmptyObject,
       formatSize,
+      formatContent,
+      formatDuration(input, output) {
+        return formatDuration((output-input)/25 *1000);
+      },
+      downloadClick() {
+
+      },
     }
   };
 </script>

@@ -345,4 +345,12 @@ utils.formatSize = function formatSize(size) {
   return str;
 };
 
+utils.formatContent = function formatContent(content) {
+  if (!content) { return ''; }
+  content = content.replace(/</gm, '&lt;');
+  content = content.replace(/>/gm, '&gt;');
+  content = content.replace(/\n/gm, '<br/>');
+  return content;
+};
+
 module.exports = utils;
