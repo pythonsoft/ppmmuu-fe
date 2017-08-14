@@ -17,3 +17,6 @@
 @import "./packages/tree/src/tree.css";
 @import "./packages/slideDialog/src/slideDialog.css";
 @import "./packages/dropdown/src/dropdown.css";
+@import "./packages/datePicker/src/datePicker.css";
+
+.clearfix:before, .clearfix:after{ overflow: hidden; visibility: hidden; content: " "; display: table; clear: both; }

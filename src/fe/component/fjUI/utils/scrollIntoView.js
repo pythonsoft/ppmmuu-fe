@@ -1,4 +1,4 @@
-export default function (container, selected) {
+export const scrollIntoViewBottom = function (container, selected) {
   if (!selected) {
     container.scrollTop = 0;
     return;
@@ -14,4 +14,13 @@ export default function (container, selected) {
   if (selectedTop + selectedHeight > containerScrollTop + containerHeight) {
     container.scrollTop = (selectedTop + selectedHeight) - containerHeight;
   }
-}
+};
+export const scrollIntoViewTop = function (container, selected) {
+  if (!selected) {
+    container.scrollTop = 0;
+    return;
+  }
+  const selectedTop = selected.offsetTop;
+
+  container.scrollTop = selectedTop;
+};

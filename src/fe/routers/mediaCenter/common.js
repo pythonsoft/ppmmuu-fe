@@ -8,8 +8,12 @@ const common = {
   getDuration(item) {
     return utils.formatDuration(item.duration / 25 * 1000);
   },
-  getMediaFormatStyle(item) {
-    return item.hd_flag === 0 ? 'media-center-color-span _480P' : 'media-center-color-span _1080P';
+  getMediaFormatStyle(item, className) {
+    if(!className) {
+      className = 'media-center-color-span';
+    }
+
+    return className + ( item.hd_flag === 0 ? ' _480P' : ' _1080P');
   },
   getMediaFormat(item) {
     return item.hd_flag === 0 ? '720P' : '1080P';

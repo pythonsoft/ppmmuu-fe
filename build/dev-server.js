@@ -16,7 +16,7 @@ const autoOpenBrowser = !!config.dev.autoOpenBrowser;
 const port = process.env.PORT || config.dev.port;
 const uri = 'http://localhost:' + port;
 
-// app.use('/', express.static(path.join(__dirname, '../src/fe/html')));
+app.use('/img', express.static(path.join(__dirname, '../src/fe/img')));
 // app.set('views', path.join(__dirname, '../src/fe/html'));
 // app.set('view engine', 'pug');
 // app.get('/login', function(req, res){

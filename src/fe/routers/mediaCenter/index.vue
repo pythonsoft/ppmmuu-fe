@@ -46,7 +46,13 @@
       <div class="media-center-wrap" ref="mediaCenter">
         <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 26) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
           <div class="media-center-result-bar">
-            <span class="media-center-result-count">{{searchResult}}</span>
+            <span class="media-center-result-count">
+              {{searchResult}}
+            </span>
+            <div class="media-center-view-bar">
+              <span :class="viewTypeSelect('grid')" @click="viewType='grid'"></span>
+              <span :class="viewTypeSelect('list')" @click="viewType='list'"></span>
+            </div>
           </div>
 
           <div v-if="items.length === 0" class="media-center-empty-result">
@@ -54,12 +60,13 @@
             <p class="media-center-empty-result-text">暂无搜索结果</p>
           </div>
 
-          <grid-view
+          <grid-list-view
             v-else
+            :type="viewType"
             :width="listWidth"
             :items="items"
             @currentItemChange="currentItemChange"
-          ></grid-view>
+          ></grid-list-view>
 
           <div class="media-pagination" v-if="items.length">
             <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
@@ -78,9 +85,9 @@
   import './index.css';
 
   import threeColumn from '../../component/layout/threeColumn';
-  import gridView from './grid';
+  import gridAndList from './gridAndList';
   import mediaRight from './right';
-  import { getTimeByStr, formatDuration } from '../../common/utils';
+  import { getTimeByStr, formatDuration,  } from '../../common/utils';
 
   const api = require('../../api/media');
 
@@ -88,7 +95,7 @@
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-view': gridView
+      'grid-list-view': gridAndList,
     },
     data() {
       return {
@@ -112,7 +119,9 @@
         offsetHeight: 0,
         listWidth: 0,
         itemSize: { width: 266, height: 224 },
-        timeId: ''
+        timeId: '',
+
+        viewType: 'grid'
       };
     },
     created() {
@@ -120,6 +129,25 @@
       this.getSearchConfig();
     },
     methods: {
+      viewTypeSelect(type) {
+        let className = 'iconfont';
+
+        if(type === 'grid') {
+          className += ' icon-Group media-center-view-grid';
+          if(this.viewType === 'grid') {
+            className += ' media-center-view-selected';
+          }
+        }else if(type === 'list') {
+
+          className += ' icon-Group1 media-center-view-list';
+
+          if(this.viewType === 'list') {
+            className += ' media-center-view-selected';
+          }
+        }
+
+        return className;
+      },
       resize() {
         clearTimeout(this.timer);
         const me = this;
@@ -214,7 +242,6 @@
         this.getMediaList();
       },
       currentItemChange(item) {
-        console.log('click item -->', item);
         this.currentVideo = item;
       }
     }

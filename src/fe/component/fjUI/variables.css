@@ -59,10 +59,15 @@
   --checkbox-border-radius: 4px;
 
   --input-height: 36px;
+  --input-height-small: 30px;
 
   --input-border: 1px solid #CED9E5;
   --input-hover-border-color: #9FB3CA;
   --input-focus-border-color: #38B1EB;
+  --input-background-color-fill: #F2F6FA;
+  --input-hover-background-color-fill: #E3EAF3;
+  --input-focus-background-color-fill: #F2F6FA;
+  --input-placeholder-color: #9FB3CA;
 
   --error-input-border: 1px solid #FF3366;
 
@@ -74,6 +79,7 @@
   --input-disabled-background-color: #F4F4F4;
 
   --input-border-radius: 4px;
+  --input-border-radius-small: 2px;
 
   --select-dropdown-box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
 
