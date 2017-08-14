@@ -15,7 +15,7 @@
           </span>
           <span :class="setThumbClass(item.id, 'media-center-list-title')" v-html="getTitle(item)"></span>
         </div>
-        <div class="media-center-list-description" v-html="getTitle(item)"></div>
+        <div class="media-center-list-description" v-html="getDescription(item)"></div>
         <ul class="media-center-list-bar">
           <li>
             <span class="media-center-list-bar-color-span" v-html="item.program_type || '无分类'"></span>
@@ -55,7 +55,7 @@
 <script>
   import Vue from 'vue';
   import VueLazyload from 'vue-lazyload';
-  import { getDuration, getThumb, getMediaFormat, getMediaFormatStyle, getReplaceName, getTitle } from './common';
+  import { getDuration, getThumb, getMediaFormat, getMediaFormatStyle, getReplaceName, getTitle, getDescription } from './common';
   import { isEmptyObject, deepClone, formatSize } from '../../common/utils';
 
   Vue.use(VueLazyload, {
@@ -96,6 +96,7 @@
       getMediaFormatStyle,
       getReplaceName,
       getTitle,
+      getDescription,
       formatSize,
       deepClone
     }
