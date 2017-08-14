@@ -277,9 +277,9 @@ utils.isEmptyObject = function isEmptyObject(obj) {
 utils.getTimeByStr = function getTimeByStr(str) {
   str = str.trim();
   if (str.indexOf('分钟') !== -1) {
-    return str[0] * 60 * 1000;
+    return str[0] * 60 * 25;
   } else if (str.indexOf('小时') !== -1) {
-    return str[0] * 60 * 60 * 1000;
+    return str[0] * 60 * 60 * 25;
   }
   return '*';
 };
