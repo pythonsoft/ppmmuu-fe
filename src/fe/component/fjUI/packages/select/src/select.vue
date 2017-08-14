@@ -27,7 +27,7 @@
   import FjInput from '../../input';
   import FjSelectDropdown from './selectDropdown';
   import Clickoutside from '../../../utils/clickoutside';
-  import scrollIntoView from '../../../utils/scrollIntoView';
+  import { scrollIntoViewBottom } from '../../../utils/scrollIntoView';
 
   export default {
     name: 'FjSelect',
@@ -134,7 +134,7 @@
 
         const container = this.$refs.popper.$el;
         const selected = this.options[this.hoverIndex].$el;
-        scrollIntoView(container, selected);
+        scrollIntoViewBottom(container, selected);
       },
       setSelected() {
         const option = this.getOption(this.value);

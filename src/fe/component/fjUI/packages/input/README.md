@@ -3,13 +3,14 @@
 ### attributes
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
-| size | 尺寸 | string | large,small,mini | - | ❌ |
+| size | 尺寸 | string | large,small,mini | - | ❌(small✅) |
 | type | 类型 | string | text,textarea | text | ✅ |
 | placeholder | 输入框占位 | string | — | - | ✅ |
 | disabled | 禁用 | boolean | — | false | ✅ |
 | readonly | 是否只读 | boolean | — | false | ✅ |
 | rows | 输入框行数 | number | — | 2 | ✅ |
 | icon | 输入框尾部图标 | string | — | - | ✅ |
+| theme | 输入框主题样式 | string | stroke, fill | stroke | ✅ |
 
 ...原生属性
 
