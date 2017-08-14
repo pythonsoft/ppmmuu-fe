@@ -17,9 +17,9 @@
             <table class="media-center-table">
               <tr v-for="info in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                <td class="item-info-value" v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></td>
-                <td class="item-info-value" v-else >
-                  {{ info.value }}
+                <td class="item-info-value">
+                  <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
+                  <span v-else>{{ info.value }}</span>
                 </td>
               </tr>
             </table>
@@ -30,7 +30,7 @@
             <table class="media-center-table">
               <tr>
                 <td class="item-info-key" width="80">文件名: </td>
-                <td class="item-info-value">
+                <td class="item-info-value" width="303">
                   <div class="media-center-file-name">
                     {{ file.FILENAME || '无文件名' }}
                     <span class="media-center-file-type">
@@ -40,11 +40,11 @@
                 </td>
               </tr>
               <tr>
-                <td class="item-info-key" width="80">文件大小: </td>
-                <td class="item-info-value">{{ formatSize(file.FILESIZE) }}</td>
+                <td class="item-info-key">文件大小: </td>
+                <td class="item-info-value" >{{ formatSize(file.FILESIZE) }}</td>
               </tr>
               <tr>
-                <td class="item-info-key" width="80">时长: </td>
+                <td class="item-info-key">时长: </td>
                 <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
               </tr>
             </table>

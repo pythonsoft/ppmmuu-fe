@@ -203,7 +203,7 @@
 }
 
 .media-item-category {
-  margin-top: 11px;
+  margin-top: 10px;
   color: #4C637B;
   height: 12px;
   line-height: 12px;
@@ -314,6 +314,7 @@
 }
 
 .media-center-table {
+  width: 383px;
 }
 
 .media-center-table td{
@@ -330,10 +331,12 @@
   line-height: 150%;
   color: #4C637B;
   vertical-align: top;
+  width: 80px;
 }
 
 .item-info-value {
   line-height: 150%;
+  width: 303px;
 }
 
 .media-center-file-item {

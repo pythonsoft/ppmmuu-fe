@@ -41,11 +41,11 @@
           <span :class="setThumbClass(item.id)" v-html="getTitle(item)"></span>
         </div>
         <div class="media-item-category">
-          类别：
+          类别:
           <span class="media-item-category-value" v-html="item.program_type || '无分类'"></span>
         </div>
         <div class="media-item-category media-item-time">
-          入库时间：
+          入库时间:
           <span class="media-item-category-value">{{ item.last_modify | formatTime }}</span>
         </div>
       </li>
