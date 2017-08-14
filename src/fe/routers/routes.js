@@ -21,9 +21,12 @@ const Account = resolve => require.ensure([], () => resolve(require('./managemen
 
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 
+const TaskCenter = resolve => require.ensure([], () => resolve(require('./taskCenter/index')), 'taskCenter');
+const TaskDownload = resolve => require.ensure([], () => resolve(require('./taskCenter/download/index')), 'taskDownload');
+
 export default [{
   path: '/',
-  redirect: '/management/account',
+  redirect: '/mediaCenter',
   component: Home,
   children: [
     {
@@ -60,6 +63,15 @@ export default [{
       component: MediaCenter,
       meta: { title: '媒体库' },
       children: []
+    },
+    {
+      path: 'taskCenter',
+      redirect: 'taskCenter/taskDownload',
+      component: TaskCenter,
+      meta: { title: '任务' },
+      children: [
+        { path: 'taskDownload', component: TaskDownload, meta: { title: '下载任务' } },
+      ]
     }
   ]
 }, {
