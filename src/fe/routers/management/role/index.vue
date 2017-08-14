@@ -54,7 +54,7 @@
 
       <div slot="footer">
         <fj-button @click="slideDialogVisible=false">取消</fj-button>
-        <fj-button type="primary" @click="confirmSlideDialogClick">保存</fj-button>
+        <fj-button type="primary" :loading="isBtnLoading" @click="confirmSlideDialogClick">保存</fj-button>
       </div>
 
     </fj-slide-dialog>
@@ -128,7 +128,8 @@
               } }
           ]
         },
-        dialogVisible: false
+        dialogVisible: false,
+        isBtnLoading: false
       };
     },
     created() {
@@ -152,7 +153,7 @@
           pageSize: me.pageSize,
           keyword: me.keyword
         };
-        api.getRoleList(formatQuery(searchObj, true))
+        api.getRoleList(formatQuery(searchObj, true), me)
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -234,6 +235,8 @@
           return true;
         });
 
+        this.isBtnLoading = true;
+
         const apiFunc = this.isEdit() ? api.postUpdateRole : api.postAddRole;
         const postData = {
           _id: this.formData._id,
@@ -242,10 +245,12 @@
         };
         apiFunc(postData)
           .then((res) => {
+            me.isBtnLoading = false;
             me.handleClickSearch();
             me.showSuccessInfo('保存成功');
           })
           .catch((error) => {
+            me.isBtnLoading = false;
             me.showErrorInfo(error);
           });
       },

@@ -159,7 +159,7 @@
         if (this.bucket && this.bucket._id) {
           me.formData.bucketId = this.bucket._id;
         }
-        api.listPath({ params: me.formData })
+        api.listPath({ params: me.formData }, me)
           .then((res) => {
             me.tableData = res.data.docs;
             me.total = res.data.total;

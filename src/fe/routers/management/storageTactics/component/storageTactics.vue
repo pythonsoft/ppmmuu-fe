@@ -161,7 +161,7 @@
         if (this.source) {
           me.formData.sourceId = this.source._id;
         }
-        api.listTactics({ params: me.formData })
+        api.listTactics({ params: me.formData }, me)
           .then((res) => {
             me.tableData = res.data.docs;
             me.total = res.data.total;
