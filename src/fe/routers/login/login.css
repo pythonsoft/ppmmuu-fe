@@ -1,25 +1,155 @@
-.login-content {
+
+.login {
   margin: 0 auto;
-  height: auto;
-  min-height: 450px;
-  position: relative
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background: #26B4D2 url(../../img/2k-background.png) no-repeat fixed top;
+  background-size: cover;
+}
+
+@media screen and (min-width: 2000px) {
+  .login {
+    background: #26B4D2 url(../../img/4k-background.png) no-repeat fixed top;
+  }
+}
+
+.login-top {
+  padding-top: 300px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.login-title {
+  font-size: 16px;
+}
+
+.login-content {
+  margin: 44px auto 22px auto;
+  padding: 30px 27px 0 27px;
+  width: 364px;
+  height: 384px;
+  background: #ffffff;
+  border-radius: 4px;
 }
 
 .login-form {
-  top: 200px;
-  width: 200px;
-  position: absolute;
-  right: 30%;
+  margin-top: 38px;
+  position: relative;
 }
 
-.login-form-item {
-  font-size: 12px;
-  line-height: 1.5;
+.login-input {
   position: relative;
-  width: 100%;
-  zoom: 1;
+  width: 310px;
+  height: 38px;
+  margin-top: 6px;
+}
+
+.login-message {
+  position: absolute;
+  top: 2px;
+  right: -145px;
+  padding-left: 7px;
+  padding-right: 10px;
+  width: 130px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  color: #4C637B;
+  display: inline-block;
+  background: #F2F6FA;
+  border: 1px solid #E3EAF3;
+  border-radius: 2px;
+  z-index: 999;
+}
+
+.login-message:before{
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  left: -8px;
+  top: 5px;
+  border-right: 8px solid #000;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+.login-message:after{
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  left: -8px;
+  top: 5px;
+  border-right: 8px solid #F2F6FA;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+.login-input .fj-input-wrap {
+  color: #2A3E52;
+}
+
+.login-input .fj-input-wrap .icon-fill-close {
+  color: #CED9E5;
+  font-size: 12px;
+}
+
+.login-label {
+  font-size: 12px;
+}
+
+.login-password {
+  margin-top: 16px;
 }
 
 .login-form-button {
+  margin-top: 30px;
   text-align: center;
+}
+
+.login-form-button .fj-button-default-size {
+  width: 310px;
+}
+
+.login-extra {
+  margin-top: 16px;
+  position: relative;
+}
+
+.login-extra .fj-checkbox-wrap {
+  font-size: 12px;
+  color: #4C637B;
+}
+
+.login-extra .fj-checkbox {
+  margin-bottom: 1px;
+}
+.login-extra .fj-checkbox-inner {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.login-extra .fj-checkbox-inner:after {
+  top: 1px;
+  left: 4px;
+}
+
+.login-forget{
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 12px;
+  color: #1497D6;
+  cursor: pointer;
+}
+
+.login-footer {
+  margin-top: 21px;
+  text-align: center;
+  font-size: 12px;
+  color: #FFFFFF;
+  opacity: 0.78;
 }
