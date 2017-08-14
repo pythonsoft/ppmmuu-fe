@@ -17,7 +17,7 @@
             </div>
             <div class="login-label login-password">密码</div>
             <div class="login-input">
-              <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword"></fj-input>
+              <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword" @focus="focusInput2()"></fj-input>
             </div>
             <div class="login-extra">
               <fj-checkbox-group v-model="userInfo.autoLogin">
@@ -99,6 +99,11 @@
         this.error = '';
         this.isDisplay = 'none';
         this.$refs.usernameInput.$refs.input.style.borderColor = '#38B1EB';
+      },
+      focusInput2() {
+        this.error = '';
+        this.isDisplay = 'none';
+        this.$refs.usernameInput.$refs.input.style.borderColor = '#CED9E5';
       },
       handleBlur() {
         this.$refs.usernameInput.$refs.input.style.borderColor = '#CED9E5';
