@@ -221,7 +221,7 @@
         }
         const options = {
           q: q,
-          fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_321',
+          fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify',
           sort: 'last_modify desc',
           start: start,
           hl: 'on',

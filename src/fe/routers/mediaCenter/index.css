@@ -133,10 +133,6 @@
   top: 0;
 }
 
-.media-center-title-selected{
-  color: #38B1EB;
-}
-
 .media-center-duration {
   position: absolute;
   right: 1px;
@@ -438,6 +434,7 @@
   font-size: 12px;
   padding-bottom: 28px;
   min-height: 70px;
+  cursor: default;
 }
 
 .media-center-list-item-thumb-wrap{
@@ -513,10 +510,12 @@
 .media-center-list-description {
   padding: 4px 0 6px 0;
   color: #2A3E52;
-
+  font-weight: normal;
 }
 
-
+.media-center-title-selected{
+  color: #38B1EB;
+}
 
 
 

@@ -2,7 +2,7 @@
   <div>
 
     <div v-if="type==='list'" class="media-center-list">
-      <div class="media-center-list-item" v-for="item in items" :key="item.id">
+      <div class="media-center-list-item" v-for="item in items" :key="item.id" @click="change(item)">
         <div class="media-center-list-item-thumb">
           <div class="iconfont icon-phoenixtv media-center-list-item-thumb-wrap">
             <img class="media-center-list-thumb" v-lazy="getThumb(item)" >
@@ -13,7 +13,7 @@
           <span :class="getMediaFormatStyle(item, 'media-center-list-color-span')">
             {{getMediaFormat(item)}}
           </span>
-          <span :class="setThumbClass(item.id, 'media-center-list-title')" v-html="getTitle(item)" @click="change(item)"></span>
+          <span :class="setThumbClass(item.id, 'media-center-list-title')" v-html="getTitle(item)"></span>
         </div>
         <div class="media-center-list-description" v-html="getTitle(item)"></div>
         <ul class="media-center-list-bar">
