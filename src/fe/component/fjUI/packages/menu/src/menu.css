@@ -16,12 +16,12 @@
   transition: background-color .3s, color .3s, border-bottom .3s;
 }
 .fj-menu-item:hover {
-  background-color: #38B1EB;
-  border-bottom: 1px solid #38B1EB;
+  background-color: #344C67;
+  border-bottom: 1px solid #344C67;
   color: #FFFFFF;
 }
 .fj-menu-item.active {
-  background-color: #1497D6;
-  border-bottom: 1px solid #1497D6;
+  background-color: #38B1EB;
+  border-bottom: 1px solid #38B1EB;
   color: #FFFFFF;
 }

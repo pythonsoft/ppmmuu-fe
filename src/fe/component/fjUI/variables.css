@@ -128,12 +128,12 @@
   --pagination-btn-border: 1px solid #CED9E5;
   --pagination-text-color: #4C637B;
 
-  --pagination-btn-hover-background-color: #38B1EB;
-  --pagination-btn-hover-border: 1px solid #38B1EB;
-  --pagination-btn-hover-color: #FFF;
+  --pagination-btn-hover-background-color: #EBF3FB;
+  --pagination-btn-hover-border: 1px solid #CED9E5;
+  --pagination-btn-hover-color: #4C637B;
 
-  --pagination-btn-active-background-color: #1497D6;
-  --pagination-btn-active-border: 1px solid #1497D6;
+  --pagination-btn-active-background-color: #38B1EB;
+  --pagination-btn-active-border: 1px solid #38B1EB;
   --pagination-btn-active-color: #FFF;
 
   --pagination-btn-disabled-bg-color: #E3EAF3;
