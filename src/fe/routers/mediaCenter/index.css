@@ -515,9 +515,7 @@
   padding: 4px 0 6px 0;
   color: #2A3E52;
   font-weight: normal;
-  height: 40px;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
