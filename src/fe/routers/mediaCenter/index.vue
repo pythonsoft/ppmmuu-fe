@@ -60,13 +60,13 @@
             <p class="media-center-empty-result-text">暂无搜索结果</p>
           </div>
 
-          <grid-view
+          <grid-list-view
             v-else
             :type="viewType"
             :width="listWidth"
             :items="items"
             @currentItemChange="currentItemChange"
-          ></grid-view>
+          ></grid-list-view>
 
           <div class="media-pagination" v-if="items.length">
             <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
@@ -85,7 +85,7 @@
   import './index.css';
 
   import threeColumn from '../../component/layout/threeColumn';
-  import gridView from './grid';
+  import gridAndList from './gridAndList';
   import mediaRight from './right';
   import { getTimeByStr, formatDuration,  } from '../../common/utils';
 
@@ -95,7 +95,7 @@
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-view': gridView,
+      'grid-list-view': gridAndList,
     },
     data() {
       return {
@@ -121,7 +121,7 @@
         itemSize: { width: 266, height: 224 },
         timeId: '',
 
-        viewType: 'list'
+        viewType: 'grid'
       };
     },
     created() {
