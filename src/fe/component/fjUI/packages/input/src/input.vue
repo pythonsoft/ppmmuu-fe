@@ -2,6 +2,7 @@
   <div
     :class="[
       type === 'textarea' ? 'fj-textarea-wrap' : 'fj-input-wrap',
+      size ? 'fj-input-' + size : '',
       {
         'fj-input-disabled': disabled
       }
@@ -11,7 +12,7 @@
       <i class="fj-input-icon iconfont" :class="icon" @click="handleIconClick" v-if="icon"></i>
       <input
         ref="input"
-        class="fj-input-inner"
+        :class="`fj-input-inner-${theme}`"
         :value="currentValue"
         @input="handleInput"
         @focus="handleFocus"
@@ -20,7 +21,7 @@
     </template>
     <textarea
       v-else
-      class="fj-textarea-inner"
+      :class="`fj-textarea-inner-${theme}`"
       :value="currentValue"
       @input="handleInput"
       @focus="handleFocus"
@@ -36,6 +37,10 @@
       type: {
         type: String,
         default: 'text'
+      },
+      theme: {
+        type: String,
+        default: 'stroke'
       },
       value: [String, Number],
       placeholder: String,

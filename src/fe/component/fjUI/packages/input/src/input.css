@@ -10,7 +10,7 @@
   vertical-align: bottom;
 }
 
-.fj-input-inner {
+.fj-input-inner-stroke {
   width: 100%;
   height: var(--input-height);
   line-height: 1;
@@ -21,32 +21,74 @@
   font-size: 14px;
   color: var(--base-color);
 }
-
-.fj-input-inner:hover,
-.fj-textarea-inner:hover {
-  border-color: var(--input-hover-border-color);
+.fj-input-inner-fill {
+  width: 100%;
+  height: var(--input-height);
+  line-height: 1;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--input-border-radius);
+  outline: none;
+  font-size: 14px;
+  color: var(--base-color);
+  background-color: var(--input-background-color-fill);
 }
-.fj-input-inner:focus,
-.fj-input-inner:active,
-.fj-textarea-inner:focus,
-.fj-textarea-inner:active {
-  border-color: var(--input-focus-border-color);
-}
-
-.fj-input-disabled .fj-input-inner,
-.fj-input-disabled .fj-textarea-inner {
-  cursor: not-allowed;
-  border-color: var(--disabled-border-color);
-  color: var(--disabled-color);
-  background-color: var(--input-disabled-background-color);
-}
-.fj-textarea-inner {
+.fj-textarea-inner-stroke {
   padding: 5px 7px;
   line-height: 1.5;
   width: 100%;
   font-size: 14px;
   border: var(--input-border);
   border-radius: var(--input-border-radius);
+}
+.fj-textarea-inner-fill {
+  padding: 5px 7px;
+  line-height: 1.5;
+  width: 100%;
+  font-size: 14px;
+  border: 1px solid transparent;
+  border-radius: var(--input-border-radius);
+  background-color: var(--input-background-color-fill);
+}
+
+.fj-input-inner-stroke:hover,
+.fj-textarea-inner-stroke:hover {
+  border-color: var(--input-hover-border-color);
+}
+.fj-input-inner-stroke:focus,
+.fj-input-inner-stroke:active,
+.fj-textarea-inner-stroke:focus,
+.fj-textarea-inner-stroke:active {
+  border-color: var(--input-focus-border-color);
+}
+
+.fj-input-inner-fill:hover,
+.fj-textarea-inner-fill:hover {
+  background-color: var(--input-hover-background-color-fill);
+}
+.fj-input-inner-fill:focus,
+.fj-input-inner-fill:active,
+.fj-textarea-inner-fill:focus,
+.fj-textarea-inner-fill:active {
+  border-color: var(--input-focus-border-color);
+  background-color: var(--input-focus-background-color-fill);
+}
+
+.fj-input-disabled .fj-input-inner-stroke,
+.fj-input-disabled .fj-textarea-inner-stroke {
+  cursor: not-allowed;
+  border-color: var(--disabled-border-color);
+  color: var(--disabled-color);
+  background-color: var(--input-disabled-background-color);
+}
+
+.fj-input-small .fj-input-inner-stroke,
+.fj-input-small .fj-input-inner-fill {
+  height: var(--input-height-small);
+  line-height: 1;
+  padding: 9px 7px;
+  font-size: 12px;
+  border-radius: var(--input-border-radius-small);
 }
 
 .fj-input-icon {
@@ -61,7 +103,7 @@
   border-top-right-radius: var(--input-border-radius);
   border-bottom-right-radius: var(--input-border-radius);
 }
-.fj-input-icon+.fj-input-inner {
+.fj-input-icon+.fj-input-inner-stroke {
   padding-right: 35px;
 }
 .fj-input-icon:after {
@@ -70,4 +112,7 @@
   width: 0;
   height: 100%;
   vertical-align: middle;
+}
+.fj-input-inner-stroke::placeholder {
+  color: var(--input-placeholder-color);
 }

@@ -29,6 +29,7 @@ import SlideDialog from './packages/slideDialog';
 import Dropdown from './packages/dropdown';
 import DropdownMenu from './packages/dropdownMenu';
 import DropdownItem from './packages/dropdownItem';
+import DatePicker from './packages/datePicker';
 
 import './index.css';
 
@@ -60,6 +61,7 @@ const components = [
   Dropdown,
   DropdownMenu,
   DropdownItem,
+  DatePicker,
   ProgressBar.component
 ];
 
@@ -107,7 +109,8 @@ const FjUI = {
   SlideDialog,
   Dropdown,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  DatePicker
 };
 
 Vue.use(FjUI);
