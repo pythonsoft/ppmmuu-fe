@@ -6,9 +6,7 @@
           <source src="http://hkss3.phoenixtv.com/live/pic.stream_720p/playlist.m3u8" />
           Your browser does not support the video tag.
         </video>
-        <div class="media-video-title">
-          {{title}}
-        </div>
+        <div class="media-video-title" v-html="title"></div>
       </div>
       <div v-else class="iconfont icon-phoenixtv media-video-wrap-bg"></div>
     </div>
@@ -34,9 +32,9 @@
                 <td class="item-info-key" width="80">文件名: </td>
                 <td class="item-info-value">
                   <div class="media-center-file-name">
-                    {{ file.FILENAME }}
+                    {{ file.FILENAME || '无文件名' }}
                     <span class="media-center-file-type">
-                      {{ file.SANAME }}
+                      {{ file.SANAME || '无信息' }}
                     </span>
                   </div>
                 </td>

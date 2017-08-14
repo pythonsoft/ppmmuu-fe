@@ -46,7 +46,13 @@
       <div class="media-center-wrap" ref="mediaCenter">
         <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 26) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
           <div class="media-center-result-bar">
-            <span class="media-center-result-count">{{searchResult}}</span>
+            <span class="media-center-result-count">
+              {{searchResult}}
+            </span>
+            <div class="media-center-view-bar">
+              <span :class="viewTypeSelect('grid')" @click="viewType='grid'"></span>
+              <span :class="viewTypeSelect('list')" @click="viewType='list'"></span>
+            </div>
           </div>
 
           <div v-if="items.length === 0" class="media-center-empty-result">
@@ -56,6 +62,7 @@
 
           <grid-view
             v-else
+            :type="viewType"
             :width="listWidth"
             :items="items"
             @currentItemChange="currentItemChange"
@@ -80,7 +87,7 @@
   import threeColumn from '../../component/layout/threeColumn';
   import gridView from './grid';
   import mediaRight from './right';
-  import { getTimeByStr, formatDuration } from '../../common/utils';
+  import { getTimeByStr, formatDuration,  } from '../../common/utils';
 
   const api = require('../../api/media');
 
@@ -88,7 +95,7 @@
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-view': gridView
+      'grid-view': gridView,
     },
     data() {
       return {
@@ -112,7 +119,9 @@
         offsetHeight: 0,
         listWidth: 0,
         itemSize: { width: 266, height: 224 },
-        timeId: ''
+        timeId: '',
+
+        viewType: 'list'
       };
     },
     created() {
@@ -120,6 +129,25 @@
       this.getSearchConfig();
     },
     methods: {
+      viewTypeSelect(type) {
+        let className = 'iconfont';
+
+        if(type === 'grid') {
+          className += ' icon-Group media-center-view-grid';
+          if(this.viewType === 'grid') {
+            className += ' media-center-view-selected';
+          }
+        }else if(type === 'list') {
+
+          className += ' icon-Group1 media-center-view-list';
+
+          if(this.viewType === 'list') {
+            className += ' media-center-view-selected';
+          }
+        }
+
+        return className;
+      },
       resize() {
         clearTimeout(this.timer);
         const me = this;
@@ -193,7 +221,7 @@
         }
         const options = {
           q: q,
-          fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify',
+          fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_321',
           sort: 'last_modify desc',
           start: start,
           hl: 'on',
@@ -214,7 +242,6 @@
         this.getMediaList();
       },
       currentItemChange(item) {
-        console.log('click item -->', item);
         this.currentVideo = item;
       }
     }
