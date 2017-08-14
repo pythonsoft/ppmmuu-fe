@@ -52,7 +52,7 @@
       },
       getFilteredRule(trigger) {
         const rules = this.getRules();
-        return rules ? rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1) : [];
+        return rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1);
       },
       getFieldValue() {
         const data = this.form.model;
@@ -95,7 +95,7 @@
       if (this.prop) {
         this.form.$emit('add-field', this);
         const rules = this.getRules();
-        if (rules && rules.length > 0) {
+        if (rules.length > 0) {
           for (let i = 0; i < rules.length; i++) {
             if (rules[i].required) {
               this.isRequired = true;
