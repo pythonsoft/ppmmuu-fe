@@ -11,10 +11,10 @@
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
               <li>
-                <span class="iconfont icon-xiazai"></span>
+                <span title="下载" class="iconfont icon-xiazai"></span>
               </li>
               <li>
-                <span class="iconfont icon-jianji"></span>
+                <span title="视频编辑" class="iconfont icon-jianji"></span>
               </li>
             </ul>
           </div>
