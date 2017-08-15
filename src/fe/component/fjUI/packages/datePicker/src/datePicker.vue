@@ -26,7 +26,7 @@
         <i :class="iconClass" class="iconfont date-range-date-icon" @click="handleIconClick"></i>
       </div>
     </div>
-    <date-panel
+    <!-- <date-panel
       v-if="isShowPanel&&type==='datetime'"
       :defaultValue="value"
       :type="type"
@@ -39,16 +39,18 @@
       :type="type"
       :format="format"
       :pickerPosition="pickerPosition"
-      @pick="handleDateRangePick"></date-range-panel>
+      @pick="handleDateRangePick"></date-range-panel> -->
   </div>
 </template>
 
 <script>
+  import Vue from 'vue';
   import FjInput from '../../input';
   import DatePanel from './panel/datePanel';
   import DateRangePanel from './panel/dateRangePanel';
   import Clickoutside from '../../../utils/clickoutside';
   import { isDate, formatDate } from './util';
+  import { getPosition } from '../../../utils/position';
 
   export default {
     name: 'FjDatePicker',
@@ -102,6 +104,13 @@
             this.selfModel = val;
           }
         }
+      },
+      isShowPanel(val) {
+        if (val) {
+          this.showPicker();
+        } else {
+          this.hidePicker();
+        }
       }
     },
     methods: {
@@ -121,7 +130,8 @@
       handleFocus() {
         this.isShowPanel = true;
       },
-      handleClose() {
+      handleClose(target) {
+        if (this.picker && this.picker.$el.contains(target)) return;
         this.isShowPanel = false;
       },
       handleDatePick(val) {
@@ -131,19 +141,66 @@
           this.$emit('input', val);
         }
       },
-      handleDateRangePick(val) {
-        this.isShowPanel = false;
-        if (val) {
-          this.selfModel = val;
-          this.$emit('input', val);
+      showPicker() {
+        if (!this.picker) {
+          this.mountPicker();
         }
+
+        this.picker.defaultValue = this.value;
+        const { pickerPosition, transitionName } = this.getPickerPosition();
+        this.picker.pickerPosition = pickerPosition;
+        this.picker.transitionName = transitionName;
+        this.picker.visible = true;
+      },
+      hidePicker() {
+        if (this.picker) {
+          this.picker.visible = false;
+        }
+      },
+      mountPicker() {
+        this.panel.defaultValue = this.value;
+        this.picker = new Vue(this.panel).$mount();
+        this.picker.type = this.type;
+        this.picker.format = this.format;
+        this.picker.$on('pick', this.handleDatePick);
+        document.body.appendChild(this.picker.$el);
+      },
+      getPickerPosition() {
+        const pickerPosition = {};
+        const inputPosition = getPosition(this.$el);
+        const top = inputPosition.y;
+        const bottom = window.innerHeight - top;
+        const inputHeight = this.$el.getBoundingClientRect().height;
+        const inputWidth = this.$el.getBoundingClientRect().width;
+        // const pickerHeight = this.picker.$el.getBoundingClientRect().height;
+        const pickerHeight = 343;
+        let marginTop = window.getComputedStyle(this.picker.$el).marginTop || 0;
+        marginTop = parseInt(marginTop, 10);
+        let transitionName = 'fj-zoom-in-top';
+        if (bottom < top) {
+          pickerPosition.top = `${top - pickerHeight - marginTop * 2}px`;
+          transitionName = 'fj-zoom-in-bottom';
+        } else {
+          pickerPosition.top = `${top + inputHeight}px`;
+        }
+        if (this.pickerPosition === 'right') {
+          pickerPosition.left = `${inputPosition.x + inputWidth}px`
+        } else {
+          pickerPosition.left = `${inputPosition.x}px`;
+        }
+        return { pickerPosition, transitionName };
+      }
+    },
+    created() {
+      if (this.type === 'datetimerange') {
+        this.panel = DateRangePanel;
+      } else {
+        this.panel = DatePanel;
       }
     },
     directives: { Clickoutside },
     components: {
-      FjInput,
-      DatePanel,
-      DateRangePanel
+      FjInput
     }
   };
 </script>

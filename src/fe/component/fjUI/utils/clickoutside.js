@@ -15,7 +15,7 @@ export default {
     const documentHandler = function (mouseup, mousedown) {
       if (!vnode.context || el.contains(mouseup.target)) return;
       if (binding.expression && el[ctx].methodName && vnode.context[el[ctx].methodName]) {
-        vnode.context[el[ctx].methodName]();
+        vnode.context[el[ctx].methodName](mouseup.target);
       } else {
         el[ctx].bindingFn && el[ctx].bindingFn();
       }

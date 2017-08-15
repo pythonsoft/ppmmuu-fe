@@ -1,9 +1,9 @@
 <template>
-  <transition name="fj-zoom-in-top">
+  <transition :name="transitionName">
     <div
       class="fj-date-range-panel"
-      :class="`fj-date-panel-${pickerPosition}`"
-      :style="{'top': top + 'px'}">
+      :style="pickerPosition"
+      v-show="visible">
 
       <div v-if="type==='datetimerange'" class="fj-datetime-panel-header clearfix">
         <div class="fj-date-panel-editor-wrap">
@@ -135,10 +135,7 @@
 
   export default {
     props: {
-      pickerPosition: {
-        type: String,
-        default: 'left'
-      },
+      pickerPosition: {},
       type: {
         type: String,
         default: 'datetimerange'
@@ -147,7 +144,12 @@
         type: String,
         default: 'YYYY-MM-DD'
       },
-      defaultValue: {}
+      defaultValue: {},
+      visible: Boolean,
+      transitionName: {
+        type: String,
+        default: 'fj-zoom-in-top'
+      }
     },
     data() {
       return {
@@ -160,9 +162,9 @@
         minMonth: null,
         maxYear: null,
         maxMonth: null,
-        minDate: this.defaultValue.length > 0 ? new Date(this.defaultValue[0]) : '',
-        maxDate: this.defaultValue.length > 1 ? new Date(this.defaultValue[1]) : '',
-        date: this.defaultValue.length > 0 ? new Date(this.defaultValue[0]) : new Date(),
+        minDate: this.defaultValue && this.defaultValue.length > 0 ? new Date(this.defaultValue[0]) : '',
+        maxDate: this.defaultValue && this.defaultValue.length > 1 ? new Date(this.defaultValue[1]) : '',
+        date: this.defaultValue && this.defaultValue.length > 0 ? new Date(this.defaultValue[0]) : new Date(),
         rangeState: {
           selecting: false,
           currentDate: null
@@ -342,8 +344,8 @@
       }
     },
     mounted() {
-      const parentHeight = this.$parent.$el.getBoundingClientRect().height;
-      this.top = parentHeight;
+      // const parentHeight = this.$parent.$el.getBoundingClientRect().height;
+      // this.top = parentHeight;
 
       this.minYear = this.date.getFullYear();
       this.minMonth = this.date.getMonth();
