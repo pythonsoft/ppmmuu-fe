@@ -295,6 +295,9 @@
   display: block;
   line-height: 30px;
 }
+.date-range-value-item.placeholder {
+  color: #9FB3CA;
+}
 .date-range-icon-wrap {
   position: relative;
   float: right;
