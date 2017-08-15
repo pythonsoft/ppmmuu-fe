@@ -294,15 +294,22 @@
 }
 
 .media-video-title-bar li {
-  width: 42px;
+  width: 32px;
   height: 42px;
   float: right;
   overflow: hidden;
   user-select:none;
+  color: #ccc;
 }
 
-.media-video-title-bar li:active {
+.media-video-title-bar li .iconfont{
+  font-size: 14px;
+}
+
+.media-video-title-bar li:active,
+.media-video-title-bar li:hover {
   background: #4c637b;
+  color: #fff;
 }
 
 .media-video-panel {
