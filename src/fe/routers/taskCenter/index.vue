@@ -29,7 +29,7 @@
 </template>
 <script>
   const menu = [
-    { text: '下载任务', index: 'taskDownload', route: 'taskDownload' },
+    { text: '下载任务', index: 'taskDownload', route: 'taskDownload' }
   ];
   export default {
     data() {

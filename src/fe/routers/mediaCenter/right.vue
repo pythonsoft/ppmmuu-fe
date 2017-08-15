@@ -6,7 +6,19 @@
           <source src="http://hkss3.phoenixtv.com/live/pic.stream_720p/playlist.m3u8" />
           Your browser does not support the video tag.
         </video>
-        <div class="media-video-title" v-html="title"></div>
+        <div >
+          <div class="media-video-title-wrap">
+            <div class="media-video-title" v-html="title"></div>
+            <ul class="media-video-title-bar">
+              <li>
+                <span>下载</span>
+              </li>
+              <li>
+                <span>编辑</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div v-else class="iconfont icon-phoenixtv media-video-wrap-bg"></div>
     </div>

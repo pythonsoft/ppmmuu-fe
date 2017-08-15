@@ -33,13 +33,18 @@
           </fj-radio-group>
         </div>
         <div class="media-category" v-if="times.length">
-          <h4>开始时间</h4>
-          <fj-input v-model="startTime"></fj-input>
+          <h4>时间范围</h4>
+          <!--<fj-input v-model="startTime"></fj-input>-->
+          <fj-date-picker
+            type="datetimerange"
+            placeholder="请选择日期范围"
+            v-model="datetimerange"
+          ></fj-date-picker>
         </div>
-        <div class="media-category" v-if="times.length">
-          <h4>结束时间</h4>
-          <fj-input v-model="endTime"></fj-input>
-        </div>
+        <!--<div class="media-category" v-if="times.length">-->
+          <!--<h4>结束时间</h4>-->
+          <!--<fj-input v-model="endTime"></fj-input>-->
+        <!--</div>-->
       </div>
     </template>
     <template slot="center">
@@ -50,8 +55,8 @@
               {{searchResult}}
             </span>
             <div class="media-center-view-bar">
-              <span :class="viewTypeSelect('grid')" @click="viewType='grid'"></span>
-              <span :class="viewTypeSelect('list')" @click="viewType='list'"></span>
+              <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span>
+              <span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
             </div>
           </div>
 
@@ -87,7 +92,7 @@
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
-  import { getTimeByStr, formatDuration,  } from '../../common/utils';
+  import { getTimeByStr, formatDuration } from '../../common/utils';
 
   const api = require('../../api/media');
 
@@ -95,7 +100,7 @@
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-list-view': gridAndList,
+      'grid-list-view': gridAndList
     },
     data() {
       return {
@@ -121,7 +126,10 @@
         itemSize: { width: 266, height: 224 },
         timeId: '',
 
-        viewType: 'grid'
+        viewType: 'grid',
+        fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03',
+
+        datetimerange: [],
       };
     },
     created() {
@@ -129,19 +137,25 @@
       this.getSearchConfig();
     },
     methods: {
+      setViewType(t) {
+        this.viewType = t;
+        this.fl = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify';
+        if(t === 'list') {
+          this.fl += ',f_str_03';
+        }
+      },
       viewTypeSelect(type) {
         let className = 'iconfont';
 
-        if(type === 'grid') {
+        if (type === 'grid') {
           className += ' icon-Group media-center-view-grid';
-          if(this.viewType === 'grid') {
+          if (this.viewType === 'grid') {
             className += ' media-center-view-selected';
           }
-        }else if(type === 'list') {
-
+        } else if (type === 'list') {
           className += ' icon-Group1 media-center-view-list';
 
-          if(this.viewType === 'list') {
+          if (this.viewType === 'list') {
             className += ' media-center-view-selected';
           }
         }
@@ -221,7 +235,7 @@
         }
         const options = {
           q: q,
-          fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify',
+          fl: this.fl,
           sort: 'last_modify desc',
           start: start,
           hl: 'on',
