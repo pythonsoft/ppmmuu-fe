@@ -1,12 +1,13 @@
 <template>
   <label
     class="fj-checkbox-wrap"
-    :class="{
+    :class="[{
       'fj-checkbox-checked': isChecked,
       'fj-checkbox-disabled': disabled
-    }">
+    },
+    size ? size : '']">
     <span class="fj-checkbox">
-      <span class="fj-checkbox-inner"></span>
+      <span :class="['fj-checkbox-inner', size ? size : '']"></span>
       <input
         class="fj-checkbox-input"
         type="checkbox"
@@ -23,6 +24,7 @@
     props: {
       value: {},
       label: {},
+      size: String,
       disabled: Boolean
     },
     data() {
