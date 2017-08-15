@@ -34,7 +34,7 @@
         </div>
         <div class="media-category" v-if="times.length">
           <h4>时间范围</h4>
-          <div class="media-category-wrap">
+          <div id="media-category-date" class="media-category-wrap">
             <fj-date-picker
               type="datetimerange"
               placeholder="请选择日期范围"
@@ -94,7 +94,7 @@
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
-  import { getTimeByStr, formatDuration } from '../../common/utils';
+  import { getTimeByStr, formatDuration, getPosition, appendToBody } from '../../common/utils';
   import FjButton from "../../component/fjUI/packages/button/src/button.vue";
 
   const api = require('../../api/media');
@@ -262,9 +262,11 @@
       currentItemChange(item) {
         this.currentVideo = item;
       },
-      demo() {
-
-      },
+//      demo() {
+//        const pos = getPosition(document.getElementById('media-category-date'));
+//        console.log(pos);
+//        appendToBody(document.getElementById('media-category-date'))
+//      },
     }
   };
 </script>
