@@ -1,12 +1,13 @@
 <template>
   <label
     class="fj-radio-wrap"
-    :class="{
+    :class="[{
       'fj-radio-checked': model === label,
       'fj-radio-disabled': disabled
-    }">
+    },
+    size ? size : '']">
     <span class="fj-radio">
-      <span class="fj-radio-inner"></span>
+      <span :class="['fj-radio-inner', size ? size : '']"></span>
       <input
         class="fj-radio-input"
         type="radio"
@@ -22,7 +23,8 @@
     name: 'FjRadio',
     props: {
       label: {},
-      disabled: Boolean
+      disabled: Boolean,
+      size: String
     },
     computed: {
       model: {

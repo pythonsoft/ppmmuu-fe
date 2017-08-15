@@ -51,12 +51,14 @@
   --button-border-radius: 4px;
 
   --radio-size: 18px;
+  --radio-small-size: 14px;
   --radio-border: 1px solid #CED9E5;
   --radio-hover-border: 1px solid #38B1EB;
   --radio-checked-border: 1px solid #38B1EB;
   --radio-checked-color: #38B1EB;
   --radio-disabled-checked-color: #CED9E5;
   --checkbox-border-radius: 4px;
+  --checkbox-border-radius-small: 2px;
 
   --input-height: 36px;
   --input-height-small: 30px;
