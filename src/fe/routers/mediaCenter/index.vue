@@ -149,12 +149,12 @@
         let className = 'iconfont';
 
         if (type === 'grid') {
-          className += ' icon-Group media-center-view-grid';
+          className += ' icon-view-grid media-center-view-grid';
           if (this.viewType === 'grid') {
             className += ' media-center-view-selected';
           }
         } else if (type === 'list') {
-          className += ' icon-Group1 media-center-view-list';
+          className += ' icon-view-list media-center-view-list';
 
           if (this.viewType === 'list') {
             className += ' media-center-view-selected';
