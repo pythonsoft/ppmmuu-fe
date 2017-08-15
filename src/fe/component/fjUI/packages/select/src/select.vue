@@ -6,6 +6,7 @@
       :readonly="true"
       :disabled="disabled"
       :placeholder="placeholder"
+      :size="size"
       @focus="handleFocus"
       @mousedown.native="handleMouseDown"
       @keydown.native.esc.prevent="visible = false"
@@ -35,6 +36,7 @@
       disabled: Boolean,
       clearable: Boolean,
       placeholder: String,
+      size: String,
       value: {
         require: true
       }

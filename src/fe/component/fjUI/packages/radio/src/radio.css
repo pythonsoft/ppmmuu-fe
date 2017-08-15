@@ -7,6 +7,9 @@
   font-size: 14px;
   cursor: pointer;
 }
+.fj-radio-wrap.small {
+  font-size: 12px;
+}
 .fj-radio-wrap.fj-radio-disabled {
   cursor: not-allowed;
   color: var(--disabled-color);
@@ -38,6 +41,10 @@
   background: #fff;
   vertical-align: middle;
 }
+.fj-radio-inner.small {
+  width: var(--radio-small-size);
+  height: var(--radio-small-size);
+}
 .fj-radio-inner:after {
   content: "";
   position: absolute;
@@ -50,6 +57,11 @@
   background: #fff;
   transform: translate(-50%,-50%) scale(0);
   transition: all .15s cubic-bezier(.78,.14,.15,.86);
+}
+.fj-radio-inner.small:after {
+  width: 6px;
+  height: 6px;
+  border-radius: 6px;
 }
 .fj-radio-inner:hover {
   border: var(--radio-hover-border);
