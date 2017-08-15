@@ -13,7 +13,7 @@
             <div class="login-label">用户名</div>
             <div class="login-input">
               <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()"></fj-input>
-              <span class="login-message" :style="{ display: isDisplay}">{{error}}</span>
+              <div class="login-message" :style="{ display: isDisplay}"><span>{{error}}</span></div>
             </div>
             <div class="login-label login-password">密码</div>
             <div class="login-input">
@@ -84,7 +84,7 @@
           })
           .catch((error) => {
             me.isBtnLoading = false;
-            me.error = error;
+            me.error = error || '用户名或密码错误';
             me.isDisplay = '';
             me.$refs.usernameInput.$refs.input.style.borderColor = '#FF3366';
           });
