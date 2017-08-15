@@ -15,16 +15,17 @@
           </span>
           <span :class="setThumbClass(item.id, 'media-center-list-title')" v-html="getTitle(item)"></span>
         </div>
-        <div class="media-center-list-description" v-html="getTitle(item)"></div>
+        <div class="media-center-list-description" v-html="getDescription(item)"></div>
+
         <ul class="media-center-list-bar">
           <li>
-            <span class="media-center-list-bar-color-span" v-html="item.program_type || '无分类'"></span>
+            <span title="分类" class="media-center-list-bar-color-span" v-html="item.program_type || '无分类'"></span>
           </li>
           <li>
-            <span class="media-center-list-bar-color-span">{{ formatSize(item.FILESIZE || 0) }}</span>
+            <span title="编目类别" class="media-center-list-bar-color-span">{{ item.ccid }}</span>
           </li>
           <li>
-            {{ item.last_modify | formatTime }}
+            <span title="入库时间">{{ item.last_modify | formatTime }}</span>
           </li>
         </ul>
       </div>
@@ -37,7 +38,7 @@
           <div class="media-center-duration">{{getDuration(item)}}</div>
         </div>
         <div class="media-item-name" :title="getReplaceName(item)">
-          <span :class="getMediaFormatStyle(item)">{{getMediaFormat(item)}}</span>
+          <span :class="getMediaFormatStyle(item)">{{ getMediaFormat(item) }}</span>
           <span :class="setThumbClass(item.id)" v-html="getTitle(item)"></span>
         </div>
         <div class="media-item-category">
@@ -55,8 +56,8 @@
 <script>
   import Vue from 'vue';
   import VueLazyload from 'vue-lazyload';
-  import { getDuration, getThumb, getMediaFormat, getMediaFormatStyle, getReplaceName, getTitle } from './common';
-  import { isEmptyObject, deepClone, formatSize } from '../../common/utils';
+  import { getDuration, getThumb, getMediaFormat, getMediaFormatStyle, getReplaceName, getTitle, getDescription } from './common';
+  import { isEmptyObject, deepClone, formatSize, getStringLength } from '../../common/utils';
 
   Vue.use(VueLazyload, {
     preLoad: 1.3,
@@ -96,6 +97,11 @@
       getMediaFormatStyle,
       getReplaceName,
       getTitle,
+      getDescription(item) {
+        const content = getDescription(item);
+        const limit = 172;
+        return getStringLength(content) > limit ? content.slice(0, limit) + '...' : content;
+      },
       formatSize,
       deepClone
     }

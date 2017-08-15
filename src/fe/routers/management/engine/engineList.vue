@@ -3,10 +3,10 @@
     <template slot="search-left">{{selectedNodeInfo.name}}</template>
     <template slot="search-right">
       <div class="layout-engine-four-row-search-item">
-        <fj-input :rows="1" placeholder="请输入名称、IP或Id" v-model="keyword"></fj-input>
+        <fj-input size="small" :rows="1" placeholder="请输入名称、IP或Id" v-model="keyword"></fj-input>
       </div>
       <div class="layout-engine-four-row-search-item">
-        <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
+        <fj-button size="small" type="primary" @click="handleClickSearch">查询</fj-button>
       </div>
     </template>
     <template slot="operation">

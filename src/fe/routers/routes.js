@@ -70,7 +70,7 @@ export default [{
       component: TaskCenter,
       meta: { title: '任务' },
       children: [
-        { path: 'taskDownload', component: TaskDownload, meta: { title: '下载任务' } },
+        { path: 'taskDownload', component: TaskDownload, meta: { title: '下载任务' } }
       ]
     }
   ]
