@@ -3,10 +3,10 @@
     <template slot="search-left">角色</template>
     <template slot="search-right">
       <div class="role-search-item">
-        <fj-input size="small" placeholder="请输入名称或标识" v-model="keyword"></fj-input>
+        <fj-input placeholder="请输入名称或标识" v-model="keyword" size="small"></fj-input>
       </div>
       <div class="role-search-item">
-        <fj-button size="small" type="primary" @click="handleClickSearch">查询</fj-button>
+        <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
       </div>
     </template>
     <template slot="operation">
@@ -27,7 +27,7 @@
       </span>
     </template>
     <template slot="table">
-      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+      <fj-table :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
         <fj-table-column prop="description" label="描述"></fj-table-column>

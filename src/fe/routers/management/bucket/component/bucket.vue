@@ -3,7 +3,7 @@
       <template slot="search-left">存储区</template>
       <template slot="search-right">
         <div class="layout-four-row-search-item" :style="{ width: '78px' }">
-          <fj-select placeholder="请选择" v-model="formData.status">
+          <fj-select placeholder="请选择" v-model="formData.status" size="small">
             <fj-option
               v-for="item in status"
               :key="item.value"
@@ -13,10 +13,10 @@
           </fj-select>
         </div>
         <div class="layout-four-row-search-item" :style="{ width: '190px' }">
-          <fj-input :rows="1" placeholder="请输入存储区名称" v-model="formData.keyword"></fj-input>
+          <fj-input :rows="1" placeholder="请输入存储区名称" v-model="formData.keyword" size="small"></fj-input>
         </div>
         <div class="layout-four-row-search-item">
-          <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
+          <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
         </div>
       </template>
       <template slot="operation">

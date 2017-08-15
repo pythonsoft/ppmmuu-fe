@@ -58,9 +58,17 @@
   color: #4C637B;
   display: inline-block;
   background: #F2F6FA;
-  border: 1px solid #E3EAF3;
   border-radius: 2px;
   z-index: 999;
+}
+
+.login-message span {
+  display: inline-block;
+  width: 113px;
+  height: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .login-message:before{
