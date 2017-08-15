@@ -34,11 +34,13 @@
         </div>
         <div class="media-category" v-if="times.length">
           <h4>时间范围</h4>
-          <fj-date-picker
-            type="datetimerange"
-            placeholder="请选择日期范围"
-            v-model="datetimerange"
-          ></fj-date-picker>
+          <div class="media-category-wrap">
+            <fj-date-picker
+              type="datetimerange"
+              placeholder="请选择日期范围"
+              v-model="datetimerange"
+            ></fj-date-picker>
+          </div>
         </div>
         <div class="media-category" v-if="times.length">
           <fj-button size="small" type="primary" @click="demo">查询</fj-button>
