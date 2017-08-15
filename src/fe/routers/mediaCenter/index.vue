@@ -42,10 +42,7 @@
             ></fj-date-picker>
           </div>
         </div>
-        <div class="media-category" v-if="times.length">
-          <fj-button size="small" type="primary" @click="demo">查询</fj-button>
-        </div>
-        </div>
+      </div>
     </template>
     <template slot="center">
       <div class="media-center-wrap" ref="mediaCenter">
@@ -262,11 +259,6 @@
       currentItemChange(item) {
         this.currentVideo = item;
       },
-//      demo() {
-//        const pos = getPosition(document.getElementById('media-category-date'));
-//        console.log(pos);
-//        appendToBody(document.getElementById('media-category-date'))
-//      },
     }
   };
 </script>
