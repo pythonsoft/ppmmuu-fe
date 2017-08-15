@@ -2,7 +2,7 @@
   <four-row-layout-right-content>
     <template slot="search-left">权限</template>
     <template slot="search-right">
-      <div class="permission-search-item" :style="{ width: '78px' }">
+      <div class="permission-search-item">
         <fj-select placeholder="请选择" v-model="status" size="small">
           <fj-option
             v-for="item in options"
@@ -13,10 +13,10 @@
         </fj-select>
       </div>
       <div class="permission-search-item">
-        <fj-input size="small" placeholder="请输入权限名" v-model="name"></fj-input>
+        <fj-input placeholder="请输入权限名" v-model="name" size="small"></fj-input>
       </div>
       <div class="permission-search-item">
-        <fj-button size="small" type="primary" @click="handleClickSearch">搜索</fj-button>
+        <fj-button type="primary" @click="handleClickSearch" size="small">搜索</fj-button>
       </div>
     </template>
      <template slot="operation">
@@ -28,7 +28,7 @@
        </span>
      </template>
       <template slot="table">
-        <fj-table style="font-size: 12px;" :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
+        <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
           <fj-table-column type="selection" width="20" align="center"></fj-table-column>
           <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
           <fj-table-column prop="name" label="名称" ></fj-table-column>
