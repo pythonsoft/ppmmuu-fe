@@ -19,13 +19,13 @@
 
         <ul class="media-center-list-bar">
           <li>
-            <span class="media-center-list-bar-color-span" v-html="item.program_type || '无分类'"></span>
+            <span title="分类" class="media-center-list-bar-color-span" v-html="item.program_type || '无分类'"></span>
           </li>
           <li>
-            <span class="media-center-list-bar-color-span">{{ formatSize(item.FILESIZE || 0) }}</span>
+            <span title="编目类别" class="media-center-list-bar-color-span">{{ item.ccid }}</span>
           </li>
           <li>
-            {{ item.last_modify | formatTime }}
+            <span title="入库时间">{{ item.last_modify | formatTime }}</span>
           </li>
         </ul>
       </div>
