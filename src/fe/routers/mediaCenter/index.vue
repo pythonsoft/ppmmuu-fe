@@ -34,18 +34,16 @@
         </div>
         <div class="media-category" v-if="times.length">
           <h4>时间范围</h4>
-          <!--<fj-input v-model="startTime"></fj-input>-->
           <fj-date-picker
             type="datetimerange"
             placeholder="请选择日期范围"
             v-model="datetimerange"
           ></fj-date-picker>
         </div>
-        <!--<div class="media-category" v-if="times.length">-->
-          <!--<h4>结束时间</h4>-->
-          <!--<fj-input v-model="endTime"></fj-input>-->
-        <!--</div>-->
-      </div>
+        <div class="media-category" v-if="times.length">
+          <fj-button size="small" type="primary" @click="demo">查询</fj-button>
+        </div>
+        </div>
     </template>
     <template slot="center">
       <div class="media-center-wrap" ref="mediaCenter">
@@ -89,15 +87,19 @@
 <script>
   import './index.css';
 
+  import Vue from 'vue';
+
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
   import { getTimeByStr, formatDuration } from '../../common/utils';
+  import FjButton from "../../component/fjUI/packages/button/src/button.vue";
 
   const api = require('../../api/media');
 
   export default {
     components: {
+      FjButton,
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
       'grid-list-view': gridAndList
@@ -257,7 +259,10 @@
       },
       currentItemChange(item) {
         this.currentVideo = item;
-      }
+      },
+      demo() {
+
+      },
     }
   };
 </script>
