@@ -168,7 +168,7 @@
       getPickerPosition() {
         const pickerPosition = {};
         const inputPosition = getPosition(this.$el);
-        const top = inputPosition.y;
+        const top = this.$el.getBoundingClientRect().top;
         const bottom = window.innerHeight - top;
         const inputHeight = this.$el.getBoundingClientRect().height;
         const inputWidth = this.$el.getBoundingClientRect().width;
@@ -178,10 +178,10 @@
         marginTop = parseInt(marginTop, 10);
         let transitionName = 'fj-zoom-in-top';
         if (bottom < top) {
-          pickerPosition.top = `${top - pickerHeight - marginTop * 2}px`;
+          pickerPosition.top = `${inputPosition.y - pickerHeight - marginTop * 2}px`;
           transitionName = 'fj-zoom-in-bottom';
         } else {
-          pickerPosition.top = `${top + inputHeight}px`;
+          pickerPosition.top = `${inputPosition.y + inputHeight}px`;
         }
         if (this.pickerPosition === 'right') {
           pickerPosition.left = `${inputPosition.x + inputWidth}px`
