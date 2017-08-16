@@ -261,7 +261,7 @@
 }
 
 .media-video-title-wrap {
-  background: #2A3E52;
+  background: #4C637B;
   height: 42px;
   line-height: 42px;
   font-size: 12px;
@@ -294,15 +294,27 @@
 }
 
 .media-video-title-bar li {
-  width: 42px;
+  width: 32px;
   height: 42px;
   float: right;
   overflow: hidden;
   user-select:none;
+  color: #CED9E5;
+  background-color: #4C637B;
+}
+
+.media-video-title-bar li .iconfont{
+  font-size: 14px;
 }
 
 .media-video-title-bar li:active {
-  background: #4c637b;
+  background: #38B1EB;
+  color: #fff;
+}
+
+.media-video-title-bar li:hover {
+  background: #344C67;
+  color: #fff;
 }
 
 .media-video-panel {
@@ -556,6 +568,9 @@
   color: #38B1EB;
 }
 
+.media-category-wrap{
+  padding-top: 15px;
+}
 
 
 

@@ -108,14 +108,14 @@
   border-top: 1px solid #EBF3FB;
   text-align: right;
 }
-
+/*
 .fj-date-panel-left {
   left: 0;
 }
 
 .fj-date-panel-right {
   right: 0;
-}
+}*/
 
 
 .fj-date-table {
@@ -295,6 +295,10 @@
   display: block;
   line-height: 30px;
 }
+.date-range-value-item.placeholder {
+  color: #9FB3CA;
+}
+
 .date-range-icon-wrap {
   position: relative;
   float: right;

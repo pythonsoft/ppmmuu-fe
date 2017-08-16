@@ -2,8 +2,8 @@
   <transition name="fj-zoom-in-top">
     <div
       class="fj-date-panel"
-      :class="`fj-date-panel-${pickerPosition}`"
-      :style="{'top': top + 'px'}">
+      :style="pickerPosition"
+      v-show="visible">
       <div v-if="type==='datetime'" class="fj-datetime-panel-header clearfix">
         <div class="fj-date-panel-editor-wrap">
           <fj-input size="small" placeholder="选择日期" :value="visibleDate" :readonly="true" />
@@ -72,7 +72,12 @@
         type: String,
         default: 'YYYY-MM-DD HH:mm:ss'
       },
-      defaultValue: {}
+      defaultValue: {},
+      visible: Boolean,
+      transitionName: {
+        type: String,
+        default: 'fj-zoom-in-top'
+      }
     },
     data() {
       return {
@@ -117,8 +122,8 @@
       }
     },
     mounted() {
-      const parentHeight = this.$parent.$el.getBoundingClientRect().height;
-      this.top = parentHeight;
+      // const parentHeight = this.$parent.$el.getBoundingClientRect().height;
+      // this.top = parentHeight;
       this.year = this.date.getFullYear();
       this.month = this.date.getMonth();
     },

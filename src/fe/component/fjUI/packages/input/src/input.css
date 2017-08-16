@@ -3,6 +3,7 @@
 .fj-input-wrap {
   position: relative;
   width: 100%;
+  line-height: 1;
 }
 .fj-textarea-wrap {
   position: relative;
@@ -100,6 +101,7 @@
   text-align: center;
   color: #344C67;
   cursor: pointer;
+  font-size: inherit;
   border-top-right-radius: var(--input-border-radius);
   border-bottom-right-radius: var(--input-border-radius);
 }

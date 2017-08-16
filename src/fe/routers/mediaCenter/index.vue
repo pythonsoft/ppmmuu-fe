@@ -34,17 +34,14 @@
         </div>
         <div class="media-category" v-if="times.length">
           <h4>时间范围</h4>
-          <!--<fj-input v-model="startTime"></fj-input>-->
-          <fj-date-picker
-            type="datetimerange"
-            placeholder="请选择日期范围"
-            v-model="datetimerange"
-          ></fj-date-picker>
+          <div id="media-category-date" class="media-category-wrap">
+            <fj-date-picker
+              type="datetimerange"
+              placeholder="请选择日期范围"
+              v-model="datetimerange"
+            ></fj-date-picker>
+          </div>
         </div>
-        <!--<div class="media-category" v-if="times.length">-->
-          <!--<h4>结束时间</h4>-->
-          <!--<fj-input v-model="endTime"></fj-input>-->
-        <!--</div>-->
       </div>
     </template>
     <template slot="center">
@@ -89,15 +86,19 @@
 <script>
   import './index.css';
 
+  import Vue from 'vue';
+
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
-  import { getTimeByStr, formatDuration } from '../../common/utils';
+  import { getTimeByStr, formatDuration, getPosition, appendToBody } from '../../common/utils';
+  import FjButton from "../../component/fjUI/packages/button/src/button.vue";
 
   const api = require('../../api/media');
 
   export default {
     components: {
+      FjButton,
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
       'grid-list-view': gridAndList
@@ -148,12 +149,12 @@
         let className = 'iconfont';
 
         if (type === 'grid') {
-          className += ' icon-Group media-center-view-grid';
+          className += ' icon-view-grid media-center-view-grid';
           if (this.viewType === 'grid') {
             className += ' media-center-view-selected';
           }
         } else if (type === 'list') {
-          className += ' icon-Group1 media-center-view-list';
+          className += ' icon-view-list media-center-view-list';
 
           if (this.viewType === 'list') {
             className += ' media-center-view-selected';
@@ -257,7 +258,7 @@
       },
       currentItemChange(item) {
         this.currentVideo = item;
-      }
+      },
     }
   };
 </script>
