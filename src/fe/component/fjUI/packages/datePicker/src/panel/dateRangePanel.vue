@@ -164,7 +164,8 @@
         maxMonth: null,
         minDate: this.defaultValue && this.defaultValue.length > 0 ? new Date(this.defaultValue[0]) : '',
         maxDate: this.defaultValue && this.defaultValue.length > 1 ? new Date(this.defaultValue[1]) : '',
-        date: this.defaultValue && this.defaultValue.length > 0 ? new Date(this.defaultValue[0]) : new Date(),
+        date: this.defaultValue && this.defaultValue.length > 0
+          ? new Date(this.defaultValue[0]) : new Date(),
         rangeState: {
           selecting: false,
           currentDate: null
