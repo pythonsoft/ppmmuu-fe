@@ -79,9 +79,9 @@
       isLogin() {
         const me = this;
         api.getUserAuth()
-                .then((res) => {
-          window.location.href = '/mediaCenter';
-        }).catch((error)=>{});
+          .then(() => {
+            window.location.href = '/mediaCenter';
+          }).catch(() => {});
       },
       login() {
         const me = this;
