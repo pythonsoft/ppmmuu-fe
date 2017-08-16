@@ -311,6 +311,7 @@
       handleClear() {
         this.minDate = null;
         this.maxDate = null;
+        this.date = new Date();
       },
       handleFocusTimeInput(type) {
         if (!this.minDate) {

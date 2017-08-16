@@ -1,5 +1,5 @@
 <template>
-  <transition name="fj-zoom-in-top">
+  <transition :name="transitionName">
     <div
       class="fj-date-panel"
       :style="pickerPosition"
