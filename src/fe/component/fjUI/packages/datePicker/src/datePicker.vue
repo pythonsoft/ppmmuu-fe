@@ -178,13 +178,13 @@
         marginTop = parseInt(marginTop, 10);
         let transitionName = 'fj-zoom-in-top';
         if (bottom < top) {
-          pickerPosition.top = `${inputPosition.y - pickerHeight - marginTop * 2}px`;
+          pickerPosition.top = `${inputPosition.y - pickerHeight - (marginTop * 2)}px`;
           transitionName = 'fj-zoom-in-bottom';
         } else {
           pickerPosition.top = `${inputPosition.y + inputHeight}px`;
         }
         if (this.pickerPosition === 'right') {
-          pickerPosition.left = `${inputPosition.x + inputWidth}px`
+          pickerPosition.left = `${inputPosition.x + inputWidth}px`;
         } else {
           pickerPosition.left = `${inputPosition.x}px`;
         }
