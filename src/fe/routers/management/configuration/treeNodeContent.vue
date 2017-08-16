@@ -20,17 +20,14 @@
     },
     methods: {
       handleClickDropDownItem(command) {
-        console.log(`currentNode: ${JSON.stringify(this.currentNode)}`);
         if (['edit', 'delete'].includes(command)) {
           if (Object.keys(this.currentNode).length === 0) {
             this.showErrorInfo('未选择组');
           } else {
             switch (command) {
               case 'edit':
-                console.log('edit');
                 break;
               case 'delete':
-                console.log('delete');
                 break;
               default:
                 this.showErrorInfo('未知操作');
