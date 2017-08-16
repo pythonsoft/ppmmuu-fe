@@ -67,7 +67,6 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 1);
-      console.log(this.$refs);
     },
     methods: {
       getActiveRoute(path, level) {

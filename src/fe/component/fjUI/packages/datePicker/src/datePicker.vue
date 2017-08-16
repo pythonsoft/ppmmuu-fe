@@ -184,7 +184,7 @@
           pickerPosition.top = `${inputPosition.y + inputHeight}px`;
         }
         if (this.pickerPosition === 'right') {
-          pickerPosition.left = `${inputPosition.x + inputWidth}px`
+          pickerPosition.left = `${inputPosition.x + inputWidth}px`;
         } else {
           pickerPosition.left = `${inputPosition.x}px`;
         }
