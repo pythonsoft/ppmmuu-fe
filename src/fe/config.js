@@ -27,13 +27,8 @@ axios.interceptors.response.use((response) => {
   // Do something with response data
   const res = response.data;
   const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004'];
-  if (loginStatusCodeArr.indexOf(res.status) !== -1) {
+  if (loginStatusCodeArr.indexOf(res.status) !== -1 && response.config.url.indexOf('/user/auth') === -1) {
     window.location.href = '/login';
-  }
-  if (response.config && response.config.url.indexOf('/user/login') !== -1) {
-    if (res.status === '0') {
-      window.location.href = '/management/account';
-    }
   }
   return response;
 }, error =>
