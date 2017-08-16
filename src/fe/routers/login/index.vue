@@ -10,7 +10,7 @@
       <div style="font-size: 20px; color: #2A3E52;">登录</div>
       <div class="login-form">
           <fj-form :model="userInfo" :rules="rules" ref="form" label-width="80px">
-            <div class="login-label">用户名</div>
+            <div class="login-label">账户</div>
             <div class="login-input">
               <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()"></fj-input>
               <div class="login-message" :style="{ display: isDisplay}"><span>{{error}}</span></div>
@@ -22,7 +22,7 @@
             <div class="login-extra">
               <fj-checkbox-group v-model="userInfo.autoLogin">
                 <fj-checkbox :label="true">下次自动登录</fj-checkbox>
-                <span class="login-forget">忘记密码</span>
+                <span class="login-forget">忘记密码?</span>
               </fj-checkbox-group>
             </div>
           </fj-form>
@@ -39,6 +39,7 @@
 </template>
 <script>
   import './login.css';
+  import { getCookie } from '../../common/utils';
 
   const api = require('../../api/user');
 
@@ -66,12 +67,21 @@
       };
     },
     created() {
+      const me = this;
       this.defaultRoute = this.getActiveRoute(this.$route.path, 1);
+      this.isLogin();
     },
     methods: {
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
+      },
+      isLogin() {
+        const me = this;
+        api.getUserAuth()
+          .then(() => {
+            window.location.href = '/mediaCenter';
+          }).catch(() => {});
       },
       login() {
         const me = this;
@@ -79,7 +89,7 @@
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
-            me.$router.push({ name: 'management' });
+            window.location.href = '/mediaCenter';
           })
           .catch((error) => {
             me.isBtnLoading = false;
