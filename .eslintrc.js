@@ -41,6 +41,9 @@ module.exports = {
     "no-underscore-dangle": 0,
     "func-names": 0,
     "max-len": ["error", 100, { "ignoreComments": true, "ignoreUrls": true, "ignoreStrings": true }],
-    "camelcase": 'off'
+    "camelcase": 'off',
+    "no-continue": "off",
+    "no-mixed-operators": "off",
+    "no-bitwise": "off",
   }
 };

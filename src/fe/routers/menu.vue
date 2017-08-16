@@ -36,7 +36,7 @@
 
   const menu = [
     { text: '媒体库', index: 'mediaCenter', route: '/mediaCenter', icon: 'icon-media-library' },
-  //    { text: '订阅', index: '2', route: '/2', icon: 'icon-subscription' },
+  // { text: '订阅', index: '2', route: '/2', icon: 'icon-subscription' },
     { text: '任务', index: 'taskCenter', route: '/taskCenter', icon: 'icon-menu' },
     { text: '个人中心', index: 'personalCenter', route: '/personalCenter', icon: 'icon-person' },
     { text: '管理', index: 'management', route: '/management', icon: 'icon-setting' }
@@ -46,7 +46,7 @@
       return {
         menu: menu,
         defaultRoute: '/',
-        display: false,
+        display: false
       };
     },
     created() {
@@ -54,8 +54,6 @@
     },
     watch: {
       '$route'(to, from) {
-        // console.log('to', to);
-        // console.log('from', from);
       }
     },
     methods: {
@@ -78,7 +76,7 @@
         }).catch((error) => {
           me.$message.error(error);
         });
-      },
+      }
     }
   };
 </script>

@@ -30,7 +30,6 @@
       showPathBackClick() {
       },
       editPathTactics(row) {
-        console.log('hello');
         this.showPath = false;
         this.showTactics = true;
         this.source = row;

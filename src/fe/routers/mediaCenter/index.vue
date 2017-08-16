@@ -84,21 +84,18 @@
   </layout-three-column>
 </template>
 <script>
-  import './index.css';
-
   import Vue from 'vue';
+  import { getTimeByStr, formatDuration, getPosition, appendToBody } from '../../common/utils';
+  import './index.css';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
-  import { getTimeByStr, formatDuration, getPosition, appendToBody } from '../../common/utils';
-  import FjButton from "../../component/fjUI/packages/button/src/button.vue";
 
   const api = require('../../api/media');
 
   export default {
     components: {
-      FjButton,
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
       'grid-list-view': gridAndList
@@ -130,7 +127,7 @@
         viewType: 'grid',
         fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03',
 
-        datetimerange: [],
+        datetimerange: []
       };
     },
     created() {
@@ -141,7 +138,7 @@
       setViewType(t) {
         this.viewType = t;
         this.fl = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify';
-        if(t === 'list') {
+        if (t === 'list') {
           this.fl += ',f_str_03';
         }
       },
@@ -258,7 +255,7 @@
       },
       currentItemChange(item) {
         this.currentVideo = item;
-      },
+      }
     }
   };
 </script>

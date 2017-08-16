@@ -100,7 +100,7 @@
       getDescription(item) {
         const content = getDescription(item);
         const limit = 172;
-        return getStringLength(content) > limit ? content.slice(0, limit) + '...' : content;
+        return getStringLength(content) > limit ? `${content.slice(0, limit)}...` : content;
       },
       formatSize,
       deepClone

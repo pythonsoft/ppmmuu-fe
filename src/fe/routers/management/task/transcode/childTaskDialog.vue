@@ -183,12 +183,13 @@
 
         for (let i = 0, len = order.length; i < len; i++) {
           temp = data[order[i]];
-          if (!temp) { continue; }
-          for (let j = 0, l = temp.length; j < l; j++) {
-            temp[j]._type = order[i];
-            temp[j]._path = temp[j].filePath || temp[j].orgFilePath || temp[j].mergerdFilePath || '-';
-            temp[j]._totalTime = temp[j].totalTime ? utils.formatDuration(temp[j].totalTime) : '-';
-            arr.push(temp[j]);
+          if (temp) {
+            for (let j = 0, l = temp.length; j < l; j++) {
+              temp[j]._type = order[i];
+              temp[j]._path = temp[j].filePath || temp[j].orgFilePath || temp[j].mergerdFilePath || '-';
+              temp[j]._totalTime = temp[j].totalTime ? utils.formatDuration(temp[j].totalTime) : '-';
+              arr.push(temp[j]);
+            }
           }
         }
 
