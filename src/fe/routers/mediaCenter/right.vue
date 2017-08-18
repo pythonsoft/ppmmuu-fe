@@ -1,6 +1,6 @@
 <template>
   <div class="media-right">
-    <div class=" media-video">
+    <div class=" media-video" @click.stop="openMovieEditor">
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
         <video controls="controls" autoplay="autoplay" :poster="poster" height="247" width="439">
           <source src="http://hkss3.phoenixtv.com/live/pic.stream_720p/playlist.m3u8" />
@@ -13,7 +13,7 @@
               <li>
                 <span title="下载" class="iconfont icon-xiazai"></span>
               </li>
-              <li>
+              <li @click.stop="openMovieEditor">
                 <span title="视频编辑" class="iconfont icon-jianji"></span>
               </li>
             </ul>
@@ -133,6 +133,9 @@
       },
       downloadClick() {
 
+      },
+      openMovieEditor() {
+        this.$emit('showMovieEditor', true);
       }
     }
   };

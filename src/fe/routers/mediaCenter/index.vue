@@ -79,8 +79,18 @@
     <template slot="right">
       <media-right
         :videoInfo="currentVideo"
+        @showMovieEditor="setMovieEditorDisplay"
       ></media-right>
     </template>
+
+    <movie-editor-view
+      :parentSize="parentSize"
+      :panels="'#-p1, 30'"
+      :direction="'x'"
+      :canResize="true"
+      :visible.sync="displayMovieEditor"
+    ></movie-editor-view>
+
   </layout-three-column>
 </template>
 <script>
@@ -89,6 +99,7 @@
   import './index.css';
 
   import threeColumn from '../../component/layout/threeColumn';
+  import movieEditor from '../movieEditor/index';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
 
@@ -98,7 +109,8 @@
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-list-view': gridAndList
+      'grid-list-view': gridAndList,
+      'movie-editor-view': movieEditor
     },
     data() {
       return {
@@ -127,7 +139,10 @@
         viewType: 'grid',
         fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03',
 
-        datetimerange: []
+        datetimerange: [],
+        displayMovieEditor: false,
+
+        parentSize: { width: '100', height: '100' }
       };
     },
     created() {
@@ -135,6 +150,9 @@
       this.getSearchConfig();
     },
     methods: {
+      setMovieEditorDisplay(v) {
+        this.displayMovieEditor = v;
+      },
       setViewType(t) {
         this.viewType = t;
         this.fl = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify';
@@ -167,7 +185,8 @@
           me.offsetWidth = me.$refs.mediaCenter.offsetWidth - 26 * 2;
           me.offsetHeight = document.body.clientHeight - 53;
           me.listWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
-          const pageSize = (me.offsetWidth / me.itemSize.width | 0) * (me.offsetHeight / me.itemSize.height | 0);
+          const pageSize = (me.offsetWidth / me.itemSize.width | 0) *
+            (me.offsetHeight / me.itemSize.height | 0);
           me.pageSize = pageSize < 20 ? 20 : pageSize;
 
           me.getMediaList();
