@@ -179,7 +179,7 @@
 
           top.height = `${this.getValue(top.height) + offset.y}px`;
           bottom.height = `${this.getValue(bottom.height) - offset.y}px`;
-          bottom.top = `${this.getValue(bottom.top) + offset.x}px`;
+          bottom.top = `${this.getValue(bottom.top) + offset.y}px`;
 
           bar.top = `${this.getValue(bar.top) + offset.y}px`;
         }

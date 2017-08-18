@@ -15,14 +15,14 @@
       <div class="movie-editor-main">
         <panel-view
           :parentSize="size"
-          panels="200,#-p0"
+          panels="#/2,#-p0"
+          direction="y"
         >
           <template slot="0" scope="props">
             <panel-view
               :parentSize="{ width: props.width, height: props.height }"
-              panels="30,#-p0"
-              direction="y"
-              :canResize="false"
+              panels="#/2,#-p0"
+              direction="x"
             ></panel-view>
           </template>
         </panel-view>
