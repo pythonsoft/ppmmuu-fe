@@ -185,7 +185,8 @@
           me.offsetWidth = me.$refs.mediaCenter.offsetWidth - 26 * 2;
           me.offsetHeight = document.body.clientHeight - 53;
           me.listWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
-          const pageSize = (me.offsetWidth / me.itemSize.width | 0) * (me.offsetHeight / me.itemSize.height | 0);
+          const pageSize = (me.offsetWidth / me.itemSize.width | 0) *
+            (me.offsetHeight / me.itemSize.height | 0);
           me.pageSize = pageSize < 20 ? 20 : pageSize;
 
           me.getMediaList();

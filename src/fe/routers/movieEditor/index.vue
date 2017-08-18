@@ -44,13 +44,13 @@
     },
     watch: {
       visible() {
-        this.size = { width: document.body.clientWidth, height: document.body.clientHeight }
+        this.size = { width: document.body.clientWidth, height: document.body.clientHeight };
       }
     },
     data() {
       return {
         size: { width: 0, height: 0 }
-      }
+      };
     },
     created() {
 
@@ -60,5 +60,5 @@
         this.$emit('update:visible', false);
       }
     }
-  }
+  };
 </script>
