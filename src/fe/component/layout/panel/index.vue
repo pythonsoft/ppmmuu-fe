@@ -21,7 +21,8 @@
       parentSize: { type: Object, default() { return { width: '100', height: '100' }; } },
       panels: { type: String, default: '#-p1, 30' },
       direction: { type: String, default: 'x' },
-      canResize: { type: Boolean, default: true }
+      canResize: { type: Boolean, default: true },
+      name: { type: String }
     },
     data() {
       return {
@@ -33,7 +34,8 @@
       };
     },
     watch: {
-      parentSize() {
+      parentSize(v) {
+        console.log('watch parent size --->', this.name, v);
         this.setSplits(this.panels);
         this.setSlideBars();
       }
@@ -84,6 +86,7 @@
         this.bars = bars;
       },
       setSplits(v) {
+        console.log('setSplits --->', this.name, this.parentSize);
         const splits = v.replace(/\s/g, '').trim().split(',');
         const size = this.direction === 'x' ? this.parentSize.width : this.parentSize.height;
         let temp = 0;

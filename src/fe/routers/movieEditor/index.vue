@@ -23,6 +23,7 @@
               :parentSize="{ width: props.width, height: props.height }"
               panels="#/2,#-p0"
               direction="x"
+              name="child"
             ></panel-view>
           </template>
         </panel-view>
