@@ -1,14 +1,11 @@
 <template>
   <div class="media-right">
-    <div class=" media-video">
+    <div class=" media-video" @click.stop="openMovieEditor">
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
-        <video controls="controls" autoplay="autoplay" :poster="poster" height="247" width="439" @pause="pause()" ref="video" @play="play()">
-          <source src="http://localhost:8080/media/getVideo?a=1" />
+        <video controls="controls" autoplay="autoplay" :poster="poster" height="247" width="439">
+          <source src="http://hkss3.phoenixtv.com/live/pic.stream_720p/playlist.m3u8" />
           Your browser does not support the video tag.
         </video>
-        <!--<div style="z-index: 999;width:439px;height:215px;background: mediumpurple;position:fixed;right:0;top:0;">-->
-          <!--<canvas ref="c1" width="439" height="215"/>-->
-        <!--</div>-->
         <div >
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
@@ -16,7 +13,7 @@
               <li>
                 <span title="下载" class="iconfont icon-xiazai"></span>
               </li>
-              <li>
+              <li @click.stop="openMovieEditor">
                 <span title="视频编辑" class="iconfont icon-jianji"></span>
               </li>
             </ul>
@@ -111,7 +108,6 @@
       }
     },
     created() {
-
     },
     methods: {
       handleTabClick(tab) {
@@ -127,11 +123,6 @@
           me.$message.error(error);
         });
       },
-      pause() {
-        const video = this.$refs.video;
-        // video.src = 'http://localhost:8080/media/getVideo?a=2#t=60,80';
-        const len = video.seekable.length - 1;
-      },
       getThumb,
       getTitle,
       isEmptyObject,
@@ -143,25 +134,8 @@
       downloadClick() {
 
       },
-      play() {
-        this.video = this.$refs.video;
-        this.c1 = this.$refs.c1;
-        this.ctx1 = this.c1.getContext('2d');
-        const self = this;
-        self.width = self.video.videoWidth / 2;
-        self.height = self.video.videoHeight / 2;
-        // self.timerCallback();
-      },
-      timerCallback() {
-        this.computeFrame();
-        const self = this;
-        setTimeout(() => {
-          self.timerCallback();
-        }, 0);
-      },
-      computeFrame() {
-        console.log('draw Frame');
-        this.ctx1.drawImage(this.video, 0, 0, this.width, this.height);
+      openMovieEditor() {
+        this.$emit('showMovieEditor', true);
       }
     }
   };

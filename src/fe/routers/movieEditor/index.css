@@ -1,0 +1,79 @@
+.movie-editor{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #3c3f41;
+  color: #bbb;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.movie-editor-wrap {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding-top: 25px;
+  box-sizing: border-box;
+}
+
+.movie-editor-top{
+  height: 24px;
+  line-height: 24px;
+  border-bottom: 1px solid #242627;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #4b4b4b;
+  box-sizing: border-box;
+  padding-right: 30px;
+}
+
+.movie-editor-title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  text-indent: 4px;
+  overflow: hidden;
+  height: 22px;
+  line-height: 22px;
+}
+
+.movie-editor-top-bar {
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 18px;
+}
+
+.movie-editor-top-bar li{
+  height: 24px;
+  line-height: 24px;
+  width: 24px;
+  text-align: center;
+  float: left;
+}
+
+.movie-editor-top-bar li:active {
+  background: #38B1EB;
+  color: #fff;
+}
+
+.movie-editor-top-bar li:hover {
+  background: #666;
+  color: #fff;
+}
+
+.movie-editor-main {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
