@@ -1,24 +1,17 @@
 <template>
-  <div class="clearfix">
+  <div class="clearfix" style="height: 100%;">
     <div class="left-tree">
-      <two-row-tree>
-        <template slot="tworowtree-upper-title">分组结构</template>
-        <template slot="tworowtree-upper-button">
-          <fj-button size="mini" @click="clickAddGroup">添加组</fj-button>
-        </template>
-        <template slot="tree">
-          <div id=second-row-of-tree>
-            <fj-tree
-                    :data="treeData"
-                    node-key="id"
-                    @node-click="handleTreeNodeClick"
-                    @current-change="handleTreeNodeCurrentChange"
-                    @node-expand="handleTreeNodeExpand"
-                    @node-collapse="handleTreeNodeCollapse">
-            </fj-tree>
-          </div>
-        </template>
-      </two-row-tree>
+      <tree-view
+              title="分组结构"
+              addBtnText="添加组织"
+              :vue-instance="vueInstance"
+              :menus="dropMenus"
+              menu-width="90px"
+              :exec-command="execCommand"
+              :list-group="handleTreeNodeClick"
+              :btn-click="btnClick"
+              :tree-node-current-change="treeNodeCurrentChange"
+      ></tree-view>
     </div>
     <div class="right-list">
       <four-row-layout-right-content>
@@ -33,7 +26,7 @@
         </template>
         <template slot="operation">
           <span class="permission-btn-mini-margin">
-            <fj-button type="info" size="mini" v-bind:disabled="Object.keys(currentNode).length === 0" @click="handleClickAdd">增加</fj-button>
+            <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
           </span>
           <span class="permission-btn-mini-margin">
             <fj-button type="info" size="mini" v-bind:disabled="change" @click="handleClickChange">变更</fj-button>
@@ -58,25 +51,6 @@
           </fj-pagination>
         </template>
 
-        <fj-dialog
-          v-bind:title="dialogTitle"
-          :visible.sync="dialogVisible"
-          @close="cancelDialog">
-          <template v-if="dialogTitle == '新建组'">
-            请输入组名称
-            <fj-input v-model="groupName" autofocus />
-          </template>
-          <template v-else-if="dialogTitle == ''">
-          </template>
-          <template v-else>
-            <span>{{dialogMessage}}</span>
-          </template>
-          <div slot="footer">
-            <fj-button @click="cancelDialog">取消</fj-button>
-            <fj-button type="primary" @click="confirmDialog">确定</fj-button>
-          </div>
-        </fj-dialog>
-
         <fj-slide-dialog
           v-bind:title="slideDialogTitle"
           :visible.sync="slideDialogVisible"
@@ -98,15 +72,45 @@
             <fj-button type="primary" @click="confirmSlideDialog">确定</fj-button>
           </div>
         </fj-slide-dialog>
+
+        <fj-dialog
+                title="删除提示"
+                :visible.sync="deleteDialogVisible">
+
+          <p>您确定要删除{{ dialogTitle }}吗？</p>
+
+          <div slot="footer" class="dialog-footer">
+            <fj-button @click.stop="deleteDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="isDeleteBtnLoading" @click.stop="handleDeleteClick">确定</fj-button>
+          </div>
+
+        </fj-dialog>
+        <add-group
+                :parentId="addGroupDialogParentId"
+                :dialogVisible.sync="isShowAddGroupDialog"
+                @added="vueInstance.$emit('tree.listGroup')">
+
+        </add-group>
+        <edit-group
+                :info="nodeInfo"
+                :dialogVisible.sync="isShowEditGroupDialog"
+                @edited="vueInstance.$emit('tree.listGroup')">
+
+        </edit-group>
       </four-row-layout-right-content>
     </div>
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import { formatQuery, getTree } from '../../../common/utils';
   import TwoRowTree from '../../../component/layout/twoRowTree/index';
+  import TreeView from '../../../component/higherOrder/tree';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import TreeNodeContent from './treeNodeContent';
+  import addGroup from './component/addGroupDialog';
+  import editGroup from './component/editGroup';
+  import { MENU_CONFIG } from './config';
 
   const api = require('../../../api/role');
   const apiConfig = require('../../../api/configuration');
@@ -115,18 +119,25 @@
     components: {
       'two-row-tree': TwoRowTree,
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'tree-node-content': TreeNodeContent
+      'tree-node-content': TreeNodeContent,
+      'add-group': addGroup,
+      'edit-group': editGroup,
+      'tree-view': TreeView
     },
     data() {
       return {
+        dropMenus: MENU_CONFIG,
         action: '',
-        treeData: [],
         currentNode: {},
         currentConfig: {},
         defaultRoute: '/',
-        dialogVisible: false,
-        dialogTitle: '提示',
-        dialogMessage: '',
+        deleteDialogVisible: false,
+        dialogTitle: '',
+        isDeleteBtnLoading: false,
+        addGroupDialogParentId: '',
+        isShowAddGroupDialog: false,
+        isShowEditGroupDialog: false,
+        nodeInfo: {},
         name: '',
         tableData: [],
         currentPage: 1,
@@ -156,6 +167,9 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.vueInstance = new Vue({
+        name: 'configuration'
+      });
       this.handleTreeNodeClick();
     },
     methods: {
@@ -164,19 +178,81 @@
         return pathArr[level] || '';
       },
 
-      handleTreeNodeClick(node) {
+      execCommand(command, node) {
+        const title = '组织';
+        switch (command) {
+          case 'delete':
+            this.handleOpenDeleteDialog(node.info.id);
+            break;
+          case 'new':
+            this.handleOpenAddDialog(node.info.id);
+            break;
+          case 'edit':
+            this.handleShowEditDialog(node.info);
+            break;
+          default:
+            break;
+        }
+      },
+
+      btnClick(treeNode) {
+        this.handleOpenAddDialog('');
+      },
+      treeNodeCurrentChange(treeNode) {
+        this.currentNode = treeNode;
+      },
+
+      handleOpenDeleteDialog(_id) {
+        this.deleteDialogVisible = true;
+        this.dialogTitle = '组';
+        this.deleteDialogId = _id;
+      },
+
+      handleDeleteClick() {
+        const me = this;
+        const func = this.dialogTitle === '组' ? apiConfig.postDeleteGroup : apiConfig.postDeleteConfig;
+        const _id = this.dialogTitle === '组' ? this.deleteDialogId : this.currentConfig._id;
+        me.isDeleteBtnLoading = true;
+
+        func({ _id: _id })
+          .then((res) => {
+            me.$message.success('删除成功');
+            me.isDeleteBtnLoading = false;
+            me.deleteDialogVisible = false;
+            if (this.dialogTitle === '组') {
+              me.vueInstance.$emit('tree.removeNode', this.deleteGroupDialogId);
+            } else {
+              this.handleClickSearch();
+            }
+          }).catch((error) => {
+            me.isDeleteBtnLoading = false;
+            me.$message.error(error);
+          });
+      },
+
+      handleOpenAddDialog(_id) {
+        this.isShowAddGroupDialog = true;
+        this.addGroupDialogParentId = _id;
+      },
+
+      handleShowEditDialog(info) {
+        this.isShowEditGroupDialog = true;
+        this.nodeInfo = info;
+      },
+
+      handleTreeNodeClick(node, cb) {
         const me = this;
         const query = {};
         if (node === undefined) {
           query.parent = '';
         } else {
-          query.parent = node.id;
+          query.parent = node.info ? node.info.id : '';
         }
         me.groupId = query.parent;
         me.clickNodeSearch = true;
         apiConfig.getListGroup(formatQuery(query, true))
           .then((res) => {
-            me.treeData = getTree(me.treeData, res.data, query.parent, 'id');
+            cb && cb(res.data);
           })
           .catch((err) => {
             me.showErrorInfo(err);
@@ -233,57 +309,18 @@
       },
 
       handleClickDeleted() {
-        this.dialogTitle = '提示';
-        this.dialogMessage = '确定要删除这些配置吗?';
-        this.dialogVisible = true;
-        this.action = 'deleteConfig';
+        this.dialogTitle = '配置';
+        this.deleteDialogVisible = true;
       },
 
       resetDialog() {
-        this.dialogTitle = '提示';
-        this.dialogMessage = '';
+        this.dialogTitle = '';
         this.dialogVisible = false;
         this.action = '';
       },
 
       cancelDialog() {
         this.resetDialog();
-      },
-
-      confirmDialog() {
-        const me = this;
-        const postData = {};
-        let message = '';
-        if (this.action === 'addGroup') {
-          postData.parent = this.currentNode.id || '';
-          postData.name = this.groupName;
-          message = '增加';
-          apiConfig.postAddGroup(postData)
-            .then((res) => {
-              me.showSuccessInfo(`${message}成功`);
-              me.resetDialog();
-              me.handleTreeNodeClick();
-            })
-            .catch((err) => {
-              me.showErrorInfo(err);
-              me.resetDialog();
-            });
-        } else if (this.action === 'deleteConfig') {
-          postData.id = this.currentConfig._id;
-          message = '删除';
-          apiConfig.postDeleteConfig(postData)
-            .then((response) => {
-              me.showSuccessInfo(`${message}成功!`);
-              me.resetDialog();
-              me.handleTreeNodeClick(me.currentNode);
-            })
-            .catch((error) => {
-              me.showErrorInfo(error);
-              me.resetDialog();
-            });
-        } else {
-          this.resetDialog();
-        }
       },
       handleSelectionChange(rows) {
         if (rows && rows.length !== 0) {
@@ -386,19 +423,6 @@
               me.cancelSlideDialog();
             });
         }
-      },
-
-      renderContent(h, node) {
-        return h(TreeNodeContent, {
-          props: {
-            node: node,
-            treeData: this.treeData,
-            currentNode: this.currentNode
-          },
-          methods: {
-            showErrorInfo: this.showErrorInfo
-          }
-        });
       }
     }
   };
@@ -407,17 +431,14 @@
   .left-tree {
     float: left;
     width: 192px;
+    height: 100%;
+    overflow-y: auto;
+    background-color: #F8FAFB;
   }
   .right-list {
-    margin-left: 212px;
-  }
-  #second-row-of-tree {
-    position: relative;
-  }
-
-  #two-row-tree {
-    float: left;
-    min-width: 192px;
+    margin-left: 192px;
+    height: 100%;
+    overflow: auto;
   }
 
   .permission-search-item {
