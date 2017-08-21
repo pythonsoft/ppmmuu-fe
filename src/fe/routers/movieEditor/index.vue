@@ -24,7 +24,11 @@
               panels="#/2,#-p0"
               direction="x"
               name="child"
-            ></panel-view>
+            >
+              <template slot="0">
+                00000000
+              </template>
+            </panel-view>
           </template>
         </panel-view>
       </div>
@@ -45,7 +49,7 @@
     },
     watch: {
       visible() {
-        this.size = { width: document.body.clientWidth, height: document.body.clientHeight };
+        this.resize();
       }
     },
     data() {
@@ -55,8 +59,17 @@
     },
     created() {
 
+      // window.addEventListener('resize', this.resize);
+      // document.body.removeEventListener('mouseup', this.mouseup);
+
+    },
+    mounted() {
+      window.addEventListener('resize', this.resize);
     },
     methods: {
+      resize(e) {
+        this.size = { width: document.body.clientWidth, height: document.body.clientHeight };
+      },
       close() {
         this.$emit('update:visible', false);
       }
