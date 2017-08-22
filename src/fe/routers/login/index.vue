@@ -1,5 +1,6 @@
 <template>
-  <div  class="login">
+  <div class="login">
+    <div class="login-box">
     <div class="login-top">
       <div>
         <img src="../../img/logo@2x.png" style="width: 57px; height: 57px;">
@@ -34,6 +35,7 @@
     </div>
     <div class="login-footer">
       <span>Copyright © 凤凰卫视版权所有 凤凰卫视研发中心技术支持</span>
+    </div>
     </div>
   </div>
 </template>
