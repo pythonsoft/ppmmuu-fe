@@ -1,6 +1,6 @@
 <template>
   <div class="media-right">
-    <div class=" media-video" @click.stop="openMovieEditor">
+    <div class=" media-video">
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
         <video controls="controls" autoplay="autoplay" :poster="poster" height="247" width="439">
           <source src="http://hkss3.phoenixtv.com/live/pic.stream_720p/playlist.m3u8" />
