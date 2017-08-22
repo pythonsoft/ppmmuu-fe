@@ -1,39 +1,41 @@
 <template>
-  <div  class="login">
-    <div class="login-top">
-      <div>
-        <img src="../../img/logo@2x.png" style="width: 57px; height: 57px;">
+  <div class="login">
+    <div class="login-box">
+      <div class="login-top">
+        <div>
+          <img src="../../img/logo@2x.png" style="width: 57px; height: 57px;">
+        </div>
+        <div class="login-title">鳳凰衛視媒體中心</div>
       </div>
-      <div class="login-title">鳳凰衛視媒體中心</div>
-    </div>
-    <div class="login-content">
-      <div style="font-size: 20px; color: #2A3E52;">登录</div>
-      <div class="login-form">
-          <fj-form :model="userInfo" :rules="rules" ref="form" label-width="80px">
-            <div class="login-label">账户</div>
-            <div class="login-input">
-              <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()"></fj-input>
-              <div class="login-message" :style="{ display: isDisplay}"><span>{{error}}</span></div>
+      <div class="login-content">
+        <div style="font-size: 20px; color: #2A3E52;">登录</div>
+        <div class="login-form">
+            <fj-form :model="userInfo" :rules="rules" ref="form" label-width="80px">
+              <div class="login-label">账户</div>
+              <div class="login-input">
+                <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()"></fj-input>
+                <div class="login-message" :style="{ display: isDisplay}"><span>{{error}}</span></div>
+              </div>
+              <div class="login-label login-password">密码</div>
+              <div class="login-input">
+                <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword" @focus="focusInput2()"></fj-input>
+              </div>
+              <div class="login-extra">
+                <fj-checkbox-group v-model="userInfo.autoLogin">
+                  <fj-checkbox :label="true">下次自动登录</fj-checkbox>
+                  <span class="login-forget">忘记密码?</span>
+                </fj-checkbox-group>
+              </div>
+            </fj-form>
+            <div class="login-form-button">
+              <fj-button type="primary" :loading="isBtnLoading" @click="login">登录</fj-button>
             </div>
-            <div class="login-label login-password">密码</div>
-            <div class="login-input">
-              <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword" @focus="focusInput2()"></fj-input>
-            </div>
-            <div class="login-extra">
-              <fj-checkbox-group v-model="userInfo.autoLogin">
-                <fj-checkbox :label="true">下次自动登录</fj-checkbox>
-                <span class="login-forget">忘记密码?</span>
-              </fj-checkbox-group>
-            </div>
-          </fj-form>
-          <div class="login-form-button">
-            <fj-button type="primary" :loading="isBtnLoading" @click="login">登录</fj-button>
-          </div>
+        </div>
+        <router-view></router-view>
       </div>
-      <router-view></router-view>
-    </div>
-    <div class="login-footer">
-      <span>Copyright © 凤凰卫视版权所有 凤凰卫视研发中心技术支持</span>
+      <div class="login-footer">
+        <span>Copyright © 凤凰卫视版权所有 凤凰卫视研发中心技术支持</span>
+      </div>
     </div>
   </div>
 </template>
