@@ -12,6 +12,7 @@
 .layout-engine-four-row-search-item{
   float: left;
   margin-left: 10px;
+  line-height: 100%;
 }
 
 .layout-engine-btn-mini-margin {

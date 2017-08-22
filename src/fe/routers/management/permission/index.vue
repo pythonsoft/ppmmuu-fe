@@ -16,7 +16,7 @@
         <fj-input placeholder="请输入权限名" v-model="name" size="small"></fj-input>
       </div>
       <div class="permission-search-item">
-        <fj-button type="primary" @click="handleClickSearch" size="small">搜索</fj-button>
+        <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
       </div>
     </template>
      <template slot="operation">
@@ -204,6 +204,7 @@
     .permission-search-item{
       float: left;
       margin-left: 10px;
+      line-height: 100%;
     }
 
     .permission-btn-mini-margin {
