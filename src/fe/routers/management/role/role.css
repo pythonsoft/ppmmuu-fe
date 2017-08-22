@@ -1,6 +1,7 @@
 .role-search-item{
   float: left;
   margin-left: 10px;
+  line-height: 100%;
 }
 
 .role-btn-mini-margin {
