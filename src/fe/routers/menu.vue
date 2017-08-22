@@ -1,6 +1,6 @@
 <template>
   <fj-menu :default-active="defaultRoute" router>
-    <div class="logo-wrap">logo</div>
+    <div class="iconfont icon-phoenixtv logo-wrap"></div>
     <fj-menu-item
       v-for="item in menu"
       :key="item.index"
@@ -87,6 +87,7 @@
     background: #344C67;
     color: #fff;
     text-align: center;
+    font-size: 26px;
   }
   .menu-box {
     position: absolute;
