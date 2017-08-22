@@ -6,8 +6,7 @@ stages:
 deploy_to_68_job:
   stage: deploy
   script:
-    - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git HEAD | (rm -rf ~/UMP-FE && mkdir -p ~/UMP-FE && cd ~/UMP-FE && tar xf -)"
+    - git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git HEAD | (rm -rf /home/gitlab-runner/UMP-FE && mkdir -p /home/gitlab-runner/UMP-FE && cd /home/gitlab-runner/UMP-FE && tar xf -)
 
   environment:
     name: test
@@ -19,17 +18,15 @@ deploy_to_68_job:
 setup_job:
   stage: setup
   script:
-    - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "cd UMP-FE && npm config set strict-ssl false && npm config set registry 'http://registry.npm.taobao.org/' && npm install"
+    - cd /home/gitlab-runner/UMP-FE && npm config set strict-ssl false && npm config set registry 'https://registry.npm.taobao.org/' && npm install
   tags:
     - test
 
 run_node_68:
   stage: run_node
   script:
-    - function at_68 { ssh ump@10.0.15.68 $1; }
-    - at_68 "cd ~/UMP-FE && sed -i -re \"s/(^\s*axios\.defaults\.baseURL)\s*=.*/\1='http:\/\/api\.szdev\.cn'/\" src/fe/config.js"
-    - at_68 "killall -q node && cd ~/UMP-FE && nohup npm run dev >/dev/null 2>&1 &"
+    - cd /home/gitlab-runner/UMP-FE && sed -i -re "s/(^\s*axios\.defaults\.baseURL)\s*=.*/\1='http:\/\/api\.szdev\.cn'/" src/fe/config.js
+    - killall -q node && cd ~/UMP-FE && nohup npm run dev >/dev/null 2>&1 &
 
   environment:
     name: test
