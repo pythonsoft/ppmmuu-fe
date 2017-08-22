@@ -18,10 +18,10 @@
         <template slot="search-left">{{currentNode.name || '配置项'}}</template>
         <template slot="search-right">
           <div class="permission-search-item">
-            <fj-input placeholder="请输入关键字" v-model="name"></fj-input>
+            <fj-input placeholder="请输入关键字" v-model="name" size="small"></fj-input>
           </div>
           <div class="permission-search-item">
-            <fj-button type="primary" @click="handleClickSearch">搜索</fj-button>
+            <fj-button type="primary" @click="handleClickSearch" size="small">搜索</fj-button>
           </div>
         </template>
         <template slot="operation">
