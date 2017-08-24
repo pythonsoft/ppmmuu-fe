@@ -6,11 +6,13 @@
       <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
     </div>
     <div class="material-panel-bottom">
+      <div v-if="duration===0" class="player-mask"></div>
       <div class="player-time-box clearfix">
         <span :style="{float: 'left'}">{{ formatTime(currentTime) }}</span>
         <span :style="{float: 'right'}">{{ formatTime(clipDuration) }}</span>
       </div>
       <div
+        v-show="duration > 0"
         class="player-progress-bar-box"
         @mouseenter="mouseenter"
         @mousemove="mousemove"
