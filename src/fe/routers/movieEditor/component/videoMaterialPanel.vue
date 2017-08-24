@@ -54,6 +54,8 @@
   </div>
 </template>
 <script>
+  import { fillUpZero } from '../../../common/utils';
+
   export default {
     props: {
       isActivePanel: Boolean,
@@ -260,18 +262,14 @@
         second %= (60 * 60);
         const minutes = Math.floor(second / 60);
         second %= 60;
-        let seconds = Math.floor(second);
+        const seconds = Math.floor(second);
         // const frame = Math.floor((second % 1) * this.fps)
         let frame = (second % 1) * this.fps;
         frame = frame % 1 > 0.9 ? frame + 1 : frame;
         frame = Math.floor(frame);
-
-        seconds = this.fillUpZero(seconds);
-        frame = this.fillUpZero(frame);
-        return `${this.fillUpZero(hours)}:${this.fillUpZero(minutes)}:${seconds}:${frame}`;
-      },
-      fillUpZero(v) {
-        return v < 10 ? `0${v}` : v;
+        return `
+          ${fillUpZero(hours)}:${fillUpZero(minutes)}:${fillUpZero(seconds)}:${fillUpZero(frame)}
+        `;
       },
       getControlerIcon(icon, name) {
         if (name === 'play') {
