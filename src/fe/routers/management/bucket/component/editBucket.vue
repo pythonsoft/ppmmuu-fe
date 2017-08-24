@@ -10,7 +10,7 @@
       <fj-form-item label="名称" prop="name">
         <fj-input v-model="formData.name"></fj-input>
       </fj-form-item>
-      <fj-form-item label="存储类型" prop="type">
+      <fj-form-item label="存储类型">
         <fj-select v-model="formData.type">
           <fj-option
             v-for="item in TYPE"
@@ -19,7 +19,7 @@
             :label="item.text"></fj-option>
         </fj-select>
       </fj-form-item>
-      <fj-form-item label="读写权限" prop="permission">
+      <fj-form-item label="读写权限">
         <fj-select v-model="formData.permission">
           <fj-option
                   v-for="item in PERMISSION"

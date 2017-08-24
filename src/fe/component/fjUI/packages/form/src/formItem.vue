@@ -47,8 +47,7 @@
     methods: {
       getRules() {
         let formRules = this.form.rules;
-        formRules = formRules ? formRules[this.prop] : [];
-        formRules = formRules ? formRules : [];
+        formRules = formRules && formRules[this.prop] ? formRules[this.prop] : [];
         return formRules;
       },
       getFilteredRule(trigger) {
