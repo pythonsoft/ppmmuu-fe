@@ -39,7 +39,7 @@
           <fj-form-item label="容量" prop="maxSize">
             <fj-input v-model="formData.maxSize"></fj-input>
           </fj-form-item>
-          <fj-form-item label="存储区" prop="bucket.name">
+          <fj-form-item label="存储区" prop="bucket">
             <div class="group-input"><fj-input v-model="formData.bucket.name" :readonly="true"></fj-input></div>
             <fj-button @click.stop.prevent="bucketDialogVisible=true">修改</fj-button>
           </fj-form-item>
@@ -49,7 +49,7 @@
         </fj-form>
       </fj-tab-pane>
       <fj-tab-pane label="水位线" name="tab2">
-        <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
+        <fj-form :model="formData" :rules="rules" ref="editForm1" label-width="90px">
           <fj-form-item label="警告水位线" prop="warningLine">
             <fj-select v-model="formData.warningLine">
               <fj-option
