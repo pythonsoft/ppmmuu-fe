@@ -23,14 +23,26 @@
               :parentSize="{ width: props.width, height: props.height }"
               panels="#/2,#-p0"
               direction="x"
-              name="child"
+              name="child1"
             >
               <template slot="0" scope="props">
                 <video-material-panel
-                  :isActivePanel="activePanel==='meterial'"
+                  :isActivePanel="activePanel==='meterialEditor'"
                   :size="{ width: props.width, height: props.height }"
-                  @insert="insertClip"
-                ></video-material-panel>
+                  @insert="insertClip"></video-material-panel>
+              </template>
+            </panel-view>
+          </template>
+          <template slot="1" scope="props">
+            <panel-view
+              :parentSize="{ width: props.width, height: props.height }"
+              panels="395,#-p0"
+              direction="x"
+              name="child2"
+            >
+              <template slot="0" scope="props">
+                <material-list-panel
+                  :isActivePanel="activePanel==='meterialList'"></material-list-panel>
               </template>
             </panel-view>
           </template>
@@ -43,12 +55,14 @@
   import './index.css';
   import panelView from '../../component/layout/panel/index';
   import VideoMaterialPanel from './component/videoMaterialPanel';
+  import MaterialListPanel from './component/materialListPanel';
 
   export default {
     name: 'movieEditor',
     components: {
       'panel-view': panelView,
-      VideoMateriaPanel
+      VideoMaterialPanel,
+      MaterialListPanel
     },
     props: {
       visible: { type: Boolean, default: true }
@@ -60,7 +74,7 @@
     },
     data() {
       return {
-        activePanel: 'meterial',
+        activePanel: 'meterialEditor',
         size: { width: document.body.clientWidth, height: document.body.clientHeight }
       };
     },

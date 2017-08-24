@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{'theme-dark': theme === 'dark'}">
     <div class="fj-tabs-header">
       <div
         v-for="(pane, index) in panes"
@@ -18,7 +18,11 @@
   export default {
     name: 'FjTabs',
     props: {
-      value: {}
+      value: {},
+      theme: {
+        type: String,
+        default: 'normal'
+      }
     },
     data() {
       return {
