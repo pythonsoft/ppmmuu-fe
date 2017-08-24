@@ -29,7 +29,8 @@
                 <video-material-panel
                   :isActivePanel="activePanel==='meterial'"
                   :size="{ width: props.width, height: props.height }"
-                  @insert="insertClip"></video-material-panel>
+                  @insert="insertClip"
+                ></video-material-panel>
               </template>
             </panel-view>
           </template>
@@ -47,7 +48,7 @@
     name: 'movieEditor',
     components: {
       'panel-view': panelView,
-      VideoMaterialPanel
+      VideoMateriaPanel
     },
     props: {
       visible: { type: Boolean, default: true }
