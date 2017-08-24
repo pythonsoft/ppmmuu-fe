@@ -239,7 +239,6 @@
         };
 
         api.listGroup({ params: param }).then((res) => {
-          me.vueInstance.$emit('engine.listEngine');
           cb && cb(res.data.docs);
         }).catch((error) => {
           me.showErrorInfo(error);
