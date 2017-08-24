@@ -1,7 +1,7 @@
 <template>
   <div
     :class="['material-panel-wrap', {'active-panel':isActivePanel}]" ref="wrap">
-    <div class="material-panel-title">{{ title }}</div>
+    <div class="material-panel-title">{{ `${title} ${formatTime(duration)}` }}</div>
     <div class="material-panel-box">
       <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
     </div>
@@ -46,7 +46,7 @@
       type="basic">
       <div class="screenshot-wrap">
         <img :src="screenshotURL" width="100%">
-        <a class="iconfont icon-download screenshot-download-icon" :href="screenshotURL" :download="title"></a>
+        <a class="iconfont icon-download screenshot-download-icon" :href="screenshotURL" :download="screenshotTitle"></a>
       </div>
     </fj-dialog>
   </div>
@@ -87,6 +87,7 @@
     data() {
       return {
         currentTime: 0,
+        duration: 0,
         clipDuration: 0,
         controllerList: this.getControllerList(this.controller),
         offset: 0,
@@ -105,7 +106,8 @@
         moveIndicatorTimeId: null,
         updateCurrentTimeTimeId: null,
         imageDialogVisible: false,
-        screenshotURL: ''
+        screenshotURL: '',
+        screenshotTitle: ''
       };
     },
     computed: {
@@ -172,6 +174,7 @@
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
         this.clipDuration = this.video.duration;
+        this.duration = this.video.duration;
         this.outTime = this.video.duration;
       });
       if (this.isActivePanel) {
@@ -476,6 +479,7 @@
         const imageURL = canvas.toDataURL('image/png');
         // this.downloadScreenshot(imageURL);
         this.screenshotURL = imageURL;
+        this.screenshotTitle = this.title + this.formatTime(this.currentTime);
         this.imageDialogVisible = true;
       }
     },
