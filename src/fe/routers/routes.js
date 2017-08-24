@@ -20,6 +20,7 @@ const Feedback = resolve => require.ensure([], () => resolve(require('./personal
 const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
 
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
+const MovieEditor = resolve => require.ensure([], () => resolve(require('./movieEditor')), 'movieEditor');
 
 const TaskCenter = resolve => require.ensure([], () => resolve(require('./taskCenter/index')), 'taskCenter');
 const TaskDownload = resolve => require.ensure([], () => resolve(require('./taskCenter/download/index')), 'taskDownload');
@@ -63,6 +64,11 @@ export default [{
       component: MediaCenter,
       meta: { title: '媒体库' },
       children: []
+    },
+    {
+      path: 'movieEditor',
+      component: MovieEditor,
+      meta: { title: '剪辑' }
     },
     {
       path: 'taskCenter',
