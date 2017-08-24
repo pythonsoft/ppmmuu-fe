@@ -52,7 +52,7 @@
       },
       getFilteredRule(trigger) {
         const rules = this.getRules();
-        return rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1) || [];
+        return rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1);
       },
       getFieldValue() {
         const data = this.form.model;
