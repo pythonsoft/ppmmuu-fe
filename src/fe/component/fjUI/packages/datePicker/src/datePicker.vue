@@ -23,7 +23,7 @@
         <span class="date-range-value-item" :class="{'placeholder':!displayValue[1]}">{{ displayValue[1] || '结束时间' }}</span>
       </div>
       <div class="date-range-icon-wrap">
-        <i :class="iconClass" class="iconfont date-range-date-icon" @click="handleIconClick"></i>
+        <i :class="iconClass" class="iconfont date-range-date-icon" @click.stop="handleIconClick"></i>
       </div>
     </div>
     <!-- <date-panel

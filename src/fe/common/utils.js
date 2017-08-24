@@ -1,6 +1,9 @@
 const utils = {};
 const moment = require('moment');
 
+utils.fillUpZero = function (v) {
+  return v < 10 ? `0${v}` : v;
+};
 utils.formatQuery = function formatQuery(obj, isGet = false) {
   return isGet ? {
     params: obj
