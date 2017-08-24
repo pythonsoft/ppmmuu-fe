@@ -1,0 +1,141 @@
+.material-panel-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 1px solid transparent;
+  z-index: 100;
+}
+.material-panel-wrap.active-panel {
+  border: 1px solid #38B1EB;
+}
+.material-panel-title {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  left: 20px;
+  height: 37px;
+  line-height: 37px;
+  font-size: 12px;
+  color: #CED9E5;
+}
+.material-panel-box {
+  position: absolute;
+  top: 37px;
+  right: 20px;
+  left: 20px;
+  bottom: 98px;
+}
+.material-panel-bottom {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  left: 20px;
+  height: 98px;
+  user-select: none;
+}
+.player-time-box {
+  height: 34px;
+  line-height: 34px;
+  font-size: 14px;
+  color: #CED9E5;
+}
+.player-progress-bar-box {
+  position: relative;
+  width: 100%;
+  height: 14px;
+}
+.player-progress-bar {
+  width: 100%;
+  height: 14px;
+  background: #353535;
+}
+.player-controls {
+  margin-top: 12px;
+  text-align: center;
+}
+.player-control-item-wrap {
+  position: relative;
+  display: inline-block;
+}
+.player-control-item {
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 2px;
+  font-size: 14px;
+  color: #CED9E5;
+  text-align: center;
+}
+.player-control-item:hover {
+  background: #353535;
+}
+.player-control-item i {
+  font-size: 14px;
+}
+.player-control-tooltip {
+  display: none;
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #555555;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #CED9E5;
+  padding: 0 6px;
+  line-height: 22px;
+  white-space: nowrap;
+  z-index: 11;
+}
+.player-control-item:hover+.player-control-tooltip {
+  display: block;
+}
+.player-pull-indicator {
+  position: absolute;
+  top: 0;
+  left: -6px;
+  font-size: 12px;
+  color: #38B1EB;
+  z-index: 10;
+  cursor: pointer;
+}
+.player-in-point,
+.player-out-point {
+  position: absolute;
+  top: -3px;
+  font-size: 14px;
+  color: #38B1EB;
+}
+.clip-range {
+  position: absolute;
+  top: 0px;
+  height: 14px;
+  background: #555555;
+}
+.player-tooltip {
+  position: absolute;
+  top: -28px;
+  z-index: 10;
+}
+.player-tooltip-text {
+  background: #555555;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #CED9E5;
+  padding: 0 6px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+.screenshot-wrap:hover .screenshot-download-icon {
+  display: block;
+}
+.screenshot-download-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  color: #fff;
+  display: none;
+}

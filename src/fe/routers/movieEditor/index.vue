@@ -25,8 +25,11 @@
               direction="x"
               name="child"
             >
-              <template slot="0">
-                00000000
+              <template slot="0" scope="props">
+                <video-material-panel
+                  :isActivePanel="activePanel==='meterial'"
+                  :size="{ width: props.width, height: props.height }"
+                  @insert="insertClip"></video-material-panel>
               </template>
             </panel-view>
           </template>
@@ -38,14 +41,16 @@
 <script>
   import './index.css';
   import panelView from '../../component/layout/panel/index';
+  import VideoMaterialPanel from './component/videoMaterialPanel';
 
   export default {
     name: 'movieEditor',
     components: {
-      'panel-view': panelView
+      'panel-view': panelView,
+      VideoMaterialPanel
     },
     props: {
-      visible: { type: Boolean, default: false }
+      visible: { type: Boolean, default: true }
     },
     watch: {
       visible() {
@@ -54,7 +59,8 @@
     },
     data() {
       return {
-        size: { width: 0, height: 0 }
+        activePanel: 'meterial',
+        size: { width: document.body.clientWidth, height: document.body.clientHeight }
       };
     },
     created() {
@@ -72,6 +78,9 @@
       },
       close() {
         this.$emit('update:visible', false);
+      },
+      insertClip(range) {
+        console.log('range', range);
       }
     }
   };

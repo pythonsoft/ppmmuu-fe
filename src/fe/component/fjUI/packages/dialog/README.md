@@ -4,6 +4,7 @@
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
 | visible | 是否显示dialog, 支持.sync修饰符 | boolean | - | false | ✅ |
+| type | dialog样式 | string | normal, basic | normal | ✅ |
 | title | 标题 | string | - | - | ✅ |
 | top | dialog的top值 | string | - | 200px | ✅ |
 | width | dialog的width值 | string | - | 460px | ✅ |
