@@ -2,14 +2,14 @@
   <transition name="dialog-fade">
     <div class="fj-dialog-wrapper" v-show="visible">
       <div v-if="modal" class="fj-modal" @click.self="handleModalClick"></div>
-      <div class="fj-dialog" :style="style">
+      <div :class="type==='basic'?'fj-dialog-basic':'fj-dialog'" :style="style">
         <div class="fj-dialog-header">
           <slot name="title">
             <span class="fj-dialog-title">{{title}}</span>
           </slot>
           <i v-if="showClose" class="iconfont icon-close fj-dialog-closebtn" @click="handleClose"></i>
         </div>
-        <div class="fj-dialog-body"><slot></slot></div>
+        <div :class="type==='basic'?'fj-dialog-body-basic':'fj-dialog-body'"><slot></slot></div>
         <div class="fj-dialog-footer" v-if="$slots.footer">
           <slot name="footer"></slot>
         </div>
@@ -21,6 +21,10 @@
   export default {
     name: 'FjDialog',
     props: {
+      type: {
+        type: String,
+        default: 'normal'
+      },
       title: {
         type: String,
         default: ''
