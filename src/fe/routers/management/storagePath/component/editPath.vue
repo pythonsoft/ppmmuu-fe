@@ -5,15 +5,27 @@
           @close="close">
     <fj-tabs v-model="activeTabName" @tab-click="handleTabClick">
       <fj-tab-pane label="基本信息" name="tab1">
-        <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
+        <fj-form :model="formData" :rules="rules" ref="editForm" label-width="110px">
           <fj-form-item label="标志" v-if="type === 'edit'">
             <fj-input v-model="formData._id" :disabled="true"></fj-input>
           </fj-form-item>
           <fj-form-item label="名称" prop="name">
             <fj-input v-model="formData.name"></fj-input>
           </fj-form-item>
-          <fj-form-item label="路径" prop="path">
-            <fj-input v-model="formData.path"></fj-input>
+          <fj-form-item label="Web服务器路径" prop="webServerPath">
+            <fj-input v-model="formData.webClientPath"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="Web客户端路径" prop="webClientPath">
+            <fj-input v-model="formData.webClientPath"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="流媒体路径" prop="streamingPath">
+            <fj-input v-model="formData.streamingPath"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="ftp路径" prop="ftpPath">
+            <fj-input v-model="formData.ftpPath"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="保留空间" prop="reserveCapability">
+            <fj-input v-model="formData.reserveCapability"></fj-input>
           </fj-form-item>
           <fj-form-item label="类型" prop="type">
             <fj-select v-model="formData.type">
@@ -109,10 +121,11 @@
             _id: '',
             name: ''
           },
-          type: '',
+          type: '0',
           name: '',
           status: '0',
-          maxSize: ''
+          maxSize: -1,
+          reserveCapability: -1
         },
         rules: {
           bucket: [
@@ -178,10 +191,11 @@
             _id: '',
             name: ''
           },
-          type: '',
+          type: '0',
           name: '',
           status: '0',
-          maxSize: ''
+          maxSize: '',
+          reserveCapability: ''
         };
       },
       submitForm() {
@@ -199,7 +213,8 @@
         this.isBtnLoading = true;
         const me = this;
         this.formData.status = '0';
-        this.formData.maxSize = parseInt(this.formData.maxSize, 10);
+        this.formData.maxSize = parseInt(this.formData.maxSize, 10) || -1;
+        this.formData.reserveCapability = parseInt(this.formData.reserveCapability, 10) || -1;
         if (this.bucket && this.bucket._id) {
           this.formData.bucket = {
             _id: this.bucket._id,
@@ -222,7 +237,8 @@
       editUser() {
         this.isBtnLoading = true;
         const me = this;
-        this.formData.maxSize = parseInt(this.formData.maxSize, 10);
+        this.formData.maxSize = parseInt(this.formData.maxSize, 10) || -1;
+        this.formData.reserveCapability = parseInt(this.formData.reserveCapability, 10) || -1;
         api.updatePath(this.formData)
           .then((response) => {
             this.$message.success('保存成功');
@@ -256,7 +272,7 @@
 <style scope>
   .group-input {
     float: left;
-    width: 215px;
+    width: 195px;
     margin-right: 10px;
   }
 </style>
