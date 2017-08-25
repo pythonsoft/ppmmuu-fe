@@ -260,6 +260,12 @@
   width: 100%;
 }
 
+.media-video-content{
+  height: 247px;
+  overflow: hidden;
+  position: relative;
+}
+
 .media-video-title-wrap {
   background: #4C637B;
   height: 42px;
