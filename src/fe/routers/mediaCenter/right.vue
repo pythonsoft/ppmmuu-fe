@@ -2,10 +2,12 @@
   <div class="media-right">
     <div class=" media-video">
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
-        <video controls="controls" autoplay="autoplay" :poster="poster" height="247" width="439">
-          <source src="http://hkss3.phoenixtv.com/live/pic.stream_720p/playlist.m3u8" />
-          Your browser does not support the video tag.
-        </video>
+        <div class="media-video-content">
+          <video v-if="url" controls="controls" autoplay="autoplay" :poster="poster" height="247" width="439">
+            <source :src="url" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
         <div >
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
@@ -78,6 +80,8 @@
   import { isEmptyObject, formatSize, formatDuration, formatContent } from '../../common/utils';
   import moreView from './moreView';
 
+  const config = require('../../config');
+
   const api = require('../../api/media');
 
   export default {
@@ -95,7 +99,8 @@
         files: [],
         poster: '',
         activeTabName: 'tab1',
-        item: {}
+        item: {},
+        url: '',
       };
     },
     watch: {
@@ -105,9 +110,11 @@
         this.poster = this.getThumb(val);
         this.item = val;
         this.getDetail();
+        this.getStream();
       }
     },
     created() {
+
     },
     methods: {
       handleTabClick(tab) {
@@ -136,6 +143,51 @@
       },
       openMovieEditor() {
         this.$emit('showMovieEditor', true);
+      },
+      getBlobURL(url, mime, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", url);
+        xhr.responseType = "arraybuffer";
+
+        xhr.addEventListener("load", function() {
+
+          var arrayBufferView = new Uint8Array( this.response );
+          var blob = new Blob( [ arrayBufferView ], { type: mime } );
+          var url = null;
+
+          if ( window.webkitURL ) {
+            url = window.webkitURL.createObjectURL(blob);
+          } else if ( window.URL && window.URL.createObjectURL ) {
+            url = window.URL.createObjectURL(blob);
+          }
+
+          callback(url, blob);
+        });
+        xhr.send();
+      },
+      getStream() {
+        const me = this;
+        api.getStream({ params: { objectId: this.item.id } }).then((res) => {
+          let dateString = res.result.UNCPATH;
+          const fileName = res.result.FILENAME;
+          if(dateString) {
+            dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
+            if(dateString.length === 1) {
+              dateString = dateString[0].replace(/\\/g, '\/');
+            }
+
+            const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
+            console.log('=========>', url);
+//            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
+//            me.getBlobURL(url, 'video/mp4', (url, blob) => {
+//              me.url = url;
+//            });
+
+            me.url = 'blob:' + url;
+          }
+        }).catch((error) => {
+          me.$message.error(error);
+        });
       }
     }
   };

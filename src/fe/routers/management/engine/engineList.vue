@@ -115,6 +115,10 @@
           isFetchDataNow = false;
         });
       });
+
+      me.listEngine(() => {
+        isFetchDataNow = false;
+      });
     },
     destroyed() {
       this.bubble.$off('engine.listEngine');
