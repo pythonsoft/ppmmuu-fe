@@ -8,10 +8,10 @@
     </template>
     <template slot="search-right">
       <div class="layout-engine-four-row-search-item">
-        <fj-input :rows="1" placeholder="请输入名称、IP或Id" v-model="formData.keyword"></fj-input>
+        <fj-input size="small" :rows="1" placeholder="请输入名称、IP或Id" v-model="formData.keyword"></fj-input>
       </div>
       <div class="layout-engine-four-row-search-item">
-        <fj-button type="primary" @click="handleClickSearch">查询</fj-button>
+        <fj-button type="primary" size="small" @click="handleClickSearch">查询</fj-button>
       </div>
     </template>
     <template slot="operation">
@@ -98,7 +98,7 @@
           ip: me.engineInfo.intranetIp
         };
 
-        api.listProcess({ params: param }).then((res) => {
+        api.listProcess({ params: param }, me).then((res) => {
           me.tableData = res.data;
           completeFn && completeFn();
         }).catch((error) => {

@@ -13,7 +13,7 @@ const common = {
       className = 'media-center-color-span';
     }
 
-    return className + (item.hd_flag === 0 ? ' _480P' : ' _1080P');
+    return className + (item.hd_flag === 0 ? ' _720P' : ' _1080P');
   },
   getMediaFormat(item) {
     return item.hd_flag === 0 ? '720P' : '1080P';

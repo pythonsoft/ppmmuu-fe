@@ -273,6 +273,7 @@
   .search-item {
     float: left;
     margin-left: 10px;
+    line-height: 100%;
   }
   .operation-btn-group {
     display: inline-block;

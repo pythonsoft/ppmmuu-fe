@@ -1,6 +1,6 @@
 <template>
   <fj-menu :default-active="defaultRoute" router>
-    <div class="logo-wrap">logo</div>
+    <div class="iconfont icon-phoenixtv logo-wrap"></div>
     <fj-menu-item
       v-for="item in menu"
       :key="item.index"
@@ -36,7 +36,7 @@
 
   const menu = [
     { text: '媒体库', index: 'mediaCenter', route: '/mediaCenter', icon: 'icon-media-library' },
-  // { text: '订阅', index: '2', route: '/2', icon: 'icon-subscription' },
+    // { text: '订阅', index: '2', route: '/2', icon: 'icon-subscription' },
     { text: '任务', index: 'taskCenter', route: '/taskCenter', icon: 'icon-menu' },
     { text: '个人中心', index: 'personalCenter', route: '/personalCenter', icon: 'icon-person' },
     { text: '管理', index: 'management', route: '/management', icon: 'icon-setting' }
@@ -87,6 +87,7 @@
     background: #344C67;
     color: #fff;
     text-align: center;
+    font-size: 26px;
   }
   .menu-box {
     position: absolute;

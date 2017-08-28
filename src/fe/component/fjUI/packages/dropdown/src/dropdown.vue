@@ -17,6 +17,7 @@
     },
     methods: {
       handleClick() {
+        this.$emit('handle-click');
         this.visible = !this.visible;
       },
       handleClose() {

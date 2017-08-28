@@ -21,7 +21,7 @@
                       :label="item.text"></fj-option>
             </fj-select>
           </fj-form-item>
-          <fj-form-item label="目标" prop="source.name">
+          <fj-form-item label="目标" prop="source">
             <div class="group-input">
               <fj-input :readonly="true" :value="formatSourceName()"></fj-input>
             </div>
@@ -34,7 +34,7 @@
         </fj-form>
       </fj-tab-pane>
       <fj-tab-pane label="计划信息" name="tab2">
-        <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
+        <fj-form :model="formData" :rules="rules" ref="editForm1" label-width="90px">
           <fj-form-item label="级别" prop="priority">
             <fj-select v-model="formData.priority">
               <fj-option

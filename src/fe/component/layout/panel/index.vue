@@ -21,10 +21,12 @@
       parentSize: { type: Object, default() { return { width: '100', height: '100' }; } },
       panels: { type: String, default: '#-p1, 30' },
       direction: { type: String, default: 'x' },
-      canResize: { type: Boolean, default: true }
+      canResize: { type: Boolean, default: true },
+      name: { type: String }
     },
     data() {
       return {
+        size: { height: 0, width: 0 },
         splits: [],
         bars: [],
         position: { x: 0, y: 0 },
@@ -33,9 +35,10 @@
       };
     },
     watch: {
-      parentSize() {
+      parentSize(v) {
         this.setSplits(this.panels);
         this.setSlideBars();
+        this.size = v;
       }
     },
     created() {
@@ -74,26 +77,49 @@
         return style;
       },
       setSlideBars() {
-        const bars = [];
-        for (let i = 0, len = this.splits.length; i < len; i++) {
-          if (i < len - 1) {
-            bars.push(this.setSlideBarStyle(this.splits[i]));
+        const flag = this.direction === 'x' ? 'height' : 'width';
+        let bars = [];
+
+        if (this.bars.length !== 0) {
+          bars = this.bars;
+
+          if (this.size[flag] !== this.parentSize[flag]) {
+            for (let i = 0, len = bars.length; i < len; i++) {
+              bars[i][flag] = `${this.parentSize[flag]}px`;
+            }
+          }
+        } else {
+          for (let i = 0, len = this.splits.length; i < len; i++) {
+            if (i < len - 1) {
+              bars.push(this.setSlideBarStyle(this.splits[i]));
+            }
           }
         }
 
         this.bars = bars;
       },
       setSplits(v) {
+        const flag = this.direction === 'x' ? 'height' : 'width';
         const splits = v.replace(/\s/g, '').trim().split(',');
         const size = this.direction === 'x' ? this.parentSize.width : this.parentSize.height;
         let temp = 0;
         let rs = null;
-        const arr = [];
+        let arr = [];
 
-        for (let i = 0, len = splits.length; i < len; i++) {
-          temp = this.calculate(splits[i], size, splits);
-          rs = this.getCssAndPos(temp, rs ? rs.nextPosition : null);
-          arr.push(rs.css);
+        if (this.splits.length !== 0) {
+          arr = this.splits;
+
+          if (this.size[flag] !== this.parentSize[flag]) {
+            for (let i = 0, len = arr.length; i < len; i++) {
+              arr[i][flag] = `${this.parentSize[flag]}px`;
+            }
+          }
+        } else {
+          for (let i = 0, len = splits.length; i < len; i++) {
+            temp = this.calculate(splits[i], size, splits);
+            rs = this.getCssAndPos(temp, rs ? rs.nextPosition : null);
+            arr.push(rs.css);
+          }
         }
 
         this.splits = arr;
@@ -179,7 +205,7 @@
 
           top.height = `${this.getValue(top.height) + offset.y}px`;
           bottom.height = `${this.getValue(bottom.height) - offset.y}px`;
-          bottom.top = `${this.getValue(bottom.top) + offset.x}px`;
+          bottom.top = `${this.getValue(bottom.top) + offset.y}px`;
 
           bar.top = `${this.getValue(bar.top) + offset.y}px`;
         }
