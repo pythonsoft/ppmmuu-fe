@@ -177,13 +177,18 @@
             }
 
             const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
-            console.log('=========>', url);
 //            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
 //            me.getBlobURL(url, 'video/mp4', (url, blob) => {
 //              me.url = url;
 //            });
 
-            me.url = 'blob:' + url;
+            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
+              me.url = url;
+            }else {
+              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+            }
+
+            console.log('=========>', me.url);
           }
         }).catch((error) => {
           me.$message.error(error);
