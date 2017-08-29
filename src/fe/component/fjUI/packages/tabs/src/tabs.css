@@ -39,5 +39,6 @@
   color: #CED9E5;
 }
 .theme-dark .fj-tabs-item.active {
-  border-bottom: 2px solid #CED9E5;
+  /*border-bottom: 2px solid #CED9E5;*/
+  border-bottom: 0;
 }

@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var merge = require('webpack-merge');
-var HtmlWebpackConfig = require('html-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 var baseWebpackConfig = require('./webpack.base.conf');
@@ -15,7 +15,7 @@ module.exports = merge(baseWebpackConfig, {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new HtmlWebpackConfig({
+    new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
       inject: true
