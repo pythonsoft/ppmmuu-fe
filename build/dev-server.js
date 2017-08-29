@@ -17,7 +17,7 @@ const port = process.env.PORT || config.dev.port;
 const uri = 'http://localhost:' + port;
 
 // app.use('/static', express.static('./static'));
-// app.use('/img', express.static(path.join(__dirname, '../src/fe/img')));
+app.use('/img', express.static(path.join(__dirname, '../src/fe/img')));
 // app.set('views', path.join(__dirname, '../src/fe/html'));
 // app.set('view engine', 'pug');
 // app.get('/login', function(req, res){

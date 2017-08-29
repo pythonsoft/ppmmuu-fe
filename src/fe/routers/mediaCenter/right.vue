@@ -3,12 +3,10 @@
     <div class=" media-video">
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
         <div class="media-video-content">
-          <div v-if="url" class="flowplayer" data-rtmp="rtmp://hkss4.phoenixtv.com/u/">
-            <video :poster="poster" height="247" width="439">
-              <source type="video/flash" :src="url" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+          <video v-if="url" :poster="poster" height="247" width="439" controls autoplay>
+            <source type="video/mp4" :src="url" />
+            Your browser does not support the video tag.
+          </video>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -184,12 +182,15 @@
 //              me.url = url;
 //            });
 
-            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
-              me.url = 'mp4:' + dateString + '/' + fileName;
+//            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
+//              me.url = '/img/test.mp4';
+////              me.url = 'mp4:' + dateString + '/' + fileName;
+////              rtmpPlayer()
+//            }else {
+//              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+//            }
 
-            }else {
-              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
-            }
+            me.url = me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
 
             console.log('=========>', me.url);
           }
