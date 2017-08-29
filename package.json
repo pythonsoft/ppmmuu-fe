@@ -10,7 +10,9 @@
     }
   },
   "eslintIgnore": [
-    "src/fe/html"
+    "src/fe/html",
+    "dist",
+    "src/fe/img"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node build/dev-server.js",

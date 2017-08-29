@@ -27,20 +27,21 @@ const TaskDownload = resolve => require.ensure([], () => resolve(require('./task
 
 export default [{
   path: '/',
-  redirect: '/mediaCenter',
   component: Home,
+  name: 'home',
   children: [
     {
       path: 'management',
       redirect: 'management/account',
       component: Management,
+      name: 'management',
       meta: { title: '管理' },
       children: [
-        { path: 'account', component: Account, meta: { title: '账户' } },
-        { path: 'role', component: Role, meta: { title: '角色' } },
-        { path: 'permission', component: Permission, meta: { title: '权限' } },
-        { path: 'engine', component: Engine, meta: { title: '引擎管理' } },
-        { path: 'bucket', name: 'bucket', component: Bucket, meta: { title: '存储区' } },
+        { path: 'account', component: Account, meta: { title: '账户' }, name: 'account' },
+        { path: 'role', component: Role, meta: { title: '角色' }, name: 'role' },
+        { path: 'permission', component: Permission, meta: { title: '权限' }, name: 'permission' },
+        { path: 'engine', component: Engine, meta: { title: '引擎管理' }, name: 'engine' },
+        { path: 'bucket', component: Bucket, meta: { title: '存储区' }, name: 'bucket' },
         { path: 'storagePath', name: 'storagePath', component: StoragePath, meta: { title: '路径' } },
         { path: 'storageTactics', name: 'storageTactics', component: StorageTactics, meta: { title: '策略' } },
         { path: 'transcode', component: Transcode, meta: { title: '转码任务' } },
@@ -63,7 +64,8 @@ export default [{
       path: 'mediaCenter',
       component: MediaCenter,
       meta: { title: '媒体库' },
-      children: []
+      children: [],
+      name: 'mediaCenter'
     },
     {
       path: 'movieEditor',
@@ -83,6 +85,7 @@ export default [{
 }, {
   path: '/login',
   component: Login,
+  name: 'login',
   meta: { title: '登录' }
 }
 ];
