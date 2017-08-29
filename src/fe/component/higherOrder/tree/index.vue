@@ -1,7 +1,18 @@
 <template>
-  <layout-two-row-tree class="ho-tree-layout" :showUpper="showUpper">
+  <fj-tree
+    v-if="showUpper"
+    :data="treeData"
+    node-key="nodeKey"
+    :render-content="renderItem"
+    @node-click="_treeNodeClick"
+    @current-change="_treeNodeCurrentChange"
+    @node-expand="_treeNodeExpand"
+    @node-collapse="_treeNodeCollapse">
+  </fj-tree>
+
+  <layout-two-row-tree v-else class="ho-tree-layout" :showUpper="showUpper">
     <template v-if="title" slot="title">{{ title }}</template>
-    <template slot="button">
+    <template v-if="addBtnText" slot="button">
       <fj-button size="mini" @click="_btnClick">{{ addBtnText }}</fj-button>
     </template>
     <div class="ho-empty-line" v-if="treeData.length === 0">没有数据</div>
@@ -210,7 +221,7 @@
     props: {
       nodeKey: { type: String, default: 'id' },
       treeDataBaseKey: { type: String, default: '_id' },
-      title: { type: String, default: '' },
+      title: { type: String, default: '分组' },
       addBtnText: { type: String, default: '添加组' },
       showUpper: { type: Boolean, default: true },
       vueInstance: { type: Object },
