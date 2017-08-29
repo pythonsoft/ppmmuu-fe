@@ -1,20 +1,15 @@
-var path = require('path');
 var webpack = require('webpack');
-var AssetsPlugin = require('assets-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var config = require('./config');
+var path = require('path');
 
 var DEBUG = process.env.NODE_ENV === 'development';
+var assetsSubDirectory = DEBUG ? config.dev.assetsSubDirectory : config.build.assetsSubDirectory;
 
 module.exports = {
   entry: {
     fjUI: './src/fe/component/fjUI',
     app: './src/fe/app.js'
-  },
-  output: {
-    publicPath: '/',
-    path: path.resolve(__dirname, '../dist'),
-    filename: DEBUG ? 'static/js/[name].js' : 'static/js/[name].[chunkhash].js',
-    chunkFilename: DEBUG ? 'static/js/[name].[id].js' : 'static/js/[id].[chunkhash].js'
   },
   resolve: {
     extensions: ['.js', '.vue', '.css'],
@@ -26,7 +21,19 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            css: [
+              'vue-style-loader',
+              { loader: 'css-loader', options: { minimize: true } }
+            ],
+            postcss: [
+              'vue-style-loader',
+              { loader: 'css-loader', options: { minimize: true } }
+            ]
+          }
+        }
       },
       {
         test: /\.js$/,
@@ -64,6 +71,7 @@ module.exports = {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
         loader: 'url-loader',
         options: {
+          name: path.join(assetsSubDirectory, '/fonts/[name].[ext]?[hash]'),
           limit: 100000
         }
       },
@@ -71,7 +79,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
         loader: 'file-loader',
         query: {
-          name: '/static/img/[name].[ext]?[hash]'
+          name: path.join(assetsSubDirectory, '/img/[name].[ext]?[hash]')
         }
       }
     ]
@@ -84,29 +92,6 @@ module.exports = {
         return module.context && module.context.indexOf('node_modules') !== -1;
       }
     }),
-    new ExtractTextPlugin('static/css/[name].[contenthash].css'),
-    new AssetsPlugin({
-      path: path.join(__dirname, '../dist'),
-      filename: 'assets.json',
-      processOutput: function(x) {
-        let doc = {};
-        for(let k in x) {
-          doc[k] = (function(key) {
-            let rs = null;
-            for(let _k in key) {
-              if(_k == 'js') {
-                rs = key[_k];
-              }else if(_k == 'css') {
-                doc['css'] = key[_k];
-              }
-              // break;
-            }
-            return rs
-          })(x[k]);
-        }
-        // return `module.exports = ${JSON.stringify(x, null, 2)};`
-        return `${JSON.stringify(doc, null, 2)}`
-      },
-    })
+    new ExtractTextPlugin(path.join(assetsSubDirectory, '/css/[name].[contenthash].css'))
   ]
 };
