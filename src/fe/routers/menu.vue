@@ -42,6 +42,14 @@
     { text: '管理', index: 'management', route: '/management', icon: 'icon-setting' }
   ];
   export default {
+    props: {
+      showMenuIndex: {
+        type: Array,
+        default() {
+          return ['mediaCenter', 'taskCenter', 'personalCenter'];
+        }
+      }
+    },
     data() {
       return {
         menu: menu,
@@ -50,6 +58,7 @@
       };
     },
     created() {
+      this.getMenu();
       this.defaultRoute = this.getActiveRoute(this.$route.path, 1);
     },
     watch: {
@@ -60,6 +69,16 @@
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
+      },
+      getMenu() {
+        const showMenuIndex = this.showMenuIndex;
+        const showMenu = [];
+        for (let i = 0, len = menu.length; i < len; i++) {
+          if (showMenuIndex.indexOf(menu[i].index) !== -1) {
+            showMenu.push(menu[i]);
+          }
+        }
+        this.menu = showMenu;
       },
       logout() {
         this.display = true;

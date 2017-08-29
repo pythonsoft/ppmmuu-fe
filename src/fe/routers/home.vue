@@ -2,7 +2,7 @@
   <div>
     <fj-progress-bar></fj-progress-bar>
     <div class="menu">
-      <left-menu>
+      <left-menu :showMenuIndex="showMenuIndex">
       </left-menu>
     </div>
     <div class="main"><router-view></router-view></div>
@@ -16,7 +16,19 @@
     name: 'home',
     components: {
       default: root,
-      'left-menu': menu
+      'left-menu': menu,
+      showMenuIndex: []
+    },
+    created() {
+      let showMenuIndex = this.$route.params.menu;
+      if (showMenuIndex) {
+        localStorage.setItem('menu', showMenuIndex.join(','));
+        this.showMenuIndex = menu;
+      } else {
+        showMenuIndex = localStorage.getItem('menu');
+        this.showMenuIndex = showMenuIndex ? showMenuIndex.split(',') : [];
+      }
+      this.$router.push({ name: 'mediaCenter' });
     },
     data() {
       return {

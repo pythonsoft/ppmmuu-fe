@@ -42,6 +42,7 @@
 <script>
   import './login.css';
   import { getCookie } from '../../common/utils';
+  import config from '../../config';
 
   const api = require('../../api/user');
 
@@ -91,7 +92,7 @@
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
-            window.location.href = '/mediaCenter';
+            me.$router.push({ name: 'mediaCenter', params: { menu: res.data.menu } });
           })
           .catch((error) => {
             me.isBtnLoading = false;
