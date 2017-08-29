@@ -12,9 +12,9 @@ module.exports = {
   },
   output: {
     publicPath: '/',
-    path: path.resolve(__dirname, '../dist/public'),
-    filename: DEBUG ? '[name].js' : '[name].[hash].js',
-    chunkFilename: '[name].[id].js'
+    path: path.resolve(__dirname, '../dist'),
+    filename: DEBUG ? 'static/js/[name].js' : 'static/js/[name].[chunkhash].js',
+    chunkFilename: DEBUG ? 'static/js/[name].[id].js' : 'static/js/[id].[chunkhash].js'
   },
   resolve: {
     extensions: ['.js', '.vue', '.css'],
@@ -62,9 +62,9 @@ module.exports = {
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
-        loader: 'file-loader',
-        query: {
-          name: '[name].[ext]?[hash]'
+        loader: 'url-loader',
+        options: {
+          limit: 100000
         }
       },
       {
@@ -84,7 +84,7 @@ module.exports = {
         return module.context && module.context.indexOf('node_modules') !== -1;
       }
     }),
-    new ExtractTextPlugin('[name].css'),
+    new ExtractTextPlugin('static/css/[name].[contenthash].css'),
     new AssetsPlugin({
       path: path.join(__dirname, '../dist'),
       filename: 'assets.json',
