@@ -12,6 +12,7 @@
 | label | 选项卡标题 | string | - | - | ✅ |
 | disabled | 是否禁用 | boolean | - | false | ❌ |
 | name | 选项卡标识符 | string | - | - | ✅ |
+| theme | tab主题 | string | normal, dark | normal | ✅ |
 
 ### events
 | 事件名称 | 说明 | 回调参数 | 实现 |

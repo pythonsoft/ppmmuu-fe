@@ -218,12 +218,19 @@
         if (me.checkboxCategory.length) {
           program_type = me.checkboxCategory.join(' OR ');
         }
-        if (me.startTime && !me.endTime) {
-          last_modify = `[${me.startTime} TO *]`;
-        } else if (!me.startTime && me.endTime) {
-          last_modify = `[0 TO ${me.endTime}]`;
-        } else if (me.startTime && me.endTime) {
-          last_modify = `[${me.startTime} TO ${me.endTime}]`;
+        if (this.datetimerange.length) {
+          let start = this.datetimerange[0];
+          let end = this.datetimerange[1];
+          start = start ? new Date(start).toISOString() : '';
+          end = end ?new Date(end).toISOString()  : '';
+          if(start && !end){
+            last_modify = `[${start} TO *]`;
+          }
+          else if (!start && end) {
+            last_modify = `[0 TO ${end}]`;
+          } else if (start && end) {
+            last_modify = `[${start} TO ${end}]`;
+          }
         }
         duration = `[0 TO ${getTimeByStr(me.checkboxTime)}]`;
         if (program_type) {
