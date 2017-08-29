@@ -1,3 +1,11 @@
+.material-list-wrap {
+  position: relative;
+}
+.material-list-operater-wrap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
 .material-panel-wrap {
   position: relative;
   width: 100%;

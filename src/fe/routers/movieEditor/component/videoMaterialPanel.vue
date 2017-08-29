@@ -71,7 +71,7 @@
       },
       videoSource: {
         type: String,
-        default: '../../../img/premiere.mp4'
+        default: '../../../static/premiere.mp4'
       },
       size: {
         type: Object,
