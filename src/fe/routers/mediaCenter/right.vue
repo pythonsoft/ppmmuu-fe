@@ -190,7 +190,8 @@
 //              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
 //            }
 
-            me.url = me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+//            me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+            me.url = '/img/test.mp4';
 
             console.log('=========>', me.url);
           }
