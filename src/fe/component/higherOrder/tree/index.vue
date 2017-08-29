@@ -1,6 +1,6 @@
 <template>
   <layout-two-row-tree class="ho-tree-layout" :showUpper="showUpper">
-    <template slot="title">{{ title }}</template>
+    <template v-if="title" slot="title">{{ title }}</template>
     <template slot="button">
       <fj-button size="mini" @click="_btnClick">{{ addBtnText }}</fj-button>
     </template>
@@ -9,7 +9,7 @@
       <fj-tree
         :data="treeData"
         node-key="nodeKey"
-        :render-content="renderContent"
+        :render-content="renderItem"
         @node-click="_treeNodeClick"
         @current-change="_treeNodeCurrentChange"
         @node-expand="_treeNodeExpand"
@@ -210,7 +210,7 @@
     props: {
       nodeKey: { type: String, default: 'id' },
       treeDataBaseKey: { type: String, default: '_id' },
-      title: { type: String, default: '分组' },
+      title: { type: String, default: '' },
       addBtnText: { type: String, default: '添加组' },
       showUpper: { type: Boolean, default: true },
       vueInstance: { type: Object },
@@ -223,7 +223,8 @@
       treeNodeExpand: { type: Function },
       treeNodeCollapse: { type: Function },
       btnClick: { type: Function },
-      listGroup: { type: Function }
+      listGroup: { type: Function },
+      renderContent: { type: Function },
     },
     created() {
       const me = this;
@@ -299,11 +300,11 @@
 
         return array;
       },
-      renderContent(h, node) {
+      renderItem(h, node) {
         const me = this;
         const menus = me.getMenu(node);
 
-        return h(TreeNodeContent, {
+        return this.renderContent? this.renderContent() : h(TreeNodeContent, {
           props: {
             node: node,
             menus: menus,

@@ -175,7 +175,7 @@
             if(dateString.length === 1) {
               dateString = dateString[0].replace(/\\/g, '\/');
             }
-
+            //streamURL = 'hkss4.phoenixtv.com/u/mp4:';
             const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
 //            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
 //            me.getBlobURL(url, 'video/mp4', (url, blob) => {
