@@ -82,14 +82,6 @@
         @showMovieEditor="setMovieEditorDisplay"
       ></media-right>
     </template>
-
-    <movie-editor-view
-      :parentSize="parentSize"
-      :panels="'#-p1, 30'"
-      :direction="'x'"
-      :canResize="true"
-      :visible.sync="displayMovieEditor"
-    ></movie-editor-view>
   </layout-three-column>
 </template>
 <script>
@@ -98,7 +90,6 @@
   import './index.css';
 
   import threeColumn from '../../component/layout/threeColumn';
-  import movieEditor from '../movieEditor/index';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
 
@@ -109,7 +100,6 @@
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
       'grid-list-view': gridAndList,
-      'movie-editor-view': movieEditor
     },
     data() {
       return {

@@ -22,3 +22,5 @@
 | btnClick | 添加按钮被点击时的回调 | 被选中的node | ✅ |
 | listGroup | 列举结点的接口 | 被选中的node的id, 回调参数，用于执行获取结果后续操作 | ✅ |
 | execCommand | 下拉菜单被点中时回调 | 触发的命令名, 被选中的node, 添加结点及移除结点的两个方法(object类型) | ✅ |
+| renderContent | 渲染树结点方法 | - | ✅ |
+
