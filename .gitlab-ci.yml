@@ -27,7 +27,9 @@ run_node_68:
   script:
     - cd /home/gitlab-runner/UMP-FE && sed -i -re "s/(^\s*axios\.defaults\.baseURL)\s*=.*/\1='http:\/\/api\.szdev\.cn'/" src/fe/config.js
     - "killall -q node || :"
-    - nohup npm run dev >/dev/null 2>&1 &
+    - npm run build
+    - cd dist
+    - nohup node server.js >/dev/null 2>&1 &
 
   environment:
     name: test
