@@ -27,8 +27,8 @@ module.exports = merge(baseWebpackConfig, {
     }),
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, '../src/fe/img'),
-        to: config.build.assetsSubDirectory,
+        from: path.resolve(__dirname, '../src/server'),
+        to: config.build.assetsRoot,
         ignore: ['.*']
       }
     ])

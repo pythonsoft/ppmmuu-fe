@@ -5,7 +5,7 @@ module.exports = {
     port: 8000,
     assetsPublicPath: '/',
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'public/static',
     index: path.resolve(__dirname, '../dist/index.html')
   },
   dev: {

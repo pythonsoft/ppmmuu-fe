@@ -71,7 +71,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
         loader: 'file-loader',
         query: {
-          name: '[name].[ext]?[hash]'
+          name: '/static/img/[name].[ext]?[hash]'
         }
       }
     ]
