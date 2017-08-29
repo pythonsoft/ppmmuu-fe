@@ -11,9 +11,8 @@ var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 module.exports = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
-    publicPath: config.build.assetsPublicPath,
-    filename: 'static/js/[name].[chunkhash].js',
-    chunkFilename: 'static/js/[name].[chunkhash].js'
+    filename: path.join(config.build.assetsSubDirectory, '/js/[name].[chunkhash].js'),
+    chunkFilename: path.join(config.build.assetsSubDirectory, '/js/[name].[chunkhash].js')
   },
   devtool: '#source-map',
   plugins: [
@@ -21,12 +20,6 @@ module.exports = merge(baseWebpackConfig, {
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
-    }),
-    new UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-      sourceMap: true
     }),
     new HtmlWebpackPlugin({
       filename: config.build.index,
@@ -40,9 +33,20 @@ module.exports = merge(baseWebpackConfig, {
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../src/server'),
-        to: config.build.assetsRoot,
+        to: path.resolve(__dirname, '../dist/public'),
+        ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, '../src/fe/static'),
+        to: path.resolve(__dirname, '../dist/public/static'),
         ignore: ['.*']
       }
     ])
   ]
 });
+    // new UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false
+    //   },
+    //   sourceMap: true
+    // }),

@@ -1,8 +1,10 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var config = require('./config');
+var path = require('path');
 
 var DEBUG = process.env.NODE_ENV === 'development';
+var assetsSubDirectory = DEBUG ? config.dev.assetsSubDirectory : config.build.assetsSubDirectory;
 
 module.exports = {
   entry: {
@@ -69,7 +71,7 @@ module.exports = {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
         loader: 'url-loader',
         options: {
-          name: '/static/fonts/[name].[ext]?[hash]',
+          name: path.join(assetsSubDirectory, '/fonts/[name].[ext]?[hash]'),
           limit: 100000
         }
       },
@@ -77,7 +79,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
         loader: 'file-loader',
         query: {
-          name: '/static/img/[name].[ext]?[hash]'
+          name: path.join(assetsSubDirectory, '/img/[name].[ext]?[hash]')
         }
       }
     ]
@@ -90,6 +92,6 @@ module.exports = {
         return module.context && module.context.indexOf('node_modules') !== -1;
       }
     }),
-    new ExtractTextPlugin('static/css/[name].[contenthash].css')
+    new ExtractTextPlugin(path.join(assetsSubDirectory, '/css/[name].[contenthash].css'))
   ]
 };

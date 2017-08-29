@@ -17,8 +17,8 @@ module.exports = merge(baseWebpackConfig, {
   output: {
     path: config.dev.assetsRoot,
     publicPath: config.dev.assetsPublicPath,
-    filename: 'static/js/[name].js',
-    chunkFilename: 'static/js/[name].[id].js'
+    filename: path.join(config.dev.assetsSubDirectory, '/js/[name].js'),
+    chunkFilename: path.join(config.dev.assetsSubDirectory, '/js/[name].[id].js')
   },
   devtool: '#cheap-module-eval-source-map',
   plugins: [
