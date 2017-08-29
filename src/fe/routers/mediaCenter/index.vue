@@ -218,17 +218,16 @@
           program_type = me.checkboxCategory.join(' OR ');
         }
         if (this.datetimerange.length) {
-          let start = this.datetimerange[0];
-          let end = this.datetimerange[1];
-          start = start ? new Date(start).toISOString() : '';
-          end = end ?new Date(end).toISOString()  : '';
-          if(start && !end){
-            last_modify = `[${start} TO *]`;
-          }
-          else if (!start && end) {
-            last_modify = `[0 TO ${end}]`;
-          } else if (start && end) {
-            last_modify = `[${start} TO ${end}]`;
+          let startTime = this.datetimerange[0];
+          let endTime = this.datetimerange[1];
+          startTime = startTime ? new Date(startTime).toISOString() : '';
+          endTime = endTime ? new Date(endTime).toISOString() : '';
+          if (startTime && !endTime) {
+            last_modify = `[${startTime} TO *]`;
+          } else if (!startTime && endTime) {
+            last_modify = `[0 TO ${endTime}]`;
+          } else if (startTime && endTime) {
+            last_modify = `[${startTime} TO ${endTime}]`;
           }
         }
         duration = `[0 TO ${getTimeByStr(me.checkboxTime)}]`;
