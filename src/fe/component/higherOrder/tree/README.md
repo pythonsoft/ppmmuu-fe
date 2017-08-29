@@ -10,6 +10,7 @@
 | vueInstance | 用于消息传递的vue实例 | object | — | - | ✅ |
 | menus | 设置触发的下拉菜单列表 { group: [ { name: '删除分组', command: 'deleteGroup' }, ]}  | object | — | {} | ✅ |
 | commandFieldName | 设置原始数据中哪个字段的值对应menu中的key | string | — | - | ✅ |
+| showUpper | 是否显示顶部标题栏 | string | — | - | ✅ |
 
 ### events
 | 事件名称 | 说明 | 回调参数 | 实现 |
