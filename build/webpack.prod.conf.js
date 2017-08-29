@@ -9,12 +9,24 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = merge(baseWebpackConfig, {
+  output: {
+    path: config.build.assetsRoot,
+    publicPath: config.build.assetsPublicPath,
+    filename: 'static/js/[name].[chunkhash].js',
+    chunkFilename: 'static/js/[name].[chunkhash].js'
+  },
   devtool: '#source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
+    }),
+    new UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      sourceMap: true
     }),
     new HtmlWebpackPlugin({
       filename: config.build.index,

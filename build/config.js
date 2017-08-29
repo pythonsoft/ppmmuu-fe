@@ -12,6 +12,7 @@ module.exports = {
     port: 8000,
     autoOpenBrowser: true,
     assetsPublicPath: '/',
+    assetsRoot: path.resolve(__dirname, '../dist'),
     routerPath: 'src/fe/routers',
     outputPath: 'dist'
   }
