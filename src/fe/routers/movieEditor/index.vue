@@ -36,7 +36,7 @@
           <template slot="1" scope="props">
             <panel-view
               :parentSize="{ width: props.width, height: props.height }"
-              panels="395,#-p0"
+              panels="#/3,#-p0"
               direction="x"
               name="child2"
             >

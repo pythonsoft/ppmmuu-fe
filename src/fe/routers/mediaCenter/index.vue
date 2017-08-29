@@ -90,7 +90,6 @@
       :canResize="true"
       :visible.sync="displayMovieEditor"
     ></movie-editor-view>
-
   </layout-three-column>
 </template>
 <script>

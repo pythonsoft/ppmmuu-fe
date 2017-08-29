@@ -7,6 +7,8 @@ axios.defaults.withCredentials = true;
 
 axios.defaults.baseURL = 'http://localhost:8080';
 
+axios.defaults.streamURL = 'hkss4.phoenixtv.com/u/mp4:';
+
 axios.interceptors.request.use((config) => {
   // Do something before request is sent
   if (config.method === 'get') {

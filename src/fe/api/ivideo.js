@@ -48,7 +48,7 @@ api.listItem = function listItem(data, scope) {
 api.createDirectory = function createDirectory(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/ivideo/createDirectory', data).then((response) => {
+    axios.post('/ivideo/createDirectory', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -70,7 +70,7 @@ api.createDirectory = function createDirectory(data, scope) {
 api.createItem = function createItem(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/ivideo/createItem', data).then((response) => {
+    axios.post('/ivideo/createItem', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -93,6 +93,28 @@ api.removeItem = function removeItem(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/ivideo/removeItem', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.createProject = function createProject(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/ivideo/createProject', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
