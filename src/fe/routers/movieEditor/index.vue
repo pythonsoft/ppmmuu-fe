@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visible" class="movie-editor">
+  <div class="movie-editor">
     <div class="movie-editor-wrap">
       <div class="movie-editor-top">
         <div class="movie-editor-title">
@@ -7,7 +7,7 @@
           视频编辑器
         </div>
         <ul class="movie-editor-top-bar">
-          <li @click="close">
+          <li @click="">
             <span class="iconfont icon-small-close"></span>
           </li>
         </ul>
@@ -65,12 +65,9 @@
       MaterialListPanel
     },
     props: {
-      visible: { type: Boolean, default: true }
     },
     watch: {
-      visible() {
-        this.resize();
-      }
+
     },
     data() {
       return {
@@ -79,6 +76,7 @@
       };
     },
     created() {
+        this.resize();
 
       // window.addEventListener('resize', this.resize);
       // document.body.removeEventListener('mouseup', this.mouseup);
@@ -90,9 +88,6 @@
     methods: {
       resize(e) {
         this.size = { width: document.body.clientWidth, height: document.body.clientHeight };
-      },
-      close() {
-        this.$emit('update:visible', false);
       },
       insertClip(range) {
         console.log('range', range);
