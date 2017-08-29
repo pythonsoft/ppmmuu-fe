@@ -42,11 +42,11 @@ export default [{
         { path: 'permission', component: Permission, meta: { title: '权限' }, name: 'permission' },
         { path: 'engine', component: Engine, meta: { title: '引擎管理' }, name: 'engine' },
         { path: 'bucket', component: Bucket, meta: { title: '存储区' }, name: 'bucket' },
-        { path: 'storagePath', name: 'storagePath', component: StoragePath, meta: { title: '路径' } },
-        { path: 'storageTactics', name: 'storageTactics', component: StorageTactics, meta: { title: '策略' } },
-        { path: 'transcode', component: Transcode, meta: { title: '转码任务' } },
-        { path: 'transfer', component: Transfer, meta: { title: '传输任务' } },
-        { path: 'configuration', component: Configuration, meta: { title: '设置' } }
+        { path: 'storagePath', component: StoragePath, meta: { title: '路径' }, name: 'storagePath' },
+        { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' }, name: 'storageTactics' },
+        { path: 'transcode', component: Transcode, meta: { title: '转码任务' }, name: 'transcode' },
+        { path: 'transfer', component: Transfer, meta: { title: '传输任务' }, name: 'transfer' },
+        { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' }
       ]
     },
     {
@@ -54,10 +54,11 @@ export default [{
       redirect: 'personalCenter/information',
       component: PersonalCenter,
       meta: { title: '个人中心' },
+      name: 'personalCenter',
       children: [
-        { path: 'information', component: Information, meta: { title: '个人信息' } },
-        { path: 'changePassword', component: ChangePassword, meta: { title: '密码修改' } },
-        { path: 'feedback', component: Feedback, meta: { title: '意见反馈' } }
+        { path: 'information', component: Information, meta: { title: '个人信息' }, name: 'information' },
+        { path: 'changePassword', component: ChangePassword, meta: { title: '密码修改' }, name: 'changePassword' },
+        { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
       ]
     },
     {
@@ -70,15 +71,17 @@ export default [{
     {
       path: 'movieEditor',
       component: MovieEditor,
+      name: 'movieEditor',
       meta: { title: '剪辑' }
     },
     {
       path: 'taskCenter',
       redirect: 'taskCenter/taskDownload',
       component: TaskCenter,
+      name: 'taskCenter',
       meta: { title: '任务' },
       children: [
-        { path: 'taskDownload', component: TaskDownload, meta: { title: '下载任务' } }
+        { path: 'taskDownload', component: TaskDownload, meta: { title: '下载任务' }, name: 'taskDownload' }
       ]
     }
   ]
