@@ -9,6 +9,11 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = merge(baseWebpackConfig, {
+  output: {
+    path: config.build.assetsRoot,
+    filename: path.join(config.build.assetsSubDirectory, '/js/[name].[chunkhash].js'),
+    chunkFilename: path.join(config.build.assetsSubDirectory, '/js/[name].[chunkhash].js')
+  },
   devtool: '#source-map',
   plugins: [
     new webpack.DefinePlugin({
@@ -27,10 +32,21 @@ module.exports = merge(baseWebpackConfig, {
     }),
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, '../src/fe/img'),
-        to: config.build.assetsSubDirectory,
+        from: path.resolve(__dirname, '../src/server'),
+        to: path.resolve(__dirname, '../dist/public'),
+        ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, '../src/fe/static'),
+        to: path.resolve(__dirname, '../dist/public/static'),
         ignore: ['.*']
       }
     ])
   ]
 });
+    // new UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false
+    //   },
+    //   sourceMap: true
+    // }),

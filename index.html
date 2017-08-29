@@ -8,5 +8,21 @@
   <div id="app"></div>
   <link rel="stylesheet" type="text/css" href="/img/flowplayer/skin/skin.css">
   <script type="text/javascript" src="/img/flowplayer/flowplayer.min.js"></script>
+  <script>
+    const rtmpPlayer = function(id, url) {
+      flowplayer(id, "/img/flowplayer/flowplayer.swf",{
+        clip: {
+          url: url,
+          provider: 'rtmp'
+        },
+        plugins: {
+          rtmp: {
+            url: '/img/flowplayer/flowplayer.swf',
+            netConnectionUrl: 'rtmp://localhost/vod'
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
