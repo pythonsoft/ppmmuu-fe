@@ -23,16 +23,11 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          loaders: {
-            css: [
-              'vue-style-loader',
-              { loader: 'css-loader', options: { minimize: true } }
-            ],
-            postcss: [
-              'vue-style-loader',
-              { loader: 'css-loader', options: { minimize: true } }
-            ]
-          }
+          postcss: [
+            require('postcss-import'),
+            require('autoprefixer'),
+            require('postcss-custom-properties')
+          ]
         }
       },
       {
