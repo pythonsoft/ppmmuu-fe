@@ -1,6 +1,6 @@
 <template>
   <fj-tree
-    v-if="showUpper"
+    v-if="!showUpper"
     :data="treeData"
     node-key="nodeKey"
     :render-content="renderItem"
