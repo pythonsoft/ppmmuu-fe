@@ -3,12 +3,10 @@
     <div class=" media-video">
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
         <div class="media-video-content">
-          <div v-if="url" class="flowplayer" data-rtmp="rtmp://hkss4.phoenixtv.com/u/">
-            <video :poster="poster" height="247" width="439">
-              <source type="video/flash" :src="url" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+          <video v-if="url" :poster="poster" height="247" width="439" controls autoplay>
+            <source type="video/mp4" :src="url" />
+            Your browser does not support the video tag.
+          </video>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -177,19 +175,23 @@
             if(dateString.length === 1) {
               dateString = dateString[0].replace(/\\/g, '\/');
             }
-
+            //streamURL = 'hkss4.phoenixtv.com/u/mp4:';
             const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
 //            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
 //            me.getBlobURL(url, 'video/mp4', (url, blob) => {
 //              me.url = url;
 //            });
 
-            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
-              me.url = 'mp4:' + dateString + '/' + fileName;
+//            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
+//              me.url = '/img/test.mp4';
+////              me.url = 'mp4:' + dateString + '/' + fileName;
+////              rtmpPlayer()
+//            }else {
+//              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+//            }
 
-            }else {
-              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
-            }
+//            me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+            me.url = '/img/test.mp4';
 
             console.log('=========>', me.url);
           }
