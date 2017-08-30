@@ -76,11 +76,10 @@
       };
     },
     created() {
-        this.resize();
+      this.resize();
 
       // window.addEventListener('resize', this.resize);
       // document.body.removeEventListener('mouseup', this.mouseup);
-
     },
     mounted() {
       window.addEventListener('resize', this.resize);
