@@ -1,6 +1,7 @@
 <template>
   <fj-tree
     v-if="!showUpper"
+    :theme="theme"
     :data="treeData"
     node-key="nodeKey"
     :render-content="renderItem"
@@ -246,7 +247,8 @@
       btnClick: { type: Function },
       listGroup: { type: Function },
       renderContent: { type: Function },
-      rootKey: { type: String, default: '' }
+      rootKey: { type: String, default: '' },
+      theme: String
     },
     created() {
       const me = this;
@@ -325,7 +327,7 @@
         const me = this;
         const menus = me.getMenu(node);
 
-        return this.renderContent? this.renderContent() : h(TreeNodeContent, {
+        return this.renderContent? this.renderContent(h, node) : h(TreeNodeContent, {
           props: {
             node: node,
             menus: menus,
