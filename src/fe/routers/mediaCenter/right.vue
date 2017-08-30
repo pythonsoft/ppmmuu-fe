@@ -1,10 +1,15 @@
 <template>
   <div class="media-right">
     <div class=" media-video">
+      <!--<div class="flowplayer fp-slim" data-rtmp="rtmp://hkss4.phoenixtv.com/u">-->
+        <!--<video height="247" width="439" controls autoplay>-->
+          <!--<source type="video/flash" src="mp4:/2017/08/18/PMHDSSNEWSTIMES86_02AC4A21-6246-4EF1-BD73-3F702E92DD17.mp4">-->
+        <!--</video>-->
+      <!--</div>-->
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
-        <div class="media-video-content">
+        <div class="media-video-content flowplayer fp-slim" data-rtmp="rtmp://hkss4.phoenixtv.com/u">
           <video v-if="url" :poster="poster" height="247" width="439" controls autoplay>
-            <source type="video/mp4" :src="url" />
+            <source type="video/flash" :src="url" />
             Your browser does not support the video tag.
           </video>
         </div>
@@ -115,6 +120,11 @@
     },
     created() {
 
+    },
+    mounted() {
+      const script = document.createElement('script');
+      script.src = '/static/flowplayer/flowplayer.js';
+      document.body.appendChild(script);
     },
     methods: {
       handleTabClick(tab) {
