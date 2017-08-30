@@ -11,6 +11,7 @@
 | menus | 设置触发的下拉菜单列表 { group: [ { name: '删除分组', command: 'deleteGroup' }, ]}  | object | — | {} | ✅ |
 | commandFieldName | 设置原始数据中哪个字段的值对应menu中的key | string | — | - | ✅ |
 | showUpper | 是否显示顶部标题栏 | boolean | — | true | ✅ |
+| autoFetchData | 是否在点树结点的时候自动获取子结点 | boolean | — | true | ✅ |
 
 ### events
 | 事件名称 | 说明 | 回调参数 | 实现 |
