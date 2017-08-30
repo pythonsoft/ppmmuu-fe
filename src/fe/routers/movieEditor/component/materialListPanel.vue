@@ -20,6 +20,7 @@
     <div class="material-list-content">
       <tree-view
         theme="dark"
+        :autoExpand="false"
         :showUpper="false"
         :vue-instance="vueInstance"
         :list-group="listGroup"
@@ -149,8 +150,7 @@
           type: 'new',
           isFolder: true
         };
-        console.log('this.currentNodeId', this.currentNodeId)
-        this.vueInstance.$emit('tree.insertNode', this.currentNodeId, [node]);
+        this.vueInstance.$emit('tree.insertNode', this.currentNodeId || this._id, [node]);
       }
     },
     created() {

@@ -9,6 +9,7 @@
 | node-style | 节点样式 | object | - | - | ✅ |
 | render-content | 树节点内容的渲染函数 | function(h, {node}) | - | - | ✅ |
 | theme | tab主题 | string | normal, dark | normal | ✅ |
+| autoExpand | 是否点击节点自动展开 | boolean | - | true | ✅ |
 
 ### events
 | 事件名称 | 说明 | 回调参数 | 实现 |
