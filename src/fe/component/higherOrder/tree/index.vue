@@ -295,12 +295,9 @@
         const parentNode = rs ? rs.info : null;
 
         me.selectedNodeInfo = node;
-//        this.autoFetchData && me._listGroup();
-        console.log(1);
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
       _treeNodeExpand(node) {
-        console.log(2);
         this.selectedNodeInfo = node;
         this.autoFetchData && this._listGroup();
         this.treeNodeExpand && this.treeNodeExpand(node);
@@ -364,6 +361,9 @@
       removeNode(id) {
         this.treeDataBaseInstance.remove(id);
         this.treeData = this.treeDataBaseInstance.getTreeData();
+        if(this.selectedNodeInfo.id === id) {
+          this.selectedNodeInfo = {};
+        }
       },
 
       _listGroup() {
