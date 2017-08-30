@@ -294,7 +294,7 @@
         const rs = this.treeDataBaseInstance.get(node.parentId);
         const parentNode = rs ? rs.info : null;
 
-//        me.selectedNodeInfo = node;
+        me.selectedNodeInfo = node;
 //        this.autoFetchData && me._listGroup();
         console.log(1);
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
