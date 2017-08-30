@@ -118,7 +118,7 @@
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-list-view': gridAndList,
+      'grid-list-view': gridAndList
     },
     data() {
       return {
@@ -205,11 +205,11 @@
       getMediaList() {
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        const f_date_162 = getTimeRange(this.datetimerange1);   //新聞日期
-        const f_date_36 = getTimeRange(this.datetimerange2);    //首播日期
+        const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
+        const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
         let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
 
-        if(f_date_162){
+        if (f_date_162) {
           if (q) {
             q += ` AND f_date_162:${f_date_162}`;
           } else {
@@ -217,7 +217,7 @@
           }
         }
 
-        if(f_date_36){
+        if (f_date_36) {
           if (q) {
             q += ` AND f_date_36:${f_date_36}`;
           } else {
