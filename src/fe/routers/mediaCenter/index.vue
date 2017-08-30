@@ -209,6 +209,21 @@
         const f_date_36 = getTimeRange(this.datetimerange2);    //首播日期
         let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
 
+        if(f_date_162){
+          if (q) {
+            q += ` AND f_date_162:${f_date_162}`;
+          } else {
+            q = `f_date_162:${f_date_162}`;
+          }
+        }
+
+        if(f_date_36){
+          if (q) {
+            q += ` AND f_date_36:${f_date_36}`;
+          } else {
+            q = `f_date_36:${f_date_36}`;
+          }
+        }
 
         if (this.keyword) {
           if (q) {
