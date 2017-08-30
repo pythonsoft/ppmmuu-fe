@@ -1,29 +1,45 @@
 <template>
   <div class="material-list-wrap">
-    <fj-tabs v-model="activeTabName" theme="dark">
-      <fj-tab-pane label="我的资源" name="material">
-        <tree-view
-          :showUpper="false"
-          :vue-instance="vueInstance"
-          :list-group="listGroup"
-          :tree-node-current-change="treeNodeCurrentChange"
-        ></tree-view>
-      </fj-tab-pane>
-    </fj-tabs>
-    <div class="material-list-operater-wrap">
-      <div class="player-control-item-wrap">
-        <div class="player-control-item" @click="addFolder">
-          <i class="iconfont icon-add-folder"></i>
+    <div class="material-list-header clearfix">
+      <h3 class="material-list-title">我的资源</h3>
+      <div class="material-list-operater-wrap">
+        <div class="player-control-item-wrap">
+          <div class="player-control-item" @click="addFolderInput">
+            <i class="iconfont icon-add-folder"></i>
+          </div>
+          <div class="player-control-tooltip">添加文件夹</div>
         </div>
-        <div class="player-control-tooltip">添加文件夹</div>
-      </div><!--
-      --><div class="player-control-item-wrap">
-        <div class="player-control-item">
-          <i class="iconfont icon-delete"></i>
+        <div class="player-control-item-wrap">
+          <div class="player-control-item" @click="showDeleteNodeDialog">
+            <i class="iconfont icon-delete"></i>
+          </div>
+          <div class="player-control-tooltip">删除</div>
         </div>
-        <div class="player-control-tooltip">删除</div>
       </div>
     </div>
+    <div class="material-list-content">
+      <tree-view
+        theme="dark"
+        :showUpper="false"
+        :vue-instance="vueInstance"
+        :list-group="listGroup"
+        :renderContent="renderContent"
+        :tree-node-current-change="treeNodeCurrentChange"
+      ></tree-view>
+    </div>
+
+    <fj-dialog
+      title="删除"
+      :visible.sync="deleteNodeDialogVisible">
+
+      <p class="dialog-content">您确定要删除{{ currentNodeInfo.name }}吗？</p>
+
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click.stop="deleteNodeDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="isDeleteBtnLoading" @click.stop="handleDeleteNode">确定</fj-button>
+      </div>
+
+    </fj-dialog>
   </div>
 </template>
 <script>
@@ -32,11 +48,21 @@
   import TreeView from '../../../component/higherOrder/tree';
   import ivideoAPI from '../../../api/ivideo';
 
+  const TYPE_CONFIG = {
+    0: 'folder',
+    1: 'video',
+    new: 'input'
+  };
+
   export default {
     data() {
       return {
         activeTabName: 'material',
-        _id: ''
+        _id: '',
+        currentNodeId: '',
+        currentNodeInfo: {},
+        deleteNodeDialogVisible: false,
+        isDeleteBtnLoading: false
       };
     },
     methods: {
@@ -55,9 +81,37 @@
           });
         }
       },
-      treeNodeCurrentChange() {},
+      treeNodeCurrentChange(node) {
+        this.currentNodeId = node.id;
+        this.currentNodeInfo = node.info;
+      },
+      showDeleteNodeDialog() {
+        if (!this.currentNodeId) return;
+        console.log(this.currentNodeInfo);
+        this.deleteNodeDialogVisible = true;
+      },
+      cancelCreate(node) {
+        this.vueInstance.$emit('tree.removeNode', node.id);
+      },
+      handleDeleteNode() {
+        this.isDeleteBtnLoading = true;
+        ivideoAPI.removeItem({ id: this.currentNodeId })
+          .then((response) => {
+            this.vueInstance.$emit('tree.removeNode', this.currentNodeId);
+            this.$message.success('删除成功');
+            this.isDeleteBtnLoading = false;
+            this.deleteNodeDialogVisible = false;
+          })
+          .catch((error) => {
+            this.isDeleteBtnLoading = false;
+            this.$message.error(error);
+          });
+      },
       listSourceItem(id, cb) {
         ivideoAPI.listItem({ params: { parentId: id } }).then((res) => {
+          res.data.forEach((item) => {
+            if (TYPE_CONFIG[item.type] === 'folder') item.isFolder = true;
+          });
           cb && cb(res.data);
         }).catch((error) => {
           this.$message.error(error);
@@ -66,14 +120,41 @@
       renderContent(h, node) {
         return h(TreeNodeContent, {
           props: {
-            node: node
+            node: node,
+            rootId: this._id
+          },
+          on: {
+            createDirectory: this.createDirectory,
+            updateDirectory: this.updateDirectory,
+            cancelCreate: this.cancelCreate
           }
         });
       },
-      handleTabClick() {},
-      addFolder() {}
+      createDirectory(reqData) {
+        ivideoAPI.createDirectory(reqData)
+          .then((response) => {
+            this.vueInstance.$emit('tree.listGroup');
+            // this.vueInstance.$emit('tree.removeNode', this.currentNodeId);
+            // this.$message.success('删除成功');
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      updateDirectory(reqData) {},
+      addFolderInput() {
+        const node = {
+          _id: `new${new Date().getTime()}`,
+          name: 'new',
+          type: 'new',
+          isFolder: true
+        };
+        console.log('this.currentNodeId', this.currentNodeId)
+        this.vueInstance.$emit('tree.insertNode', this.currentNodeId || this._id, [node]);
+      }
     },
     created() {
+      this.TYPE_CONFIG = TYPE_CONFIG;
       this.vueInstance = new Vue({
         name: 'materialList'
       });
@@ -84,9 +165,3 @@
     }
   };
 </script>
-<style>
-  .material-list-wrap {
-    padding-left: 20px;
-    padding-top: 10px;
-  }
-</style>

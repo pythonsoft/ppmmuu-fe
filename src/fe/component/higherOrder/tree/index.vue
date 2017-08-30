@@ -1,6 +1,7 @@
 <template>
   <fj-tree
     v-if="!showUpper"
+    :theme="theme"
     :data="treeData"
     node-key="nodeKey"
     :render-content="renderItem"
@@ -75,8 +76,12 @@
       return { info, parentIndex };
     },
     insert(parentId, infos) {
+<<<<<<< HEAD
 
       if (this.td.length === 0) {
+=======
+      if (!parentId && this.td.length === 0) {
+>>>>>>> update movieEditor
         this.td = this.composeData(parentId, infos);
         this.indexs = {};
 
@@ -94,6 +99,7 @@
         const parentIndex = val.parentIndex;
         const children = info.children || [];
 
+<<<<<<< HEAD
         for (let i = 0, len = infos.length; i < len; i++) {
           this.indexs[infos[i][this.indexKey]] = `${parentIndex}-${i}`;
         }
@@ -109,6 +115,18 @@
 
         this.td = this.td.concat(arr);
       }
+=======
+      const info = val.info;
+      const parentIndex = val.parentIndex;
+      const children = val.info.children || [];
+
+      // this.removeChildren(parentId);
+      for (let i = 0, len = infos.length; i < len; i++) {
+        this.indexs[infos[i][this.indexKey]] = `${parentIndex}-${i}`;
+      }
+
+      info.children = children.concat(this.composeData(parentId, infos));
+>>>>>>> update movieEditor
 
       return true;
     },
@@ -246,7 +264,11 @@
       btnClick: { type: Function },
       listGroup: { type: Function },
       renderContent: { type: Function },
+<<<<<<< HEAD
       rootKey: { type: String, default: '' }
+=======
+      theme: { type: String }
+>>>>>>> update movieEditor
     },
     created() {
       const me = this;
@@ -325,7 +347,7 @@
         const me = this;
         const menus = me.getMenu(node);
 
-        return this.renderContent? this.renderContent() : h(TreeNodeContent, {
+        return this.renderContent? this.renderContent(h, node) : h(TreeNodeContent, {
           props: {
             node: node,
             menus: menus,
@@ -350,11 +372,14 @@
       },
 
       insertNode(parentId, data) {
+        console.log('insertNode', data);
         this.treeDataBaseInstance.insert(parentId, data);
         this.treeData = this.treeDataBaseInstance.getTreeData();
+        console.log('tree data ->', this.treeData);
       },
 
       removeNode(id) {
+        console.log('removeNode', id);
         this.treeDataBaseInstance.remove(id);
         this.treeData = this.treeDataBaseInstance.getTreeData();
       },
