@@ -76,7 +76,7 @@
       return { info, parentIndex };
     },
     insert(parentId, infos) {
-      if (!parentId) {
+      if (!parentId && this.td.length === 0) {
         this.td = this.composeData(parentId, infos);
         this.indexs = {};
 

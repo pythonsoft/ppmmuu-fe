@@ -1,17 +1,11 @@
 <template>
   <div class="media-right">
     <div class=" media-video">
-      <!--<div class="flowplayer fp-slim" data-rtmp="rtmp://hkss4.phoenixtv.com/u">-->
-        <!--<video height="247" width="439" controls autoplay>-->
-          <!--<source type="video/flash" src="mp4:/2017/08/18/PMHDSSNEWSTIMES86_02AC4A21-6246-4EF1-BD73-3F702E92DD17.mp4">-->
-        <!--</video>-->
-      <!--</div>-->
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
-        <div class="media-video-content flowplayer fp-slim" data-rtmp="rtmp://hkss4.phoenixtv.com/u">
-          <video v-if="url" :poster="poster" height="247" width="439" controls autoplay>
-            <source type="video/flash" :src="url" />
-            Your browser does not support the video tag.
-          </video>
+        <div class="media-video-content" id="video" ref="video">
+          <video-view
+            :url="url"
+          ></video-view>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -82,8 +76,10 @@
 <script>
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject, formatSize, formatDuration, formatContent } from '../../common/utils';
+  import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo } from '../../common/utils';
   import moreView from './moreView';
+  import videoView from './components/video'
+  import VideoView from "./components/video.vue";
 
   const config = require('../../config');
 
@@ -92,7 +88,9 @@
   export default {
     name: 'right',
     components: {
-      'more-view': moreView
+      VideoView,
+      'more-view': moreView,
+      'video-view': videoView
     },
     props: {
       videoInfo: { type: Object, default: {} }
@@ -119,12 +117,6 @@
       }
     },
     created() {
-
-    },
-    mounted() {
-      const script = document.createElement('script');
-      script.src = '/static/flowplayer/flowplayer.js';
-      document.body.appendChild(script);
     },
     methods: {
       handleTabClick(tab) {
@@ -186,7 +178,8 @@
               dateString = dateString[0].replace(/\\/g, '\/');
             }
             //streamURL = 'hkss4.phoenixtv.com/u/mp4:';
-            const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
+            const url = 'mp4:' + dateString + '/' + fileName;
+//            const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
 //            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
 //            me.getBlobURL(url, 'video/mp4', (url, blob) => {
 //              me.url = url;
@@ -201,9 +194,13 @@
 //            }
 
 //            me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
-            me.url = '/img/test.mp4';
+            me.url = url;
 
-            console.log('=========>', me.url);
+//            const script = document.createElement('script');
+//            script.src = '/static/flowplayer/flowplayer.js';
+//            document.body.appendChild(script);
+
+//            getVideo('video', url);
           }
         }).catch((error) => {
           me.$message.error(error);
