@@ -9,6 +9,7 @@
       <div :style="innerNodeStyle">
         <template v-if="isFolder">
           <i
+            @click="handleExpandIconClick"
             :style="{ left: (open ? indent - 5 : indent) + 'px' }"
             :class="open ? 'tri-bottom' : 'tri-right'"></i>
           <div :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
@@ -39,7 +40,11 @@
       nodeKey: String,
       nodeStyle: Object,
       indent: {},
-      renderContent: Function
+      renderContent: Function,
+      autoExpand: {
+        type: Boolean,
+        default: true
+      }
     },
     data() {
       return {
@@ -53,15 +58,27 @@
         return this.node.children && this.node.children.length > 0;
       },
       isCurrentNode() {
-        return this.tree.currentNode === this;
+        console.log('this.tree.currentNode');
+        console.log(this.tree.currentNode);
+        return this.tree.currentNode === this.node[this.nodeKey];
       },
       innerNodeStyle() {
         return Object.assign({}, this.nodeStyle, { paddingLeft: `${this.indent}px`, position: 'relative' });
       }
     },
     methods: {
-      handleClick() {
+      handleExpandIconClick() {
         if (this.isFolder) {
+          if (!this.open) {
+            this.tree.$emit('node-expand', this.node);
+          } else {
+            this.tree.$emit('node-collapse', this.node);
+          }
+          this.open = !this.open;
+        }
+      },
+      handleClick() {
+        if (this.isFolder && this.autoExpand) {
           if (!this.open) {
             this.tree.$emit('node-expand', this.node);
           } else {
@@ -72,7 +89,7 @@
           // this.tree.currentNode = this;
           // this.tree.$emit('current-change', this.node);
         }
-        this.tree.currentNode = this;
+        this.tree.currentNode = this.node[this.nodeKey];
         this.tree.$emit('current-change', this.node);
         this.tree.$emit('node-click', this.node);
       },

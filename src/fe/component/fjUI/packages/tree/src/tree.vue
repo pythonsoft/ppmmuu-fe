@@ -6,6 +6,7 @@
       :node-key="nodeKey"
       :node-style="nodeStyle"
       :indent="indent"
+      :autoExpand="autoExpand"
       :render-content="renderContent"
       :key="getNodeKey(item, index)"></fj-tree-node>
   </ul>
@@ -30,11 +31,15 @@
       theme: {
         type: String,
         default: 'normal'
+      },
+      autoExpand: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
       return {
-        currentNode: null
+        currentNode: ''
       };
     },
     methods: {

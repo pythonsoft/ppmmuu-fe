@@ -3,7 +3,9 @@ const ctx = '@@clickoutsideContext';
 
 let startClick;
 
-document.addEventListener('mousedown', e => (startClick = e));
+document.addEventListener('mousedown', (e) => {
+  startClick = e;
+});
 
 document.addEventListener('mouseup', (e) => {
   nodeList.forEach(node => node[ctx].documentHandler(e, startClick));

@@ -3,7 +3,8 @@
     v-if="!showUpper"
     :theme="theme"
     :data="treeData"
-    node-key="nodeKey"
+    :autoExpand="autoExpand"
+    :node-key="nodeKey"
     :render-content="renderItem"
     @node-click="_treeNodeClick"
     @current-change="_treeNodeCurrentChange"
@@ -20,7 +21,7 @@
     <template v-else slot="tree">
       <fj-tree
         :data="treeData"
-        node-key="nodeKey"
+        :node-key="nodeKey"
         :render-content="renderItem"
         @node-click="_treeNodeClick"
         @current-change="_treeNodeCurrentChange"
@@ -249,7 +250,7 @@
       renderContent: { type: Function },
       rootKey: { type: String, default: '' },
       theme: String,
-      autoFetchData: { type: Boolean, default: true }
+      autoExpand: { type: Boolean, default: true }
     },
     created() {
       const me = this;
@@ -293,13 +294,12 @@
         const me = this;
         const rs = this.treeDataBaseInstance.get(node.parentId);
         const parentNode = rs ? rs.info : null;
-
         me.selectedNodeInfo = node;
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
       _treeNodeExpand(node) {
         this.selectedNodeInfo = node;
-        this.autoFetchData && this._listGroup();
+        this._listGroup();
         this.treeNodeExpand && this.treeNodeExpand(node);
       },
       _treeNodeCollapse(node) {
