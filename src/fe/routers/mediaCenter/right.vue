@@ -1,7 +1,8 @@
 <template>
   <div class="media-right">
     <div class=" media-video">
-      <div v-if="!isEmptyObject(item)" class="media-video-wrap">
+      <!--<div v-if="!isEmptyObject(item)" class="media-video-wrap">-->
+      <div v-if="1" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
           <video-view
             :url="url"

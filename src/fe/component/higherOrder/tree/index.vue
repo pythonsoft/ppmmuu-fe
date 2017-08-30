@@ -126,15 +126,17 @@
         return false;
       }
 
-      const children = val.info.children;
-
-      if (children && children.length > 0) {
-        for (let i = 0, len = children.length; i < len; i++) {
-          if (this.indexs[children[i][this.indexKey]]) {
-            delete this.indexs[children[i][this.indexKey]];
+      const clear = function clear(childrenNode) {
+        if (childrenNode && childrenNode.length > 0) {
+          for (let i = 0, len = childrenNode.length; i < len; i++) {
+            if (this.indexs[childrenNode[i][this.indexKey]]) {
+              delete this.indexs[childrenNode[i][this.indexKey]];
+            }
           }
         }
-      }
+      };
+
+      clear(val.info.children);
 
       val.info.children = [];
 
