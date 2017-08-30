@@ -248,7 +248,8 @@
       listGroup: { type: Function },
       renderContent: { type: Function },
       rootKey: { type: String, default: '' },
-      theme: String
+      theme: String,
+      autoFetchData: { type: Boolean, default: true }
     },
     created() {
       const me = this;
@@ -294,7 +295,7 @@
         const parentNode = rs ? rs.info : null;
 
         me.selectedNodeInfo = node;
-        me._listGroup();
+        this.autoFetchData && me._listGroup();
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
       _treeNodeExpand(node) {
