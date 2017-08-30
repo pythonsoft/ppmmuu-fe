@@ -5,40 +5,58 @@
         <div class="media-search">
           <fj-input
             placeholder="请输入检索关键词"
-            size="mini"
+            size="small"
             v-model="keyword"
             icon="icon-search input-search-icon"
             @on-icon-click="searchClick"
             @keydown.native.enter.prevent="searchClick"
           ></fj-input>
         </div>
-        <div class="media-category" v-if="categories.length">
-          <h4>类别</h4>
-          <fj-checkbox-group v-model="checkboxCategory">
-            <template v-for="category in categories">
-              <div class="category-checkbox">
-                <fj-checkbox :label="category">{{category}}</fj-checkbox>
-              </div>
-            </template>
-          </fj-checkbox-group>
-        </div>
-        <div class="media-category" v-if="times.length">
-          <h4>高级</h4>
-          <fj-radio-group v-model="checkboxTime">
-            <template v-for="time in times">
-              <div class="category-checkbox">
-                <fj-radio :label="time">{{time}}</fj-radio>
-              </div>
-            </template>
-          </fj-radio-group>
-        </div>
-        <div class="media-category" v-if="times.length">
-          <h4>时间范围</h4>
-          <div id="media-category-date" class="media-category-wrap">
+        <template v-for="config in searchSelectConfigs">
+          <div class="media-category">
+            <h4>{{config.label}}</h4>
+            <fj-select placeholder="请选择" v-model="config.selected" size="small">
+              <fj-option
+                      v-for="item in config.items"
+                      :key="item.key"
+                      :label="item.label"
+                      :value="item.value">
+              </fj-option>
+            </fj-select>
+          </div>
+        </template>
+
+        <template v-for="config in searchRadioboxConfigs">
+          <div class="media-category clearfix">
+            <h4>{{config.label}}</h4>
+            <fj-radio-group v-model="config.selected">
+              <template v-for="item in config.items">
+                <div class="category-checkbox">
+                  <fj-radio :label="item.value">{{item.label}}</fj-radio>
+                </div>
+              </template>
+            </fj-radio-group>
+          </div>
+        </template>
+
+        <div class="media-category">
+          <h4>新聞日期</h4>
+          <div id="media-category-date">
             <fj-date-picker
               type="datetimerange"
               placeholder="请选择日期范围"
-              v-model="datetimerange"
+              v-model="datetimerange1"
+            ></fj-date-picker>
+          </div>
+        </div>
+
+        <div class="media-category">
+          <h4>首播日期</h4>
+          <div id="media-category-date">
+            <fj-date-picker
+                    type="datetimerange"
+                    placeholder="请选择日期范围"
+                    v-model="datetimerange2"
             ></fj-date-picker>
           </div>
         </div>
@@ -88,6 +106,7 @@
   import Vue from 'vue';
   import { getTimeByStr, formatDuration, getPosition, appendToBody } from '../../common/utils';
   import './index.css';
+  import { searchSelectConfigs, searchRadioboxConfigs, getTimeRange, getQuery } from './config';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
@@ -105,20 +124,15 @@
       return {
         defaultRoute: '/',
         keyword: '',
-        checkboxCategory: [],
-        checkboxTime: '',
-        startTime: '',
-        endTime: '',
-        categories: [],
-        times: [],
-        items: [],
+        searchSelectConfigs: searchSelectConfigs,
+        searchRadioboxConfigs: searchRadioboxConfigs,
         pageSize: 24,
         total: 0,
         currentPage: 1,
         currentVideo: {},
         searchResult: '耗时0秒,结果0条',
         /* client */
-
+        items: [],
         offsetWidth: 0,
         offsetHeight: 0,
         listWidth: 0,
@@ -128,7 +142,8 @@
         viewType: 'grid',
         fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03',
 
-        datetimerange: [],
+        datetimerange1: [],
+        datetimerange2: [],
         displayMovieEditor: false,
 
         parentSize: { width: '100', height: '100' }
@@ -136,7 +151,6 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
-      this.getSearchConfig();
     },
     methods: {
       setMovieEditorDisplay(v) {
@@ -188,49 +202,14 @@
       searchClick() {
         this.resize();
       },
-      getSearchConfig() {
-        const me = this;
-        api.getSearchConfig().then((res) => {
-          me.categories = res.data.category;
-          me.times = res.data.duration;
-        }).catch((error) => {
-          me.$message.error(error);
-        });
-      },
       getMediaList() {
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        let program_type = '';
-        let duration = '';
-        let last_modify = '';
-        let q = '';
-        if (me.checkboxCategory.length) {
-          program_type = me.checkboxCategory.join(' OR ');
-        }
-        if (this.datetimerange.length) {
-          let startTime = this.datetimerange[0];
-          let endTime = this.datetimerange[1];
-          startTime = startTime ? new Date(startTime).toISOString() : '';
-          endTime = endTime ? new Date(endTime).toISOString() : '';
-          if (startTime && !endTime) {
-            last_modify = `[${startTime} TO *]`;
-          } else if (!startTime && endTime) {
-            last_modify = `[0 TO ${endTime}]`;
-          } else if (startTime && endTime) {
-            last_modify = `[${startTime} TO ${endTime}]`;
-          }
-        }
-        duration = `[0 TO ${getTimeByStr(me.checkboxTime)}]`;
-        if (program_type) {
-          q = `(program_type:${program_type})`;
-        }
-        if (duration) {
-          if (q) {
-            q += ` AND duration:${duration}`;
-          } else {
-            q = `duration:${duration}`;
-          }
-        }
+        const f_date_162 = getTimeRange(this.datetimerange1);   //新聞日期
+        const f_date_36 = getTimeRange(this.datetimerange2);    //首播日期
+        let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
+
+
         if (this.keyword) {
           if (q) {
             q += ` AND full_text:${this.keyword}`;
@@ -238,13 +217,8 @@
             q = `full_text:${this.keyword}`;
           }
         }
-        if (last_modify) {
-          if (q) {
-            q += ` AND last_modify:${last_modify}`;
-          } else {
-            q = `last_modify:${last_modify}`;
-          }
-        }
+
+
         const options = {
           q: q,
           fl: this.fl,
