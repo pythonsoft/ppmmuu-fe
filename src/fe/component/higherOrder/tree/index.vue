@@ -35,7 +35,7 @@
   import layoutTwoRowTree from '../../../component/layout/twoRowTree/index';
   import TreeNodeContent from './treeNodeContent';
 
-  const TreeDataBase = function (key) {
+  const TreeDataBase = function (key, parentId) {
     this.td = [];
     this.indexs = {};
     this.indexKey = key;
@@ -47,14 +47,13 @@
 
       for (let i = 0, len = d.length; i < len; i++) {
         if (!arr) { arr = []; }
-        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || '' });
+        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || '__root__' + d[i][indexKey] });
       }
 
       return arr;
     },
     get(id) {
       if (this.td.length === 0) { return null; }
-
       const parentIndex = this.indexs[id];
 
       if (!parentIndex) {
@@ -76,7 +75,8 @@
       return { info, parentIndex };
     },
     insert(parentId, infos) {
-      if (!parentId) {
+
+      if (this.td.length === 0) {
         this.td = this.composeData(parentId, infos);
         this.indexs = {};
 
@@ -89,20 +89,26 @@
 
       const val = this.get(parentId);
 
-      if (!val) {
-        return false;
+      if (val) {
+        const info = val.info;
+        const parentIndex = val.parentIndex;
+        const children = info.children || [];
+
+        for (let i = 0, len = infos.length; i < len; i++) {
+          this.indexs[infos[i][this.indexKey]] = `${parentIndex}-${i}`;
+        }
+
+        info.children = children.concat(this.composeData(parentId, infos));
+
+      }else {
+        const arr = this.composeData(parentId, infos);
+
+        for (let i = 0, len = infos.length; i < len; i++) {
+          this.indexs[infos[i][this.indexKey]] = `${i}`;
+        }
+
+        this.td = this.td.concat(arr);
       }
-
-      const info = val.info;
-      const parentIndex = val.parentIndex;
-
-      this.removeChildren(parentId);
-
-      for (let i = 0, len = infos.length; i < len; i++) {
-        this.indexs[infos[i][this.indexKey]] = `${parentIndex}-${i}`;
-      }
-
-      info.children = this.composeData(parentId, infos);
 
       return true;
     },
@@ -161,6 +167,10 @@
       this.td = JSON.parse(str).key;
 
       return true;
+    },
+    reset() {
+      this.td = [];
+      this.indexs = {};
     },
     getTreeData() {
       return utils.deepClone(this.td);
@@ -236,6 +246,7 @@
       btnClick: { type: Function },
       listGroup: { type: Function },
       renderContent: { type: Function },
+      rootKey: { type: String, default: '' }
     },
     created() {
       const me = this;
@@ -256,7 +267,7 @@
         cb && cb(me.treeDataBaseInstance.getParentsId(parentId));
       });
 
-      this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey);
+      this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey, this.rootKey);
 
       me.vueInstance.$emit('tree.listGroup');
     },
@@ -274,7 +285,6 @@
 
       /* tree */
       _treeNodeClick(node) {
-      //        this.treeNodeClick && this.treeNodeClick(node);
       },
       _treeNodeCurrentChange(node) {
         const me = this;
@@ -327,7 +337,7 @@
               me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
               me.execCommand && me.execCommand(command, node, {
                 insertNode: me.insertNode,
-                removeNode: me.removeNode
+                removeNode: me.removeNode,
               });
             }
           }
@@ -347,14 +357,19 @@
       removeNode(id) {
         this.treeDataBaseInstance.remove(id);
         this.treeData = this.treeDataBaseInstance.getTreeData();
-      //        this.selectedNodeInfo = {};
       },
 
       _listGroup() {
         const me = this;
 
         this.listGroup && this.listGroup(this.selectedNodeInfo, (data) => {
-          me.insertNode(me.selectedNodeInfo.id || '', data);
+            if(me.selectedNodeInfo.id) {
+            me.treeDataBaseInstance.removeChildren(me.selectedNodeInfo.id);
+            me.insertNode(me.selectedNodeInfo.id, data);
+          }else {
+            me.treeDataBaseInstance.reset();
+            me.insertNode('', data);
+          }
         });
       }
 
