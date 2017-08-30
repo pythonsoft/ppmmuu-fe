@@ -150,7 +150,7 @@
           isFolder: true
         };
         console.log('this.currentNodeId', this.currentNodeId)
-        this.vueInstance.$emit('tree.insertNode', this.currentNodeId || this._id, [node]);
+        this.vueInstance.$emit('tree.insertNode', this.currentNodeId, [node]);
       }
     },
     created() {
