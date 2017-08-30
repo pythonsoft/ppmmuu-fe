@@ -4,7 +4,7 @@
     :theme="theme"
     :data="treeData"
     :autoExpand="autoExpand"
-    node-key="nodeKey"
+    :node-key="nodeKey"
     :render-content="renderItem"
     @node-click="_treeNodeClick"
     @current-change="_treeNodeCurrentChange"
@@ -21,7 +21,7 @@
     <template v-else slot="tree">
       <fj-tree
         :data="treeData"
-        node-key="nodeKey"
+        :node-key="nodeKey"
         :render-content="renderItem"
         @node-click="_treeNodeClick"
         @current-change="_treeNodeCurrentChange"

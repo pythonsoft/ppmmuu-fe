@@ -58,7 +58,9 @@
         return this.node.children && this.node.children.length > 0;
       },
       isCurrentNode() {
-        return this.tree.currentNode === this;
+        console.log('this.tree.currentNode');
+        console.log(this.tree.currentNode);
+        return this.tree.currentNode === this.node[this.nodeKey];
       },
       innerNodeStyle() {
         return Object.assign({}, this.nodeStyle, { paddingLeft: `${this.indent}px`, position: 'relative' });
@@ -87,7 +89,7 @@
           // this.tree.currentNode = this;
           // this.tree.$emit('current-change', this.node);
         }
-        this.tree.currentNode = this;
+        this.tree.currentNode = this.node[this.nodeKey];
         this.tree.$emit('current-change', this.node);
         this.tree.$emit('node-click', this.node);
       },

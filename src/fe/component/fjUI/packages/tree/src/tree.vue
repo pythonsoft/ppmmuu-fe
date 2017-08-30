@@ -39,7 +39,7 @@
     },
     data() {
       return {
-        currentNode: null
+        currentNode: ''
       };
     },
     methods: {
