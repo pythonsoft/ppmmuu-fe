@@ -9,6 +9,7 @@
       <div :style="innerNodeStyle">
         <template v-if="isFolder">
           <i
+            @click="handleExpandIconClick"
             :style="{ left: (open ? indent - 5 : indent) + 'px' }"
             :class="open ? 'tri-bottom' : 'tri-right'"></i>
           <div :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
@@ -39,7 +40,11 @@
       nodeKey: String,
       nodeStyle: Object,
       indent: {},
-      renderContent: Function
+      renderContent: Function,
+      autoExpand: {
+        type: Boolean,
+        default: true
+      }
     },
     data() {
       return {
@@ -60,8 +65,18 @@
       }
     },
     methods: {
-      handleClick() {
+      handleExpandIconClick() {
         if (this.isFolder) {
+          if (!this.open) {
+            this.tree.$emit('node-expand', this.node);
+          } else {
+            this.tree.$emit('node-collapse', this.node);
+          }
+          this.open = !this.open;
+        }
+      },
+      handleClick() {
+        if (this.isFolder && this.autoExpand) {
           if (!this.open) {
             this.tree.$emit('node-expand', this.node);
           } else {

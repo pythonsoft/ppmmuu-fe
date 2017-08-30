@@ -77,7 +77,6 @@
     },
     created() {
       this.resize();
-
       // window.addEventListener('resize', this.resize);
       // document.body.removeEventListener('mouseup', this.mouseup);
     },

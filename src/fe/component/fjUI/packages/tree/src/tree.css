@@ -19,15 +19,17 @@
 
 .tri-bottom,
 .tri-right {
+  margin-left: 2px;
+  margin-right: 2px;
   position: absolute;
   border: 5px solid #4C637B;
 }
 .tri-bottom {
-  top: 8px;
+  margin-top: 8px;
   border-color: #4C637B transparent transparent transparent;
 }
 .tri-right {
-  top: 5px;
+  margin-top: 5px;
   border-color: transparent transparent transparent #4C637B;
 }
 .theme-dark .tri-bottom,
@@ -36,11 +38,11 @@
   border: 5px solid #9FB3CA;
 }
 .theme-dark .tri-bottom {
-  top: 8px;
+  margin-top: 8px;
   border-color: #9FB3CA transparent transparent transparent;
 }
 .theme-dark .tri-right {
-  top: 5px;
+  margin-top: 5px;
   border-color: transparent transparent transparent #9FB3CA;
 }
 

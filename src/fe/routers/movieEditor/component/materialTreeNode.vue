@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.nodeWrap">
-    <p v-if="isShowFolderName" @click.stop="" @dblclick.stop="dblclickFolder">{{ node.name }}</p>
+    <p v-if="isShowFolderName" @dblclick.stop="dblclickFolder">{{ node.name }}</p>
     <input
       ref="treeNodeInput"
       v-model="inputValue"
@@ -35,10 +35,10 @@
     },
     computed: {
       isShowFolderName() {
-        return this.nodeStatus === 'editing' ? false : TYPE_CONFIG[this.node.info.type]==='folder';
+        return this.nodeStatus === 'editing' ? false : TYPE_CONFIG[this.node.info.type] === 'folder';
       },
       isShowInput() {
-        return this.nodeStatus === 'editing' ? true : TYPE_CONFIG[this.node.info.type]==='input';
+        return this.nodeStatus === 'editing' ? true : TYPE_CONFIG[this.node.info.type] === 'input';
       }
     },
     created() {
