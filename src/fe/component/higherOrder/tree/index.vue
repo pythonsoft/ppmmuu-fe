@@ -294,11 +294,15 @@
         const rs = this.treeDataBaseInstance.get(node.parentId);
         const parentNode = rs ? rs.info : null;
 
-        me.selectedNodeInfo = node;
-        this.autoFetchData && me._listGroup();
+//        me.selectedNodeInfo = node;
+//        this.autoFetchData && me._listGroup();
+        console.log(1);
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
       _treeNodeExpand(node) {
+        console.log(2);
+        this.selectedNodeInfo = node;
+        this.autoFetchData && this._listGroup();
         this.treeNodeExpand && this.treeNodeExpand(node);
       },
       _treeNodeCollapse(node) {
