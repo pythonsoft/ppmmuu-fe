@@ -20,7 +20,7 @@
       showMenuIndex: []
     },
     created() {
-      const query = window.location.href.replace(/http[s]*:\/\//g, '').replace(window.location.host, '');;
+      const query = window.location.href.replace(/http[s]*:\/\//g, '').replace(window.location.host, '');
       const paths = query.split('/');
       let name = paths[paths.length - 1];
 

@@ -235,7 +235,7 @@
       treeNodeCollapse: { type: Function },
       btnClick: { type: Function },
       listGroup: { type: Function },
-      renderContent: { type: Function },
+      renderContent: { type: Function }
     },
     created() {
       const me = this;
@@ -315,7 +315,7 @@
         const me = this;
         const menus = me.getMenu(node);
 
-        return this.renderContent? this.renderContent() : h(TreeNodeContent, {
+        return this.renderContent ? this.renderContent() : h(TreeNodeContent, {
           props: {
             node: node,
             menus: menus,

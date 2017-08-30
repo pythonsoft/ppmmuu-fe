@@ -105,7 +105,7 @@
         poster: '',
         activeTabName: 'tab1',
         item: {},
-        url: '',
+        url: ''
       };
     },
     watch: {
@@ -155,19 +155,18 @@
         this.$emit('showMovieEditor', true);
       },
       getBlobURL(url, mime, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("get", url);
-        xhr.responseType = "arraybuffer";
+        const xhr = new XMLHttpRequest();
+        xhr.open('get', url);
+        xhr.responseType = 'arraybuffer';
 
-        xhr.addEventListener("load", function() {
+        xhr.addEventListener('load', function () {
+          const arrayBufferView = new Uint8Array(this.response);
+          const blob = new Blob([arrayBufferView], { type: mime });
+          let url = null;
 
-          var arrayBufferView = new Uint8Array( this.response );
-          var blob = new Blob( [ arrayBufferView ], { type: mime } );
-          var url = null;
-
-          if ( window.webkitURL ) {
+          if (window.webkitURL) {
             url = window.webkitURL.createObjectURL(blob);
-          } else if ( window.URL && window.URL.createObjectURL ) {
+          } else if (window.URL && window.URL.createObjectURL) {
             url = window.URL.createObjectURL(blob);
           }
 
@@ -180,27 +179,27 @@
         api.getStream({ params: { objectId: this.item.id } }).then((res) => {
           let dateString = res.result.UNCPATH;
           const fileName = res.result.FILENAME;
-          if(dateString) {
+          if (dateString) {
             dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
-            if(dateString.length === 1) {
+            if (dateString.length === 1) {
               dateString = dateString[0].replace(/\\/g, '\/');
             }
-            //streamURL = 'hkss4.phoenixtv.com/u/mp4:';
-            const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
-//            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
-//            me.getBlobURL(url, 'video/mp4', (url, blob) => {
-//              me.url = url;
-//            });
+            // streamURL = 'hkss4.phoenixtv.com/u/mp4:';
+            const url = `http://${config.defaults.streamURL}${dateString}/${fileName}`;
+            //            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
+            //            me.getBlobURL(url, 'video/mp4', (url, blob) => {
+            //              me.url = url;
+            //            });
 
-//            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
-//              me.url = '/img/test.mp4';
-////              me.url = 'mp4:' + dateString + '/' + fileName;
-////              rtmpPlayer()
-//            }else {
-//              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
-//            }
+            //            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
+            //              me.url = '/img/test.mp4';
+            // //              me.url = 'mp4:' + dateString + '/' + fileName;
+            // //              rtmpPlayer()
+            //            }else {
+            //              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+            //            }
 
-//            me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+            //            me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
             me.url = '/img/test.mp4';
 
             console.log('=========>', me.url);

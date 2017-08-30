@@ -12,7 +12,8 @@
   "eslintIgnore": [
     "src/fe/html",
     "dist",
-    "src/fe/img"
+    "src/fe/img",
+    "src/fe/static"
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development node build/dev-server.js",
