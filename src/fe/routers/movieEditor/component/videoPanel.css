@@ -1,10 +1,29 @@
-.material-list-wrap {
-  position: relative;
-}
-.material-list-operater-wrap {
+.material-list-header {
   position: absolute;
   top: 10px;
   right: 10px;
+  left: 20px;
+  height: 24px;
+}
+.material-list-wrap .dialog-content {
+  font-size: 14px;
+}
+.material-list-content {
+  position: absolute;
+  top: 34px;
+  right: 10px;
+  left: 20px;
+  bottom: 0;
+  overflow: auto;
+}
+.material-list-title {
+  float: left;
+  font-size: 12px;
+  color: #CED9E5;
+  line-height: 24px;
+}
+.material-list-operater-wrap {
+  float: right;
 }
 .material-panel-wrap {
   position: relative;
