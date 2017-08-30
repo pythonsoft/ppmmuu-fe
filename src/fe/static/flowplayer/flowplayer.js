@@ -1317,7 +1317,7 @@ var flowplayer = _dereq_('../flowplayer')
 
 flowplayer(function(api, root) {
   if (api.conf.chromecast === false) return;
-  scriptjs('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js');
+  // scriptjs('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js');
   window['__onGCastApiAvailable'] = function(loaded) {
     if (!loaded) return;
     initialize();
@@ -3875,7 +3875,8 @@ extend(flowplayer, {
       live: false,
       livePositionOffset: 120,
 
-      swf: "//releases.flowplayer.org/7.1.0/flowplayer.swf",
+      // swf: "//releases.flowplayer.org/7.1.0/flowplayer.swf",
+      swf: "/static/flowplayer/flowplayer.swf",
       swfHls: "//releases.flowplayer.org/7.1.0/flowplayerhls.swf",
 
       speeds: [0.25, 0.5, 1, 1.5, 2],
