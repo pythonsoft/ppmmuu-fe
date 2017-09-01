@@ -5,7 +5,8 @@ export default {
         {
           this.data.map((row, rowIndex) => {
             let className = rowIndex % 2 === 1 ? 'fj-table-striped' : null;
-            if (this.highlight && row === this.store.states.currentRow) {
+            if (this.highlight
+              && (row === this.store.states.currentRow || this.store.states.selection.indexOf(row) > -1)) {
               className = className ? `${className} fj-current-row` : 'fj-current-row';
             }
             return (
@@ -50,7 +51,11 @@ export default {
   },
   methods: {
     handleClick(row) {
-      this.store.setCurrentRow(row);
+      if (this.store.states.isMultiple) {
+        this.store.rowSelectedChanged(row);
+      } else {
+        this.store.setCurrentRow(row);
+      }
     }
   }
 };
