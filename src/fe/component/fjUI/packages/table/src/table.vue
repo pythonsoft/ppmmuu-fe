@@ -35,7 +35,10 @@
         type: String,
         default: '暂无数据'
       },
-      highlightCurrentRow: Boolean,
+      highlightCurrentRow: {
+        type: Boolean,
+        default: true
+      },
       showThead: {
         type: Boolean,
         default: true
@@ -48,9 +51,11 @@
         data: this.data,
         isAllSelected: false,
         selection: [],
-        currentRow: null
+        currentRow: null,
+        isMultiple: false
       };
       store.insertColumn = (column) => {
+        if (column.type === 'selection') this.store.states.isMultiple = true;
         this.store.states.columns.push(column);
       };
       store.isSelected = row => (this.store.states.selection).indexOf(row) > -1;
