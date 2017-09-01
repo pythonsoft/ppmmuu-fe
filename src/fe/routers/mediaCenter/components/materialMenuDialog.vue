@@ -27,7 +27,7 @@
       return {
         _id: '',
         currentNodeId: ''
-      }
+      };
     },
     created() {
       this.vueInstance = new Vue({
