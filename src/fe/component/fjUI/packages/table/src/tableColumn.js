@@ -36,6 +36,7 @@ export default {
         return (
           <fj-checkbox
             value={data.store.isSelected(data.row)}
+            size="small"
             on-input={() => { data.store.rowSelectedChanged(data.row); }}
           />
         );
