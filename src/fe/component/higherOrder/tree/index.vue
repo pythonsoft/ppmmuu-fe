@@ -37,7 +37,7 @@
   import layoutTwoRowTree from '../../../component/layout/twoRowTree/index';
   import TreeNodeContent from './treeNodeContent';
 
-  const TreeDataBase = function (key, parentId) {
+  const TreeDataBase = function (key) {
     this.td = [];
     this.indexs = {};
     this.indexKey = key;
@@ -48,10 +48,8 @@
       const indexKey = this.indexKey;
 
       for (let i = 0, len = d.length; i < len; i++) {
-        if (!arr) { arr = []; }
-        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || `__root__${d[i][indexKey]}` });
+        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || '__root__' + d[i][indexKey] });
       }
-
       return arr;
     },
     get(id) {
@@ -118,17 +116,28 @@
         return false;
       }
 
+      const me = this;
       const val = this.get(id);
 
       if (!val) {
         return false;
       }
 
+      const indexKey = this.indexKey;
+
       const clear = function clear(childrenNode) {
         if (childrenNode && childrenNode.length > 0) {
+          let temp = null;
+
           for (let i = 0, len = childrenNode.length; i < len; i++) {
-            if (this.indexs[childrenNode[i][this.indexKey]]) {
-              delete this.indexs[childrenNode[i][this.indexKey]];
+            temp = childrenNode[i];
+
+            if(temp.children && temp.children.length > 0) {
+              clear(temp.children);
+            }else {
+              if (me.indexs[childrenNode[i][indexKey]]) {
+                delete me.indexs[childrenNode[i][indexKey]];
+              }
             }
           }
         }
@@ -142,6 +151,7 @@
     },
     remove(id) {
       const val = this.removeChildren(id);
+      if(!val) { return false; }
       // 移除本身
       const parentIndex = val.parentIndex;
       const indexs = parentIndex.split('-');
@@ -168,6 +178,7 @@
       str = str.replace(',"--",', ',').replace(',"--"', '').replace('"--",', '').replace('"--"', '');
       this.td = JSON.parse(str).key;
 
+      delete this.indexs[id];
       return true;
     },
     reset() {
@@ -286,7 +297,6 @@
       showErrorInfo(message) {
         this.$message.error(message);
       },
-
       /* tree */
       _treeNodeClick(node) {
       },
