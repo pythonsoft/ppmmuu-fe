@@ -209,8 +209,13 @@
         const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
         let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
-        let searchNotice = '检索词:';
-        searchNotice += getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
+        let searchNotice = '检索词:' + this.keyword;
+        const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
+        if(this.keyword && searchChoose) {
+          searchNotice += ',' + searchChoose;
+        }else{
+          searchNotice += searchChoose;
+        }
         const noticeLength = getStringLength(searchNotice);
         if (noticeLength > 15) {
           searchNotice = searchNotice.substr(0, 15);
@@ -235,26 +240,32 @@
             q = `f_date_36:${f_date_36}`;
           }
         }
+        const options = {
+          fl: this.fl,
+          sort: 'last_modify desc',
+          start: start,
+          hl: 'off',
+          indent: 'off',
+          'hl.fl': 'name,program_name_cn,program_name_en',
+          rows: this.pageSize
+        };
 
         if (this.keyword) {
           if (q) {
             q += ` AND full_text:${this.keyword}`;
+            options['q'] = q;
+            options['hl'] = 'on';
+            options['indent'] = 'on';
+            for( let k = 0, len = searchSelectConfigs[0].items.length; k < len; k++){
+              if(searchSelectConfigs[0].items[k].value === this.keyword){
+                options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en';
+              }
+            }
           } else {
             q = `full_text:${this.keyword}`;
+            options['q'] = q;
           }
         }
-
-
-        const options = {
-          q: q,
-          fl: this.fl,
-          sort: 'last_modify desc',
-          start: start,
-          hl: 'on',
-          indent: 'on',
-          'hl.fl': 'program_type,name,program_name_cn,program_name_en',
-          rows: this.pageSize
-        };
 
         api.solrSearch({ params: options }, me).then((res) => {
           me.items = res.data.docs;
