@@ -367,6 +367,7 @@ method.searchRadioboxConfigs = [
     key: 'hd_flag',
     label: '高標清',
     items: [
+      { value: '', label: '全部' },
       { value: 1, label: '高清' },
       { value: 0, label: '標清' }
     ],
@@ -376,6 +377,7 @@ method.searchRadioboxConfigs = [
     key: 'f_str_067',
     label: '是否歸檔',
     items: [
+      { value: '', label: '全部' },
       { value: '是', label: '是' },
       { value: '否', label: '否' }
     ],
