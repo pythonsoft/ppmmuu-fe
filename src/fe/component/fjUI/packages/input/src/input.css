@@ -118,3 +118,6 @@
 .fj-input-inner-stroke::placeholder {
   color: var(--input-placeholder-color);
 }
+.fj-input-inner-fill::placeholder {
+  color: var(--input-placeholder-color);
+}
