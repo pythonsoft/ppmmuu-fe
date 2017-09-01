@@ -58,8 +58,6 @@
         return this.node.children && this.node.children.length > 0;
       },
       isCurrentNode() {
-        console.log('this.tree.currentNode');
-        console.log(this.tree.currentNode);
         return this.tree.currentNode === this.node[this.nodeKey];
       },
       innerNodeStyle() {

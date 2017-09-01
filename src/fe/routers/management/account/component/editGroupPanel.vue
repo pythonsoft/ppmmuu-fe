@@ -189,7 +189,7 @@
     color: #2A3E52;
   }
   .edit-panel-warpper h1 {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 62px;
   }
   .edit-panel-section {
@@ -198,7 +198,7 @@
     padding-top: 30px;
   }
   .edit-panel-section h2 {
-    font-size: 14px;
+    font-size: 12px;
   }
   .edit-panel-section.basic {
     min-height: 226px;

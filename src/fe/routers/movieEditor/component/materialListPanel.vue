@@ -122,7 +122,8 @@
         return h(TreeNodeContent, {
           props: {
             node: node,
-            rootId: this._id
+            rootId: this._id,
+            currentNodeId: this.currentNodeId
           },
           on: {
             createDirectory: this.createDirectory,

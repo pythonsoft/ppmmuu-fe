@@ -39,8 +39,6 @@
 
 .icon-close:before { content: "\e66c"; }
 
-.icon-plus:before { content: "\e66d"; }
-
 .icon-circle-check:before { content: "\e66e"; }
 
 .icon-info:before { content: "\e66f"; }
@@ -112,3 +110,6 @@
 .icon-add-folder:before { content: "\e68f"; }
 
 .icon-tianjiashipin:before { content: "\e690"; }
+
+.icon-addto:before { content: "\e692"; }
+
