@@ -54,7 +54,7 @@
     },
     computed: {
       isFolder() {
-        if (this.node.info.isFolder) return true;
+        if (this.node.info && this.node.info.isFolder) return true;
         return this.node.children && this.node.children.length > 0;
       },
       isCurrentNode() {
