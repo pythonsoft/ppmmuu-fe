@@ -1,7 +1,8 @@
 <template>
   <div id="video" class="flowplayer fp-slim" data-rtmp="rtmp://hkss4.phoenixtv.com/u">
-    <video height="247" width="439" controls autoplay>
+    <video height="247" width="439" controls autoplay :src="url">
       <source type="video/flash" :src="url">
+      <!--<source type="video/mp4" :src="url">-->
     </video>
   </div>
 </template>
@@ -14,10 +15,10 @@
     },
     watch: {
       url(v) {
-        console.log('url -->', v);
-        const script = document.createElement('script');
-        script.src = '/static/flowplayer/flowplayer.js';
-        document.body.appendChild(script);
+//        console.log('url -->', v);
+//        const script = document.createElement('script');
+//        script.src = '/static/flowplayer/flowplayer.js';
+//        document.body.appendChild(script);
 //        flowplayer('video', { src: "/static/flowplayer/flowplayer.swf", width: 439, height: 247 }, {
 //          clip: {
 //            url: v,

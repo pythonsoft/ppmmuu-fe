@@ -1,12 +1,9 @@
 <template>
   <div class="media-right">
     <div class=" media-video">
-      <!--<div v-if="!isEmptyObject(item)" class="media-video-wrap">-->
-      <div v-if="1" class="media-video-wrap">
+      <div v-if="!isEmptyObject(item)" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <video-view
-            :url="url"
-          ></video-view>
+          <video height="247" width="439" controls autoplay :src="url"></video>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -79,9 +76,6 @@
   import { getTitle, getThumb } from './common';
   import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo } from '../../common/utils';
   import moreView from './moreView';
-  import videoView from './components/video'
-  import VideoView from "./components/video.vue";
-
   const config = require('../../config');
 
   const api = require('../../api/media');
@@ -89,9 +83,7 @@
   export default {
     name: 'right',
     components: {
-      VideoView,
       'more-view': moreView,
-      'video-view': videoView
     },
     props: {
       videoInfo: { type: Object, default: {} }
@@ -179,29 +171,8 @@
               dateString = dateString[0].replace(/\\/g, '\/');
             }
             //streamURL = 'hkss4.phoenixtv.com/u/mp4:';
-            const url = 'mp4:' + dateString + '/' + fileName;
-//            const url = 'http://' + config.defaults.streamURL + dateString + '/' + fileName;
-//            me.url = 'http://hkss4.phoenixtv.com/vod/mp4:x/2017/07/AJ/12d9fde7-afd7-499f-b8af-92b2e89ad7ca.mp4/playlist.m3u8';
-//            me.getBlobURL(url, 'video/mp4', (url, blob) => {
-//              me.url = url;
-//            });
-
-//            if(window.navigator.userAgent.indexOf("Chrome") !== -1) {
-//              me.url = '/img/test.mp4';
-////              me.url = 'mp4:' + dateString + '/' + fileName;
-////              rtmpPlayer()
-//            }else {
-//              me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
-//            }
-
-//            me.url = (url + '/playlist.m3u8').replace('mp4:', 'mp4:x');
+            const url = config.defaults.streamURL + dateString + '/' + fileName;
             me.url = url;
-
-//            const script = document.createElement('script');
-//            script.src = '/static/flowplayer/flowplayer.js';
-//            document.body.appendChild(script);
-
-//            getVideo('video', url);
           }
         }).catch((error) => {
           me.$message.error(error);
