@@ -1,3 +1,7 @@
+.fj-tree-small {
+
+}
+
 .fj-tree-item-expandable {
   color: #2A3E52;
 }
@@ -7,8 +11,9 @@
 
 .fj-tree-item,
 .fj-tree-item-expandable {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  font-size: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   cursor: default;
 }
 
@@ -22,27 +27,39 @@
   margin-left: 2px;
   margin-right: 2px;
   position: absolute;
-  border: 5px solid #4C637B;
+  border: 4px solid #4C637B;
 }
 .tri-bottom {
   margin-top: 8px;
   border-color: #4C637B transparent transparent transparent;
 }
 .tri-right {
-  margin-top: 5px;
+  margin-top: 6px;
   border-color: transparent transparent transparent #4C637B;
 }
+
+.fj-tree-current-item .tri-bottom,
+.fj-tree-current-item .tri-right {
+  border: 4px solid #fff;
+}
+.fj-tree-current-item .tri-bottom {
+  border-color: #fff transparent transparent transparent;
+}
+.fj-tree-current-item .tri-right {
+  border-color: transparent transparent transparent #fff;
+}
+
 .theme-dark .tri-bottom,
 .theme-dark .tri-right {
   position: absolute;
-  border: 5px solid #9FB3CA;
+  border: 4px solid #9FB3CA;
 }
 .theme-dark .tri-bottom {
   margin-top: 8px;
   border-color: #9FB3CA transparent transparent transparent;
 }
 .theme-dark .tri-right {
-  margin-top: 5px;
+  margin-top: 6px;
   border-color: transparent transparent transparent #9FB3CA;
 }
 

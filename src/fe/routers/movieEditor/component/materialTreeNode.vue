@@ -6,15 +6,23 @@
       v-model="inputValue"
       placeholder="请输入文件名"
       type="text"
-      v-if="isShowInput"
+      v-else-if="isShowInput"
       :class="$style.treeInput"
       @click.stop=""
       @keyup.enter="submit"
       v-clickoutside="handleCancel">
+    <div v-else :class="[$style.mediaWrap, currentNodeId === node.id ? $style.currentMedia : '']">
+      <div :class="$style.mediaLeft" class="clearfix">
+        <img :class="$style.mediaImg" :src="node.info.snippet && node.info.snippet.thumb" height="29px">
+        <p :class="$style.mediaName">{{ node.name }}</p>
+      </div>
+      <span :class="$style.mediaDuration">{{ formatTime(node.info.snippet.duration) }}</span>
+    </div>
   </div>
 </template>
 <script>
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
+  import { fillUpZero } from '../../../common/utils';
 
   const TYPE_CONFIG = {
     0: 'folder',
@@ -25,7 +33,8 @@
     directives: { Clickoutside },
     props: {
       node: {},
-      rootId: String
+      rootId: String,
+      currentNodeId: String
     },
     data() {
       return {
@@ -55,6 +64,14 @@
       }
     },
     methods: {
+      formatTime(second = 0) {
+        const hours = Math.floor(second / (60 * 60));
+        second %= (60 * 60);
+        const minutes = Math.floor(second / 60);
+        second %= 60;
+        const seconds = Math.floor(second);
+        return `${fillUpZero(hours)}:${fillUpZero(minutes)}:${fillUpZero(seconds)}`;
+      },
       dblclickFolder() {
         this.nodeStatus = 'editing';
         this.inputValue = this.node.name;
@@ -93,5 +110,36 @@
     border: 0;
     border-radius: 2px;
     color: #9FB3CA;
+  }
+  .mediaWrap {
+    position: relative;
+    width: 100%;
+    height: 29px;
+  }
+  .currentMedia {
+    background-color: #2A3E52;
+  }
+  .mediaDuration {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 48px;
+  }
+  .mediaLeft {
+    position: absolute;
+    top: 0;
+    right: 60px;
+    bottom: 0;
+    left: 0;
+  }
+  .mediaImg {
+    float: left;
+    margin-right: 12px;
+  }
+  .mediaName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

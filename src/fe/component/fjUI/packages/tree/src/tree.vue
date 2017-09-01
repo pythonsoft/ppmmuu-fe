@@ -1,5 +1,5 @@
 <template>
-  <ul class="fj-tree" :class="{'theme-dark': theme === 'dark'}">
+  <ul class="fj-tree" :class="[{'theme-dark': theme === 'dark'}]">
     <fj-tree-node
       v-for="(item, index) in data"
       :node="item"
@@ -32,6 +32,7 @@
         type: String,
         default: 'normal'
       },
+      size: String,
       autoExpand: {
         type: Boolean,
         default: true
