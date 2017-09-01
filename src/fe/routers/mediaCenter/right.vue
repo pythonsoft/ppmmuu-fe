@@ -18,6 +18,9 @@
               <li @click.stop="openMovieEditor">
                 <span title="视频编辑" class="iconfont icon-cut"></span>
               </li>
+              <li @click.stop="showMaterialMenu" ref="addtoBtn" v-clickoutside="closeMaterialMenu">
+                <span title="收藏" class="iconfont icon-addto"></span>
+              </li>
             </ul>
           </div>
         </div>
@@ -81,13 +84,19 @@
   import moreView from './moreView';
   import videoView from './components/video'
   import VideoView from "./components/video.vue";
+  import MaterialMenuDialog from './components/materialMenuDialog';
+  import { getPosition } from '../../component/fjUI/utils/position';
+  import Vue from 'vue';
+  import Clickoutside from '../../component/fjUI/utils/clickoutside';
 
   const config = require('../../config');
 
   const api = require('../../api/media');
+  import ivideoAPI from '../../api/ivideo';
 
   export default {
     name: 'right',
+    directives: { Clickoutside },
     components: {
       VideoView,
       'more-view': moreView,
@@ -143,6 +152,56 @@
       },
       downloadClick() {
 
+      },
+      closeMaterialMenu(target) {
+        if (this.menu && this.menu.$el.contains(target)) return;
+        if (this.menu && this.menu.visible) this.unmountMenu();
+      },
+      showMaterialMenu() {
+        if (!this.menu) {
+          this.mountMenu();
+        }
+        const menuPosition = this.getMenuPosition();
+        this.menu.menuPosition = menuPosition;
+        this.menu.visible = true;
+      },
+      getMenuPosition() {
+        const addtoBtn = this.$refs.addtoBtn;
+        const menuPosition = {};
+        const addtoBtnPosition = getPosition(addtoBtn);
+        const addtoBtnHeight = addtoBtn.getBoundingClientRect().height;
+        menuPosition.top = `${addtoBtnPosition.y + addtoBtnHeight}px`;
+        menuPosition.left = `${addtoBtnPosition.x - 163}px`;
+        return menuPosition;
+      },
+      mountMenu() {
+        this.menu = new Vue(MaterialMenuDialog).$mount();
+        this.menu.$on('addto-menu', this.handleAddtoMenu);
+        document.body.appendChild(this.menu.$el);
+      },
+      unmountMenu() {
+        if (this.menu) {
+          this.menu.$destroy();
+          document.body.removeChild(this.menu.$el);
+          this.menu = null;
+        }
+      },
+      handleAddtoMenu(data) {
+        const reqData = Object.assign({}, data);
+        reqData.name = this.title;
+        reqData.snippet = {
+          "thumb": this.poster,
+          "input": 0,
+          "output": this.item.duration,
+          "duration": this.item.duration
+        };
+        ivideoAPI.createItem(reqData)
+          .then((response) => {
+            this.unmountMenu();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
       },
       openMovieEditor() {
         this.$emit('showMovieEditor', true);
