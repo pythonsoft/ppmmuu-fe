@@ -62,7 +62,7 @@
   }
 
   .layout-top-search .layout-search-title{
-    font-size: 16px;
+    font-size: 14px;
     position: absolute;
     left: 20px;
   }
