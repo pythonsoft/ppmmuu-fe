@@ -23,8 +23,8 @@
 }
 
 .media-category h4 {
-  font-weight: bold;
   margin-bottom: 9px;
+  color: #4C637B;
 }
 
 .media-category .fj-checkbox-wrap,
@@ -33,7 +33,6 @@
 }
 
 .category-checkbox {
-  margin-top: 15px;
   margin-left: 0px;
   height: 20px;
   line-height: 20px;

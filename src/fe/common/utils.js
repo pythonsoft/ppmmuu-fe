@@ -405,17 +405,17 @@ utils.getPosition = function getPosition(ele, oRefer) {
 utils.getVideo = function getVideo(el, url, options) {
   const settings = utils.merge({
     width: 439,
-    height: 247,
+    height: 247
   }, options);
 
-  $f(el, { src: "/static/flowplayer/flowplayer.swf", width: settings.width, height: settings.height }, {
+  $f(el, { src: '/static/flowplayer/flowplayer.swf', width: settings.width, height: settings.height }, {
     clip: {
       url: url,
       provider: 'rtmp'
     },
     plugins: {
       rtmp: {
-        url: "/static/flowplayer/flowplayer.rtmp-3.2.13.swf",
+        url: '/static/flowplayer/flowplayer.rtmp-3.2.13.swf',
         netConnectionUrl: 'rtmp://hkss4.phoenixtv.com/u/'
       }
     },
@@ -423,10 +423,10 @@ utils.getVideo = function getVideo(el, url, options) {
       background: '#000000',
       backgroundGradient: 'none'
     },
-    onError: function(err) {
+    onError(err) {
       console.log(err);
     }
   });
-}
+};
 
 module.exports = utils;
