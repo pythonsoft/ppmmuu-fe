@@ -4,7 +4,7 @@
   position: relative;
   display: inline-block;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
 }
 .fj-radio-wrap.small {

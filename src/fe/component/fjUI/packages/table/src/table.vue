@@ -5,7 +5,7 @@
       <tr>
         <th v-for="column in store.states.columns" :style="{width: column.width + 'px', 'text-align': column.align}">
           <div v-if="column.type === 'selection'">
-            <fj-checkbox :value="store.states.isAllSelected" @input="toggleAllSelection" />
+            <fj-checkbox size="small" :value="store.states.isAllSelected" @input="toggleAllSelection" />
           </div>
           <div v-else>{{column.label}}</div>
         </th>

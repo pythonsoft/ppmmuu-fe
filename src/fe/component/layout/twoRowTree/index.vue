@@ -31,8 +31,8 @@
   }
   .layout-two-row-tree-upper {
     padding: 0 16px;
-    height: 40px;
-    line-height: 40px;
+    height: 32px;
+    line-height: 32px;
     overflow: auto;
   }
   .layout-two-row-tree-upper-title {

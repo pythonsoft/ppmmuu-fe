@@ -3,7 +3,7 @@
     <template slot="search-left">{{ group.name }}</template>
     <template slot="search-right">
       <div class="search-item" :style="{ width: '78px' }">
-        <fj-select size="small" v-model="status">
+        <fj-select size="small" v-model="status" theme="fill">
           <fj-option
             v-for="item in STATUS_OPTIONS"
             :key="item.value"
@@ -12,7 +12,7 @@
         </fj-select>
       </div>
       <div class="search-item" :style="{ width: '190px' }">
-        <fj-input size="small" placeholder="请输入账户名" v-model="keyword"></fj-input>
+        <fj-input theme="fill" size="small" placeholder="请输入账户名" v-model="keyword"></fj-input>
       </div>
       <div class="search-item">
         <fj-button size="small" type="primary" @click="handleSearch">查询</fj-button>
