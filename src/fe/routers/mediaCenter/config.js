@@ -364,7 +364,7 @@ method.searchRadioboxConfigs = [
       { value: 1, label: '高清' },
       { value: 0, label: '標清' }
     ],
-    selected: ''
+    selected: 'all'
   },
   {
     key: 'f_str_067',
@@ -374,7 +374,7 @@ method.searchRadioboxConfigs = [
       { value: '是', label: '是' },
       { value: '否', label: '否' }
     ],
-    selected: ''
+    selected: 'all'
   }
 ];
 
