@@ -3,7 +3,7 @@
     <div class=" media-video">
       <div v-if="!isEmptyObject(item)" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <video height="247" width="439" controls autoplay :src="url"></video>
+          <video height="246" width="439" controls autoplay :src="url"></video>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -11,9 +11,6 @@
             <ul class="media-video-title-bar">
               <li>
                 <span title="下载" class="iconfont icon-video-download"></span>
-              </li>
-              <li @click.stop="openMovieEditor">
-                <span title="视频编辑" class="iconfont icon-cut"></span>
               </li>
               <li @click.stop="showMaterialMenu" ref="addtoBtn" v-clickoutside="closeMaterialMenu">
                 <span title="收藏" class="iconfont icon-addto"></span>
@@ -197,9 +194,6 @@
           .catch((error) => {
             this.$message.error(error);
           });
-      },
-      openMovieEditor() {
-        this.$emit('showMovieEditor', true);
       },
       getBlobURL(url, mime, callback) {
         var xhr = new XMLHttpRequest();

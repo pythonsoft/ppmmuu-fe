@@ -232,7 +232,7 @@
   height: 100%;
   border-left: 4px solid  #F2F6FA;
   box-sizing: border-box;
-  padding-top: 291px;
+  padding-top: 288px;
   font-size: 12px;
 }
 
@@ -241,7 +241,7 @@
 }
 
 .media-video {
-  height: 291px;
+  height: 288px;
   width: 100%;
   text-align: center;
   background: #CED9E5;
@@ -254,7 +254,7 @@
 }
 
 .media-video-wrap-bg {
-  line-height: 291px;
+  line-height: 288px;
   font-size: 50px;
 }
 
@@ -264,7 +264,7 @@
 }
 
 .media-video-content{
-  height: 247px;
+  height: 246px;
   overflow: hidden;
   position: relative;
 }
