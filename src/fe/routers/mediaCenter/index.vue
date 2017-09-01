@@ -6,6 +6,7 @@
           <fj-input
             placeholder="请输入检索关键词"
             size="small"
+            theme="fill"
             v-model="keyword"
             icon="icon-search input-search-icon"
             @on-icon-click="searchClick"
@@ -15,7 +16,7 @@
         <template v-for="config in searchSelectConfigs">
           <div class="media-category">
             <h4>{{config.label}}</h4>
-            <fj-select placeholder="请选择" v-model="config.selected" size="small">
+            <fj-select placeholder="请选择" v-model="config.selected" size="small" theme="fill">
               <fj-option
                       v-for="item in config.items"
                       :key="item.key"
@@ -104,9 +105,9 @@
 </template>
 <script>
   import Vue from 'vue';
-  import { getTimeByStr, formatDuration, getPosition, appendToBody } from '../../common/utils';
+  import { getTimeByStr, formatDuration, getPosition, appendToBody, getStringLength } from '../../common/utils';
   import './index.css';
-  import { searchSelectConfigs, searchRadioboxConfigs, getTimeRange, getQuery } from './config';
+  import { searchSelectConfigs, searchRadioboxConfigs, getTimeRange, getQuery, getSearchNotice } from './config';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
@@ -130,7 +131,7 @@
         total: 0,
         currentPage: 1,
         currentVideo: {},
-        searchResult: '耗时0秒,结果0条',
+        searchResult: '',
         /* client */
         items: [],
         offsetWidth: 0,
@@ -208,6 +209,16 @@
         const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
         let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
+        let searchNotice = '检索词:';
+        searchNotice += getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
+        const noticeLength = getStringLength(searchNotice);
+        if (noticeLength > 15) {
+          searchNotice = searchNotice.substr(0, 15);
+          searchNotice += '...';
+        } else {
+          searchNotice += '   ';
+        }
+        this.searchResult = searchNotice;
 
         if (f_date_162) {
           if (q) {
@@ -248,7 +259,7 @@
         api.solrSearch({ params: options }, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
-          me.searchResult = `耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
+          me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
         }).catch((error) => {
           me.$message.error(error);
         });

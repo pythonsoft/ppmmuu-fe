@@ -10,7 +10,7 @@
   export default {
     name: 'mediacenterVideo',
     props: {
-      //mp4:/2017/08/18/PMHDSSNEWSTIMES86_02AC4A21-6246-4EF1-BD73-3F702E92DD17.mp4
+      // mp4:/2017/08/18/PMHDSSNEWSTIMES86_02AC4A21-6246-4EF1-BD73-3F702E92DD17.mp4
       url: { type: String, default: '' }
     },
     watch: {
@@ -41,12 +41,12 @@
       }
     },
     data() {
-      return {}
+      return {};
     },
     methods: {
 
     },
     created() {
     }
-  }
+  };
 </script>

@@ -75,7 +75,6 @@
       return { info, parentIndex };
     },
     insert(parentId, infos) {
-
       if (this.td.length === 0) {
         this.td = this.composeData(parentId, infos);
         this.indexs = {};
@@ -99,8 +98,7 @@
         }
 
         info.children = children.concat(this.composeData(parentId, infos));
-
-      }else {
+      } else {
         const arr = this.composeData(parentId, infos);
 
         for (let i = 0, len = infos.length; i < len; i++) {
@@ -341,7 +339,7 @@
         const me = this;
         const menus = me.getMenu(node);
 
-        return this.renderContent? this.renderContent(h, node) : h(TreeNodeContent, {
+        return this.renderContent ? this.renderContent(h, node) : h(TreeNodeContent, {
           props: {
             node: node,
             menus: menus,
@@ -353,7 +351,7 @@
               me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
               me.execCommand && me.execCommand(command, node, {
                 insertNode: me.insertNode,
-                removeNode: me.removeNode,
+                removeNode: me.removeNode
               });
             }
           }
@@ -373,7 +371,7 @@
       removeNode(id) {
         this.treeDataBaseInstance.remove(id);
         this.treeData = this.treeDataBaseInstance.getTreeData();
-        if(this.selectedNodeInfo.id === id) {
+        if (this.selectedNodeInfo.id === id) {
           this.selectedNodeInfo = {};
         }
       },
@@ -382,10 +380,10 @@
         const me = this;
 
         this.listGroup && this.listGroup(this.selectedNodeInfo, (data) => {
-            if(me.selectedNodeInfo.id) {
+          if (me.selectedNodeInfo.id) {
             me.treeDataBaseInstance.removeChildren(me.selectedNodeInfo.id);
             me.insertNode(me.selectedNodeInfo.id, data);
-          }else {
+          } else {
             me.treeDataBaseInstance.reset();
             me.insertNode('', data);
           }

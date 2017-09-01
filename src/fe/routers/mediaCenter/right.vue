@@ -76,8 +76,6 @@
   import { getTitle, getThumb } from './common';
   import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo } from '../../common/utils';
   import moreView from './moreView';
-  import videoView from './components/video'
-  import VideoView from "./components/video.vue";
   import MaterialMenuDialog from './components/materialMenuDialog';
   import { getPosition } from '../../component/fjUI/utils/position';
   import Vue from 'vue';
@@ -86,6 +84,7 @@
   const config = require('../../config');
 
   const api = require('../../api/media');
+
   import ivideoAPI from '../../api/ivideo';
 
   export default {
@@ -105,7 +104,7 @@
         poster: '',
         activeTabName: 'tab1',
         item: {},
-        url: '',
+        url: ''
       };
     },
     watch: {
@@ -182,10 +181,10 @@
         const reqData = Object.assign({}, data);
         reqData.name = this.title;
         reqData.snippet = {
-          "thumb": this.poster,
-          "input": 0,
-          "output": this.item.duration,
-          "duration": this.item.duration
+          thumb: this.poster,
+          input: 0,
+          output: this.item.duration,
+          duration: this.item.duration
         };
         ivideoAPI.createItem(reqData)
           .then((response) => {
@@ -196,19 +195,18 @@
           });
       },
       getBlobURL(url, mime, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("get", url);
-        xhr.responseType = "arraybuffer";
+        const xhr = new XMLHttpRequest();
+        xhr.open('get', url);
+        xhr.responseType = 'arraybuffer';
 
-        xhr.addEventListener("load", function() {
+        xhr.addEventListener('load', function () {
+          const arrayBufferView = new Uint8Array(this.response);
+          const blob = new Blob([arrayBufferView], { type: mime });
+          let url = null;
 
-          var arrayBufferView = new Uint8Array( this.response );
-          var blob = new Blob( [ arrayBufferView ], { type: mime } );
-          var url = null;
-
-          if ( window.webkitURL ) {
+          if (window.webkitURL) {
             url = window.webkitURL.createObjectURL(blob);
-          } else if ( window.URL && window.URL.createObjectURL ) {
+          } else if (window.URL && window.URL.createObjectURL) {
             url = window.URL.createObjectURL(blob);
           }
 
@@ -221,9 +219,9 @@
         api.getStream({ params: { objectId: this.item.id } }).then((res) => {
           let dateString = res.result.UNCPATH;
           const fileName = res.result.FILENAME;
-          if(dateString) {
+          if (dateString) {
             dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
-            if(dateString.length === 1) {
+            if (dateString.length === 1) {
               dateString = dateString[0].replace(/\\/g, '\/');
             }
             //streamURL = 'hkss4.phoenixtv.com/u/mp4:';
