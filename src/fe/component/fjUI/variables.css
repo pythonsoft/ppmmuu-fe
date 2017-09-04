@@ -93,11 +93,17 @@
   --select-dropdown-max-height: 240px;
 
   --table-th-border: 1px solid #EBF3FB;
+  --table-dark-th-border: 1px solid #444444;
   --table-th-color: #021120;
+  --table-dark-th-color: #9FB3CA;
   --table-td-color: #4C637B;
+  --table-dark-td-color: #CED9E5;
   --table-tr-hover-bg-color: #EBF3FB;
+  --table-dark-tr-hover-bg-color: #353535;
   --table-tr-striped-bg-color: #F8FAFB;
+  --table-dark-tr-striped-bg-color: #292929;
   --table-current-row-bg-color: rgba(56,176,235,0.25);
+  --table-dark-current-row-bg-color: #2A3E52;
 
   --dialog-border-radius: 4px;
   --dialog-border: 1px solid #CED9E5;

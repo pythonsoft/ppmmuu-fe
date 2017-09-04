@@ -1,5 +1,5 @@
 <template>
-  <div class="fj-select" v-clickoutside="handleClose">
+  <div class="fj-select" :class="[theme ? `fj-select-${theme}` : '', size ? `fj-select-${size}` : '']" v-clickoutside="handleClose">
     <fj-input
       v-model="selectedLabel"
       ref="reference"
