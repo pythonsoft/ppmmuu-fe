@@ -27,7 +27,8 @@
             >
               <template slot="0" scope="props">
                 <video-material-panel
-                  :isActivePanel="activePanel==='meterialEditor'"
+                  :videoSource="materialVideo"
+                  :isActivePanel="activePanel==='materialEditor'"
                   :size="{ width: props.width, height: props.height }"
                   @insert="insertClip"></video-material-panel>
               </template>
@@ -42,7 +43,11 @@
             >
               <template slot="0" scope="props">
                 <material-list-panel
-                  :isActivePanel="activePanel==='meterialList'"></material-list-panel>
+                  :isActivePanel="activePanel==='meterialList'"
+                  @updateCurrentMaterial="updateCurrentMaterial"></material-list-panel>
+              </template>
+              <template slot="1" scope="props">
+                <workspace-panel></workspace-panel>
               </template>
             </panel-view>
           </template>
@@ -56,13 +61,15 @@
   import panelView from '../../component/layout/panel/index';
   import VideoMaterialPanel from './component/videoMaterialPanel';
   import MaterialListPanel from './component/materialListPanel';
+  import WorkspacePanel from './component/workspacePanel';
 
   export default {
     name: 'movieEditor',
     components: {
       'panel-view': panelView,
       VideoMaterialPanel,
-      MaterialListPanel
+      MaterialListPanel,
+      WorkspacePanel
     },
     props: {
     },
@@ -71,7 +78,8 @@
     },
     data() {
       return {
-        activePanel: 'meterialEditor',
+        materialVideo: null,
+        activePanel: 'materialEditor',
         size: { width: document.body.clientWidth, height: document.body.clientHeight }
       };
     },
@@ -89,6 +97,9 @@
       },
       insertClip(range) {
         console.log('range', range);
+      },
+      updateCurrentMaterial(item) {
+        this.materialVideo = item;
       }
     }
   };

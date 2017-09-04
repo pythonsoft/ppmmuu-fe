@@ -22,7 +22,7 @@
   color: #CED9E5;
   line-height: 24px;
 }
-.material-list-operater-wrap {
+.material-list-controller-wrap {
   float: right;
 }
 .material-panel-wrap {
@@ -176,4 +176,28 @@
   font-size: 32px;
   color: #fff;
   display: none;
+}
+.workspace-wrap {
+  position: relative;
+  padding-top: 4px;
+}
+.workspace-header {
+  padding-left: 20px;
+}
+.task-list-controller-wrap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.task-list-controller-wrap .select-wrap {
+  width: 92px;
+}
+.task-list {
+  margin-top: 14px;
+  border-top: 1px solid #444;
+}
+.timeline-title {
+  margin: 10px 20px;
+  font-size: 12px;
+  color: #CED9E5;
 }

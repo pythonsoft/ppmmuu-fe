@@ -2,7 +2,7 @@
   <div class="material-list-wrap">
     <div class="material-list-header clearfix">
       <h3 class="material-list-title">我的资源</h3>
-      <div class="material-list-operater-wrap">
+      <div class="material-list-controller-wrap">
         <div class="player-control-item-wrap">
           <div class="player-control-item" @click="addFolderInput">
             <i class="iconfont icon-add-folder"></i>
@@ -128,9 +128,13 @@
           on: {
             createDirectory: this.createDirectory,
             updateDirectory: this.updateDirectory,
-            cancelCreate: this.cancelCreate
+            cancelCreate: this.cancelCreate,
+            updateCurrentMaterial: this.updateCurrentMaterial
           }
         });
+      },
+      updateCurrentMaterial(item) {
+        this.$emit('updateCurrentMaterial', item);
       },
       createDirectory(reqData) {
         ivideoAPI.createDirectory(reqData)

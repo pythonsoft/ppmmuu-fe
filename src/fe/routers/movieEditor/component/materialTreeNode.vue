@@ -11,7 +11,7 @@
       @click.stop=""
       @keyup.enter="submit"
       v-clickoutside="handleCancel">
-    <div v-else :class="[$style.mediaWrap, currentNodeId === node.id ? $style.currentMedia : '']">
+    <div v-else :class="[$style.mediaWrap, currentNodeId === node.id ? $style.currentMedia : '']" @dblclick="updateCurrentMaterial">
       <div :class="$style.mediaLeft" class="clearfix">
         <img :class="$style.mediaImg" :src="node.info.snippet && node.info.snippet.thumb" height="29px">
         <p :class="$style.mediaName">{{ node.name }}</p>
@@ -76,6 +76,9 @@
         this.nodeStatus = 'editing';
         this.inputValue = this.node.name;
       },
+      updateCurrentMaterial() {
+        this.$emit('updateCurrentMaterial', this.node.info);
+      },
       handleCancel() {
         if (this.nodeStatus === 'editing') {
           this.nodeStatus = 'normal';
@@ -121,7 +124,7 @@
   }
   .mediaDuration {
     position: absolute;
-    right: 0;
+    right: 3px;
     top: 0;
     bottom: 0;
     width: 48px;
