@@ -1,6 +1,9 @@
 const utils = {};
 const moment = require('moment');
 
+const mediaAPI = require('../api/media');
+const config = require('../config');
+
 utils.fillUpZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
@@ -426,6 +429,26 @@ utils.getVideo = function getVideo(el, url, options) {
     onError(err) {
       console.log(err);
     }
+  });
+};
+
+utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
+  mediaAPI.getStream({ params: { objectId: objectId } }, scope).then((res) => {
+    let dateString = res.result.UNCPATH;
+    const fileName = res.result.FILENAME;
+    if (dateString) {
+      dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
+      if (dateString.length === 1) {
+        dateString = dateString[0].replace(/\\/g, '\/');
+      }
+      let url = config.defaults.streamURL + dateString + '/' + fileName;
+      if(config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
+        url = '/static/video/test.mp4';
+      }
+      cb && cb(null, url);
+    }
+  }).catch((error) => {
+    cb && cb(error);
   });
 };
 

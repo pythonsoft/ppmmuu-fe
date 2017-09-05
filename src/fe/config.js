@@ -7,7 +7,12 @@ axios.defaults.withCredentials = true;
 
 axios.defaults.baseURL = 'http://localhost:8080';
 
-axios.defaults.streamURL = 'http://hk.live.szdev.cn/u';
+if(window.location.hostname.indexOf('hk') !== -1) {
+  axios.defaults.baseURL = 'http://hk.api.szdev.cn';
+}
+
+// axios.defaults.streamURL = 'http://hk.live.szdev.cn/u';
+axios.defaults.streamURL = 'http://localhost:8080';
 
 axios.interceptors.request.use((config) => {
   // Do something before request is sent

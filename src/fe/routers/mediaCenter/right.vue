@@ -74,7 +74,7 @@
 <script>
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo } from '../../common/utils';
+  import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo, getStreamURL } from '../../common/utils';
   import moreView from './moreView';
   import MaterialMenuDialog from './components/materialMenuDialog';
   import { getPosition } from '../../component/fjUI/utils/position';
@@ -216,21 +216,15 @@
       },
       getStream() {
         const me = this;
-        api.getStream({ params: { objectId: this.item.id } }).then((res) => {
-          let dateString = res.result.UNCPATH;
-          const fileName = res.result.FILENAME;
-          if (dateString) {
-            dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
-            if (dateString.length === 1) {
-              dateString = dateString[0].replace(/\\/g, '\/');
-            }
-            //streamURL = 'hkss4.phoenixtv.com/u/mp4:';
-            const url = config.defaults.streamURL + dateString + '/' + fileName;
-            me.url = url;
+
+        getStreamURL(this.item.id, function(err, url) {
+          if(err) {
+            me.$message.error(error);
+            return false;
           }
-        }).catch((error) => {
-          me.$message.error(error);
-        });
+
+          me.url = url;
+        }, me);
       }
     }
   };

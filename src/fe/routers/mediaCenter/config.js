@@ -86,7 +86,7 @@ method.getQuery = function getQuery(configs) {
   for (let i = 0, len = configs.length; i < len; i++) {
     const temp = configs[i];
     const key = temp.key;
-    if (temp.selected !== undefined && temp.selected !== '') {
+    if (temp.selected !== undefined && temp.selected !== '' && temp.selected !== 'all') {
       if (q) {
         q += ` AND ${key}:${temp.selected}`;
       } else {
@@ -103,7 +103,7 @@ method.getSearchNotice = function getSearchNotice(configs) {
   for (let i = 0, len = configs.length; i < len; i++) {
     const temp = configs[i];
     const key = temp.key;
-    if (temp.selected !== undefined && temp.selected !== '') {
+    if (temp.selected !== undefined && temp.selected !== 'all' && temp.selected !== '') {
       const items = temp.items;
       for (let j = 0, len1 = items.length; j < len1; j++) {
         if (items[j].value == temp.selected) {
