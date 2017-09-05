@@ -107,7 +107,7 @@
   import Vue from 'vue';
   import { getTimeByStr, formatDuration, getPosition, appendToBody, getStringLength } from '../../common/utils';
   import './index.css';
-  import { searchSelectConfigs, searchRadioboxConfigs, getTimeRange, getQuery, getSearchNotice } from './config';
+  import { getTimeRange, getQuery, getSearchNotice } from './config';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
@@ -125,8 +125,8 @@
       return {
         defaultRoute: '/',
         keyword: '',
-        searchSelectConfigs: searchSelectConfigs,
-        searchRadioboxConfigs: searchRadioboxConfigs,
+        searchSelectConfigs: [],
+        searchRadioboxConfigs: [],
         pageSize: 24,
         total: 0,
         currentPage: 1,
@@ -152,6 +152,7 @@
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.getSeachConfigs();
     },
     methods: {
       setMovieEditorDisplay(v) {
@@ -203,6 +204,16 @@
       searchClick() {
         this.resize();
       },
+      getSeachConfigs() {
+        const me = this;
+        api.getSearchConfig().then((res)=>{
+          me.searchSelectConfigs = res.data.searchSelectConfigs;
+          me.searchRadioboxConfigs = res.data.searchRadioboxConfigs;
+        }).catch((error)=>{
+          me.$message.error(error);
+        })
+
+      },
       getMediaList() {
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
@@ -241,6 +252,7 @@
           }
         }
         const options = {
+          q: q,
           fl: this.fl,
           sort: 'last_modify desc',
           start: start,
@@ -256,8 +268,8 @@
             options['q'] = q;
             options['hl'] = 'on';
             options['indent'] = 'on';
-            for( let k = 0, len = searchSelectConfigs[0].items.length; k < len; k++){
-              if(searchSelectConfigs[0].items[k].value === this.keyword){
+            for( let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++){
+              if(this.searchSelectConfigs[0].items[k].value === this.keyword){
                 options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en';
               }
             }
