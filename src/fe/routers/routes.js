@@ -13,6 +13,9 @@ const StorageTactics = resolve => require.ensure([], () => resolve(require('./ma
 const Transcode = resolve => require.ensure([], () => resolve(require('./management/task/transcode/index')), 'transcode');
 const Transfer = resolve => require.ensure([], () => resolve(require('./management/task/transfer/index')), 'transfer');
 
+const ManagementAbout = resolve => require.ensure([], () => resolve(require('./management/help/about/index')), 'managementAbout');
+const ManagementFeedback = resolve => require.ensure([], () => resolve(require('./management/help/feedback/index')), 'managementFeedback');
+
 const PersonalCenter = resolve => require.ensure([], () => resolve(require('./personalCenter/index')), 'personalCenter');
 const Information = resolve => require.ensure([], () => resolve(require('./personalCenter/information/index')), 'information');
 const ChangePassword = resolve => require.ensure([], () => resolve(require('./personalCenter/changePassword/index')), 'changePassword');
@@ -46,7 +49,9 @@ export default [{
         { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' }, name: 'storageTactics' },
         { path: 'transcode', component: Transcode, meta: { title: '转码任务' }, name: 'transcode' },
         { path: 'transfer', component: Transfer, meta: { title: '传输任务' }, name: 'transfer' },
-        { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' }
+        { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' },
+        { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
+        { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' }
       ]
     },
     {

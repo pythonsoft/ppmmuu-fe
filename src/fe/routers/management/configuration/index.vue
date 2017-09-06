@@ -444,6 +444,7 @@
   .permission-search-item {
     float: left;
     margin-left: 10px;
+    line-height: 100%;
   }
 
   .permission-btn-mini-margin {

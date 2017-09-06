@@ -436,6 +436,7 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
   mediaAPI.getStream({ params: { objectId: objectId } }, scope).then((res) => {
     let dateString = res.result.UNCPATH;
     const fileName = res.result.FILENAME;
+
     if (dateString) {
       dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
       if (dateString.length === 1) {
@@ -445,7 +446,7 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
       if(config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
         url = '/static/video/test.mp4';
       }
-      cb && cb(null, url);
+      cb && cb(null, url, res);
     }
   }).catch((error) => {
     cb && cb(error);
