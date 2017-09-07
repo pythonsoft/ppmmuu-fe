@@ -263,11 +263,11 @@
         };
 
         if (this.keyword) {
+          options['q'] = q;
+          options['hl'] = 'on';
+          options['indent'] = 'on';
           if (q) {
             q += ` AND full_text:${this.keyword}`;
-            options['q'] = q;
-            options['hl'] = 'on';
-            options['indent'] = 'on';
             for( let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++){
               if(this.searchSelectConfigs[0].items[k].value === this.keyword){
                 options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en';
