@@ -11,7 +11,7 @@
       @click.stop=""
       @keyup.enter="submit"
       v-clickoutside="handleCancel">
-    <div v-else :class="[$style.mediaWrap, currentNodeId === node.id ? $style.currentMedia : '']" @dblclick="updateCurrentMaterial">
+    <div v-else :class="[$style.mediaWrap, currentNodeId === node.id ? $style.currentMedia : '']" @dblclick="updateCurrentSource">
       <div :class="$style.mediaLeft" class="clearfix">
         <img :class="$style.mediaImg" :src="node.info.snippet && node.info.snippet.thumb" height="29px">
         <p :class="$style.mediaName">{{ node.name }}</p>
@@ -22,7 +22,7 @@
 </template>
 <script>
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
-  import { fillUpZero } from '../../../common/utils';
+  import { transformSecondsToStr } from '../../../common/utils';
 
   const TYPE_CONFIG = {
     0: 'folder',
@@ -64,20 +64,15 @@
       }
     },
     methods: {
-      formatTime(second = 0) {
-        const hours = Math.floor(second / (60 * 60));
-        second %= (60 * 60);
-        const minutes = Math.floor(second / 60);
-        second %= 60;
-        const seconds = Math.floor(second);
-        return `${fillUpZero(hours)}:${fillUpZero(minutes)}:${fillUpZero(seconds)}`;
+      formatTime(time = 0) {
+        return transformSecondsToStr(time, 'HH:mm:ss');
       },
       dblclickFolder() {
         this.nodeStatus = 'editing';
         this.inputValue = this.node.name;
       },
-      updateCurrentMaterial() {
-        this.$emit('updateCurrentMaterial', this.node.info);
+      updateCurrentSource() {
+        this.$emit('updateCurrentSource', this.node.info);
       },
       handleCancel() {
         if (this.nodeStatus === 'editing') {

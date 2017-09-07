@@ -1,22 +1,37 @@
 <template>
-  <fj-tabs
-    v-model="activeTabName"
-    theme="dark"
-    custom-class="workspace-wrap"
-    custom-header-class="workspace-header">
-    <fj-tab-pane label="我的素材" name="timeline">
-      <timeline-panel></timeline-panel>
-    </fj-tab-pane>
-    <fj-tab-pane label="任务列表" name="taskList">
-      <task-list-panel></task-list-panel>
-    </fj-tab-pane>
-  </fj-tabs>
+  <div
+    :class="['workspace-panel-wrap', {'active-panel': activePanel === 'workspacePanel'}]"
+    @click="()=>{this.$emit('update:activePanel', 'workspacePanel')}">
+    <fj-tabs
+      v-model="activeTabName"
+      theme="dark"
+      custom-class="workspace-wrap"
+      custom-header-class="workspace-header">
+      <fj-tab-pane label="我的素材" name="timeline">
+        <timeline-panel :importSourceInfo="importSourceInfo" :size="size" :projectBus="projectBus"></timeline-panel>
+      </fj-tab-pane>
+      <fj-tab-pane label="任务列表" name="taskList">
+        <task-list-panel></task-list-panel>
+      </fj-tab-pane>
+    </fj-tabs>
+  </div>
 </template>
 <script>
   import TimelinePanel from './timelinePanel';
   import TaskListPanel from './taskListPanel';
 
   export default {
+    props: {
+      projectBus: {},
+      size: {
+        type: Object,
+        default() {
+          return { width: 0, height: 0 };
+        }
+      },
+      importSourceInfo: {},
+      activePanel: String
+    },
     data() {
       return {
         activeTabName: 'timeline'

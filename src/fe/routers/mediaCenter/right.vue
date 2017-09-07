@@ -12,7 +12,7 @@
               <li>
                 <span title="下载" class="iconfont icon-video-download"></span>
               </li>
-              <li @click.stop="showMaterialMenu" ref="addtoBtn" v-clickoutside="closeMaterialMenu">
+              <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="收藏" class="iconfont icon-addto"></span>
               </li>
             </ul>
@@ -72,26 +72,26 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import './index.css';
   import { getTitle, getThumb } from './common';
   import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo, getStreamURL } from '../../common/utils';
   import moreView from './moreView';
-  import MaterialMenuDialog from './components/materialMenuDialog';
+  import SourceMenuDialog from './components/sourceMenuDialog';
   import { getPosition } from '../../component/fjUI/utils/position';
-  import Vue from 'vue';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
+  import ivideoAPI from '../../api/ivideo';
 
   const config = require('../../config');
 
   const api = require('../../api/media');
 
-  import ivideoAPI from '../../api/ivideo';
 
   export default {
     name: 'right',
     directives: { Clickoutside },
     components: {
-      'more-view': moreView,
+      'more-view': moreView
     },
     props: {
       videoInfo: { type: Object, default: {} }
@@ -144,11 +144,11 @@
       downloadClick() {
 
       },
-      closeMaterialMenu(target) {
+      closeSourceMenu(target) {
         if (this.menu && this.menu.$el.contains(target)) return;
         if (this.menu && this.menu.visible) this.unmountMenu();
       },
-      showMaterialMenu() {
+      showSourceMenu() {
         if (!this.menu) {
           this.mountMenu();
         }
@@ -166,7 +166,7 @@
         return menuPosition;
       },
       mountMenu() {
-        this.menu = new Vue(MaterialMenuDialog).$mount();
+        this.menu = new Vue(SourceMenuDialog).$mount();
         this.menu.$on('addto-menu', this.handleAddtoMenu);
         document.body.appendChild(this.menu.$el);
       },
@@ -181,6 +181,7 @@
         const reqData = Object.assign({}, data);
         reqData.name = this.title;
         reqData.snippet = {
+          objectId: this.item.id,
           thumb: this.poster,
           input: 0,
           output: this.item.duration,

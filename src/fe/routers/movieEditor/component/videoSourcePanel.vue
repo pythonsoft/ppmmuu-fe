@@ -1,15 +1,16 @@
 <template>
   <div
-    :class="['material-panel-wrap', {'active-panel':isActivePanel}]" ref="wrap">
-    <div class="material-panel-title">{{ `${title} ${formatTime(duration)}` }}</div>
-    <div class="material-panel-box">
+    :class="['video-source-wrap', {'active-panel':isActivePanel}]"
+    @click="()=>{this.$emit('update:activePanel', 'sourcePanel')}">
+    <div class="video-source-title">{{ `源：${title || '素材名称'} ${displayDuration}` }}</div>
+    <div class="video-source-box">
       <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
     </div>
-    <div class="material-panel-bottom">
+    <div class="video-source-bottom">
       <div v-if="duration===0" class="player-mask"></div>
       <div class="player-time-box clearfix">
-        <span :style="{float: 'left'}">{{ formatTime(currentTime) }}</span>
-        <span :style="{float: 'right'}">{{ formatTime(clipDuration) }}</span>
+        <span :style="{float: 'left'}">{{ displayCurrentTime }}</span>
+        <span :style="{float: 'right'}">{{ displayClipDuration }}</span>
       </div>
       <div
         v-show="duration > 0"
@@ -54,11 +55,11 @@
   </div>
 </template>
 <script>
-  import { fillUpZero } from '../../../common/utils';
+  import { fillUpZero, getStreamURL, transformSecondsToStr } from '../../../common/utils';
 
   export default {
     props: {
-      isActivePanel: Boolean,
+      activePanel: String,
       imageSize: {
         type: Object,
         default() {
@@ -67,9 +68,9 @@
       },
       title: {
         type: String,
-        default: '素材名称'
+        default: ''
       },
-      videoSource: {
+      videoId: {
         type: String,
         default: ''
       },
@@ -81,7 +82,7 @@
       },
       fps: {
         type: Number,
-        default: 60
+        default: 25
       },
       controller: {
         type: String,
@@ -103,6 +104,7 @@
         outPointOffset: -5,
         inTime: 0,
         outTime: 0,
+        inTimeScreenshot: '',
         tooltipTimeId: null,
         tooltipStyle: { display: 'none' },
         tooltipTime: 0,
@@ -111,7 +113,8 @@
         updateCurrentTimeTimeId: null,
         imageDialogVisible: false,
         screenshotURL: '',
-        screenshotTitle: ''
+        screenshotTitle: '',
+        videoSource: ''
       };
     },
     computed: {
@@ -132,21 +135,39 @@
         const left = this.inPointOffset + 10;
         const right = progressBar.width - this.outPointOffset - 4;
         return { left: `${left}px`, right: `${right}px` };
+      },
+      isActivePanel() {
+        return this.activePanel === 'sourcePanel';
+      },
+      displayDuration() {
+        return transformSecondsToStr(this.duration);
+      },
+      displayCurrentTime() {
+        return transformSecondsToStr(this.currentTime);
+      },
+      displayClipDuration() {
+        return transformSecondsToStr(this.clipDuration);
       }
     },
     watch: {
+      videoId(val) {
+        this.getStream(val);
+      },
       isActivePanel(val) {
         if (val) {
+          if (!this.video.duration) return;
           window.addEventListener('keyup', this.keyup);
           window.addEventListener('keydown', this.keydown);
         } else {
           window.removeEventListener('keyup', this.keyup);
+          window.removeEventListener('keydown', this.keydown);
         }
       },
       controller(val) {
         this.controllerList = this.getControllerList(val);
       },
       inTime(val) {
+        this.inTimeScreenshot = this.createImage();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         if (progressBarWidth > 0) {
@@ -181,14 +202,29 @@
         this.duration = this.video.duration;
         this.outTime = this.video.duration;
       });
+      this.video.addEventListener('loadeddata', () => {
+        this.inTimeScreenshot = this.createImage();
+      });
       if (this.isActivePanel) {
+        if (!this.video.duration) return;
         window.addEventListener('keyup', this.keyup);
         window.addEventListener('keydown', this.keydown);
       } else {
         window.removeEventListener('keyup', this.keyup);
+        window.removeEventListener('keydown', this.keydown);
       }
     },
     methods: {
+      getStream(id) {
+        getStreamURL(id, (err, url) => {
+          if (err) {
+            this.$message.error(err);
+            return;
+          }
+
+          this.videoSource = url;
+        }, this);
+      },
       reset() {
         this.currentTime = 0;
         this.offset = 0;
@@ -221,8 +257,8 @@
         const keyCode = e.keyCode;
         const keyCodeConfig = {
           32: { name: 'space', fn: this.updatePlayerStatus },
-          73: { name: 'i', fn: this.updateInPoint },
-          79: { name: 'o', fn: this.updateOutPoint },
+          73: { name: 'i', fn: this.markIn },
+          79: { name: 'o', fn: this.markOut },
           37: { name: 'left', fn: this.gotoPrevFrame },
           39: { name: 'right', fn: this.gotoNextFrame },
           188: { name: ',', fn: this.insertClip }
@@ -235,8 +271,8 @@
         const controllerArr = controller.split(',');
         const list = [];
         const controllerConfig = {
-          inPoint: { name: 'in-point', icon: 'icon-in-point', tooltip: '标记入点(I)', clickFn: this.updateInPoint },
-          outPoint: { name: 'out-point', icon: 'icon-out-point', tooltip: '标记出点(O)', clickFn: this.updateOutPoint },
+          inPoint: { name: 'in-point', icon: 'icon-in-point', tooltip: '标记入点(I)', clickFn: this.markIn },
+          outPoint: { name: 'out-point', icon: 'icon-out-point', tooltip: '标记出点(O)', clickFn: this.markOut },
           gotoInPoint: { name: 'goto-in-point', icon: 'icon-goto-in-point', tooltip: '转到入点(Shift+I)', clickFn: this.gotoInPoint },
           prevFrame: { name: 'prev-frame', icon: 'icon-video-prev', tooltip: '后退一帧(左侧)', clickFn: this.gotoPrevFrame },
           play: { name: 'play', icon: 'icon-play', tooltip: '播放-停止切换(Space)', clickFn: this.updatePlayerStatus },
@@ -255,21 +291,10 @@
         const style = {};
         style.left = progressBar ? progressBar.getBoundingClientRect().left : 0;
         style.width = progressBar ? progressBar.getBoundingClientRect().width : 0;
+        if (style.width === 0) {
+          style.width = this.size.width - 40;
+        }
         return style;
-      },
-      formatTime(second) {
-        const hours = Math.floor(second / (60 * 60));
-        second %= (60 * 60);
-        const minutes = Math.floor(second / 60);
-        second %= 60;
-        const seconds = Math.floor(second);
-        // const frame = Math.floor((second % 1) * this.fps)
-        let frame = (second % 1) * this.fps;
-        frame = frame % 1 > 0.9 ? frame + 1 : frame;
-        frame = Math.floor(frame);
-        return `
-          ${fillUpZero(hours)}:${fillUpZero(minutes)}:${fillUpZero(seconds)}:${fillUpZero(frame)}
-        `;
       },
       getControlerIcon(icon, name) {
         if (name === 'play') {
@@ -297,7 +322,7 @@
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
       },
-      updateInPoint() {
+      markIn() {
         if (this.video.currentTime <= this.video.duration
           && this.video.currentTime >= this.video.duration - 1 / this.fps) {
           this.inTime = this.video.currentTime - 1 / this.fps;
@@ -321,7 +346,7 @@
           this.isShowOutPoint = true;
         }
       },
-      updateOutPoint() {
+      markOut() {
         if (this.video.currentTime <= 1 / this.fps
           && this.video.currentTime >= 0) {
           this.inTime = this.video.currentTime;
@@ -356,14 +381,14 @@
             this.currentTime = this.video.currentTime;
             if (this.currentTime === this.video.duration) {
               this.isPlaying = false;
-              clearInterval(this.timer);
+              clearInterval(this.moveIndicatorTimer);
             }
             this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
           }, this.interval);
         } else if (this.isPlaying) {
           this.pause();
           this.isPlaying = false;
-          clearInterval(this.timer);
+          clearInterval(this.moveIndicatorTimer);
         }
       },
       gotoPrevFrame() {
@@ -402,7 +427,9 @@
         const currentLeft = x - progressBar.left;
 
         this.tooltipTime = currentLeft / progressBar.width * this.video.duration;
-        this.tooltipText = this.formatTime(this.tooltipTime);
+        if (this.tooltipTime < 0) this.tooltipTime = 0;
+        if (this.tooltipTime > this.video.duration) this.tooltipTime = this.video.duration;
+        this.tooltipText = transformSecondsToStr(this.tooltipTime);
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 80;
         if (x + tooltipWidth > this.size.width) {
@@ -468,22 +495,33 @@
         document.removeEventListener('mouseup', this.bodyMouseupHandler);
       },
       insertClip() {
-        this.$emit('insert', [this.inTime, this.outTime]);
+        const info = {
+          objectId: this.videoId,
+          title: this.title,
+          range: [this.inTime, this.outTime],
+          duration: this.outTime - this.inTime,
+          screenshot: this.inTimeScreenshot
+        };
+        this.$emit('insert', info);
       },
       screenshot() {
+        this.screenshotURL = this.createImage();
+        this.screenshotTitle = this.title + transformSecondsToStr(this.currentTime);
+        this.imageDialogVisible = true;
+      },
+      createImage() {
         const canvas = document.createElement('CANVAS');
-        canvas.width = this.imageSize.width;
-        canvas.height = this.imageSize.height;
+        const size = {
+          width: this.imageSize.width,
+          height: this.imageSize.height
+        };
+        canvas.width = size.width;
+        canvas.height = size.height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(this.video, 0, 0, canvas.width, canvas.height);
         const imageURL = canvas.toDataURL('image/png');
-        // this.downloadScreenshot(imageURL);
-        this.screenshotURL = imageURL;
-        this.screenshotTitle = this.title + this.formatTime(this.currentTime);
-        this.imageDialogVisible = true;
+        return imageURL;
       }
-    },
-    components: {
     }
   };
 </script>

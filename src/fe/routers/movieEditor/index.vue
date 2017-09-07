@@ -26,11 +26,20 @@
               name="child1"
             >
               <template slot="0" scope="props">
-                <video-material-panel
-                  :videoSource="materialVideo"
-                  :isActivePanel="activePanel==='materialEditor'"
+                <video-source-panel
+                  :title="sourceTitle"
+                  :videoId="sourceVideoId"
+                  :activePanel.sync="activePanel"
                   :size="{ width: props.width, height: props.height }"
-                  @insert="insertClip"></video-material-panel>
+                  @insert="importSource"></video-source-panel>
+              </template>
+              <template slot="1" scope="props">
+                <program-panel
+                  :title="programInfo.title"
+                  :range="programInfo.range"
+                  :videoId="programInfo.objectId"
+                  :activePanel.sync="activePanel"
+                  :size="{ width: props.width, height: props.height }"></program-panel>
               </template>
             </panel-view>
           </template>
@@ -42,12 +51,16 @@
               name="child2"
             >
               <template slot="0" scope="props">
-                <material-list-panel
-                  :isActivePanel="activePanel==='meterialList'"
-                  @updateCurrentMaterial="updateCurrentMaterial"></material-list-panel>
+                <media-browser
+                  :activePanel.sync="activePanel"
+                  @updateCurrentSource="updateCurrentSource"></media-browser>
               </template>
               <template slot="1" scope="props">
-                <workspace-panel></workspace-panel>
+                <workspace-panel
+                  :activePanel.sync="activePanel"
+                  :size="{ width: props.width, height: props.height }"
+                  :importSourceInfo="importSourceInfo"
+                  :projectBus="projectBus"></workspace-panel>
               </template>
             </panel-view>
           </template>
@@ -57,18 +70,21 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import './index.css';
   import panelView from '../../component/layout/panel/index';
-  import VideoMaterialPanel from './component/videoMaterialPanel';
-  import MaterialListPanel from './component/materialListPanel';
+  import VideoSourcePanel from './component/videoSourcePanel';
+  import ProgramPanel from './component/programPanel';
+  import MediaBrowser from './component/mediaBrowser';
   import WorkspacePanel from './component/workspacePanel';
 
   export default {
     name: 'movieEditor',
     components: {
       'panel-view': panelView,
-      VideoMaterialPanel,
-      MaterialListPanel,
+      VideoSourcePanel,
+      ProgramPanel,
+      MediaBrowser,
       WorkspacePanel
     },
     props: {
@@ -78,13 +94,21 @@
     },
     data() {
       return {
-        materialVideo: null,
-        activePanel: 'materialEditor',
-        size: { width: document.body.clientWidth, height: document.body.clientHeight }
+        importSourceInfo: null,
+        sourceTitle: '',
+        sourceVideoId: '',
+        activePanel: 'sourcePanel',
+        size: { width: document.body.clientWidth, height: document.body.clientHeight },
+        programInfo: { id: '', objectId: '', title: '', range: [0, 0] }
       };
     },
     created() {
       this.resize();
+      this.projectBus = new Vue();
+      this.projectBus.$on('updateProgram', (data) => {
+        if (this.programInfo && this.programInfo.id === data.id) return;
+        this.programInfo = data;
+      });
       // window.addEventListener('resize', this.resize);
       // document.body.removeEventListener('mouseup', this.mouseup);
     },
@@ -95,11 +119,12 @@
       resize(e) {
         this.size = { width: document.body.clientWidth, height: document.body.clientHeight };
       },
-      insertClip(range) {
-        console.log('range', range);
+      importSource(info) {
+        this.importSourceInfo = info;
       },
-      updateCurrentMaterial(item) {
-        this.materialVideo = item;
+      updateCurrentSource(item) {
+        this.sourceVideoId = item.snippet.objectId || '';
+        this.sourceTitle = item.name;
       }
     }
   };
