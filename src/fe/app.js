@@ -1,15 +1,12 @@
-import moment from 'moment';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import './css/base.css';
 import routes from './routers/routes';
+import { formatTime } from './common/utils';
 
 Vue.use(VueRouter);
 
-Vue.filter('formatTime', (value, formatString) => {
-  formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
-  return moment(value).format(formatString);
-});
+Vue.filter('formatTime', formatTime);
 
 const router = new VueRouter({
   mode: 'history',

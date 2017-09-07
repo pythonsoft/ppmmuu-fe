@@ -1,10 +1,9 @@
 const utils = {};
-const moment = require('moment');
 
 const mediaAPI = require('../api/media');
 const config = require('../config');
 
-utils.fillUpZero = function (v) {
+utils.fillupZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
 utils.formatQuery = function formatQuery(obj, isGet = false) {
@@ -290,34 +289,6 @@ utils.getTimeByStr = function getTimeByStr(str) {
   return '*';
 };
 
-/**
- *
- * @param duration 毫秒
- * @returns {string}
- */
-utils.formatDuration = function formatDuration(duration) {
-  const sec = moment.duration(duration).seconds();
-  const min = moment.duration(duration).minutes();
-  const hour = moment.duration(duration).hours();
-  let str = '';
-  if (hour < 10) {
-    str = `0${hour}:`;
-  } else {
-    str = `${hour}:`;
-  }
-  if (min < 10) {
-    str += `0${min}:`;
-  } else {
-    str += `${min}:`;
-  }
-  if (sec < 10) {
-    str += `0${sec}`;
-  } else {
-    str += `${sec}`;
-  }
-  return str;
-};
-
 utils.getTextByValue = function getTextByValue(col, v, st) {
   let text = '';
   const target = col[st];
@@ -333,8 +304,69 @@ utils.getTextByValue = function getTextByValue(col, v, st) {
   return text;
 };
 
-utils.formatTime = function (value, formatString = 'YYYY-MM-DD HH:mm:ss') {
-  return moment(value).format(formatString);
+const isDate = function (date) {
+  if (date === undefined || date === null) return false;
+  return !isNaN(new Date(date).getTime());
+};
+const toDate = function (date) {
+  return isDate(date) ? new Date(date) : null;
+};
+const fillupZero = function (v) {
+  return v < 10 ? `0${v}` : v;
+};
+
+utils.formatTime = function (date, format = 'YYYY-MM-DD HH:mm:ss') {
+  date = toDate(date);
+  if (!date) return '';
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const secs = date.getSeconds();
+
+  let result = format;
+  result = result.replace(/YYYY/, year);
+  result = result.replace(/MM/, fillupZero(month));
+  result = result.replace(/DD/, fillupZero(day));
+  result = result.replace(/HH/, fillupZero(hours));
+  result = result.replace(/mm/, fillupZero(minutes));
+  result = result.replace(/ss/, fillupZero(secs));
+  return result;
+};
+
+/**
+ *
+ * @param duration 毫秒
+ * @returns {string}
+ */
+utils.formatDuration = function formatDuration(duration) {
+  const hours = Math.floor(duration / (60 * 60 * 1000));
+  duration %= (60 * 60 * 1000);
+  const minutes = Math.floor(duration / (60 * 1000));
+  duration %= 60 * 1000;
+  const seconds = Math.floor(duration / 1000);
+  return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
+};
+
+utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {
+  if (time < 0) time = 0;
+  const hours = Math.floor(time / (60 * 60));
+  time %= (60 * 60);
+  const minutes = Math.floor(time / 60);
+  time %= 60;
+  const seconds = Math.floor(time);
+  let frame = (time % 1) * fps;
+  frame = frame % 1 > 0.9 ? frame + 1 : frame;
+  frame = Math.floor(frame);
+
+  let result = format;
+  result = result.replace(/HH/, fillupZero(hours));
+  result = result.replace(/mm/, fillupZero(minutes));
+  result = result.replace(/ss/, fillupZero(seconds));
+  result = result.replace(/ff/, fillupZero(frame));
+
+  return result;
 };
 
 utils.formatSize = function formatSize(size) {
