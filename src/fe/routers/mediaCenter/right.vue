@@ -146,9 +146,6 @@
       formatDuration(input, output) {
         return formatDuration((output - input) / 25 * 1000);
       },
-      downloadClick() {
-
-      },
       closeSourceMenu(target) {
         if (this.menu && this.menu.$el.contains(target)) return;
         if (this.menu && this.menu.visible) this.unmountMenu();

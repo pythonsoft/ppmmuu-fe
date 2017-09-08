@@ -30,7 +30,7 @@
 
       if (showMenuIndex) {
         localStorage.setItem('menu', showMenuIndex.join(','));
-        this.showMenuIndex = menu;
+        this.showMenuIndex = showMenuIndex;
       } else {
         showMenuIndex = localStorage.getItem('menu');
         this.showMenuIndex = showMenuIndex ? showMenuIndex.split(',') : [];
