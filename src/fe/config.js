@@ -5,7 +5,8 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
-axios.defaults.baseURL = 'http://localhost:8080';
+// axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.baseURL = 'http://10.0.15.124:8080';
 
 if(window.location.hostname.indexOf('hk') !== -1) {
   axios.defaults.baseURL = 'http://hk.api.szdev.cn';
