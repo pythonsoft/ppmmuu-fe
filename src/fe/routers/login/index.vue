@@ -96,7 +96,7 @@
           })
           .catch((error) => {
             me.isBtnLoading = false;
-            me.error = error || '邮箱或密码错误';
+            me.error = error || '用户名或密码错误';
             me.isDisplay = '';
             me.$refs.usernameInput.$refs.input.style.borderColor = '#FF3366';
           });
