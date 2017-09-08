@@ -10,6 +10,11 @@
   color: var(--table-th-color);
   border-right: var(--table-th-border);
 }
+.fj-table-dark th {
+  border-bottom: var(--table-dark-th-border);
+  color: var(--table-dark-th-color);
+  border-right: var(--table-dark-th-border);
+}
 .fj-table th:last-child {
   border-right: 0;
 }
@@ -21,14 +26,26 @@
   padding: 11px 10px;
   color: var(--table-td-color);
 }
+.fj-table-dark td {
+  color: var(--table-dark-td-color);
+}
 .fj-table tbody tr:hover{
   background-color: var(--table-tr-hover-bg-color);
+}
+.fj-table-dark tbody tr:hover{
+  background-color: var(--table-dark-tr-hover-bg-color);
 }
 .fj-table-striped {
   background-color: var(--table-tr-striped-bg-color);
 }
+.fj-table-dark .fj-table-striped {
+  background-color: var(--table-dark-tr-striped-bg-color);
+}
 .fj-table tbody tr.fj-current-row {
   background-color: var(--table-current-row-bg-color);
+}
+.fj-table-dark tbody tr.fj-current-row {
+  background-color: var(--table-dark-current-row-bg-color);
 }
 
 .hidden-column {
@@ -40,4 +57,8 @@
   border-top: 0;
   text-align: center;
   height: 88px;
+}
+
+.fj-table-dark .fj-table-empty-block {
+  border: var(--table-dark-th-border);
 }

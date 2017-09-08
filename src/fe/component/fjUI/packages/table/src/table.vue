@@ -1,5 +1,5 @@
 <template>
-  <table class="fj-table">
+  <table class="fj-table" :class="`fj-table-${theme}`">
     <div class="hidden-column"><slot></slot></div>
     <thead v-if="showThead">
       <tr>
@@ -42,6 +42,10 @@
       showThead: {
         type: Boolean,
         default: true
+      },
+      theme: {
+        type: String,
+        default: 'normal'
       }
     },
     data() {
