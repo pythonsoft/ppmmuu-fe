@@ -13,12 +13,12 @@
             <fj-form :model="userInfo" :rules="rules" ref="form" label-width="80px">
               <div class="login-label">账户</div>
               <div class="login-input">
-                <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()"></fj-input>
+                <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()" placeholder="请输入邮箱"></fj-input>
                 <div class="login-message" :style="{ display: isDisplay}"><span>{{error}}</span></div>
               </div>
               <div class="login-label login-password">密码</div>
               <div class="login-input">
-                <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword" @focus="focusInput2()"></fj-input>
+                <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword" @focus="focusInput2()" placeholder="请输入密码"></fj-input>
               </div>
               <div class="login-extra">
                 <fj-checkbox-group v-model="userInfo.autoLogin">
@@ -54,7 +54,7 @@
         isBtnLoading: false,
         rules: {
           username: [
-            { required: true, message: '请输入用户名' }
+            { required: true, message: '请输入邮箱' }
           ],
           password: [
             { required: true, message: '请输入密码' }

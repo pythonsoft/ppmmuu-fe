@@ -8,10 +8,12 @@
       @click.stop="handleClick">
       <div :style="innerNodeStyle">
         <template v-if="isFolder">
-          <i
+          <div
             @click="handleExpandIconClick"
-            :style="{ left: (open ? indent - 5 : indent) + 'px' }"
-            :class="open ? 'tri-bottom' : 'tri-right'"></i>
+            class="expand-wrap"
+            :style="{ left: (open ? indent - 5 : indent) + 'px' }">
+            <i :class="open ? 'tri-bottom' : 'tri-right'"></i>
+          </div>
           <div :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
         </template>
         <node-content v-else :node="node"></node-content>

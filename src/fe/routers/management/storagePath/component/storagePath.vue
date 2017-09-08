@@ -38,11 +38,16 @@
       <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editTacticsClick">配置策略</fj-button>
       </span>
+
       <span class="layout-btn-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
+      </span>
+
+      <span class="layout-btn-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">查看详细</fj-button>
       </span>
     </template>
     <template slot="table">
@@ -51,7 +56,6 @@
           <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="path" label="路径"></fj-table-column>
         <fj-table-column prop="maxSize" label="容量 | 已使用">
           <template scope="props">{{ formatSize(props.row) }}</template>
         </fj-table-column>
