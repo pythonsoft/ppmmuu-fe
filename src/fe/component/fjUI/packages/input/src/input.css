@@ -34,6 +34,18 @@
   color: var(--base-color);
   background-color: var(--input-background-color-fill);
 }
+.fj-input-inner-drak {
+  width: 100%;
+  height: var(--input-height);
+  line-height: 1;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--input-border-radius);
+  outline: none;
+  font-size: 12px;
+  color: #CED9E5;
+  background-color: #555;
+}
 .fj-textarea-inner-stroke {
   padding: 5px 7px;
   line-height: 1.5;
@@ -67,12 +79,20 @@
 .fj-textarea-inner-fill:hover {
   background-color: var(--input-hover-background-color-fill);
 }
+.fj-input-inner-drak:hover {
+  background-color: #2A3E52;
+}
 .fj-input-inner-fill:focus,
 .fj-input-inner-fill:active,
 .fj-textarea-inner-fill:focus,
 .fj-textarea-inner-fill:active {
   border-color: var(--input-focus-border-color);
   background-color: var(--input-focus-background-color-fill);
+}
+.fj-input-inner-drak:focus,
+.fj-input-inner-drak:active {
+  background-color: #555555;
+  border-color: #38B1EB;
 }
 
 .fj-input-disabled .fj-input-inner-stroke,
@@ -84,7 +104,8 @@
 }
 
 .fj-input-small .fj-input-inner-stroke,
-.fj-input-small .fj-input-inner-fill {
+.fj-input-small .fj-input-inner-fill,
+.fj-input-small .fj-input-inner-drak {
   height: var(--input-height-small);
   line-height: 1;
   padding: 9px 7px;

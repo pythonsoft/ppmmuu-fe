@@ -1,14 +1,14 @@
-.material-list-header {
+.media-browser-header {
   position: absolute;
   top: 10px;
   right: 10px;
   left: 20px;
   height: 24px;
 }
-.material-list-wrap .dialog-content {
+.media-browser-wrap .dialog-content {
   font-size: 14px;
 }
-.material-list-content {
+.media-browser-content {
   position: absolute;
   top: 34px;
   right: 10px;
@@ -16,26 +16,31 @@
   bottom: 0;
   overflow: auto;
 }
-.material-list-title {
+.media-browser-title {
   float: left;
   font-size: 12px;
   color: #CED9E5;
   line-height: 24px;
 }
-.material-list-operater-wrap {
+.media-browser-controller-wrap {
   float: right;
 }
-.material-panel-wrap {
+.video-source-wrap,
+.media-browser-wrap,
+.workspace-panel-wrap {
   position: relative;
   width: 100%;
   height: 100%;
   border: 1px solid transparent;
   z-index: 100;
 }
-.material-panel-wrap.active-panel {
+.video-source-wrap.active-panel,
+.media-browser-wrap.active-panel,
+.workspace-panel-wrap.active-panel {
   border: 1px solid #38B1EB;
 }
-.material-panel-title {
+
+.video-source-title {
   position: absolute;
   top: 0;
   right: 20px;
@@ -45,14 +50,14 @@
   font-size: 12px;
   color: #CED9E5;
 }
-.material-panel-box {
+.video-source-box {
   position: absolute;
   top: 37px;
   right: 20px;
   left: 20px;
   bottom: 98px;
 }
-.material-panel-bottom {
+.video-source-bottom {
   position: absolute;
   bottom: 0;
   right: 20px;
@@ -107,6 +112,9 @@
 }
 .player-control-item:hover {
   background: #353535;
+}
+.disabled-control-item {
+  color: #555;
 }
 .player-control-item i {
   font-size: 14px;
@@ -176,4 +184,37 @@
   font-size: 32px;
   color: #fff;
   display: none;
+}
+.workspace-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 4px;
+}
+.workspace-header {
+  padding-left: 20px;
+}
+.task-list-controller-wrap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.task-list-controller-wrap .select-wrap {
+  width: 92px;
+}
+.task-list {
+  margin-top: 14px;
+  border-top: 1px solid #444;
+}
+.timeline-title {
+  margin: 10px 20px;
+  font-size: 12px;
+  color: #CED9E5;
+}
+.timeline-content {
+  position: absolute;
+  top: 90px;
+  right: 0;
+  left: 4px;
+  bottom: 0;
 }

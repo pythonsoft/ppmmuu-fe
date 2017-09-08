@@ -22,11 +22,19 @@
   color: #fff;
 }
 
+.expand-wrap {
+  position: absolute;
+  width: 12px;
+  height: 18px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
 .tri-bottom,
 .tri-right {
-  margin-left: 2px;
+  /*margin-left: 2px;
   margin-right: 2px;
-  position: absolute;
+  position: absolute;*/
+  display: inline-block;
   border: 4px solid #4C637B;
 }
 .tri-bottom {
@@ -51,7 +59,8 @@
 
 .theme-dark .tri-bottom,
 .theme-dark .tri-right {
-  position: absolute;
+  /*position: absolute;*/
+  display: inline-block;
   border: 4px solid #9FB3CA;
 }
 .theme-dark .tri-bottom {

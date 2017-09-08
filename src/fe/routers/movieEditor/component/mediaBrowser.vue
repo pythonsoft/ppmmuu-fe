@@ -1,8 +1,10 @@
 <template>
-  <div class="material-list-wrap">
-    <div class="material-list-header clearfix">
-      <h3 class="material-list-title">我的资源</h3>
-      <div class="material-list-operater-wrap">
+  <div
+    :class="['media-browser-wrap', {'active-panel': activePanel === 'mediaBrowser'}]"
+    @click="()=>{this.$emit('update:activePanel', 'mediaBrowser')}">
+    <div class="media-browser-header clearfix">
+      <h3 class="media-browser-title">我的资源</h3>
+      <div class="media-browser-controller-wrap">
         <div class="player-control-item-wrap">
           <div class="player-control-item" @click="addFolderInput">
             <i class="iconfont icon-add-folder"></i>
@@ -17,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="material-list-content">
+    <div class="media-browser-content">
       <tree-view
         theme="dark"
         :autoExpand="false"
@@ -45,7 +47,7 @@
 </template>
 <script>
   import Vue from 'vue';
-  import TreeNodeContent from './materialTreeNode';
+  import TreeNodeContent from './sourceTreeNode';
   import TreeView from '../../../component/higherOrder/tree';
   import ivideoAPI from '../../../api/ivideo';
 
@@ -56,9 +58,11 @@
   };
 
   export default {
+    props: {
+      activePanel: String
+    },
     data() {
       return {
-        activeTabName: 'material',
         _id: '',
         currentNodeId: '',
         currentNodeInfo: {},
@@ -88,7 +92,6 @@
       },
       showDeleteNodeDialog() {
         if (!this.currentNodeId) return;
-        console.log(this.currentNodeInfo);
         this.deleteNodeDialogVisible = true;
       },
       cancelCreate(node) {
@@ -128,9 +131,13 @@
           on: {
             createDirectory: this.createDirectory,
             updateDirectory: this.updateDirectory,
-            cancelCreate: this.cancelCreate
+            cancelCreate: this.cancelCreate,
+            updateCurrentSource: this.updateCurrentSource
           }
         });
+      },
+      updateCurrentSource(item) {
+        this.$emit('updateCurrentSource', item);
       },
       createDirectory(reqData) {
         ivideoAPI.createDirectory(reqData)
@@ -157,7 +164,7 @@
     created() {
       this.TYPE_CONFIG = TYPE_CONFIG;
       this.vueInstance = new Vue({
-        name: 'materialList'
+        name: 'mediaBrowser'
       });
     },
     components: {

@@ -28,7 +28,6 @@
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
-    "moment": "^2.18.1",
     "pug": "^2.0.0-rc.2",
     "serve-favicon": "^2.4.3",
     "vue": "^2.3.4",

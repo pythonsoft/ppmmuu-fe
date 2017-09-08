@@ -6,7 +6,8 @@ export default {
           this.data.map((row, rowIndex) => {
             let className = rowIndex % 2 === 1 ? 'fj-table-striped' : null;
             if (this.highlight
-              && (row === this.store.states.currentRow || this.store.states.selection.indexOf(row) > -1)) {
+              && (row === this.store.states.currentRow
+              || this.store.states.selection.indexOf(row) > -1)) {
               className = className ? `${className} fj-current-row` : 'fj-current-row';
             }
             return (
