@@ -1,9 +1,9 @@
 <template>
   <div class="media-right">
     <div class=" media-video">
-      <div v-if="!isEmptyObject(item)" class="media-video-wrap">
+      <div v-if="1" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <video height="246" width="439" controls autoplay :src="url"></video>
+          <player :height="246" :width="439" :url="url"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -78,6 +78,7 @@
   import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo, getStreamURL } from '../../common/utils';
   import moreView from './moreView';
   import SourceMenuDialog from './components/sourceMenuDialog';
+  import Player from './components/player';
   import { getPosition } from '../../component/fjUI/utils/position';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import ivideoAPI from '../../api/ivideo';
@@ -92,7 +93,8 @@
     name: 'right',
     directives: { Clickoutside },
     components: {
-      'more-view': moreView
+      'more-view': moreView,
+      Player
     },
     props: {
       videoInfo: { type: Object, default: {} }
@@ -105,7 +107,7 @@
         poster: '',
         activeTabName: 'tab1',
         item: {},
-        url: '',
+        url: '/static/video/test.mp4',
         streamInfo: {}
       };
     },
