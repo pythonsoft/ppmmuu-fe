@@ -6,6 +6,7 @@
 | showThead | 是否显示表头 | boolean | - | true | ✅ |
 | data | 显示的数据 | array | - | - | ✅ |
 | empty-text | 空数据时显示的文本内容，也可以通过slot="empty"设置 | string | - | 暂无数据 | ✅ |
+| theme | 主题样式 | string | normal, drak | normal | ✅ |
 
 
 ### table-column attributes

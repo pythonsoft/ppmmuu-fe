@@ -7,4 +7,4 @@
 | placeholder | 输入框占位 | string | — | - | ✅ |
 | disabled | 禁用 | boolean | — | false | ✅ |
 | clearable | 是否可以清空 | boolean | — | false | ✅ |
-| theme | 输入框主题样式 | string | stroke, fill | stroke | ✅ |
+| theme | 输入框主题样式 | string | stroke, fill, drak | stroke | ✅ |

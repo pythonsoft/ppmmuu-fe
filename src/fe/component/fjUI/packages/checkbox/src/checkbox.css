@@ -37,7 +37,7 @@
   height: var(--radio-size);
   border-radius: var(--checkbox-border-radius);
   border: var(--radio-border);
-  background: #fff;
+  background: transparent;
   vertical-align: middle;
 }
 .fj-checkbox-inner.small {

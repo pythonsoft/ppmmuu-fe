@@ -1,6 +1,6 @@
 <template>
-  <div v-show="visible" class="material-menu-dialog" :style="menuPosition">
-    <div class="material-menu-tree">
+  <div v-show="visible" class="source-menu-dialog" :style="menuPosition">
+    <div class="source-menu-tree">
       <tree-view
         :showUpper="false"
         :vue-instance="vueInstance"
@@ -8,7 +8,7 @@
         :tree-node-current-change="treeNodeCurrentChange"
       ></tree-view>
     </div>
-    <div class="material-menu-footer">
+    <div class="source-menu-footer">
       <fj-button type="primary" size="mini" @click="submit" :disabled="!currentNodeId">确定</fj-button>
     </div>
   </div>
@@ -31,7 +31,7 @@
     },
     created() {
       this.vueInstance = new Vue({
-        name: 'materialmenu'
+        name: 'sourceMenu'
       });
     },
     methods: {
