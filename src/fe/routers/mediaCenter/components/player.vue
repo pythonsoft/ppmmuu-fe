@@ -244,7 +244,6 @@
           || document.webkitFullscreenElement
           || document.msFullscreenElement;
         if (!fullscreenElement) {
-          // this.isFullscreen = true;
           if (element.requestFullscreen) {
             element.requestFullscreen();
           } else if (element.webkitRequestFullScreen) {
@@ -255,7 +254,6 @@
             element.msRequestFullscreen();
           }
         } else {
-          // this.isFullscreen = false;
           if (document.exitFullscreen) {
             document.exitFullscreen();
           } else if (document.webkitExitFullscreen) {

@@ -150,7 +150,15 @@
             this.$message.error(error);
           });
       },
-      updateDirectory(reqData) {},
+      updateDirectory(reqData) {
+        ivideoAPI.updateItem(reqData)
+          .then((response) => {
+              this.vueInstance.$emit('tree.listGroup');
+            })
+            .catch((error) => {
+              this.$message.error(error);
+            });
+      },
       addFolderInput() {
         const node = {
           _id: `new${new Date().getTime()}`,

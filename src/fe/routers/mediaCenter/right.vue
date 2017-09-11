@@ -10,7 +10,10 @@
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
               <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="(e) => download()"></span>
+                <span title="下载" class="iconfont icon-video-download" @click.stop="download"></span>
+              </li>
+              <li>
+                <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="收藏" class="iconfont icon-addto"></span>
@@ -178,7 +181,7 @@
           this.menu = null;
         }
       },
-      handleAddtoMenu(data) {
+      handleAddtoMenu(data, leaveOrNot) {
         const reqData = Object.assign({}, data);
         reqData.name = this.title;
         reqData.snippet = {
@@ -191,6 +194,27 @@
         ivideoAPI.createItem(reqData)
           .then((response) => {
             this.unmountMenu();
+            if (leaveOrNot) {
+              this.$router.push('movieEditor');
+            }
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      gotoEditer() {
+        const reqData = { parentId: '' };
+        reqData.name = this.title;
+        reqData.snippet = {
+          objectId: this.item.id,
+          thumb: this.poster,
+          input: 0,
+          output: this.item.duration,
+          duration: this.item.duration
+        };
+        ivideoAPI.createItem(reqData)
+          .then((response) => {
+            this.$router.push('movieEditor');
           })
           .catch((error) => {
             this.$message.error(error);
