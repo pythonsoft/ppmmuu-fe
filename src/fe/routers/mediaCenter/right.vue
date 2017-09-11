@@ -195,7 +195,7 @@
           .then((response) => {
             this.unmountMenu();
             if (leaveOrNot) {
-              this.$router.push('movieEditor');
+              this.$router.push({path: 'movieEditor', query: {objectId: this.item.id}});
             }
           })
           .catch((error) => {
@@ -214,7 +214,7 @@
         };
         ivideoAPI.createItem(reqData)
           .then((response) => {
-            this.$router.push('movieEditor');
+            this.$router.push({path: 'movieEditor', query: {objectId: this.item.id}});
           })
           .catch((error) => {
             this.$message.error(error);
