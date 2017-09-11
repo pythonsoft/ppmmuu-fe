@@ -26,6 +26,7 @@
 
   const TYPE_CONFIG = {
     0: 'folder',
+    2: 'folder',
     1: 'video',
     new: 'input'
   };
