@@ -286,7 +286,7 @@
         this.tooltipText = transformSecondsToStr(this.tooltipTime);
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 80;
-        if (x + tooltipWidth > this.size.width) {
+        if (currentLeft + tooltipWidth > this.size.width) {
           this.tooltipStyle.left = `${currentLeft - tooltipWidth}px`;
         } else {
           this.tooltipStyle.left = `${currentLeft}px`;

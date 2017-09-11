@@ -87,7 +87,9 @@
           name: this.inputValue
         };
         if (this.nodeStatus === 'editing') {
+          reqData.id = this.node.id;
           this.$emit('updateDirectory', reqData);
+          this.nodeStatus = 'normal';
         } else {
           this.$emit('createDirectory', reqData);
         }
