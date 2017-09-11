@@ -111,9 +111,6 @@
     },
     watch: {
       videoInfo(val) {
-
-        console.log('this.item -->', this.item)
-
         this.title = this.getTitle(val);
         this.program = {};
         this.poster = this.getThumb(val);
@@ -200,18 +197,19 @@
       getStream() {
         const me = this;
 
-        getStreamURL(this.item.id, function(err, url, rs) {
-          if(err) {
-            me.$message.error(error);
+        getStreamURL(this.item.id, (err, url, rs) => {
+          if (err) {
+            me.$message.error(err);
             return false;
           }
           me.streamInfo = rs.result;
           me.url = url;
-          console.log(rs);
         }, me);
+
+        return false;
       },
       download(info) {
-        if(isEmptyObject(this.streamInfo)) {
+        if (isEmptyObject(this.streamInfo)) {
           return false;
         }
 
@@ -224,7 +222,7 @@
           fileName: this.streamInfo.FILENAME
         };
 
-        if(info && !isEmptyObject(info)) {
+        if (info && !isEmptyObject(info)) {
           param.objectid = info.OBJECTID;
           param.fileName = info.FILENAME;
           param.inpoint = info.INPOINT;
@@ -236,6 +234,8 @@
         }).catch((error) => {
           me.$message.error(error);
         });
+
+        return false;
       }
     }
   };

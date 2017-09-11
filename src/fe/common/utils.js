@@ -437,33 +437,6 @@ utils.getPosition = function getPosition(ele, oRefer) {
   return { x, y };
 };
 
-utils.getVideo = function getVideo(el, url, options) {
-  const settings = utils.merge({
-    width: 439,
-    height: 247
-  }, options);
-
-  $f(el, { src: '/static/flowplayer/flowplayer.swf', width: settings.width, height: settings.height }, {
-    clip: {
-      url: url,
-      provider: 'rtmp'
-    },
-    plugins: {
-      rtmp: {
-        url: '/static/flowplayer/flowplayer.rtmp-3.2.13.swf',
-        netConnectionUrl: 'rtmp://hkss4.phoenixtv.com/u/'
-      }
-    },
-    canvas: {
-      background: '#000000',
-      backgroundGradient: 'none'
-    },
-    onError(err) {
-      console.log(err);
-    }
-  });
-};
-
 utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
   mediaAPI.getStream({ params: { objectId: objectId } }, scope).then((res) => {
     let dateString = res.result.UNCPATH;
@@ -474,8 +447,8 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
       if (dateString.length === 1) {
         dateString = dateString[0].replace(/\\/g, '\/');
       }
-      let url = config.defaults.streamURL + dateString + '/' + fileName;
-      if(config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
+      let url = `${config.defaults.streamURL + dateString}/${fileName}`;
+      if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
         url = '/static/video/test.mp4';
       }
       cb && cb(null, url, res);

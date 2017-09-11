@@ -28,7 +28,7 @@ const common = {
     return name;
   },
   getTitle(item) {
-    return item.program_name_en || item.program_name_cn || item.name || '(此视频不包含标题信息)';
+    return item.program_name_cn || item.program_name_en || item.name || '(此视频不包含标题信息)';
   },
   getDescription(item) {
     return item.f_str_03 ? item.f_str_03 : common.getTitle(item);

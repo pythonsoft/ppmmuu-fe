@@ -44,9 +44,9 @@
 <script>
   import './index.css';
   import utils from '../../../../common/utils';
-  import LayoutTwoRowTitle from "../../../../component/layout/twoRowTitle/index.vue";
+  import LayoutTwoRowTitle from '../../../../component/layout/twoRowTitle/index';
 
-  const api = require('../../../../api/transcode');
+//  const api = require('../../../../api/transcode');
 
   export default {
     components: { LayoutTwoRowTitle },

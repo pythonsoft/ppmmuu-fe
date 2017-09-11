@@ -51,10 +51,12 @@
         { text: '传输任务', index: 'transfer', route: 'transfer' }
       ] },
     { text: '设置', index: 'configuration', route: 'configuration' },
-    { title: '帮助', index: 'help', children: [
-      { text: '关于', index: 'managementAbout', route: 'managementAbout' },
-      { text: '反馈', index: 'managementFeedback', route: 'managementFeedback' },
-    ] }
+    { title: '帮助',
+      index: 'help',
+      children: [
+        { text: '关于', index: 'managementAbout', route: 'managementAbout' },
+        { text: '反馈', index: 'managementFeedback', route: 'managementFeedback' }
+      ] }
   ];
   export default {
     data() {
