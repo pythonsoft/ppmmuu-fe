@@ -1,9 +1,9 @@
 <template>
   <div class="media-right">
-    <div class=" media-video">
+    <div class="media-video">
       <div v-if="1" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <player :height="246" :width="439" :url="url"></player>
+          <player :height="285" :width="438" :url="url"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
