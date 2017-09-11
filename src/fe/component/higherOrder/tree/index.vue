@@ -44,11 +44,11 @@
   };
   TreeDataBase.prototype = {
     composeData(parentId, d) {
-      let arr = [];
+      const arr = [];
       const indexKey = this.indexKey;
 
       for (let i = 0, len = d.length; i < len; i++) {
-        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || '__root__' + d[i][indexKey] });
+        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || `__root__${d[i][indexKey]}` });
       }
       return arr;
     },
@@ -132,9 +132,9 @@
           for (let i = 0, len = childrenNode.length; i < len; i++) {
             temp = childrenNode[i];
 
-            if(temp.children && temp.children.length > 0) {
+            if (temp.children && temp.children.length > 0) {
               clear(temp.children);
-            }else {
+            } else {
               if (me.indexs[childrenNode[i][indexKey]]) {
                 delete me.indexs[childrenNode[i][indexKey]];
               }
@@ -151,7 +151,7 @@
     },
     remove(id) {
       const val = this.removeChildren(id);
-      if(!val) { return false; }
+      if (!val) { return false; }
       // 移除本身
       const parentIndex = val.parentIndex;
       const indexs = parentIndex.split('-');

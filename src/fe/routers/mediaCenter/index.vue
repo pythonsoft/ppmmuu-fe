@@ -206,13 +206,12 @@
       },
       getSeachConfigs() {
         const me = this;
-        api.getSearchConfig().then((res)=>{
+        api.getSearchConfig().then((res) => {
           me.searchSelectConfigs = res.data.searchSelectConfigs;
           me.searchRadioboxConfigs = res.data.searchRadioboxConfigs;
-        }).catch((error)=>{
+        }).catch((error) => {
           me.$message.error(error);
-        })
-
+        });
       },
       getMediaList() {
         const me = this;
@@ -220,11 +219,11 @@
         const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
         let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
-        let searchNotice = '检索词:' + this.keyword;
+        let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
-        if(this.keyword && searchChoose) {
-          searchNotice += ',' + searchChoose;
-        }else{
+        if (this.keyword && searchChoose) {
+          searchNotice += `,${searchChoose}`;
+        } else {
           searchNotice += searchChoose;
         }
         const noticeLength = getStringLength(searchNotice);
@@ -251,6 +250,7 @@
             q = `f_date_36:${f_date_36}`;
           }
         }
+
         const options = {
           q: q,
           fl: this.fl,
@@ -258,26 +258,40 @@
           start: start,
           hl: 'off',
           indent: 'off',
-          'hl.fl': 'name,program_name_cn,program_name_en',
+          'hl.fl': 'name,program_name_cn,program_name_en,f_str_03',
           rows: this.pageSize
         };
 
+        const hit = function (val) {
+        //          const keywords = 'name,program_name_cn,program_name_en,f_str_03'.split(',');
+          const keywords = 'name'.split(',');
+          const query = [];
+
+          for (let i = 0, len = keywords.length; i < len; i++) {
+            query.push(`OR ${keywords[i]}:${val}`);
+          }
+
+          return query.join(' ');
+        };
+
         if (this.keyword) {
-          options['q'] = q;
-          options['hl'] = 'on';
-          options['indent'] = 'on';
+          options.q = q;
+          options.hl = 'on';
+          options.indent = 'on';
           if (q) {
-            q += ` AND full_text:${this.keyword}`;
-            for( let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++){
-              if(this.searchSelectConfigs[0].items[k].value === this.keyword){
-                options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en';
+            q += ` AND full_text:${this.keyword} ${hit(this.keyword)}`;
+            for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
+              if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
+                options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en,f_str_03';
               }
             }
           } else {
-            q = `full_text:${this.keyword}`;
-            options['q'] = q;
+            q = `full_text:${this.keyword} ${hit(this.keyword)}`;
+            options.q = q;
           }
         }
+
+        options.q += ' AND publish_status:1';
 
         api.solrSearch({ params: options }, me).then((res) => {
           me.items = res.data.docs;

@@ -106,7 +106,7 @@ method.getSearchNotice = function getSearchNotice(configs) {
     if (temp.selected !== undefined && temp.selected !== 'all' && temp.selected !== '') {
       const items = temp.items;
       for (let j = 0, len1 = items.length; j < len1; j++) {
-        if (items[j].value == temp.selected) {
+        if (items[j].value === temp.selected) {
           q.push(items[j].label);
           break;
         }
