@@ -47,7 +47,8 @@ export const STATUS_CONFIG = {
 };
 export const VERIFY_TYPE_CONFIG = {
   0: '密码',
-  1: '域'
+  1: '域',
+  2: 'WebOS'
 };
 
 export const PERMISSION_TYPE_CONFIG = {
