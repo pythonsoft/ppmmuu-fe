@@ -20,6 +20,8 @@ const ManagementFeedback = resolve => require.ensure([], () => resolve(require('
 const PersonalCenter = resolve => require.ensure([], () => resolve(require('./personalCenter/index')), 'personalCenter');
 const Information = resolve => require.ensure([], () => resolve(require('./personalCenter/information/index')), 'information');
 const ChangePassword = resolve => require.ensure([], () => resolve(require('./personalCenter/changePassword/index')), 'changePassword');
+const History = resolve => require.ensure([], () => resolve(require('./personalCenter/history')), 'history');
+const SearchHistory = resolve => require.ensure([], () => resolve(require('./personalCenter/searchHistory')), 'searchHistory');
 const Feedback = resolve => require.ensure([], () => resolve(require('./personalCenter/feedback/index')), 'feedback');
 const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
 
@@ -65,6 +67,8 @@ export default [{
       children: [
         { path: 'information', component: Information, meta: { title: '个人信息' }, name: 'information' },
         { path: 'changePassword', component: ChangePassword, meta: { title: '密码修改' }, name: 'changePassword' },
+        { path: 'history', component: History, meta: { title: '观看历史' }, name: 'history' },
+        { path: 'searchHistory', component: SearchHistory, meta: { title: '检索历史' }, name: 'searchHistory' },
         { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
       ]
     },
