@@ -11,7 +11,8 @@ const StoragePath = resolve => require.ensure([], () => resolve(require('./manag
 const StorageTactics = resolve => require.ensure([], () => resolve(require('./management/storageTactics/index')), 'storageTactics');
 
 const Transcode = resolve => require.ensure([], () => resolve(require('./management/task/transcode/index')), 'transcode');
-const Transfer = resolve => require.ensure([], () => resolve(require('./management/task/transfer/index')), 'transfer');
+const Download = resolve => require.ensure([], () => resolve(require('./management/task/download/index')), 'download');
+const Backmoving = resolve => require.ensure([], () => resolve(require('./management/task/backmoving/index')), 'backmoving');
 
 const ManagementAbout = resolve => require.ensure([], () => resolve(require('./management/help/about/index')), 'managementAbout');
 const ManagementFeedback = resolve => require.ensure([], () => resolve(require('./management/help/feedback/index')), 'managementFeedback');
@@ -48,7 +49,8 @@ export default [{
         { path: 'storagePath', component: StoragePath, meta: { title: '路径' }, name: 'storagePath' },
         { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' }, name: 'storageTactics' },
         { path: 'transcode', component: Transcode, meta: { title: '转码任务' }, name: 'transcode' },
-        { path: 'transfer', component: Transfer, meta: { title: '传输任务' }, name: 'transfer' },
+        { path: 'download', component: Download, meta: { title: '下载任务' }, name: 'download' },
+        { path: 'backmoving', component: Backmoving, meta: { title: '回迁任务' }, name: 'backmoving' },
         { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' },
         { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
         { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' }
