@@ -117,3 +117,7 @@
 
 .icon-esc-fullscreen:before { content: "\e694"; }
 
+.icon-volume:before { content: "\e695"; }
+
+.icon-mute:before { content: "\e696"; }
+
