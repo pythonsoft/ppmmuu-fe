@@ -23,14 +23,25 @@
       </div>
       <div class="controllerWrap clearfix">
         <i class="iconfont playerBtn" :class="[isPlaying ? 'icon-pause' : 'icon-play']" @click="updatePlayerStatus"></i>
+        <div class="volumeBox">
+          <i class="iconfont volumeBtn" :class="isMute ? 'icon-mute' : 'icon-volume'" @click="muteBtnClick"></i>
+          <div class="volumePanel">
+            <div class="volumeSlider" ref="volumeSlider" @click="handleVolumeSliderClick">
+              <div class="volumeSliderHandle" :style="volumeSliderHandleStyle"></div>
+            </div>
+          </div>
+        </div>
         <div class="playerTime">{{ displayCurrentTime }} / {{ displayDuration }}</div>
-        <i class="right-control playerBtn iconfont" :class="[isFullscreen ? 'icon-esc-fullscreen' : 'icon-fullscreen']" @click="fullscreen"></i>
+        <i class="rightControl playerBtn iconfont" :class="[isFullscreen ? 'icon-esc-fullscreen' : 'icon-fullscreen']" @click="fullscreen"></i>
       </div>
     </div>
   </div>
 </template>
 <script>
   import { transformSecondsToStr } from '../../../common/utils';
+
+  const volumeSliderWidth = 38;
+  const volumeSliderHandleWidth = 8;
 
   export default {
     props: {
@@ -67,7 +78,12 @@
         tooltipStyle: { display: 'none' },
         tooltipTime: 0,
         tooltipText: '00:00:00',
-        isFullscreen: false
+        isFullscreen: false,
+        isMute: false,
+        volume: 1,
+        volumeSliderWidth: volumeSliderWidth,
+        volumeSliderHandleWidth: volumeSliderHandleWidth,
+        volumeSliderOffset: volumeSliderWidth - volumeSliderHandleWidth
       };
     },
     computed: {
@@ -88,9 +104,32 @@
       },
       hoverProgressStyle() {
         return { transform: `scaleX(${this.hoverProgressPercent})` };
+      },
+      volumeSliderHandleStyle() {
+        return { left: `${this.volumeSliderOffset}px` };
       }
     },
     watch: {
+      isMute(val) {
+        if (val) {
+          this.video.volume = 0;
+          this.volumeSliderOffset = 0;
+        } else {
+          this.video.volume = this.volume;
+          const tempVolume = this.volume * this.volumeSliderWidth - this.volumeSliderHandleWidth;
+          this.volumeSliderOffset = tempVolume < 0 ? 0 : tempVolume;
+        }
+      },
+      volume(val) {
+        const tempOffset = val * this.volumeSliderWidth - this.volumeSliderHandleWidth;
+        if (tempOffset > this.volumeSliderWidth - this.volumeSliderHandleWidth) {
+          this.volumeSliderOffset = this.volumeSliderWidth - this.volumeSliderHandleWidth;
+        } else if (tempOffset <= 0) {
+          this.volumeSliderOffset = 0;
+        } else {
+          this.volumeSliderOffset = tempOffset;
+        }
+      },
       streamInfo(val) {
         this.video.currentTime = val.INPOINT / 1000;
         this.currentTime = this.video.currentTime;
@@ -101,8 +140,19 @@
         this.playProgressPercent = val / this.video.duration;
       },
       isFullscreen(val) {
+        if (val) {
+          this.volumeSliderWidth = volumeSliderWidth * 2;
+          this.volumeSliderHandleWidth = volumeSliderHandleWidth * 2;
+        } else {
+          this.volumeSliderWidth = volumeSliderWidth;
+          this.volumeSliderHandleWidth = volumeSliderHandleWidth;
+        }
+        if (!this.isMute) {
+          const tempVolume = this.volume * this.volumeSliderWidth - this.volumeSliderHandleWidth;
+          this.volumeSliderOffset = tempVolume < 0 ? 0 : tempVolume;
+        }
         setTimeout(() => {
-          let progressBarWidth = this.getProgressBarStyle().width;
+          const progressBarWidth = this.getProgressBarStyle().width;
           this.indicatorOffset = this.video.currentTime / this.video.duration * progressBarWidth;
           this.playProgressPercent = this.video.currentTime / this.video.duration;
         }, 500);
@@ -127,6 +177,9 @@
       document.addEventListener('msfullscreenchange', this.fullscreenchangeListener, false);
     },
     methods: {
+      muteBtnClick() {
+        this.isMute = !this.isMute;
+      },
       getProgressBarStyle() {
         const progressBar = this.$refs.progressBar;
         const style = {};
@@ -204,6 +257,20 @@
         // this.playProgressPercent = currentLeft / progressBar.width;
         this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
         this.currentTime = this.video.currentTime;
+      },
+      handleVolumeSliderClick(e) {
+        const x = e.clientX;
+        const volumeSliderRect = this.$refs.volumeSlider.getBoundingClientRect();
+        const currentLeft = x - volumeSliderRect.left;
+
+        this.video.volume = currentLeft / this.volumeSliderWidth >= 0
+          ? currentLeft / this.volumeSliderWidth : 0;
+        this.volume = this.video.volume;
+        if (this.volume > 0 && this.isMute) {
+          this.isMute = false;
+        } else if (this.volume <= 0 && !this.isMute) {
+          this.isMute = true;
+        }
       },
       indicatorMousedown(e) {
         if (this.isPlaying) {
@@ -412,7 +479,10 @@
     font-size: 14px;
     line-height: 44px;
   }
-  .right-control {
+  .leftControl {
+    float: left;
+  }
+  .rightControl {
     float: right;
   }
   .playerTooltip {
@@ -428,5 +498,80 @@
     padding: 0 6px;
     line-height: 22px;
     white-space: nowrap;
+  }
+  .volumeBox {
+    height: 100%;
+    display: inline-block;
+  }
+  .volumeBox .volumeBtn {
+    display: inline-block;
+    height: 100%;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .playerBigMode .volumeBtn {
+    font-size: 18px;
+  }
+  .volumeBox:hover .volumePanel {
+    width: 38px;
+    margin: 0 8px;
+  }
+  .playerBigMode .volumeBox:hover .volumePanel {
+    width: 76px;
+  }
+  .volumePanel {
+    display: inline-block;
+    width: 0;
+    vertical-align: top;
+    height: 100%;
+    cursor: pointer;
+    transition: margin .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+  }
+  .volumeSlider {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+  }
+  .volumeSliderHandle {
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .playerBigMode .volumeSliderHandle {
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+  }
+  .volumeSliderHandle:before,
+  .volumeSliderHandle:after {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    width: 38px;
+  }
+  .playerBigMode .volumeSliderHandle:before,
+  .playerBigMode .volumeSliderHandle:after {
+    width: 76px;
+  }
+  .volumeSliderHandle:before {
+    left: -38px;
+    background: #38B1EB;
+  }
+  .playerBigMode .volumeSliderHandle:before {
+    left: -76px;
+  }
+  .volumeSliderHandle:after {
+    left: 4px;
+    background: #F2F2F2;
+  }
+  .playerBigMode .volumeSliderHandle:after {
+    left: 8px;
   }
 </style>

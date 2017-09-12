@@ -110,8 +110,11 @@
         poster: '',
         activeTabName: 'tab1',
         item: {},
-        url: '',
-        streamInfo: {}
+        url: '/static/video/test.mp4',
+        streamInfo: {
+          INPOINT: 0,
+          OUTPOINT: 0
+        }
       };
     },
     watch: {
