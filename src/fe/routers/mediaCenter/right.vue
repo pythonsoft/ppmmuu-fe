@@ -1,9 +1,9 @@
 <template>
   <div class="media-right">
     <div class="media-video">
-      <div v-if="1" class="media-video-wrap">
+      <div v-if="url" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <player :height="285" :width="438" :url="url"></player>
+          <player :height="285" :width="438" :url="url" :streamInfo="streamInfo"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -110,7 +110,7 @@
         poster: '',
         activeTabName: 'tab1',
         item: {},
-        url: '/static/video/test.mp4',
+        url: '',
         streamInfo: {}
       };
     },
@@ -195,7 +195,7 @@
           .then((response) => {
             this.unmountMenu();
             if (leaveOrNot) {
-              this.$router.push('movieEditor');
+              this.$router.push({ path: 'movieEditor', query: { objectId: this.item.id } });
             }
           })
           .catch((error) => {
@@ -214,7 +214,7 @@
         };
         ivideoAPI.createItem(reqData)
           .then((response) => {
-            this.$router.push('movieEditor');
+            this.$router.push({ path: 'movieEditor', query: { objectId: this.item.id } });
           })
           .catch((error) => {
             this.$message.error(error);
@@ -226,7 +226,7 @@
         getStreamURL(this.item.id, (err, url, rs) => {
           if (err) {
             me.$message.error(err);
-            return false;
+            return;
           }
           me.streamInfo = rs.result;
           me.url = url;

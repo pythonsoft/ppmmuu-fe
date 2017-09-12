@@ -52,7 +52,7 @@
         }
       },
       listSourceItem(id, cb) {
-        ivideoAPI.listItem({ params: { parentId: id, type: 0 } }).then((res) => {
+        ivideoAPI.listItem({ params: { parentId: id, type: '0,2' } }).then((res) => {
           res.data.forEach((item) => {
             item.isFolder = true;
           });

@@ -35,6 +35,15 @@
   export default {
     props: {
       url: String,
+      streamInfo: {
+        type: Object,
+        default() {
+          return {
+            INPOINT: 0,
+            OUTPOINT: 0
+          };
+        }
+      },
       height: Number,
       width: Number,
       fps: {
@@ -82,6 +91,15 @@
       }
     },
     watch: {
+      streamInfo(val) {
+        this.video.currentTime = val.INPOINT / 1000;
+        this.currentTime = this.video.currentTime;
+      },
+      currentTime(val) {
+        const progressBarWidth = this.getProgressBarStyle().width;
+        this.indicatorOffset = val / this.video.duration * progressBarWidth;
+        this.playProgressPercent = val / this.video.duration;
+      },
       isFullscreen(val) {
         setTimeout(() => {
           let progressBarWidth = this.getProgressBarStyle().width;
@@ -94,6 +112,8 @@
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
         this.duration = this.video.duration;
+        this.video.currentTime = this.streamInfo.INPOINT / 1000;
+        this.currentTime = this.video.currentTime;
       });
       document.addEventListener('fullscreenchange', this.fullscreenchangeListener, false);
       document.addEventListener('mozfullscreenchange', this.fullscreenchangeListener, false);
@@ -132,14 +152,14 @@
         }
       },
       indicatorMover() {
-        const progressBarWidth = this.getProgressBarStyle().width;
+        // const progressBarWidth = this.getProgressBarStyle().width;
         this.currentTime = this.video.currentTime;
         if (this.currentTime === this.video.duration) {
           this.isPlaying = false;
           clearInterval(this.moveIndicatorTimer);
         }
-        this.indicatorOffset = this.video.currentTime / this.video.duration * progressBarWidth;
-        this.playProgressPercent = this.video.currentTime / this.video.duration;
+        // this.indicatorOffset = this.video.currentTime / this.video.duration * progressBarWidth;
+        // this.playProgressPercent = this.video.currentTime / this.video.duration;
       },
       play() {
         this.video.play();
@@ -180,8 +200,8 @@
         const x = e.clientX;
         const progressBar = this.getProgressBarStyle();
         const currentLeft = x - progressBar.left;
-        this.indicatorOffset = currentLeft;
-        this.playProgressPercent = currentLeft / progressBar.width;
+        // this.indicatorOffset = currentLeft;
+        // this.playProgressPercent = currentLeft / progressBar.width;
         this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
         this.currentTime = this.video.currentTime;
       },

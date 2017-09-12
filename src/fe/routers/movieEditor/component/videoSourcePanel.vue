@@ -196,6 +196,9 @@
       }
     },
     mounted() {
+      if (this.$route.query.objectId) {
+        this.getStream(this.$route.query.objectId);
+      }
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
         this.clipDuration = this.video.duration;
