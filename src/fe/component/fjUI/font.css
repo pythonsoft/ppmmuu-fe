@@ -113,3 +113,11 @@
 
 .icon-addto:before { content: "\e692"; }
 
+.icon-fullscreen:before { content: "\e693"; }
+
+.icon-esc-fullscreen:before { content: "\e694"; }
+
+.icon-volume:before { content: "\e695"; }
+
+.icon-mute:before { content: "\e696"; }
+

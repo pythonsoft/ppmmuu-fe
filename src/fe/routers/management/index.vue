@@ -48,7 +48,8 @@
       index: 'taskManager',
       children: [
         { text: '转码任务', index: 'transcode', route: 'transcode' },
-        { text: '传输任务', index: 'transfer', route: 'transfer' }
+        { text: '下载任务', index: 'download', route: 'download' },
+        { text: '回迁任务', index: 'backmoving', route: 'backmoving' }
       ] },
     { text: '设置', index: 'configuration', route: 'configuration' },
     { title: '帮助',

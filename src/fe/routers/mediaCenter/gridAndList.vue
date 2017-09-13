@@ -36,19 +36,18 @@
         <div class="iconfont icon-phoenixtv media-center-grid-image">
           <img class="media-center-thumb" v-lazy="getThumb(item)" >
           <div class="media-center-duration">{{getDuration(item)}}</div>
+          <i v-if="editable" class="media-center-delete-btn iconfont icon-close" @click="deleteItem(item)"></i>
         </div>
         <div class="media-item-name" :title="getReplaceName(item)">
           <span :class="getMediaFormatStyle(item)">{{ getMediaFormat(item) }}</span>
           <span :class="setThumbClass(item.id)" v-html="getTitle(item)"></span>
         </div>
         <div class="media-item-category">
-          类别:
-          <span class="media-item-category-value" v-html="item.program_type || '无分类'"></span>
+          <span v-html="item.program_type || '无分类'"></span>
         </div>
-        <div class="media-item-category media-item-time">
-          入库时间:
-          <span class="media-item-category-value">{{ item.last_modify | formatTime }}</span>
-        </div>
+        <p class="media-item-category media-item-time">
+          {{ item.last_modify | formatTime }}
+        </p>
       </li>
     </ul>
   </div>
@@ -70,7 +69,8 @@
     props: {
       type: { type: String, default: 'grid' },
       width: { type: Number, default: 100 },
-      items: { type: Array, default: [] }
+      items: { type: Array, default: [] },
+      editable: { type: Boolean, default: false }
     },
     data() {
       return {
@@ -78,6 +78,9 @@
       };
     },
     methods: {
+      deleteItem(item) {
+        this.$emit('deleteItem', item);
+      },
       change(item) {
         this.selectInfoId = item.id;
         this.$emit('currentItemChange', item);

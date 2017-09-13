@@ -9,7 +9,8 @@
       ></tree-view>
     </div>
     <div class="source-menu-footer">
-      <fj-button type="primary" size="mini" @click="submit" :disabled="!currentNodeId">确定</fj-button>
+      <fj-button type="primary" size="mini" @click="submit" :disabled="!currentNodeId">添加</fj-button>
+      <fj-button type="primary" size="mini" @click="submitAndLeave" :disabled="!currentNodeId">添加并前往编辑</fj-button>
     </div>
   </div>
 </template>
@@ -51,7 +52,7 @@
         }
       },
       listSourceItem(id, cb) {
-        ivideoAPI.listItem({ params: { parentId: id, type: 0 } }).then((res) => {
+        ivideoAPI.listItem({ params: { parentId: id, type: '0,2' } }).then((res) => {
           res.data.forEach((item) => {
             item.isFolder = true;
           });
@@ -65,6 +66,9 @@
       },
       submit() {
         this.$emit('addto-menu', { parentId: this.currentNodeId });
+      },
+      submitAndLeave() {
+        this.$emit('addto-menu', { parentId: this.currentNodeId }, true);
       }
     },
     components: {

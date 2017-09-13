@@ -3,7 +3,8 @@
     <fj-input
       v-model="selectedLabel"
       ref="reference"
-      :readonly="true"
+      :readonly="!remote"
+      @change="inputValueChange"
       :disabled="disabled"
       :placeholder="placeholder"
       :theme="theme"
@@ -21,7 +22,12 @@
       :icon="iconClass"
     ></fj-input>
     <fj-select-dropdown ref="popper" v-show="visible" :min-width="inputWidth" :position="dropdownPosition">
-      <slot></slot>
+      <div v-if="remote && selectedLabel.length === 0" class="fj-select-dropdown-title-wrap clearfix">
+        <h3 class="fj-select-dropdown-title">历史记录</h3>
+        <span class="fj-select-dropdown-clear-btn" @click="clearHistoryMethod">清空<i class="iconfont icon-delete"></i></span>
+      </div>
+      <p class="fj-select-dropdown-empty" v-if="options.length === 0 || loading">{{ emptyText }}</p>
+      <div v-show="options.length > 0 && !loading"><slot></slot></div>
     </fj-select-dropdown>
   </div>
 </template>
@@ -34,6 +40,20 @@
   export default {
     name: 'FjSelect',
     props: {
+      remote: Boolean,
+      remoteMethod: {
+        type: Function,
+        default: () => {}
+      },
+      historyMethod: {
+        type: Function,
+        default: () => {}
+      },
+      clearHistoryMethod: {
+        type: Function,
+        default: () => {}
+      },
+      loading: Boolean,
       disabled: Boolean,
       clearable: Boolean,
       placeholder: String,
@@ -71,6 +91,13 @@
       document.removeEventListener('scroll', this.resetDropdownPosition);
     },
     methods: {
+      inputValueChange(val) {
+        if (val.length > 0) {
+          this.remoteMethod(val);
+        } else {
+          this.historyMethod();
+        }
+      },
       handleFocus(e) {
         this.visible = true;
       },
@@ -82,6 +109,7 @@
         }
       },
       handleIconClick(e) {
+        // 如果为remote就触发搜索函数
         if (this.iconClass.indexOf('icon-fill-close select-delete-icon') > -1) {
           this.deleteSelected(e);
         } else {
@@ -178,6 +206,10 @@
           this.handleIconHide();
           this.resetHoverIndex();
         } else {
+          // 如果输入框的值为空就调historyMethod(), 否则就调用remoteMethod()
+          if (this.selectedLabel.length === 0) {
+            this.historyMethod();
+          }
           this.handleIconShow();
           this.resetInputWidth();
           this.resetDropdownPosition();
@@ -195,7 +227,16 @@
     },
     computed: {
       iconClass() {
+        if (this.remote) {
+          return 'icon-search fill-icon-btn';
+        }
         return this.clearable && this.inputHovering && this.value !== '' ? 'icon-fill-close select-delete-icon' : this.icon;
+      },
+      emptyText() {
+        if (this.loading) {
+          return '加载中';
+        }
+        return '无数据';
       }
     },
     components: {

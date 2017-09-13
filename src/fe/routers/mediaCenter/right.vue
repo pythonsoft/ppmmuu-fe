@@ -1,16 +1,19 @@
 <template>
   <div class="media-right">
-    <div class=" media-video">
-      <div v-if="!isEmptyObject(item)" class="media-video-wrap">
+    <div class="media-video">
+      <div v-if="url" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <video height="246" width="439" controls autoplay :src="url"></video>
+          <player :height="285" :width="438" :url="url" :streamInfo="streamInfo"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
               <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="(e) => download()"></span>
+                <span title="下载" class="iconfont icon-video-download" @click.stop="download"></span>
+              </li>
+              <li>
+                <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="收藏" class="iconfont icon-addto"></span>
@@ -78,6 +81,7 @@
   import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo, getStreamURL } from '../../common/utils';
   import moreView from './moreView';
   import SourceMenuDialog from './components/sourceMenuDialog';
+  import Player from './components/player';
   import { getPosition } from '../../component/fjUI/utils/position';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import ivideoAPI from '../../api/ivideo';
@@ -92,7 +96,8 @@
     name: 'right',
     directives: { Clickoutside },
     components: {
-      'more-view': moreView
+      'more-view': moreView,
+      Player
     },
     props: {
       videoInfo: { type: Object, default: {} }
@@ -106,7 +111,10 @@
         activeTabName: 'tab1',
         item: {},
         url: '',
-        streamInfo: {}
+        streamInfo: {
+          INPOINT: 0,
+          OUTPOINT: 0
+        }
       };
     },
     watch: {
@@ -176,7 +184,7 @@
           this.menu = null;
         }
       },
-      handleAddtoMenu(data) {
+      handleAddtoMenu(data, leaveOrNot) {
         const reqData = Object.assign({}, data);
         reqData.name = this.title;
         reqData.snippet = {
@@ -189,6 +197,27 @@
         ivideoAPI.createItem(reqData)
           .then((response) => {
             this.unmountMenu();
+            if (leaveOrNot) {
+              this.$router.push({ path: 'movieEditor', query: { objectId: this.item.id } });
+            }
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      gotoEditer() {
+        const reqData = { parentId: '' };
+        reqData.name = this.title;
+        reqData.snippet = {
+          objectId: this.item.id,
+          thumb: this.poster,
+          input: 0,
+          output: this.item.duration,
+          duration: this.item.duration
+        };
+        ivideoAPI.createItem(reqData)
+          .then((response) => {
+            this.$router.push({ path: 'movieEditor', query: { objectId: this.item.id } });
           })
           .catch((error) => {
             this.$message.error(error);
@@ -200,7 +229,7 @@
         getStreamURL(this.item.id, (err, url, rs) => {
           if (err) {
             me.$message.error(err);
-            return false;
+            return;
           }
           me.streamInfo = rs.result;
           me.url = url;

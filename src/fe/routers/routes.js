@@ -11,7 +11,8 @@ const StoragePath = resolve => require.ensure([], () => resolve(require('./manag
 const StorageTactics = resolve => require.ensure([], () => resolve(require('./management/storageTactics/index')), 'storageTactics');
 
 const Transcode = resolve => require.ensure([], () => resolve(require('./management/task/transcode/index')), 'transcode');
-const Transfer = resolve => require.ensure([], () => resolve(require('./management/task/transfer/index')), 'transfer');
+const Download = resolve => require.ensure([], () => resolve(require('./management/task/download/index')), 'download');
+const Backmoving = resolve => require.ensure([], () => resolve(require('./management/task/backmoving/index')), 'backmoving');
 
 const ManagementAbout = resolve => require.ensure([], () => resolve(require('./management/help/about/index')), 'managementAbout');
 const ManagementFeedback = resolve => require.ensure([], () => resolve(require('./management/help/feedback/index')), 'managementFeedback');
@@ -19,6 +20,8 @@ const ManagementFeedback = resolve => require.ensure([], () => resolve(require('
 const PersonalCenter = resolve => require.ensure([], () => resolve(require('./personalCenter/index')), 'personalCenter');
 const Information = resolve => require.ensure([], () => resolve(require('./personalCenter/information/index')), 'information');
 const ChangePassword = resolve => require.ensure([], () => resolve(require('./personalCenter/changePassword/index')), 'changePassword');
+const History = resolve => require.ensure([], () => resolve(require('./personalCenter/history')), 'history');
+const SearchHistory = resolve => require.ensure([], () => resolve(require('./personalCenter/searchHistory')), 'searchHistory');
 const Feedback = resolve => require.ensure([], () => resolve(require('./personalCenter/feedback/index')), 'feedback');
 const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
 
@@ -48,7 +51,8 @@ export default [{
         { path: 'storagePath', component: StoragePath, meta: { title: '路径' }, name: 'storagePath' },
         { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' }, name: 'storageTactics' },
         { path: 'transcode', component: Transcode, meta: { title: '转码任务' }, name: 'transcode' },
-        { path: 'transfer', component: Transfer, meta: { title: '传输任务' }, name: 'transfer' },
+        { path: 'download', component: Download, meta: { title: '下载任务' }, name: 'download' },
+        { path: 'backmoving', component: Backmoving, meta: { title: '回迁任务' }, name: 'backmoving' },
         { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' },
         { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
         { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' }
@@ -63,6 +67,8 @@ export default [{
       children: [
         { path: 'information', component: Information, meta: { title: '个人信息' }, name: 'information' },
         { path: 'changePassword', component: ChangePassword, meta: { title: '密码修改' }, name: 'changePassword' },
+        { path: 'history', component: History, meta: { title: '观看历史' }, name: 'history' },
+        { path: 'searchHistory', component: SearchHistory, meta: { title: '检索历史' }, name: 'searchHistory' },
         { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
       ]
     },
