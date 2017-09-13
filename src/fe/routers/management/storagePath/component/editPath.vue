@@ -24,14 +24,14 @@
           <fj-form-item label="ftp路径" prop="ftpPath">
             <fj-input v-model="formData.ftpPath"></fj-input>
           </fj-form-item>
-          <fj-form-item label="windows路径" prop="ftpPath">
-            <fj-input v-model="formData.ftpPath"></fj-input>
-          </fj-form-item>
-          <fj-form-item label="linux路径" prop="windowsStoragePath">
+          <fj-form-item label="windows路径" prop="windowsStoragePath">
             <fj-input v-model="formData.windowsStoragePath"></fj-input>
           </fj-form-item>
-          <fj-form-item label="保留空间" prop="linuxStoragePath">
+          <fj-form-item label="linux路径" prop="linuxStoragePath">
             <fj-input v-model="formData.linuxStoragePath"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="保留空间" prop="reserveCapability">
+            <fj-input v-model="formData.reserveCapability"></fj-input>
           </fj-form-item>
           <fj-form-item label="类型" prop="type">
             <fj-select v-model="formData.type">
