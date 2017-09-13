@@ -237,7 +237,7 @@
           me.listChildTask(true, () => {
             me.autoRefreshList();
           });
-        }, 3000);
+        }, 5000);
 
         return false;
       },

@@ -27,9 +27,12 @@
         <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
       </span>
       <span class="layout-btn-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
       </span>
     </template>
@@ -40,7 +43,7 @@
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
-        <fj-table-column prop="filePath" label="名称"></fj-table-column>
+        <fj-table-column prop="fileName" label="名称"></fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
@@ -62,6 +65,18 @@
       :parentInfo="table.currentRowInfo"
       :visible.sync="childTaskDialogVisible"
     ></child-task-slide-dialog-view>
+
+    <fj-dialog
+      title="提示"
+      :visible.sync="dialog.visible"
+      @close="dialog.visible=false"
+    >
+      <span>确定要删除此任务 {{ table.currentRowInfo.fileName }} 吗?</span>
+      <div slot="footer">
+        <fj-button @click="dialog.visible=false">取消</fj-button>
+        <fj-button type="primary" @click="dialogConfirm">确定</fj-button>
+      </div>
+    </fj-dialog>
 
   </layout-four-row>
 </template>
@@ -92,6 +107,11 @@
           status: '',
           currentStep: ''
         },
+
+        dialog: {
+          visible: false
+        },
+
         table: {
           currentRowInfo: {}
         },
@@ -163,9 +183,15 @@
           me.listTask(true, () => {
             me.autoRefreshList();
           });
-        }, 3000);
+        }, 5000);
 
         return false;
+      },
+      deleteClick() {
+        this.dialog.visible = true;
+      },
+      dialogConfirm() {
+        this.deleteJob();
       },
       /* api */
       listTask(notNeedProcess, completeFn) {
@@ -184,6 +210,7 @@
           param.currentStep = this.formData.currentStep;
         }
 
+        /**
         const mock = {
           "status":"0",
           "data":{
@@ -216,6 +243,7 @@
           },
           "statusInfo":{}
         };
+         **/
 
         api.listJob({ params: param }, notNeedProcess ? '' : me).then((res) => {
           me.tableData = res.data.docs;
@@ -233,10 +261,27 @@
         const me = this;
 
         const param = {
-          parentId: this.table.currentRowInfo.id
+          jobId: this.table.currentRowInfo.id
         };
 
-        api.stop({ params: param }).then((res) => {
+        api.stopJob({ params: param }).then((res) => {
+          me.$message.success('任务已成功停止');
+          me.listTask();
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
+      },
+
+      deleteJob() {
+        const me = this;
+
+        const param = {
+          jobId: this.table.currentRowInfo.id
+        };
+
+        api.deleteJob({ params: param }).then((res) => {
           me.$message.success('任务已成功停止');
           me.listTask();
         }).catch((error) => {
@@ -250,10 +295,10 @@
         const me = this;
 
         const param = {
-          parentId: this.table.currentRowInfo.id
+          jobId: this.table.currentRowInfo.id
         };
 
-        api.restart({ params: param }).then((res) => {
+        api.restartJob({ params: param }).then((res) => {
           me.$message.success('任务已成功重启');
           me.listTask();
         }).catch((error) => {
