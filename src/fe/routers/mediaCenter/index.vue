@@ -71,8 +71,17 @@
               {{searchResult}}
             </span>
             <div class="media-center-view-bar">
-              <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span>
-              <span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
+              <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
+              --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
+              --><div class="order-select">
+                <fj-select v-model="orderVal" size="small">
+                  <fj-option
+                    v-for="item in ORDER_OPTIONS"
+                    :key="item.value"
+                    :value="item.value"
+                    :label="item.label"></fj-option>
+                </fj-select>
+              </div>
             </div>
           </div>
 
@@ -122,7 +131,16 @@
       'grid-list-view': gridAndList
     },
     data() {
+      const ORDER_OPTIONS = [
+        { value: 'order1', label: '关联度排序' },
+        { value: 'order2', label: '新闻时间由远到近' },
+        { value: 'order3', label: '新闻时间由近到远' },
+        { value: 'order4', label: '首播时间由近到远' },
+        { value: 'order5', label: '首播时间由远到近' }
+      ];
       return {
+        ORDER_OPTIONS: ORDER_OPTIONS,
+        orderVal: 'order1',
         defaultRoute: '/',
         keyword: '',
         searchSelectConfigs: [],
@@ -137,7 +155,7 @@
         offsetWidth: 0,
         offsetHeight: 0,
         listWidth: 0,
-        itemSize: { width: 266, height: 224 },
+        itemSize: { width: 192, height: 180 },
         timeId: '',
 
         viewType: 'grid',
