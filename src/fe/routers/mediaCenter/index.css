@@ -66,7 +66,6 @@
 .media-center-result-bar {
   height: 53px;
   line-height: 53px;
-  overflow: hidden;
   color: #4C637B;
 }
 
@@ -104,19 +103,20 @@
 }
 
 .media-center-grid li {
-  height: 224px;
-  width: 266px;
+  height: 180px;
+  width: 192px;
   float: left;
+  margin-right: 6px;
+  margin-bottom: 25px;
   box-sizing: border-box;
-  padding: 0 26px 26px 0;
   cursor: default;
 }
 
 .media-center-grid-image {
-  height: 135px;
-  line-height: 135px;
+  height: 108px;
+  line-height: 108px;
   text-align: center;
-  width: 240px;
+  width: 192px;
   overflow: hidden;
   border-radius: 2px;
   box-sizing: border-box;
@@ -129,28 +129,44 @@
 .media-center-thumb {
   position: absolute;
   overflow: hidden;
-  width: 240px;
-  height: 135px;
+  width: 192px;
+  height: 108px;
   left: 0;
   top: 0;
 }
 
 .media-center-duration {
   position: absolute;
-  right: 1px;
-  bottom: 2px;
+  right: 0;
+  bottom: 0;
   width: 56px;
   height: 14px;
   line-height: 14px;
-  opacity: 0.5;
   text-align: center;
-  background: #000000;
+  background: rgba(0, 0, 0, .5);
   color: #fff;
   font-size: 12px;
 }
 
+.media-center-grid-image:hover .media-center-delete-btn {
+  display: block;
+}
+.media-center-delete-btn {
+  display: none;
+  position: absolute;
+  right: 1px;
+  top: 2px;
+  width: 33px;
+  height: 33px;
+  line-height: 33px;
+  color: #fff;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, .5);
+  cursor: pointer;
+}
+
 .media-item-name {
-  margin-top: 6px;
+  margin-top: 9px;
   height: 17px;
   line-height: 17px;
   width: 100%;
@@ -205,18 +221,13 @@
 }
 
 .media-item-category {
-  margin-top: 10px;
+  margin-top: 9px;
   color: #4C637B;
-  height: 12px;
-  line-height: 12px;
-}
-
-.media-item-category-value {
-  color: #2A3E52;
+  line-height: 17px;
 }
 
 .media-item-time{
-  margin-top: 6px;
+  margin-top: 2px;
 }
 
 .media-pagination {
@@ -462,17 +473,17 @@
 
 .media-center-view-bar{
   float: right;
-  width: 200px;
-  overflow: hidden;
-  height: 53px;
   line-height: 53px;
-  text-align: right;
   cursor: default;
 }
 
+.order-select {
+  display: inline-block;
+  width: 141px;
+}
 .media-center-view-grid,
 .media-center-view-list {
-  padding-left: 10px;
+  margin-right: 20px;
   cursor: default;
   color: #9FB3CA;
 }

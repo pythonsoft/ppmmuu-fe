@@ -31,6 +31,8 @@
   const menu = [
     { text: '个人信息', index: 'information', route: 'information' },
     { text: '密码修改', index: 'changePassword', route: 'changePassword' },
+    { text: '观看历史', index: 'history', route: 'history' },
+    { text: '检索历史', index: 'searchHistory', route: 'searchHistory' },
     { text: '意见反馈', index: 'feedback', route: 'feedback' }
   ];
   export default {
