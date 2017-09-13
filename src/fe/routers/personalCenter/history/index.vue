@@ -3,7 +3,7 @@
     <h1 :class="$style.title">观看历史</h1>
     <div :class="$style.contentHeader" class="clearfix">
       <p :class="$style.headerText">共{{ total }}条记录</p>
-      <i class="iconfont icon-delete" :class="$style.headerRight"></i>
+      <i class="iconfont icon-delete" :class="$style.headerRight" @click="showClearHistoryDialog"></i>
     </div>
     <grid-list-view
       :editable="true"
@@ -15,11 +15,20 @@
     <div :class="$style.pagination" v-show="items.length">
       <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
     </div>
+    <fj-dialog
+      title="清空"
+      :visible.sync="clearHistoryDialogVisible">
+      <p>您确定要清空吗？</p>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click.stop="clearHistoryDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="isClearBtnLoading" @click.stop="clearHistory">确定</fj-button>
+      </div>
+    </fj-dialog>
   </div>
 </template>
 <script>
   import GridListView from '../../mediaCenter/gridAndList';
-  import mediaAPI from '../../../api/media';
+  import userAPI from '../../../api/user';
   import { formatQuery } from '../../../common/utils';
 
   export default {
@@ -29,7 +38,9 @@
         items: [],
         pageSize: 24,
         total: 0,
-        currentPage: 1
+        currentPage: 1,
+        clearHistoryDialogVisible: false,
+        isClearBtnLoading: false
       };
     },
     mounted() {
@@ -38,25 +49,53 @@
       window.addEventListener('resize', this.updateListWidth);
     },
     methods: {
+      showClearHistoryDialog() {
+        this.clearHistoryDialogVisible = true;
+      },
+      clearHistory() {
+        this.isClearBtnLoading = true;
+        userAPI.clearWatchHistory()
+          .then((response) => {
+            this.updateList();
+            this.isClearBtnLoading = false;
+            this.clearHistoryDialogVisible = false;
+            this.$message.success('删除成功');
+          })
+          .catch((error) => {
+            this.isClearBtnLoading = false;
+            this.$message.error(error);
+          });
+      },
       deleteItem(item) {
-        console.log('item', item);
+        const id = item._id;
+
+        userAPI.removeWatchHistory({ ids: id })
+          .then((response) => {
+            this.updateList();
+            this.$message.success('删除成功');
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
       },
       updateList() {
-        // const data = {
-        //   page: this.currentPage,
-        //   pageSize: this.pageSize
-        // };
-        // mediaAPI.getWatchHistory(formatQuery(data, true))
-        //   .then((response) => {
-        //     const responseData = response.data;
-        //     this.tableData = responseData.docs;
-        //     this.currentPage = responseData.page;
-        //     this.total = responseData.total;
-        //     this.selectedItems = [];
-        //   })
-        //   .catch((error) => {
-        //     this.$message.error(error);
-        //   });
+        const data = {
+          page: this.currentPage,
+          pageSize: this.pageSize
+        };
+        userAPI.getWatchHistory(formatQuery(data, true))
+          .then((response) => {
+            const responseData = response.data;
+            const tempList = responseData.docs.map((item) => {
+              return Object.assign(item.videoContent, { _id: item._id });
+            });
+            this.items = tempList;
+            this.currentPage = responseData.page;
+            this.total = responseData.total;
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
       },
       updateListWidth() {
         const browseBoxWidth = this.$refs.browseBox.getBoundingClientRect().width;
@@ -72,7 +111,7 @@
 </script>
 <style module>
   .browseBox {
-    max-width: 1182px;
+    max-width: 1188px;
     margin: 0 20px;
   }
   .title {
