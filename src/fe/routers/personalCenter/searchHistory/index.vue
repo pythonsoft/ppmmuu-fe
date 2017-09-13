@@ -2,8 +2,8 @@
   <four-row-layout-right-content>
     <template slot="search-left">检索历史</template>
     <template slot="operation">
-      <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showDeleteHistoryDialog">删除</fj-button>
-      <fj-button size="mini" type="primary" @click="">清空全部</fj-button>
+      <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="deleteHistory">删除</fj-button>
+      <fj-button size="mini" type="primary" @click="showClearHistoryDialog">清空全部</fj-button>
     </template>
     <template slot="table">
       <fj-table :data="tableData" @selection-change="handleSelectionChange">
@@ -18,18 +18,18 @@
       <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
     </template>
     <fj-dialog
-      title="删除"
-      :visible.sync="deleteHistoryDialogVisible">
-      <p>您确定要删除吗？</p>
+      title="清空"
+      :visible.sync="clearHistoryDialogVisible">
+      <p>您确定要清空吗？</p>
       <div slot="footer" class="dialog-footer">
-        <fj-button @click.stop="deleteHistoryDialogVisible=false">取消</fj-button><!--
-        --><fj-button type="primary" :loading="isDeleteBtnLoading" @click.stop="deleteHistory">确定</fj-button>
+        <fj-button @click.stop="clearHistoryDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="isClearBtnLoading" @click.stop="clearHistory">确定</fj-button>
       </div>
     </fj-dialog>
   </four-row-layout-right-content>
 </template>
 <script>
-  import mediaAPI from '../../../api/media';
+  import userAPI from '../../../api/user';
   import { formatQuery } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent';
 
@@ -41,8 +41,8 @@
         pageSize: 20,
         total: 0,
         currentPage: 1,
-        deleteHistoryDialogVisible: false,
-        isDeleteBtnLoading: false
+        clearHistoryDialogVisible: false,
+        isClearBtnLoading: false
       };
     },
     mounted() {
@@ -57,16 +57,42 @@
           this.updateList();
         }
       },
-      showDeleteHistoryDialog() {
-        this.deleteHistoryDialogVisible = true;
+      showClearHistoryDialog() {
+        this.clearHistoryDialogVisible = true;
       },
-      deleteHistory() {},
+      clearHistory() {
+        this.isClearBtnLoading = true;
+        userAPI.clearSearchHistory()
+          .then((response) => {
+            this.updateList();
+            this.isClearBtnLoading = false;
+            this.clearHistoryDialogVisible = false;
+            this.$message.success('删除成功');
+          })
+          .catch((error) => {
+            this.isClearBtnLoading = false;
+            this.$message.error(error);
+          });
+      },
+      deleteHistory() {
+        const ids = this.selectedItems.map((item) => {
+          return item._id;
+        });
+        userAPI.removeSearchHistory({ ids: ids.join(',') })
+          .then((response) => {
+            this.updateList();
+            this.$message.success('删除成功');
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
       updateList() {
         const data = {
           page: this.currentPage,
           pageSize: this.pageSize
         };
-        mediaAPI.getSearchHistory(formatQuery(data, true))
+        userAPI.getSearchHistory(formatQuery(data, true))
           .then((response) => {
             const responseData = response.data;
             this.tableData = responseData.docs;
