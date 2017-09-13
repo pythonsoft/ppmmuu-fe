@@ -6,10 +6,11 @@
       <i class="iconfont icon-delete" :class="$style.headerRight"></i>
     </div>
     <grid-list-view
+      :editable="true"
       type="grid"
       :width="listWidth"
       :items="items"
-      @currentItemChange="currentItemChange"
+      @deleteItem="deleteItem"
     ></grid-list-view>
     <div :class="$style.pagination" v-show="items.length">
       <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
@@ -37,6 +38,9 @@
       window.addEventListener('resize', this.updateListWidth);
     },
     methods: {
+      deleteItem(item) {
+        console.log('item', item);
+      },
       updateList() {
         // const data = {
         //   page: this.currentPage,

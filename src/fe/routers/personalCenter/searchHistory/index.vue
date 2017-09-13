@@ -3,6 +3,7 @@
     <template slot="search-left">检索历史</template>
     <template slot="operation">
       <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showDeleteHistoryDialog">删除</fj-button>
+      <fj-button size="mini" type="primary" @click="">清空全部</fj-button>
     </template>
     <template slot="table">
       <fj-table :data="tableData" @selection-change="handleSelectionChange">
