@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="`fj-pagination-${theme}`">
     <div class="fj-pagination-total">共{{ total }}条</div><!--
     --><ul class="fj-page-list">
       <li :class="['iconfont icon-arrow-left fj-pagination-prev', { 'disabled': internalCurrentPage <= 1 }]" @click="prev"></li>
@@ -39,6 +39,10 @@
   export default {
     name: 'FjPagination',
     props: {
+      theme: {
+        type: String,
+        default: 'normal'
+      },
       pageSize: {
         type: Number,
         default: 20

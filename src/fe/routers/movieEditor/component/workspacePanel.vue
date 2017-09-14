@@ -11,7 +11,7 @@
         <timeline-panel :importSourceInfo="importSourceInfo" :size="size" :projectBus="projectBus"></timeline-panel>
       </fj-tab-pane>
       <fj-tab-pane label="任务列表" name="taskList">
-        <task-list-panel></task-list-panel>
+        <task-list-panel :visible="activeTabName==='taskList'"></task-list-panel>
       </fj-tab-pane>
     </fj-tabs>
   </div>

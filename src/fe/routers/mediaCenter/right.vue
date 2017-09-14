@@ -3,7 +3,7 @@
     <div class="media-video">
       <div v-if="url" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <player :height="285" :width="438" :url="url" :streamInfo="streamInfo"></player>
+          <player :height="288" :width="448" :url="url" :streamInfo="streamInfo"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
