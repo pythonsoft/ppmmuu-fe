@@ -65,7 +65,7 @@
     </template>
     <template slot="center">
       <div class="media-center-wrap" ref="mediaCenter">
-        <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 26) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
+        <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
           <div class="media-center-result-bar">
             <span class="media-center-result-count">
               {{searchResult}}

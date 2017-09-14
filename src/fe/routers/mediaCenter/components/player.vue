@@ -371,7 +371,7 @@
     bottom: 36px;
   }
   .playerBigMode .videoBox {
-    bottom: 86px;
+    bottom: 56px;
   }
   .playerBottom {
     position: absolute;
@@ -386,7 +386,7 @@
     cursor: pointer;
   }
   .playerBigMode .progressBarWrap {
-    height: 42px;
+    height: 16px;
   }
   .progressBarList {
     position: absolute;
@@ -398,7 +398,7 @@
     background: rgba(204, 204, 204, .5);
   }
   .playerBigMode .progressBarList {
-    bottom: 18px;
+    bottom: 6px;
     height: 4px;
   }
   .playProgress {
@@ -429,22 +429,22 @@
     background: #fff;
   }
   .playerBigMode .playerPullIndicator {
-    top: 12px;
-    left: -6px;
-    width: 18px;
-    height: 18px;
+    top: 1px;
+    left: -5px;
+    width: 16px;
+    height: 16px;
   }
   .progressBarWrap:hover .playerPullIndicator {
-    top: 4px;
+    top: 3px;
     left: -4px;
     width: 8px;
     height: 8px;
   }
   .playerBigMode .progressBarWrap:hover .playerPullIndicator {
-    top: 12px;
-    left: -6px;
-    width: 18px;
-    height: 18px;
+    top: 1px;
+    left: -5px;
+    width: 16px;
+    height: 16px;
   }
   .controllerWrap {
     height: 24px;
@@ -453,8 +453,8 @@
     text-align: left;
   }
   .playerBigMode .controllerWrap {
-    height: 44px;
-    line-height: 44px;
+    height: 40px;
+    line-height: 40px;
   }
   .playerBtn {
     display: inline-block;
@@ -464,7 +464,7 @@
     cursor: pointer;
   }
   .playerBigMode .playerBtn {
-    width: 66px;
+    width: 50px;
     text-align: center;
     font-size: 18px;
     cursor: pointer;
@@ -474,6 +474,7 @@
   }
   .playerTime {
     display: inline-block;
+    vertical-align: bottom;
   }
   .playerBigMode .playerTime {
     font-size: 14px;
