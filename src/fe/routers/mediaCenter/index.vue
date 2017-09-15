@@ -1,5 +1,5 @@
 <template>
-  <layout-three-column :leftWidth="201" :rightWidth="442">
+  <layout-three-column :leftWidth="201" :rightWidth="448">
     <template slot="left">
       <div class="media-left">
         <div class="media-search">
@@ -155,7 +155,7 @@
         offsetWidth: 0,
         offsetHeight: 0,
         listWidth: 0,
-        itemSize: { width: 192, height: 180 },
+        itemSize: { width: 198, height: 180 },
         timeId: '',
 
         viewType: 'grid',

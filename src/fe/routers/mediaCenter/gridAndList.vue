@@ -114,17 +114,17 @@
 
 .media-center-list-item{
   position: relative;
-  padding-left: 124px;
+  padding-left: 211px;
   font-size: 12px;
-  padding-bottom: 28px;
-  min-height: 70px;
+  margin-bottom: 16px;
+  min-height: 108px;
   cursor: default;
 }
 
 .media-center-list-item-thumb-wrap{
   position: relative;
-  height: 63px;
-  width: 112px;
+  height: 108px;
+  width: 192px;
   text-align: center;
   overflow: hidden;
   border-radius: 2px;
@@ -135,8 +135,8 @@
 }
 
 .media-center-list-item-thumb{
-  height: 63px;
-  width: 112px;
+  height: 108px;
+  width: 192px;
   overflow: hidden;
   position: absolute;
   left: 0;
@@ -147,8 +147,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 112px;
-  height: 63px;
+  width: 192px;
+  height: 108px;
 }
 
 .media-center-list-color-span {
@@ -187,14 +187,15 @@
 }
 
 .media-center-list-title {
-  font-size: 12px;
-  color: #2A3E52;
   font-weight: bold;
+  font-size: 14px;
+  color: #2A3E52;
 }
 
 .media-center-list-description {
-  padding: 4px 0 6px 0;
-  color: #2A3E52;
+  margin: 12px 0 8px;
+  font-size: 12px;
+  color: #4C637B;
   font-weight: normal;
   overflow: hidden;
   text-overflow: ellipsis;

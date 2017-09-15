@@ -8,7 +8,7 @@
         <div class="player-control-tooltip">删除</div>
       </div>
       <div class="player-control-item-wrap">
-        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" @click="">
+        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" @click="download">
           <i class="iconfont icon-video-download"></i>
         </div>
         <div class="player-control-tooltip">下载</div>
@@ -22,6 +22,7 @@
 </template>
 <script>
   import { transformSecondsToStr } from '../../../common/utils';
+  import jobAPI from '../../../api/job';
 
   const TIMELINE_CONFIG = {
     sequenceHeight: 91,
@@ -102,6 +103,21 @@
       this.dpr = window.devicePixelRatio;
     },
     methods: {
+      download(info) {
+        if (this.sequences.length === 0 || this.currentSequenceIndex < 0) return;
+        const item = this.sequences[this.currentSequenceIndex];
+        const param = {
+          objectid: item.objectId,
+          inpoint: item.range[0] * 1000,
+          outpoint: item.range[1] * 1000,
+          fileName: item.title
+        };
+        jobAPI.download(param).then((res) => {
+          this.$message.success('正在下载文件，请到"任务"查看详细情况');
+        }).catch((error) => {
+          this.$message.error(error);
+        });
+      },
       resize(parentSize) {
         const width = this.size.width - TIMELINE_CONFIG.marginLeft;
         const height = this.size.height - TIMELINE_CONFIG.marginTop;

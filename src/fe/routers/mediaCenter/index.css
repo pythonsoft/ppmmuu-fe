@@ -64,8 +64,9 @@
 }
 
 .media-center-result-bar {
-  height: 53px;
-  line-height: 53px;
+  height: 30px;
+  line-height: 30px;
+  margin: 15px 0;
   color: #4C637B;
 }
 
@@ -152,7 +153,7 @@
   height: 100%;
   border-left: 4px solid  #F2F6FA;
   box-sizing: border-box;
-  padding-top: 324px;
+  padding-top: 330px;
   font-size: 12px;
 }
 
@@ -161,7 +162,7 @@
 }
 
 .media-video {
-  height: 324px;
+  height: 330px;
   width: 100%;
   text-align: center;
   background: #CED9E5;
@@ -174,7 +175,7 @@
 }
 
 .media-video-wrap-bg {
-  line-height: 324px;
+  line-height: 330px;
   font-size: 50px;
 }
 
@@ -184,7 +185,7 @@
 }
 
 .media-video-content{
-  height: 285px;
+  height: 288px;
   overflow: hidden;
   position: relative;
 }
@@ -383,16 +384,18 @@
 
 .media-center-view-bar{
   float: right;
-  line-height: 53px;
+  line-height: 30px;
   cursor: default;
 }
 
 .order-select {
+  vertical-align: top;
   display: inline-block;
   width: 141px;
 }
 .media-center-view-grid,
 .media-center-view-list {
+  vertical-align: top;
   margin-right: 20px;
   cursor: default;
   color: #9FB3CA;
