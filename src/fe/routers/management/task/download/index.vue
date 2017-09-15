@@ -87,8 +87,8 @@
   import utils from '../../../../common/utils';
 
   const api = require('../../../../api/job');
-  const config = require('./config');
-  const common = require('./common');
+  const config = require('../config');
+  const common = require('../common');
 
   export default {
     components: {

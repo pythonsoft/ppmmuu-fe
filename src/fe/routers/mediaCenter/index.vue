@@ -67,7 +67,7 @@
       <div class="media-center-wrap" ref="mediaCenter">
         <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
           <div v-if="listType === 'default'">
-            <div
+            <div :style="{ padding: '0 26px'}"
               v-for="categoryItem in defaultList">
               <h3 class="category-title">{{ categoryItem.category }}</h3>
               <grid-list-view

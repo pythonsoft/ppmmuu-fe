@@ -9,8 +9,8 @@
         </fj-form-item>
       </fj-form>
       <div slot="footer" class="dialog-footer">
-        <fj-button @click="handleClose">取消</fj-button><!--
-        --><fj-button type="primary" :loading="isBtnLoading" @click="submitForm('form')">确定</fj-button>
+        <fj-button @click="handleClose">取消</fj-button>
+        <fj-button type="primary" :loading="isBtnLoading" @click="submitForm('form')">确定</fj-button>
       </div>
     </fj-dialog>
 </template>

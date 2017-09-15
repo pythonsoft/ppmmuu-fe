@@ -1,4 +1,4 @@
-const utils = require('../../../../common/utils');
+const utils = require('../../../common/utils');
 
 const config = {};
 const method = {};
@@ -23,7 +23,6 @@ config.STATUS = {
   complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' }
 };
 
-
 config.PERMISSION = {
   PRIVATE: { text: '私有', value: '0', key: 'PRIVATE' },
   PUBLIC_READ_ONLY: { text: '公开只读', value: '1', key: 'PUBLIC_READ_ONLY' },
@@ -41,6 +40,12 @@ config.DELETE_DENY = {
   1: { text: '是', value: '1', key: 'YES' }
 };
 
+config.TASK_TYPE = {
+  media_download: { text: '下载', value: '0', key: 'media_download' },
+  transcoding: { text: '转码', value: '1', key: 'transcoding' },
+  fmft_transfer: { text: '传输', value: '2', key: 'fmft_transfer' }
+};
+
 config.FIELD_NAME = {
   id: { cn: '标识' },
   workServerId: { cn: '服务器ID' },
@@ -54,6 +59,15 @@ config.FIELD_NAME = {
   presentInfoId: { cn: '主任务ID' },
   serialNO: { cn: 'serialNO' }
 };
+
+config.NODE_TEMPLATE = {
+  DOWNLOAD: { text: '下载模板', value: '1', key: 'DOWNLOAD' },
+};
+
+config.TEMPLATE_TYPE = Object.assign({
+  ALL: { text: '全部', value: '', key: 'ALL' },
+  TRANSCODE: { text: '转码模板', value: '0', key: 'TRANSCODE' }
+}, config.NODE_TEMPLATE);
 
 method.getTextByValue = function (v, st) {
   return utils.getTextByValue(config, v, st) || {};

@@ -37,7 +37,7 @@
           </template>
         </fj-table-column>
         <fj-table-column prop="fileName" label="名称"></fj-table-column>
-        <fj-table-column prop="currentStep" label="速度">
+        <fj-table-column prop="currentStep" label="进度">
           <template scope="props">{{ `${props.row.currentStep}(${props.row.tasklist[props.row.currentStep].position}%)` }}</template>
         </fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
@@ -68,7 +68,7 @@
   </div>
 </template>
 <script>
-  import config from '../../management/task/download/config';
+  import config from '../../management/task/config';
   import jobAPI from '../../../api/job';
 
   export default {
