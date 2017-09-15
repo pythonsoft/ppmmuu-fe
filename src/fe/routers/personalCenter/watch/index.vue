@@ -215,6 +215,7 @@
             return;
           }
           this.streamInfo = rs.result;
+          document.title = rs.result.FILENAME;
           this.url = url;
         }, this);
       },
