@@ -31,8 +31,13 @@
             <table class="media-center-table">
               <tr v-for="info in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                <td class="item-info-value">
-                  <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
+                <td class="item-info-value clearfix">
+                  <template v-if="info.cn === '內容介紹'">
+                    <span v-if="isFoldedContent" class="inline-info">{{ info.value }}</span>
+                    <span class="item-expand-btn" v-if="isFoldedContent" @click="isFoldedContent=false">详细<i class="tri-bottom"></i></span>
+                    <span v-else v-html="formatContent(info.value)"></span>
+                    <span class="item-folded-btn" v-if="info.value.length > 60 && !isFoldedContent" @click="isFoldedContent=true">收起<i class="tri-top"></i></span>
+                  </template>
                   <span v-else>{{ info.value }}</span>
                 </td>
               </tr>
@@ -114,7 +119,8 @@
         streamInfo: {
           INPOINT: 0,
           OUTPOINT: 0
-        }
+        },
+        isFoldedContent: false
       };
     },
     watch: {
@@ -125,11 +131,25 @@
         this.item = val;
         this.getDetail();
         this.getStream();
+      },
+      program(val) {
+        const keys = Object.keys(val);
+        for (let i = 0; i < keys.length; i++) {
+          const info = val[keys[i]];
+          if (info.cn === '內容介紹') {
+            if (info.value.length > 60) {
+              this.isFoldedContent = true;
+            }
+          }
+        }
       }
     },
     created() {
     },
     methods: {
+      expandContent() {
+        this.isFoldedContent = false;
+      },
       handleTabClick(tab) {
 
       },
@@ -198,7 +218,7 @@
           .then((response) => {
             this.unmountMenu();
             if (leaveOrNot) {
-              this.$router.push({ path: 'movieEditor', query: { objectId: this.item.id } });
+              this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
             }
           })
           .catch((error) => {
@@ -217,7 +237,7 @@
         };
         ivideoAPI.createItem(reqData)
           .then((response) => {
-            this.$router.push({ path: 'movieEditor', query: { objectId: this.item.id } });
+            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
           })
           .catch((error) => {
             this.$message.error(error);

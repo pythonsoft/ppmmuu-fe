@@ -196,8 +196,8 @@
       }
     },
     mounted() {
-      if (this.$route.query.objectId) {
-        this.getStream(this.$route.query.objectId);
+      if (this.$route.params.objectId) {
+        this.getStream(this.$route.params.objectId);
       }
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
