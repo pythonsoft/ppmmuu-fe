@@ -68,7 +68,7 @@
   </div>
 </template>
 <script>
-  import config from '../../management/task/download/config';
+  import config from '../../management/task/config';
   import jobAPI from '../../../api/job';
 
   export default {
