@@ -38,7 +38,7 @@
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
                     <span v-else>{{ info.value }}</span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="info.isFoldedContent=true">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
                 </td>
               </tr>
             </table>
@@ -146,6 +146,10 @@
     methods: {
       expand(info, key) {
         const newInfo = Object.assign({}, this.program[key], { isFoldedContent: false });
+        this.$set(this.program, key, newInfo);
+      },
+      folded(info, key) {
+        const newInfo = Object.assign({}, this.program[key], { isFoldedContent: true });
         this.$set(this.program, key, newInfo);
       },
       handleTabClick(tab) {
