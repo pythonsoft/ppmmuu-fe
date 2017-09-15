@@ -61,11 +61,12 @@ config.FIELD_NAME = {
 };
 
 config.NODE_TEMPLATE = {
-  DOWNLOAD: { text: '下载模板', value: '0', key: 'DOWNLOAD' },
+  DOWNLOAD: { text: '下载模板', value: '1', key: 'DOWNLOAD' },
 };
 
 config.TEMPLATE_TYPE = Object.assign({
-  TRANSCODE: { text: '转码模板', value: '1', key: 'TRANSCODE' }
+  ALL: { text: '全部', value: '', key: 'ALL' },
+  TRANSCODE: { text: '转码模板', value: '0', key: 'TRANSCODE' }
 }, config.NODE_TEMPLATE);
 
 method.getTextByValue = function (v, st) {
