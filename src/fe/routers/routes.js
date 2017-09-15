@@ -11,6 +11,7 @@ const StoragePath = resolve => require.ensure([], () => resolve(require('./manag
 const StorageTactics = resolve => require.ensure([], () => resolve(require('./management/storageTactics/index')), 'storageTactics');
 
 const Transcode = resolve => require.ensure([], () => resolve(require('./management/task/transcode/index')), 'transcode');
+const TemplateManager = resolve => require.ensure([], () => resolve(require('./management/task/template/index')), 'TemplateManager');
 const Download = resolve => require.ensure([], () => resolve(require('./management/task/download/index')), 'download');
 const Backmoving = resolve => require.ensure([], () => resolve(require('./management/task/backmoving/index')), 'backmoving');
 
@@ -55,7 +56,8 @@ export default [{
         { path: 'backmoving', component: Backmoving, meta: { title: '回迁任务' }, name: 'backmoving' },
         { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' },
         { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
-        { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' }
+        { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' },
+        { path: 'templateManager', component: TemplateManager, meta: { title: '模板管理' }, name: 'templateManager' },
       ]
     },
     {

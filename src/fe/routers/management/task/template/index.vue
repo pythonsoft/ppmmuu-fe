@@ -1,6 +1,6 @@
 <template>
   <layout-four-row>
-    <template slot="search-left">转码任务</template>
+    <template slot="search-left">转码模板</template>
     <template slot="search-right">
       <div class="layout-four-row-search-item" :style="{ width: '88px' }">
         <fj-select size="small" placeholder="请选择" v-model="formData.status">
@@ -21,13 +21,13 @@
     </template>
     <template slot="operation">
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
+        <fj-button type="info" size="mini" @click="addClick">添加</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="updateClick">变更</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
       </span>
       <span class="layout-btn-margin">
         <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
@@ -68,30 +68,21 @@
 <script>
   import './index.css';
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
-  import childTaskDialogView from './childTaskDialog';
+  import dialog from './dialog';
   import utils from '../../../../common/utils';
 
-  const api = require('../../../../api/transcode');
+  const api = require('../../../../api/job');
   const config = require('../config');
-  const common = require('../common');
 
   export default {
     components: {
       'layout-four-row': fourRowLayout,
-      'child-task-slide-dialog-view': childTaskDialogView
+      'child-task-slide-dialog-view': dialog
     },
     data() {
       return {
         isDisabled: true,
-        stopDisable: true,
-        restartDisable: true,
 
-        status: config.getConfig('STATUS'),
-        formData: {
-          keyword: '',
-          status: '',
-          currentStep: ''
-        },
         table: {
           currentRowInfo: {}
         },
@@ -103,33 +94,25 @@
 
         /* child task */
         childTaskDialogVisible: false,
-
-        runTimer: false
       };
     },
     created() {
-      this.listTask();
-      this.runTimer = true;
-      this.autoRefreshList();
+      this.listTemplate();
     },
     destroyed() {
-      this.runTimer = false;
     },
     methods: {
       handleClickSearch() {
-        this.listTask();
+        this.listTemplate();
       },
-      stopClick() {
-        this.stop();
+      addClick() {
       },
-      restartClick() {
-        this.restart();
-      },
-      childTaskClick() {
+      updateClick() {},
+      deleteClick() {
         this.childTaskDialogVisible = true;
       },
       refreshClick() {
-        this.listTask();
+        this.listTemplate();
         this.isDisabled = true;
         this.table.currentRowInfo = {};
         this.childTaskDialogVisible = false;
@@ -138,8 +121,6 @@
       handleCurrentChange(current) {
         this.table.currentRowInfo = current;
         this.isDisabled = false;
-        this.stopDisable = !common.isTaskCanStop(current.status);
-        this.restartDisable = !common.isTaskCanRestart(current.status);
       },
       getStatus(v) {
         return config.getConfig('STATUS', v);
@@ -152,23 +133,10 @@
       },
       pageChange(val) {
         this.page = val;
-        this.listTask();
-      },
-      autoRefreshList() {
-        const me = this;
-        if (!me.runTimer) {
-          return false;
-        }
-        setTimeout(() => {
-          me.listTask(true, () => {
-            me.autoRefreshList();
-          });
-        }, 3000);
-
-        return false;
+        this.listTemplate();
       },
       /* api */
-      listTask(notNeedProcess, completeFn) {
+      listTemplate() {
         const me = this;
 
         const param = {
@@ -176,58 +144,13 @@
           pageSize: this.pageSize
         };
 
-        if (this.formData.status) {
-          param.status = this.formData.status;
-        }
-
-        if (this.formData.currentStep) {
-          param.currentStep = this.formData.currentStep;
-        }
-
-        api.list({ params: param }, notNeedProcess ? '' : me).then((res) => {
+        api.listTemplate({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
-          completeFn && completeFn();
-        }).catch((error) => {
-          if (!notNeedProcess) {
-            me.$message.error(error);
-          }
-          completeFn && completeFn();
-        });
-      },
-      stop() {
-        const me = this;
-
-        const param = {
-          parentId: this.table.currentRowInfo.id
-        };
-
-        api.stop({ params: param }).then((res) => {
-          me.$message.success('任务已成功停止');
-          me.listTask();
         }).catch((error) => {
           me.$message.error(error);
         });
-
-        return false;
-      },
-
-      restart() {
-        const me = this;
-
-        const param = {
-          parentId: this.table.currentRowInfo.id
-        };
-
-        api.restart({ params: param }).then((res) => {
-          me.$message.success('任务已成功重启');
-          me.listTask();
-        }).catch((error) => {
-          me.$message.error(error);
-        });
-
-        return false;
       }
     }
   };
