@@ -77,7 +77,7 @@
       },
       listTemplate() {
         this.$emit('listTemplate');
-      }
+      },
     }
   };
 </script>

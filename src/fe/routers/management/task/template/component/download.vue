@@ -113,9 +113,9 @@
       add() {
         const me = this;
 
-        api.createDownloadTemplate(this.formData).then((res) => {
+        api.createDownloadTemplate(this.formData, me).then((res) => {
           me.$message.success('保存成功');
-          me.$emit();
+          me.$emit('listTemplate');
         }).catch((error) => {
           me.$message.error(error);
         });
@@ -123,7 +123,16 @@
         return false;
       },
       update() {
+        const me = this;
 
+        api.update(this.formData, me).then((res) => {
+          me.$message.success('保存成功');
+          me.$emit('listTemplate');
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
       },
       bucketConfirm(val) {
         this.formData.bucketId = val._id;
