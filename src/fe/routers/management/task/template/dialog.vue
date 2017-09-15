@@ -55,6 +55,7 @@
 
           if(this.type !== 'add') {
             this.title = '变更模板信息';
+            this.currentType = this.templateInfo.type;
           }else {
             this.title = '添加模板信息';
           }

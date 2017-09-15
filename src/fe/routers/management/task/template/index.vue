@@ -104,11 +104,11 @@
         this.listTemplate();
       },
       addClick() {
-        this.tableData.type = 'add';
+        this.table.type = 'add';
         this.dialogDisplay = true;
       },
       updateClick() {
-        this.tableData.type = 'update';
+        this.table.type = 'update';
         this.dialogDisplay = true;
       },
       deleteClick() {
