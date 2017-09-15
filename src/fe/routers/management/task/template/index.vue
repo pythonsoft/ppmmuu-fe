@@ -3,9 +3,9 @@
     <template slot="search-left">转码模板</template>
     <template slot="search-right">
       <div class="layout-four-row-search-item" :style="{ width: '88px' }">
-        <fj-select size="small" placeholder="请选择" v-model="formData.status">
+        <fj-select size="small" placeholder="请选择" v-model="formData.type">
           <fj-option
-            v-for="item in status"
+            v-for="item in type"
             :key="item.value"
             :label="item.text"
             :value="item.value"
@@ -71,7 +71,7 @@
   import dialog from './dialog';
   import utils from '../../../../common/utils';
 
-  const api = require('../../../../api/job');
+  const templateAPI = require('../../../../api/template');
   const config = require('../config');
 
   export default {
@@ -86,6 +86,13 @@
         table: {
           currentRowInfo: {}
         },
+
+        formData: {
+          type: ''
+        },
+
+        type: config.getConfig('TEMPLATE_TYPE'),
+
         tableData: [],
         /* bucket param */
         page: 1,
@@ -103,6 +110,7 @@
     },
     methods: {
       handleClickSearch() {
+        console.log('llll -->', config.NODE_TEMPLATE)
         this.listTemplate();
       },
       addClick() {
@@ -138,13 +146,15 @@
       /* api */
       listTemplate() {
         const me = this;
+        const templateType = config.getConfig('NODE_TEMPLATE');
 
         const param = {
           page: this.page,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          type: templateType.DOWNLOAD.value
         };
 
-        api.listTemplate({ params: param }, me).then((res) => {
+        templateAPI.list({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
