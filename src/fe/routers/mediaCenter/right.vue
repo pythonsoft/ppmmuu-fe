@@ -9,9 +9,9 @@
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
-              <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="download"></span>
-              </li>
+              <!--<li>-->
+                <!--<span title="下载" class="iconfont icon-video-download" @click.stop="download"></span>-->
+              <!--</li>-->
               <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
@@ -71,27 +71,31 @@
               :info=file
             ></more-view>
             <div class="media-center-operation-bar">
-              <fj-button type="info" size="mini" @click.stop="(e) => download(file)">下载</fj-button>
+              <fj-button type="info" size="mini" @click.stop="(e) => prepareDownload(file)">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>
       </fj-tabs>
     </div>
+
+    <download-list-view
+      :visible.sync="downloadDialogDisplay"
+      @confirm="downloadListConfirm"
+    ></download-list-view>
   </div>
 </template>
 <script>
   import Vue from 'vue';
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject, formatSize, formatDuration, formatContent, getVideo, getStreamURL } from '../../common/utils';
+  import { isEmptyObject, formatSize, formatDuration, formatContent, getStreamURL } from '../../common/utils';
   import moreView from './moreView';
   import SourceMenuDialog from './components/sourceMenuDialog';
   import Player from './components/player';
   import { getPosition } from '../../component/fjUI/utils/position';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import ivideoAPI from '../../api/ivideo';
-
-  const config = require('../../config');
+  import downloadListView from '../management/task/template/component/downloadDialog';
 
   const api = require('../../api/media');
   const jobAPI = require('../../api/job');
@@ -102,6 +106,7 @@
     directives: { Clickoutside },
     components: {
       'more-view': moreView,
+      'download-list-view': downloadListView,
       Player
     },
     props: {
@@ -119,7 +124,10 @@
         streamInfo: {
           INPOINT: 0,
           OUTPOINT: 0
-        }
+        },
+        templateInfo: {},
+        fileInfo: {},
+        downloadDialogDisplay: false
       };
     },
     watch: {
@@ -259,7 +267,17 @@
 
         return false;
       },
-      download(info) {
+      downloadListConfirm(templateInfo) {
+        this.templateInfo = templateInfo || {};
+        if(!isEmptyObject(templateInfo)) {
+          this.download();
+        }
+      },
+      prepareDownload(fileInfo) {
+        this.fileInfo = fileInfo;
+        this.downloadDialogDisplay = true;
+      },
+      download() {
         if (isEmptyObject(this.streamInfo)) {
           return false;
         }
@@ -267,18 +285,13 @@
         const me = this;
 
         const param = {
-          objectid: this.item.id,
-          inpoint: this.streamInfo.INPOINT,
-          outpoint: this.streamInfo.OUTPOINT,
-          fileName: this.streamInfo.FILENAME
+          objectid: this.fileInfo.OBJECTID,
+          inpoint: this.fileInfo.INPOINT,
+          outpoint: this.fileInfo.OUTPOINT,
+          filename: this.fileInfo.FILENAME,
+          filetypeid: this.fileInfo.FILETYPEID,
+          templateId: this.templateInfo._id,
         };
-
-        if (info && !isEmptyObject(info)) {
-          param.objectid = info.OBJECTID;
-          param.fileName = info.FILENAME;
-          param.inpoint = info.INPOINT;
-          param.outpoint = info.OUTPOINT;
-        }
 
         jobAPI.download(param).then((res) => {
           me.$message.success('正在下载文件，请到"任务"查看详细情况');

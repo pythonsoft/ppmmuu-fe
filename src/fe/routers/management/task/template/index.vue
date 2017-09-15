@@ -53,6 +53,16 @@
       @listTemplate="listTemplate"
     ></dialog-view>
 
+    <fj-dialog title="删除模板" :visible.sync="confirmDialogDisplay" @close="confirmDialogDisplay=false">
+      <template>
+        <span>确定要删 {{ table.currentRowInfo.name }} 这块模板？</span>
+      </template>
+      <div slot="footer">
+        <fj-button @click="confirmDialogDisplay=false">取消</fj-button>
+        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+      </div>
+    </fj-dialog>
+
   </layout-four-row>
 </template>
 <script>
@@ -94,6 +104,7 @@
 
         /* child task */
         dialogDisplay: false,
+        confirmDialogDisplay: false,
       };
     },
     created() {
@@ -109,7 +120,6 @@
         this.table.type = 'add';
         this.dialogDisplay = true;
         this.templateInfo = null;
-        console.log('this.templateInfo --->', this.templateInfo);
       },
       updateClick() {
         this.table.type = 'update';
@@ -117,7 +127,7 @@
         this.templateInfo = this.table.currentRowInfo;
       },
       deleteClick() {
-        this.dialogDisplay = false;
+        this.confirmDialogDisplay = true;
       },
       refreshClick() {
         this.listTemplate();
@@ -143,6 +153,17 @@
         this.page = val;
         this.listTemplate();
       },
+      confirmDialog() {
+        const me = this;
+
+        templateAPI.remove({ id: this.table.currentRowInfo._id }, me).then((res) => {
+          me.$message.success('删除成功');
+          me.listTemplate();
+          me.confirmDialogDisplay = false;
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+      },
       /* api */
       listTemplate() {
         const me = this;
@@ -161,7 +182,7 @@
         }).catch((error) => {
           me.$message.error(error);
         });
-      }
+      },
     }
   };
 </script>

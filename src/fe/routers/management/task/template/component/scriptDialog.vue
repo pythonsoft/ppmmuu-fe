@@ -7,7 +7,7 @@
     <div class="template-script-content">
       <ul>
         <li>
-          <div class="title">1.变量使用方法${变量名}</div>
+          <div class="title">1.paths变量使用方法${paths.变量名}</div>
         </li>
         <li>
           <div class="title">2.可使用的全局变量为</div>
@@ -29,10 +29,10 @@
 
             let storagePath = [
               pathA.windowsStoragePath,
-              ${userInfo.name},
-              ${year},
-              ${month},
-              ${day}
+              userInfo.name,
+              year,
+              month,
+              day
             ].join('/');
 
             result = storagePath;

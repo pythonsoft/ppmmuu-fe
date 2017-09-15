@@ -100,9 +100,10 @@
         this.$emit('close');
       },
       submitForm() {
+        const me = this;
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            if (!this.templateInfo._id) {
+            if (!me.templateInfo) {
               this.add();
             } else {
               this.update();
@@ -116,6 +117,7 @@
         api.createDownloadTemplate(this.formData, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
+          me.close();
         }).catch((error) => {
           me.$message.error(error);
         });
