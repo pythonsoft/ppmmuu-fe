@@ -29,11 +29,11 @@
         <fj-tab-pane label="条目信息" name="tab1">
           <div class="media-center-file-item">
             <table class="media-center-table">
-              <tr v-for="info in program" v-if="info.value" >
+              <tr v-for="(info, key) in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
                   <span v-if="info.isFoldedContent" class="inline-info">{{ info.value }}</span>
-                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="info.isFoldedContent=false">详细<i class="tri-bottom"></i></span>
+                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
                     <span v-else>{{ info.value }}</span>
@@ -144,6 +144,10 @@
     created() {
     },
     methods: {
+      expand(info, key) {
+        const newInfo = Object.assign({}, this.program[key], { isFoldedContent: false });
+        this.$set(this.program, key, newInfo);
+      },
       handleTabClick(tab) {
 
       },
