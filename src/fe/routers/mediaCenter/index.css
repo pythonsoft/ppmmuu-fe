@@ -100,47 +100,6 @@
   color: #9FB3CA;
 }
 
-
-.media-center-color-span {
-  width: 40px;
-  height: 15px;
-  line-height: 16px;
-  text-align: center;
-  display: block;
-  font-size: 10px;
-  border-radius: 2px;
-  position: absolute;
-  left: 0;
-  top: 1px;
-  font-weight: normal;
-}
-
-._4k {
-  color: #fff;
-  background: #F4AC32;
-}
-
-._1080P {
-  color: #fff;
-  background: #D0021B;
-}
-
-._720P {
-  color: #fff;
-  background: #9353DE;
-}
-
-._480P {
-  color: #fff;
-  background: #1497D6;
-}
-
-._240P {
-  color: #fff;
-  background: #2EC4B6;
-}
-
-
 .media-pagination {
   text-align: center;
   padding-top: 30px;

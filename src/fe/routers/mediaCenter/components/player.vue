@@ -1,5 +1,5 @@
 <template>
-  <div class="playerWrap" :class="{'playerBigMode': isFullscreen}" ref="playerWrap" :style="isFullscreen ? {} : { height: `${height}px`, width: `${width}px` }">
+  <div class="playerWrap" :class="{'playerBigMode': isFullscreen || mode === 'big'}" ref="playerWrap" :style="isFullscreen ? {} : { height: `${height}px`, width: `${width}px` }">
     <div class="videoBox">
       <video :style="{display: 'block', width: '100%', height: '100%'}" ref="video" :src="url"></video>
     </div>
@@ -60,6 +60,10 @@
       fps: {
         type: Number,
         default: 25
+      },
+      mode: {
+        type: String,
+        default: 'normal'
       }
     },
     data() {
@@ -81,9 +85,9 @@
         isFullscreen: false,
         isMute: false,
         volume: 1,
-        volumeSliderWidth: volumeSliderWidth,
-        volumeSliderHandleWidth: volumeSliderHandleWidth,
-        volumeSliderOffset: volumeSliderWidth - volumeSliderHandleWidth
+        volumeSliderWidth: this.mode === 'big' ? volumeSliderWidth * 2 : volumeSliderWidth,
+        volumeSliderHandleWidth: this.mode === 'big' ? volumeSliderHandleWidth * 2 : volumeSliderHandleWidth,
+        volumeSliderOffset: this.mode === 'big' ? (volumeSliderWidth * 2 - volumeSliderHandleWidth * 2) : (volumeSliderWidth - volumeSliderHandleWidth)
       };
     },
     computed: {
@@ -358,6 +362,8 @@
 <style>
   .playerWrap {
     position: relative;
+    background: #021120;
+    color: #fff;
   }
   .playerWrap:-webkit-full-screen {
     width: 100%;
@@ -430,7 +436,7 @@
   }
   .playerBigMode .playerPullIndicator {
     top: 1px;
-    left: -5px;
+    left: -8px;
     width: 16px;
     height: 16px;
   }
@@ -442,7 +448,7 @@
   }
   .playerBigMode .progressBarWrap:hover .playerPullIndicator {
     top: 1px;
-    left: -5px;
+    left: -8px;
     width: 16px;
     height: 16px;
   }

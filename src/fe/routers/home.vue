@@ -35,8 +35,6 @@
         showMenuIndex = localStorage.getItem('menu');
         this.showMenuIndex = showMenuIndex ? showMenuIndex.split(',') : [];
       }
-
-      this.$router.push({ name: name });
     },
     data() {
       return {
