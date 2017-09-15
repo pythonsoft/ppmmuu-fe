@@ -18,6 +18,8 @@
 
      <download-template-view
        v-if="currentType === templateType.DOWNLOAD.value"
+       :templateInfo="templateInfo"
+       :type="type"
        @close="close"
        @listTemplate="listTemplate"
      ></download-template-view>
@@ -44,6 +46,7 @@
       return {
         title: '',
         currentType: '',
+        info: {},
         templateType: config.getConfig('TEMPLATE_TYPE'),
         dialogVisible: false
       };
@@ -52,7 +55,6 @@
       visible(val) {
         if (val) {
           this.dialogVisible = true;
-
           if(this.type !== 'add') {
             this.title = '变更模板信息';
             this.currentType = this.templateInfo.type;
@@ -61,6 +63,7 @@
           }
         } else {
           this.dialogVisible = false;
+          this.currentType = '';
         }
       },
     },

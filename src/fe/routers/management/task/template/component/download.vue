@@ -47,20 +47,20 @@
   export default {
     name: 'templateDownloadForm',
     props: {
-      info: Object
+      templateInfo: Object,
+      type: String
     },
     components: {
       'bucket-browser-view': bucketBrowserView,
       'script-dialog-view': scriptDialogView
     },
-    watch: {
-      info(v) {
-        if(v) {
-          this.formData.id = v._id;
-          this.name = v.name;
-          this.bucketId = v.details.bucketId;
-          this.script = v.details.script;
-        }
+    created() {
+      if(this.type !== 'add') {
+        this.formData.id = this.templateInfo._id;
+        this.formData.name = this.templateInfo.name;
+        this.formData.bucketId = this.templateInfo.details.bucketId;
+        this.formData.script = this.templateInfo.details.script;
+        this.formData.description = this.templateInfo.description;
       }
     },
     data() {
@@ -88,13 +88,21 @@
       }
     },
     methods: {
+      initParam() {
+        this.formData = {
+          id: '',
+          name: '',
+          bucketId: '',
+          script: '',
+        };
+      },
       close() {
         this.$emit('close');
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            if (!this.info) {
+            if (!this.templateInfo._id) {
               this.add();
             } else {
               this.update();

@@ -47,7 +47,7 @@
     </template>
 
     <dialog-view
-      :templateInfo="table.currentRowInfo"
+      :templateInfo="templateInfo"
       :visible.sync="dialogDisplay"
       :type="table.type"
       @listTemplate="listTemplate"
@@ -78,6 +78,8 @@
           type: 'add'
         },
 
+        templateInfo: null,
+
         formData: {
           type: ''
         },
@@ -106,10 +108,13 @@
       addClick() {
         this.table.type = 'add';
         this.dialogDisplay = true;
+        this.templateInfo = null;
+        console.log('this.templateInfo --->', this.templateInfo);
       },
       updateClick() {
         this.table.type = 'update';
         this.dialogDisplay = true;
+        this.templateInfo = this.table.currentRowInfo;
       },
       deleteClick() {
         this.dialogDisplay = false;
