@@ -272,6 +272,15 @@
   width: 303px;
   display: block;
 }
+.item-info-value .inline-info {
+  float: left;
+  display: inline-block;
+  width: 178px;
+  height: 21px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .media-center-file-item {
   padding: 8px 30px 8px 10px;
@@ -413,4 +422,35 @@
 }
 .source-menu-footer {
   text-align: right;
+}
+.item-expand-btn {
+  float: left;
+  font-style: italic;
+  cursor: pointer;
+}
+.item-folded-btn {
+  position: relative;
+  display: block;
+  font-style: italic;
+  cursor: pointer;
+}
+.item-expand-btn .tri-bottom {
+  vertical-align: middle;
+  margin: 5px;
+  border: 4px solid #4C637B;
+  border-color: #4C637B transparent transparent transparent;
+}
+.item-folded-btn .tri-top {
+  position: absolute;
+  top: -2px;
+  margin: 5px;
+  border: 4px solid #4C637B;
+  border-color: transparent transparent #4C637B transparent;
+}
+.category-title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #2A3E52;
 }
