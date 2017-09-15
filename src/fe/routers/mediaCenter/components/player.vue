@@ -1,5 +1,5 @@
 <template>
-  <div class="playerWrap" :class="{'playerBigMode': isFullscreen}" ref="playerWrap" :style="isFullscreen ? {} : { height: `${height}px`, width: `${width}px` }">
+  <div class="playerWrap" :class="{'playerBigMode': isFullscreen || mode === 'big'}" ref="playerWrap" :style="isFullscreen ? {} : { height: `${height}px`, width: `${width}px` }">
     <div class="videoBox">
       <video :style="{display: 'block', width: '100%', height: '100%'}" ref="video" :src="url"></video>
     </div>
@@ -60,6 +60,10 @@
       fps: {
         type: Number,
         default: 25
+      },
+      mode: {
+        type: String,
+        default: 'normal'
       }
     },
     data() {
@@ -81,9 +85,9 @@
         isFullscreen: false,
         isMute: false,
         volume: 1,
-        volumeSliderWidth: volumeSliderWidth,
-        volumeSliderHandleWidth: volumeSliderHandleWidth,
-        volumeSliderOffset: volumeSliderWidth - volumeSliderHandleWidth
+        volumeSliderWidth: this.mode === 'big' ? volumeSliderWidth * 2 : volumeSliderWidth,
+        volumeSliderHandleWidth: this.mode === 'big' ? volumeSliderHandleWidth * 2 : volumeSliderHandleWidth,
+        volumeSliderOffset: this.mode === 'big' ? (volumeSliderWidth * 2 - volumeSliderHandleWidth * 2) : (volumeSliderWidth - volumeSliderHandleWidth)
       };
     },
     computed: {
@@ -358,6 +362,8 @@
 <style>
   .playerWrap {
     position: relative;
+    background: #021120;
+    color: #fff;
   }
   .playerWrap:-webkit-full-screen {
     width: 100%;
@@ -371,7 +377,7 @@
     bottom: 36px;
   }
   .playerBigMode .videoBox {
-    bottom: 86px;
+    bottom: 56px;
   }
   .playerBottom {
     position: absolute;
@@ -386,7 +392,7 @@
     cursor: pointer;
   }
   .playerBigMode .progressBarWrap {
-    height: 42px;
+    height: 16px;
   }
   .progressBarList {
     position: absolute;
@@ -398,7 +404,7 @@
     background: rgba(204, 204, 204, .5);
   }
   .playerBigMode .progressBarList {
-    bottom: 18px;
+    bottom: 6px;
     height: 4px;
   }
   .playProgress {
@@ -429,22 +435,22 @@
     background: #fff;
   }
   .playerBigMode .playerPullIndicator {
-    top: 12px;
-    left: -6px;
-    width: 18px;
-    height: 18px;
+    top: 1px;
+    left: -8px;
+    width: 16px;
+    height: 16px;
   }
   .progressBarWrap:hover .playerPullIndicator {
-    top: 4px;
+    top: 3px;
     left: -4px;
     width: 8px;
     height: 8px;
   }
   .playerBigMode .progressBarWrap:hover .playerPullIndicator {
-    top: 12px;
-    left: -6px;
-    width: 18px;
-    height: 18px;
+    top: 1px;
+    left: -8px;
+    width: 16px;
+    height: 16px;
   }
   .controllerWrap {
     height: 24px;
@@ -453,8 +459,8 @@
     text-align: left;
   }
   .playerBigMode .controllerWrap {
-    height: 44px;
-    line-height: 44px;
+    height: 40px;
+    line-height: 40px;
   }
   .playerBtn {
     display: inline-block;
@@ -464,7 +470,7 @@
     cursor: pointer;
   }
   .playerBigMode .playerBtn {
-    width: 66px;
+    width: 50px;
     text-align: center;
     font-size: 18px;
     cursor: pointer;
@@ -474,6 +480,7 @@
   }
   .playerTime {
     display: inline-block;
+    vertical-align: bottom;
   }
   .playerBigMode .playerTime {
     font-size: 14px;

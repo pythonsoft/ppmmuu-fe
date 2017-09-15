@@ -33,8 +33,9 @@
         }
       },
       handleChangePath(path, level, route) {
-        const pathArr = path.split('/');
+        let pathArr = path.split('/');
         pathArr[level] = route;
+        pathArr = pathArr.slice(0, level + 1);
         return pathArr.join('/');
       }
     },

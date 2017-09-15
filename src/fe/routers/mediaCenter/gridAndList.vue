@@ -36,7 +36,7 @@
         <div class="iconfont icon-phoenixtv media-center-grid-image">
           <img class="media-center-thumb" v-lazy="getThumb(item)" >
           <div class="media-center-duration">{{getDuration(item)}}</div>
-          <i v-if="editable" class="media-center-delete-btn iconfont icon-close" @click="deleteItem(item)"></i>
+          <i v-if="editable" class="media-center-delete-btn iconfont icon-close" @click.stop="deleteItem(item)"></i>
         </div>
         <div class="media-item-name" :title="getReplaceName(item)">
           <span :class="getMediaFormatStyle(item)">{{ getMediaFormat(item) }}</span>
@@ -293,4 +293,44 @@
 .media-item-time{
   margin-top: 2px;
 }
+
+.media-center-color-span {
+  width: 40px;
+  height: 15px;
+  line-height: 16px;
+  text-align: center;
+  display: block;
+  font-size: 10px;
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  top: 1px;
+  font-weight: normal;
+}
+
+._4k {
+  color: #fff;
+  background: #F4AC32;
+}
+
+._1080P {
+  color: #fff;
+  background: #D0021B;
+}
+
+._720P {
+  color: #fff;
+  background: #9353DE;
+}
+
+._480P {
+  color: #fff;
+  background: #1497D6;
+}
+
+._240P {
+  color: #fff;
+  background: #2EC4B6;
+}
+
 </style>
