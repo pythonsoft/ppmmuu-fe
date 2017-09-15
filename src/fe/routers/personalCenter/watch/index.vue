@@ -13,9 +13,9 @@
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="streamInfo.FILENAME"></div>
             <ul class="media-video-title-bar">
-              <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="download()"></span>
-              </li>
+              <!--<li>-->
+                <!--<span title="下载" class="iconfont icon-video-download" @click.stop="download()"></span>-->
+              <!--</li>-->
               <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
@@ -75,13 +75,18 @@
                 :info="file"
               ></more-view>
               <div class="media-center-operation-bar">
-                <fj-button type="info" size="mini" @click.stop="download(file)">下载</fj-button>
+                <fj-button type="info" size="mini" @click.stop="prepareDownload(file)">下载</fj-button>
               </div>
             </div>
           </fj-tab-pane>
         </fj-tabs>
       </div>
     </div>
+
+    <download-list-view
+      :visible.sync="downloadDialogDisplay"
+      @confirm="downloadListConfirm"
+    ></download-list-view>
   </div>
 </template>
 <script>
@@ -96,6 +101,8 @@
   const mediaAPI = require('../../../api/media');
   const ivideoAPI = require('../../../api/ivideo');
   const userAPI = require('../../../api/user');
+
+  import downloadListView from '../../management/task/template/component/downloadDialog';
 
   const playerMinWidth = 792;
   const playerMaxWidth = 1188;
@@ -121,7 +128,10 @@
         },
         program: {},
         items: [],
-        rightboxWidth: '452px'
+        rightboxWidth: '452px',
+        templateInfo: {},
+        fileInfo: {},
+        downloadDialogDisplay: false
       }
     },
     watch: {
@@ -219,25 +229,59 @@
           this.url = url;
         }, this);
       },
-      download(info) {
-        const param = {
-          objectid: this.objectId,
-          inpoint: this.streamInfo.INPOINT,
-          outpoint: this.streamInfo.OUTPOINT,
-          fileName: this.streamInfo.FILENAME
-        };
-        if (info && !isEmptyObject(info)) {
-          param.objectid = info.OBJECTID;
-          param.fileName = info.FILENAME;
-          param.inpoint = info.INPOINT;
-          param.outpoint = info.OUTPOINT;
+//      download(info) {
+//        const param = {
+//          objectid: this.objectId,
+//          inpoint: this.streamInfo.INPOINT,
+//          outpoint: this.streamInfo.OUTPOINT,
+//          fileName: this.streamInfo.FILENAME
+//        };
+//        if (info && !isEmptyObject(info)) {
+//          param.objectid = info.OBJECTID;
+//          param.fileName = info.FILENAME;
+//          param.inpoint = info.INPOINT;
+//          param.outpoint = info.OUTPOINT;
+//        }
+//
+//        jobAPI.download(param).then((res) => {
+//          this.$message.success('正在下载文件，请到"任务"查看详细情况');
+//        }).catch((error) => {
+//          this.$message.error(error);
+//        });
+//      },
+      downloadListConfirm(templateInfo) {
+        this.templateInfo = templateInfo || {};
+        if(!isEmptyObject(templateInfo)) {
+          this.download();
+        }
+      },
+      prepareDownload(fileInfo) {
+        this.fileInfo = fileInfo;
+        this.downloadDialogDisplay = true;
+      },
+      download() {
+        if (isEmptyObject(this.streamInfo)) {
+          return false;
         }
 
+        const me = this;
+
+        const param = {
+          objectid: this.fileInfo.OBJECTID,
+          inpoint: this.fileInfo.INPOINT,
+          outpoint: this.fileInfo.OUTPOINT,
+          filename: this.fileInfo.FILENAME,
+          filetypeid: this.fileInfo.FILETYPEID,
+          templateId: this.templateInfo._id,
+        };
+
         jobAPI.download(param).then((res) => {
-          this.$message.success('正在下载文件，请到"任务"查看详细情况');
+          me.$message.success('正在下载文件，请到"任务"查看详细情况');
         }).catch((error) => {
-          this.$message.error(error);
+          me.$message.error(error);
         });
+
+        return false;
       },
       gotoEditer() {
         const reqData = { parentId: '' };
@@ -264,7 +308,8 @@
     components: {
       Player,
       MoreView,
-      GridListView
+      GridListView,
+      'download-list-view': downloadListView,
     }
   };
 </script>
