@@ -16,7 +16,7 @@
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
-                <span title="收藏" class="iconfont icon-addto"></span>
+                <span title="添加" class="iconfont icon-addto"></span>
               </li>
             </ul>
           </div>
