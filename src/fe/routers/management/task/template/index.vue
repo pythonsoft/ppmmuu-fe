@@ -104,7 +104,7 @@
 
         /* child task */
         dialogDisplay: false,
-        confirmDialogDisplay: false,
+        confirmDialogDisplay: false
       };
     },
     created() {
@@ -182,7 +182,7 @@
         }).catch((error) => {
           me.$message.error(error);
         });
-      },
+      }
     }
   };
 </script>

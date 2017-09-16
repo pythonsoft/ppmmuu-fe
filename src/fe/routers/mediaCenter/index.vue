@@ -143,7 +143,7 @@
   import { getTimeByStr, formatDuration, getPosition, appendToBody, getStringLength } from '../../common/utils';
   import './index.css';
   import { getTimeRange, getQuery, getSearchNotice, getOrder, ORDER_OPTIONS,
-          HHIGHLIGHT_FIELDS1, HHIGHLIGHT_FIELDS2, FILETR_FIELDS } from './config';
+    HHIGHLIGHT_FIELDS1, HHIGHLIGHT_FIELDS2, FILETR_FIELDS } from './config';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
@@ -197,7 +197,7 @@
       this.getDefaultMedia();
     },
     watch: {
-      orderVal(val){
+      orderVal(val) {
         this.getMediaList();
       }
     },
@@ -355,9 +355,9 @@
           }
         }
 
-        if(q){
+        if (q) {
           q += ' AND publish_status:1';
-        }else{
+        } else {
           q = 'publish_status:1';
         }
 
@@ -371,10 +371,10 @@
           me.$message.error(error);
         });
       },
-      searchHouseNoClick(){
+      searchHouseNoClick() {
         const me = this;
         this.listType = 'normal';
-        if(!me.houseNo){
+        if (!me.houseNo) {
           return false;
         }
         let searchNotice = `检索词: ${this.keyword}`;
@@ -407,7 +407,7 @@
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
         }).catch((error) => {
-            me.$message.error(error);
+          me.$message.error(error);
         });
       },
       handleCurrentPageChange(page) {

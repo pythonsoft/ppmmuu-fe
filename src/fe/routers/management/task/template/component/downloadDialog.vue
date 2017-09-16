@@ -26,7 +26,7 @@
       visible: {
         type: Boolean,
         default: false
-      },
+      }
     },
     watch: {
       visible(val) {
@@ -40,8 +40,8 @@
     data() {
       return {
         tableData: [],
-        currentRow: {},
-      }
+        currentRow: {}
+      };
     },
     methods: {
       close() {
@@ -69,7 +69,7 @@
         }).catch((error) => {
           me.$message.error(error);
         });
-      },
+      }
     }
-  }
+  };
 </script>

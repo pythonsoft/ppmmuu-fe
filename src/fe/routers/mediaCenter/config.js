@@ -134,16 +134,17 @@ method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;
 method.HHIGHLIGHT_FIELDS2 = HHIGHLIGHT_FIELDS2;
 method.FILETR_FIELDS = FILETR_FIELDS;
 
-method.getOrder = function getOrder(selectedValue){
-  if(selectedValue){
-    for(let i = 0, len = ORDER_OPTIONS.length; i < len; i++ ){
-      if(selectedValue === ORDER_OPTIONS[i].value){
-        return ORDER_OPTIONS[i].sort
+method.getOrder = function getOrder(selectedValue) {
+  if (selectedValue) {
+    for (let i = 0, len = ORDER_OPTIONS.length; i < len; i++) {
+      if (selectedValue === ORDER_OPTIONS[i].value) {
+        return ORDER_OPTIONS[i].sort;
       }
     }
-  }else{
+    return '';
+  } else {
     return '';
   }
-}
+};
 
 module.exports = method;

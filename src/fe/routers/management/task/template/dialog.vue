@@ -28,6 +28,7 @@
 </template>
 <script>
   const config = require('../config');
+
   import downloadTemplateView from './component/download';
 
   export default {
@@ -55,17 +56,17 @@
       visible(val) {
         if (val) {
           this.dialogVisible = true;
-          if(this.type !== 'add') {
+          if (this.type !== 'add') {
             this.title = '变更模板信息';
             this.currentType = this.templateInfo.type;
-          }else {
+          } else {
             this.title = '添加模板信息';
           }
         } else {
           this.dialogVisible = false;
           this.currentType = '';
         }
-      },
+      }
     },
     created() {
     },
@@ -77,7 +78,7 @@
       },
       listTemplate() {
         this.$emit('listTemplate');
-      },
+      }
     }
   };
 </script>

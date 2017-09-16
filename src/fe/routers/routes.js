@@ -58,7 +58,7 @@ export default [{
         { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' },
         { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
         { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' },
-        { path: 'templateManager', component: TemplateManager, meta: { title: '模板管理' }, name: 'templateManager' },
+        { path: 'templateManager', component: TemplateManager, meta: { title: '模板管理' }, name: 'templateManager' }
       ]
     },
     {
@@ -70,9 +70,13 @@ export default [{
       children: [
         { path: 'information', component: Information, meta: { title: '个人信息' }, name: 'information' },
         { path: 'changePassword', component: ChangePassword, meta: { title: '密码修改' }, name: 'changePassword' },
-        { path: 'history', component: History, meta: { title: '观看历史' }, name: 'history', children: [
-          { path: 'watch/:objectId', component: Watch, name: 'historyWatch' }
-        ]},
+        { path: 'history',
+          component: History,
+          meta: { title: '观看历史' },
+          name: 'history',
+          children: [
+            { path: 'watch/:objectId', component: Watch, name: 'historyWatch' }
+          ] },
         { path: 'searchHistory', component: SearchHistory, meta: { title: '检索历史' }, name: 'searchHistory' },
         { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
       ]

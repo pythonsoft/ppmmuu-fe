@@ -114,7 +114,7 @@
       showBucket: {
         type: Boolean,
         default: true
-      },
+      }
     },
     data() {
       return {

@@ -132,14 +132,14 @@
             const key = keys[i];
             this.formData[key] = '';
           }
-          this.formData['expiredTime'] = new Date('9999 23:59:59');
+          this.formData.expiredTime = new Date('9999 23:59:59');
           this.groupName = '';
         } else {
           this.initEditUser();
         }
       },
-      visible(val){
-        if(val && this.type == 'edit') {
+      visible(val) {
+        if (val && this.type === 'edit') {
           this.initEditUser();
         }
       }

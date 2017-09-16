@@ -39,7 +39,7 @@
           ],
           password: [
             { required: true, message: '请输入密码' }
-          ],
+          ]
         }
       };
     },
@@ -47,15 +47,15 @@
       dialogVisible(val) {
         this.visible = val;
       },
-      id(val){
-        if(val){
+      id(val) {
+        if (val) {
           this.initEditUser();
         }
       }
     },
     methods: {
       initEditUser() {
-        console.log("fgggg");
+        console.log('fgggg');
         api.getGroupUserDetail(formatQuery({ _id: this.id }, true))
           .then((response) => {
             const user = response.data.mediaExpressUser || '';
