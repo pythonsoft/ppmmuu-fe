@@ -31,10 +31,10 @@
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" width="260" label="标识"></fj-table-column>
         <fj-table-column prop="name" width="400" label="名称"></fj-table-column>
+        <fj-table-column prop="description" label="描述"></fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="description" label="描述"></fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination">
