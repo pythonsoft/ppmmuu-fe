@@ -1,5 +1,5 @@
 <template>
-  <layout-three-column :leftWidth="201" :rightWidth="442">
+  <layout-three-column :leftWidth="201" :rightWidth="448">
     <template slot="left">
       <div class="media-left">
         <div class="media-search">
@@ -65,33 +65,56 @@
     </template>
     <template slot="center">
       <div class="media-center-wrap" ref="mediaCenter">
-        <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 26) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
-          <div class="media-center-result-bar">
-            <span class="media-center-result-count">
-              {{searchResult}}
-            </span>
-            <div class="media-center-view-bar">
-              <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span>
-              <span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
+        <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
+          <div v-if="listType === 'default'">
+            <div :style="{ padding: '0 26px'}"
+              v-for="categoryItem in defaultList">
+              <h3 class="category-title">{{ categoryItem.category }}</h3>
+              <grid-list-view
+                type="grid"
+                :width="listWidth"
+                :items="categoryItem.docs"
+                @currentItemChange="currentItemChange"
+              ></grid-list-view>
             </div>
           </div>
+          <template v-else>
+            <div class="media-center-result-bar">
+              <span class="media-center-result-count">
+                {{searchResult}}
+              </span>
+              <div class="media-center-view-bar">
+                <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
+                --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
+                --><div class="order-select">
+                  <fj-select v-model="orderVal" size="small">
+                    <fj-option
+                      v-for="item in ORDER_OPTIONS"
+                      :key="item.value"
+                      :value="item.value"
+                      :label="item.label"></fj-option>
+                  </fj-select>
+                </div>
+              </div>
+            </div>
 
-          <div v-if="items.length === 0" class="media-center-empty-result">
-            <div class="iconfont icon-media-library media-center-empty-result-bg"></div>
-            <p class="media-center-empty-result-text">暂无搜索结果</p>
-          </div>
+            <div v-if="items.length === 0" class="media-center-empty-result">
+              <div class="iconfont icon-media-library media-center-empty-result-bg"></div>
+              <p class="media-center-empty-result-text">暂无搜索结果</p>
+            </div>
 
-          <grid-list-view
-            v-else
-            :type="viewType"
-            :width="listWidth"
-            :items="items"
-            @currentItemChange="currentItemChange"
-          ></grid-list-view>
+            <grid-list-view
+              v-else
+              :type="viewType"
+              :width="listWidth"
+              :items="items"
+              @currentItemChange="currentItemChange"
+            ></grid-list-view>
 
-          <div class="media-pagination" v-if="items.length">
-            <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
-          </div>
+            <div class="media-pagination" v-if="items.length">
+              <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
+            </div>
+          </template>
         </div>
       </div>
     </template>
@@ -122,7 +145,16 @@
       'grid-list-view': gridAndList
     },
     data() {
+      const ORDER_OPTIONS = [
+        { value: 'order1', label: '关联度排序' },
+        { value: 'order2', label: '新闻时间由远到近' },
+        { value: 'order3', label: '新闻时间由近到远' },
+        { value: 'order4', label: '首播时间由近到远' },
+        { value: 'order5', label: '首播时间由远到近' }
+      ];
       return {
+        ORDER_OPTIONS: ORDER_OPTIONS,
+        orderVal: 'order1',
         defaultRoute: '/',
         keyword: '',
         searchSelectConfigs: [],
@@ -137,7 +169,7 @@
         offsetWidth: 0,
         offsetHeight: 0,
         listWidth: 0,
-        itemSize: { width: 266, height: 224 },
+        itemSize: { width: 198, height: 180 },
         timeId: '',
 
         viewType: 'grid',
@@ -147,14 +179,24 @@
         datetimerange2: [],
         displayMovieEditor: false,
 
-        parentSize: { width: '100', height: '100' }
+        parentSize: { width: '100', height: '100' },
+        listType: 'default',
+        defaultList: []
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.getSeachConfigs();
+      this.getDefaultMedia();
     },
     methods: {
+      getDefaultMedia() {
+        api.defaultMedia().then((res) => {
+          this.defaultList = res.data;
+        }).catch((error) => {
+          this.$message.error(error);
+        });
+      },
       setMovieEditorDisplay(v) {
         this.displayMovieEditor = v;
       },
@@ -206,25 +248,25 @@
       },
       getSeachConfigs() {
         const me = this;
-        api.getSearchConfig().then((res)=>{
+        api.getSearchConfig().then((res) => {
           me.searchSelectConfigs = res.data.searchSelectConfigs;
           me.searchRadioboxConfigs = res.data.searchRadioboxConfigs;
-        }).catch((error)=>{
+        }).catch((error) => {
           me.$message.error(error);
-        })
-
+        });
       },
       getMediaList() {
+        this.listType = 'normal';
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
         let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
-        let searchNotice = '检索词:' + this.keyword;
+        let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
-        if(this.keyword && searchChoose) {
-          searchNotice += ',' + searchChoose;
-        }else{
+        if (this.keyword && searchChoose) {
+          searchNotice += `,${searchChoose}`;
+        } else {
           searchNotice += searchChoose;
         }
         const noticeLength = getStringLength(searchNotice);
@@ -251,6 +293,7 @@
             q = `f_date_36:${f_date_36}`;
           }
         }
+
         const options = {
           q: q,
           fl: this.fl,
@@ -258,26 +301,40 @@
           start: start,
           hl: 'off',
           indent: 'off',
-          'hl.fl': 'name,program_name_cn,program_name_en',
+          'hl.fl': 'name,program_name_cn,program_name_en,f_str_03',
           rows: this.pageSize
         };
 
+        const hit = function (val) {
+        //          const keywords = 'name,program_name_cn,program_name_en,f_str_03'.split(',');
+          const keywords = 'name'.split(',');
+          const query = [];
+
+          for (let i = 0, len = keywords.length; i < len; i++) {
+            query.push(`OR ${keywords[i]}:${val}`);
+          }
+
+          return query.join(' ');
+        };
+
         if (this.keyword) {
-          options['q'] = q;
-          options['hl'] = 'on';
-          options['indent'] = 'on';
+          options.q = q;
+          options.hl = 'on';
+          options.indent = 'on';
           if (q) {
-            q += ` AND full_text:${this.keyword}`;
-            for( let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++){
-              if(this.searchSelectConfigs[0].items[k].value === this.keyword){
-                options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en';
+            q += ` AND full_text:${this.keyword} ${hit(this.keyword)}`;
+            for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
+              if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
+                options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en,f_str_03';
               }
             }
           } else {
-            q = `full_text:${this.keyword}`;
-            options['q'] = q;
+            q = `full_text:${this.keyword} ${hit(this.keyword)}`;
+            options.q = q;
           }
         }
+
+        options.q += ' AND publish_status:1';
 
         api.solrSearch({ params: options }, me).then((res) => {
           me.items = res.data.docs;

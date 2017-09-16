@@ -103,7 +103,9 @@
   .logo-wrap {
     height: 62px;
     line-height: 62px;
-    background: #344C67;
+    background: #4C637B;
+    /*background: #344C67;*/
+    box-shadow: inset 0 -1px 0 0 #5E748A;
     color: #fff;
     text-align: center;
     font-size: 26px;

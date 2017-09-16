@@ -10,7 +10,7 @@
 
   export default {
     components: {
-      'layout-four-row': fourRowLayout,
+      'layout-four-row': fourRowLayout
     },
     data() {
       return {

@@ -39,7 +39,9 @@
 .workspace-panel-wrap.active-panel {
   border: 1px solid #38B1EB;
 }
-
+.active-panel {
+  z-index: 200;
+}
 .video-source-title {
   position: absolute;
   top: 0;

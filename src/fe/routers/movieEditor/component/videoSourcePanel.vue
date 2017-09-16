@@ -55,7 +55,7 @@
   </div>
 </template>
 <script>
-  import { fillUpZero, getStreamURL, transformSecondsToStr } from '../../../common/utils';
+  import { getStreamURL, transformSecondsToStr } from '../../../common/utils';
 
   export default {
     props: {
@@ -196,6 +196,9 @@
       }
     },
     mounted() {
+      if (this.$route.params.objectId) {
+        this.getStream(this.$route.params.objectId);
+      }
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
         this.clipDuration = this.video.duration;
@@ -432,7 +435,7 @@
         this.tooltipText = transformSecondsToStr(this.tooltipTime);
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 80;
-        if (x + tooltipWidth > this.size.width) {
+        if (currentLeft + tooltipWidth > this.size.width) {
           this.tooltipStyle.left = `${currentLeft - tooltipWidth}px`;
         } else {
           this.tooltipStyle.left = `${currentLeft}px`;
@@ -440,7 +443,6 @@
         this.tooltipStyle.display = 'block';
       },
       mousemove(e) {
-        clearTimeout(this.timeId);
         this.tooltipTimeId = setTimeout(() => {
           this.mouseenter(e);
         }, 1);

@@ -6,8 +6,8 @@
     <fj-tabs v-model="activeTabName" @tab-click="handleTabClick">
       <fj-tab-pane label="基本信息" name="tab1">
         <fj-form :model="formData" :rules="rules" ref="editForm" label-width="110px">
-          <fj-form-item label="标志" v-if="type === 'edit'">
-            <fj-input v-model="formData._id" :disabled="true"></fj-input>
+          <fj-form-item label="标志" prop="_id">
+            <fj-input v-model="formData._id"></fj-input>
           </fj-form-item>
           <fj-form-item label="名称" prop="name">
             <fj-input v-model="formData.name"></fj-input>
@@ -23,6 +23,12 @@
           </fj-form-item>
           <fj-form-item label="ftp路径" prop="ftpPath">
             <fj-input v-model="formData.ftpPath"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="windows路径" prop="windowsStoragePath">
+            <fj-input v-model="formData.windowsStoragePath"></fj-input>
+          </fj-form-item>
+          <fj-form-item label="linux路径" prop="linuxStoragePath">
+            <fj-input v-model="formData.linuxStoragePath"></fj-input>
           </fj-form-item>
           <fj-form-item label="保留空间" prop="reserveCapability">
             <fj-input v-model="formData.reserveCapability"></fj-input>
@@ -142,6 +148,9 @@
           ],
           name: [
             { required: true, message: '请输入名称' }
+          ],
+          _id: [
+            { required: true, message: '请输入标识' }
           ]
         },
         TYPE: config.TYPE,

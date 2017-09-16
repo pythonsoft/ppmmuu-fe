@@ -38,11 +38,16 @@
       <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editTacticsClick">配置策略</fj-button>
       </span>
+
       <span class="layout-btn-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
+      </span>
+
+      <span class="layout-btn-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">查看详细</fj-button>
       </span>
     </template>
     <template slot="table">
@@ -50,15 +55,15 @@
         <fj-table-column prop="status" width="90" align="center" label="状态" >
           <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
+        <fj-table-column prop="_id" width="160" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="path" label="路径"></fj-table-column>
-        <fj-table-column prop="maxSize" label="容量 | 已使用">
+        <fj-table-column prop="maxSize" width="160" label="容量 | 已使用">
           <template scope="props">{{ formatSize(props.row) }}</template>
         </fj-table-column>
-        <fj-table-column prop="bucket" label="存储区名称">
+        <fj-table-column prop="bucket" width="160" label="存储区名称">
           <template scope="props">{{ props.row.bucket.name }}</template>
         </fj-table-column>
-        <fj-table-column prop="creator" label="创建人">
+        <fj-table-column prop="creator" width="160" label="创建人">
           <template scope="props">{{ props.row.creator.name }}</template>
         </fj-table-column>
         <fj-table-column prop="createdTime" width="160" align="center" label="创建时间">

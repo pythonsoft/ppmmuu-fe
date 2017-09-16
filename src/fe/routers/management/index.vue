@@ -48,13 +48,17 @@
       index: 'taskManager',
       children: [
         { text: '转码任务', index: 'transcode', route: 'transcode' },
-        { text: '传输任务', index: 'transfer', route: 'transfer' }
+        { text: '下载任务', index: 'download', route: 'download' },
+        { text: '回迁任务', index: 'backmoving', route: 'backmoving' },
+        { text: '模板管理', index: 'templateManager', route: 'templateManager' },
       ] },
     { text: '设置', index: 'configuration', route: 'configuration' },
-    { title: '帮助', index: 'help', children: [
-      { text: '关于', index: 'managementAbout', route: 'managementAbout' },
-      { text: '反馈', index: 'managementFeedback', route: 'managementFeedback' },
-    ] }
+    { title: '帮助',
+      index: 'help',
+      children: [
+        { text: '关于', index: 'managementAbout', route: 'managementAbout' },
+        { text: '反馈', index: 'managementFeedback', route: 'managementFeedback' }
+      ] }
   ];
   export default {
     data() {

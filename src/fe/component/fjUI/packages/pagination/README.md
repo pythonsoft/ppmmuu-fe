@@ -6,7 +6,7 @@
 | page-size | 每页显示条目个数 | number | - | 20 | ✅ |
 | total | 总条目数 | number | - | - | ✅ |
 | current-page | 当前页数，支持.sync修饰符 | number | - | - | ✅ |
-
+| theme | 主题样式 | string | normal, drak | normal | ✅ |
 
 ### events
 | 事件名称 | 说明 | 回调参数 | 实现 |

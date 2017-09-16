@@ -72,8 +72,8 @@
   import utils from '../../../../common/utils';
 
   const api = require('../../../../api/transcode');
-  const config = require('./config');
-  const common = require('./common');
+  const config = require('../config');
+  const common = require('../common');
 
   export default {
     components: {
@@ -163,7 +163,7 @@
           me.listTask(true, () => {
             me.autoRefreshList();
           });
-        }, 3000);
+        }, 5000);
 
         return false;
       },
