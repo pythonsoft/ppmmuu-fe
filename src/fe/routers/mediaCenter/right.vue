@@ -269,7 +269,7 @@
       },
       downloadListConfirm(templateInfo) {
         this.templateInfo = templateInfo || {};
-        if(!isEmptyObject(templateInfo)) {
+        if (!isEmptyObject(templateInfo)) {
           this.download();
         }
       },
@@ -290,7 +290,7 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id,
+          templateId: this.templateInfo._id
         };
 
         jobAPI.download(param).then((res) => {

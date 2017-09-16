@@ -300,7 +300,7 @@
         const me = this;
 
         const param = {
-          jobId: this.table.currentRowInfo.taskId,
+          jobId: this.table.currentRowInfo.taskId
         };
 
         if (!param.jobId) {

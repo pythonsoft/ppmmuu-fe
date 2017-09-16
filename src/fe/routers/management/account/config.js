@@ -25,6 +25,7 @@ export const MENU_CONFIG = {
   ],
   1: [
     { command: 'delete', name: '删除部门' },
+    { command: 'newDepartment', name: '新建部门' },
     { command: 'new', name: '新建小组' },
     { command: 'permission', name: '权限信息' },
     { command: 'edit', name: '属性' }

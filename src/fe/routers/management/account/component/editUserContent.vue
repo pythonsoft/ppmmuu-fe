@@ -32,6 +32,13 @@
         <div class="group-input"><fj-input v-model="groupName" :readonly="true"></fj-input></div>
         <fj-button @click.stop.prevent="addGroupDialogVisible=true">修改</fj-button>
       </fj-form-item>
+      <fj-form-item label="有效日期" prop="expiredTime">
+        <fj-date-picker
+                type="date"
+                placeholder="请选择有效日期"
+                v-model="formData.expiredTime"
+        ></fj-date-picker>
+      </fj-form-item>
       <fj-form-item label="备注">
         <fj-input type="textarea" :rows="5" v-model="formData.description"></fj-input>
       </fj-form-item>
@@ -58,7 +65,8 @@
     props: {
       type: String,
       companyId: String,
-      id: String
+      id: String,
+      visible: Boolean
     },
     data() {
       return {
@@ -72,7 +80,8 @@
           password: '',
           departmentId: '',
           teamId: '',
-          description: ''
+          description: '',
+          expiredTime: new Date('9999 23:59:59')
         },
         rules: {
           email: [
@@ -123,8 +132,14 @@
             const key = keys[i];
             this.formData[key] = '';
           }
+          this.formData.expiredTime = new Date('9999 23:59:59');
           this.groupName = '';
         } else {
+          this.initEditUser();
+        }
+      },
+      visible(val) {
+        if (val && this.type === 'edit') {
           this.initEditUser();
         }
       }
@@ -143,6 +158,7 @@
             }
             this.formData.departmentId = response.data.department._id;
             this.formData.teamId = response.data.team._id;
+            this.formData.expiredTime = new Date(response.data.expiredTime);
             this.groupName = `${response.data.department.name} / ${response.data.team.name}`;
           })
           .catch((error) => {

@@ -50,7 +50,7 @@
         { text: '转码任务', index: 'transcode', route: 'transcode' },
         { text: '下载任务', index: 'download', route: 'download' },
         { text: '回迁任务', index: 'backmoving', route: 'backmoving' },
-        { text: '模板管理', index: 'templateManager', route: 'templateManager' },
+        { text: '模板管理', index: 'templateManager', route: 'templateManager' }
       ] },
     { text: '设置', index: 'configuration', route: 'configuration' },
     { title: '帮助',

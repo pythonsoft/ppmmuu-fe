@@ -23,7 +23,9 @@
 </template>
 <script>
   const api = require('../../../../api/storage');
+
   import utils from '../../../../common/utils';
+
   const config = require('../config');
 
   export default {
@@ -32,12 +34,12 @@
       visible: {
         type: Boolean,
         default: false
-      },
+      }
     },
     data() {
       return {
         tableData: [],
-        currentRow: {},
+        currentRow: {}
       };
     },
     watch: {
@@ -62,8 +64,8 @@
             me.tableData = res.data.docs;
             me.total = res.data.total;
           }).catch((error) => {
-          me.$message.error(error);
-        });
+            me.$message.error(error);
+          });
 
         return false;
       },

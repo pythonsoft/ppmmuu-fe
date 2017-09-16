@@ -55,7 +55,7 @@
       'script-dialog-view': scriptDialogView
     },
     created() {
-      if(this.type !== 'add') {
+      if (this.type !== 'add') {
         this.formData.id = this.templateInfo._id;
         this.formData.name = this.templateInfo.name;
         this.formData.bucketId = this.templateInfo.details.bucketId;
@@ -71,7 +71,7 @@
           id: '',
           name: '',
           bucketId: '',
-          script: '',
+          script: ''
         },
         isBtnLoading: false,
         rules: {
@@ -83,9 +83,9 @@
           ],
           script: [
             { required: true, message: '请填写脚本' }
-          ],
-        },
-      }
+          ]
+        }
+      };
     },
     methods: {
       initParam() {
@@ -93,7 +93,7 @@
           id: '',
           name: '',
           bucketId: '',
-          script: '',
+          script: ''
         };
       },
       close() {
@@ -140,5 +140,5 @@
         this.formData.bucketId = val._id;
       }
     }
-  }
+  };
 </script>

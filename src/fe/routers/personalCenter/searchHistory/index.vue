@@ -75,9 +75,7 @@
           });
       },
       deleteHistory() {
-        const ids = this.selectedItems.map((item) => {
-          return item._id;
-        });
+        const ids = this.selectedItems.map(item => item._id);
         userAPI.removeSearchHistory({ ids: ids.join(',') })
           .then((response) => {
             this.updateList();
