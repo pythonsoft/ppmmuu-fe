@@ -13,6 +13,14 @@
             @keydown.native.enter.prevent="searchClick"
           ></fj-input>
         </div>
+        <div class="media-search">
+          <fj-input
+                  placeholder="请输入houseNo"
+                  size="small"
+                  theme="fill"
+                  v-model="houseNo"
+          ></fj-input>
+        </div>
         <template v-for="config in searchSelectConfigs">
           <div class="media-category">
             <h4>{{config.label}}</h4>
@@ -130,7 +138,8 @@
   import Vue from 'vue';
   import { getTimeByStr, formatDuration, getPosition, appendToBody, getStringLength } from '../../common/utils';
   import './index.css';
-  import { getTimeRange, getQuery, getSearchNotice } from './config';
+  import { getTimeRange, getQuery, getSearchNotice, getOrder, ORDER_OPTIONS,
+          HHIGHLIGHT_FIELDS1, HHIGHLIGHT_FIELDS2, FILETR_FIELDS } from './config';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
@@ -145,18 +154,12 @@
       'grid-list-view': gridAndList
     },
     data() {
-      const ORDER_OPTIONS = [
-        { value: 'order1', label: '关联度排序' },
-        { value: 'order2', label: '新闻时间由远到近' },
-        { value: 'order3', label: '新闻时间由近到远' },
-        { value: 'order4', label: '首播时间由近到远' },
-        { value: 'order5', label: '首播时间由远到近' }
-      ];
       return {
         ORDER_OPTIONS: ORDER_OPTIONS,
         orderVal: 'order1',
         defaultRoute: '/',
         keyword: '',
+        houseNo: '',
         searchSelectConfigs: [],
         searchRadioboxConfigs: [],
         pageSize: 24,
@@ -173,7 +176,7 @@
         timeId: '',
 
         viewType: 'grid',
-        fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03',
+        fl: FILETR_FIELDS,
 
         datetimerange1: [],
         datetimerange2: [],
@@ -188,6 +191,11 @@
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.getSeachConfigs();
       this.getDefaultMedia();
+    },
+    watch: {
+      orderVal(val){
+        this.getMediaList();
+      }
     },
     methods: {
       getDefaultMedia() {
@@ -286,6 +294,14 @@
           }
         }
 
+        if (me.houseNo) {
+          if (q) {
+            q += ` AND f_str_187:${me.houseNo}`;
+          } else {
+            q = `f_str_187:${me.houseNo}`;
+          }
+        }
+
         if (f_date_36) {
           if (q) {
             q += ` AND f_date_36:${f_date_36}`;
@@ -294,14 +310,16 @@
           }
         }
 
+        const sort = getOrder(this.orderVal);
+
         const options = {
           q: q,
           fl: this.fl,
-          sort: 'last_modify desc',
+          sort: sort,
           start: start,
           hl: 'off',
           indent: 'off',
-          'hl.fl': 'name,program_name_cn,program_name_en,f_str_03',
+          'hl.fl': HHIGHLIGHT_FIELDS1,
           rows: this.pageSize
         };
 
@@ -311,30 +329,35 @@
           const query = [];
 
           for (let i = 0, len = keywords.length; i < len; i++) {
-            query.push(`OR ${keywords[i]}:${val}`);
+            query.push(` OR ${keywords[i]}:${val}`);
           }
 
           return query.join(' ');
         };
 
         if (this.keyword) {
-          options.q = q;
+          const fullText = sort ? this.keyword : (this.keyword + hit(this.keyword));
           options.hl = 'on';
           options.indent = 'on';
           if (q) {
-            q += ` AND full_text:${this.keyword} ${hit(this.keyword)}`;
+            q += ` AND (full_text:${fullText})`;
             for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
               if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
-                options['hl.fl'] = 'program_type,name,program_name_cn,program_name_en,f_str_03';
+                options['hl.fl'] = HHIGHLIGHT_FIELDS1;
               }
             }
           } else {
-            q = `full_text:${this.keyword} ${hit(this.keyword)}`;
-            options.q = q;
+            q = `(full_text:${fullText})`;
           }
         }
 
-        options.q += ' AND publish_status:1';
+        if(q){
+          q += ' AND publish_status:1';
+        }else{
+          q = 'publish_status:1';
+        }
+
+        options.q = q;
 
         api.solrSearch({ params: options }, me).then((res) => {
           me.items = res.data.docs;
