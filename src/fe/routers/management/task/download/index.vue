@@ -12,12 +12,12 @@
           ></fj-option>
         </fj-select>
       </div>
-      <div class="layout-four-row-search-item" :style="{ width: '190px' }">
-        <fj-input size="small" :rows="1" placeholder="请输入任务名称" v-model="formData.keyword"></fj-input>
-      </div>
-      <div class="layout-four-row-search-item">
-        <fj-button type="primary" size="small" @click="handleClickSearch">查询</fj-button>
-      </div>
+      <!--<div class="layout-four-row-search-item" :style="{ width: '190px' }">-->
+        <!--<fj-input size="small" :rows="1" placeholder="请输入任务名称" v-model="formData.keyword"></fj-input>-->
+      <!--</div>-->
+      <!--<div class="layout-four-row-search-item">-->
+        <!--<fj-button type="primary" size="small" @click="handleClickSearch">查询</fj-button>-->
+      <!--</div>-->
     </template>
     <template slot="operation">
       <span class="layout-btn-mini-margin">
@@ -44,6 +44,9 @@
           </template>
         </fj-table-column>
         <fj-table-column prop="fileName" label="名称"></fj-table-column>
+        <fj-table-column prop="userName" width="140" label="用户名">
+          <template scope="props">{{ props.row.userName || '-' }}</template>
+        </fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
@@ -101,7 +104,7 @@
         stopDisable: true,
         restartDisable: true,
 
-        status: config.getConfig('STATUS'),
+        status: config.getConfig('DOWNLOAD_STATUS'),
         formData: {
           keyword: '',
           status: '',
@@ -162,7 +165,7 @@
         this.restartDisable = !common.isTaskCanRestart(current.status);
       },
       getStatus(v) {
-        return config.getConfig('STATUS', v);
+        return config.getConfig('DOWNLOAD_STATUS', v);
       },
       formatType(v) {
         return v;

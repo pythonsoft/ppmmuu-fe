@@ -1,6 +1,6 @@
 <template>
   <layout-four-row>
-    <template slot="search-left">转码任务</template>
+    <template slot="search-left">下载任务</template>
     <template slot="search-right">
       <div class="layout-four-row-search-item" :style="{ width: '88px' }">
         <fj-select size="small" placeholder="请选择" v-model="formData.status">
@@ -12,12 +12,12 @@
           ></fj-option>
         </fj-select>
       </div>
-      <div class="layout-four-row-search-item" :style="{ width: '190px' }">
-        <fj-input size="small" :rows="1" placeholder="请输入任务名称" v-model="formData.keyword"></fj-input>
-      </div>
-      <div class="layout-four-row-search-item">
-        <fj-button size="small" type="primary" @click="handleClickSearch">查询</fj-button>
-      </div>
+      <!--<div class="layout-four-row-search-item" :style="{ width: '190px' }">-->
+        <!--<fj-input size="small" :rows="1" placeholder="请输入任务名称" v-model="formData.keyword"></fj-input>-->
+      <!--</div>-->
+      <!--<div class="layout-four-row-search-item">-->
+        <!--<fj-button type="primary" size="small" @click="handleClickSearch">查询</fj-button>-->
+      <!--</div>-->
     </template>
     <template slot="operation">
       <span class="layout-btn-mini-margin">
@@ -27,9 +27,12 @@
         <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
       </span>
       <span class="layout-btn-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
       </span>
     </template>
@@ -40,7 +43,7 @@
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
-        <fj-table-column prop="filePath" label="名称"></fj-table-column>
+        <fj-table-column prop="fileName" label="名称"></fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
@@ -63,6 +66,18 @@
       :visible.sync="childTaskDialogVisible"
     ></child-task-slide-dialog-view>
 
+    <fj-dialog
+      title="提示"
+      :visible.sync="dialog.visible"
+      @close="dialog.visible=false"
+    >
+      <span>确定要删除此任务 {{ table.currentRowInfo.fileName }} 吗?</span>
+      <div slot="footer">
+        <fj-button @click="dialog.visible=false">取消</fj-button>
+        <fj-button type="primary" @click="dialogConfirm">确定</fj-button>
+      </div>
+    </fj-dialog>
+
   </layout-four-row>
 </template>
 <script>
@@ -71,9 +86,9 @@
   import childTaskDialogView from './childTaskDialog';
   import utils from '../../../common/utils';
 
-  const api = require('../../../api/transcode');
-  const config = require('./config');
-  const common = require('./common');
+  const api = require('../../../api/user');
+  const config = require('../../management/task/config');
+  const common = require('../../management/task/common');
 
   export default {
     components: {
@@ -86,12 +101,17 @@
         stopDisable: true,
         restartDisable: true,
 
-        status: config.getConfig('STATUS'),
+        status: config.getConfig('DOWNLOAD_STATUS'),
         formData: {
           keyword: '',
           status: '',
           currentStep: ''
         },
+
+        dialog: {
+          visible: false
+        },
+
         table: {
           currentRowInfo: {}
         },
@@ -142,7 +162,7 @@
         this.restartDisable = !common.isTaskCanRestart(current.status);
       },
       getStatus(v) {
-        return config.getConfig('STATUS', v);
+        return config.getConfig('DOWNLOAD_STATUS', v);
       },
       formatType(v) {
         return v;
@@ -163,9 +183,15 @@
           me.listTask(true, () => {
             me.autoRefreshList();
           });
-        }, 3000);
+        }, 5000);
 
         return false;
+      },
+      deleteClick() {
+        this.dialog.visible = true;
+      },
+      dialogConfirm() {
+        this.deleteJob();
       },
       /* api */
       listTask(notNeedProcess, completeFn) {
@@ -184,7 +210,42 @@
           param.currentStep = this.formData.currentStep;
         }
 
-        api.list({ params: param }, notNeedProcess ? '' : me).then((res) => {
+        /**
+        const mock = {
+          "status":"0",
+          "data":{
+            "docs":[
+              {
+                "id":"b850529d-43fa-47e8-9502-97fad80ad775",
+                "tasklist":[
+                  {
+                    "taskName":"下载",
+                    "taskType":"media_download",
+                    "taskId":"59ae6ef758b26b017acc2eb2",
+                    "status":"dealing",
+                    "position":0,
+                    "createParams":"{\"objectid\":\"5A73A94C-BA88-5995-4459-4B2F551B5962\",\"inpoint\":0,\"outpoint\":412435,\"fileName\":\"testA.mp4\"}",
+                    "queryParams":"jobid\u003d59ae6ef758b26b017acc2eb2",
+                    "serialNO":0,
+                    "errMsg":"can not stop,task not support",
+                    "filePath":"/root/media/2017/09/05/172545447testA.mp4",
+                    "fileName":"172545447testA.mp4"}],
+                "status":"dealing",
+                "currentStep":0,
+                "filePath":"/root/media/2017/09/05/172545447testA.mp4",
+                "fileName":"172545447testA.mp4",
+                "createTime":"2017-09-05T09:25:43.607Z",
+                "lastModify":"2017-09-07T08:09:33.727Z"}],
+            "page":1,
+            "pageCount":1,
+            "pageSize":20,
+            "total":1
+          },
+          "statusInfo":{}
+        };
+         **/
+
+        api.listJob({ params: param }, notNeedProcess ? '' : me).then((res) => {
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
@@ -200,10 +261,27 @@
         const me = this;
 
         const param = {
-          parentId: this.table.currentRowInfo.id
+          jobId: this.table.currentRowInfo.id
         };
 
-        api.stop({ params: param }).then((res) => {
+        api.stopJob({ params: param }).then((res) => {
+          me.$message.success('任务已成功停止');
+          me.listTask();
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
+      },
+
+      deleteJob() {
+        const me = this;
+
+        const param = {
+          jobId: this.table.currentRowInfo.id
+        };
+
+        api.deleteJob({ params: param }).then((res) => {
           me.$message.success('任务已成功停止');
           me.listTask();
         }).catch((error) => {
@@ -217,10 +295,10 @@
         const me = this;
 
         const param = {
-          parentId: this.table.currentRowInfo.id
+          jobId: this.table.currentRowInfo.id
         };
 
-        api.restart({ params: param }).then((res) => {
+        api.restartJob({ params: param }).then((res) => {
           me.$message.success('任务已成功重启');
           me.listTask();
         }).catch((error) => {
