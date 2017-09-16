@@ -48,7 +48,11 @@
       @close="handleChildTaskClose">
       <fj-table style="font-size: 12px;" :data="childTaskData" name="table" ref="table">
         <fj-table-column prop="key" width="100" label="key"></fj-table-column>
-        <fj-table-column prop="value" label="value"></fj-table-column>
+        <fj-table-column prop="value" label="value">
+          <template scope="props">
+            <div>{{ props.row.value }}</div>
+          </template>
+        </fj-table-column>
       </fj-table>
     </fj-slide-dialog>
 
