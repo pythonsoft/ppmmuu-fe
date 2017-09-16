@@ -25,7 +25,7 @@
     <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
       <fj-table-column prop="_type" width="100" align="center" label="类型">
         <template scope="props">
-          {{ getCurrentStepConfig(props.row._type).text }}
+          {{ getTaskType(props.row._type).text }}
         </template>
       </fj-table-column>
       <fj-table-column prop="status" width="50" align="center" label="状态">
@@ -33,15 +33,10 @@
           <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
         </template>
       </fj-table-column>
-      <fj-table-column prop="_path" width="220" label="路径">
-        <template scope="props">
-          <div class="task-wrap">{{ props.row._path }}</div>
-        </template>
-      </fj-table-column>
-      <fj-table-column prop="_totalTime" label="时长"></fj-table-column>
-      <fj-table-column prop="processRate" width="80" label="进度(%)" align="center"></fj-table-column>
+      <fj-table-column prop="filePath" width="220" label="路径"></fj-table-column>
+      <fj-table-column prop="position" width="80" label="进度(%)" align="center"></fj-table-column>
       <fj-table-column prop="createTime" width="140" align="center" label="创建时间">
-        <template scope="props">{{ props.row.createTime | formatTime }}</template>
+        <template scope="props">{{ parentInfo.createTime | formatTime }}</template>
       </fj-table-column>
     </fj-table>
 
@@ -63,9 +58,9 @@
 <script>
   import utils from '../../../common/utils';
 
-  const api = require('../../../api/transcode');
-  const config = require('./config');
-  const common = require('./common');
+  const api = require('../../../api/user');
+  const config = require('../../management/task/config');
+  const common = require('../../management/task/common');
 
   export default {
     name: 'engineBaseSlideDialogView',
@@ -171,28 +166,34 @@
 
       },
       getStatus(v) {
-        return config.getConfig('STATUS', v);
+        return config.getConfig('DOWNLOAD_STATUS', v);
       },
-      getCurrentStepConfig(v) {
-        return config.getConfig('CURRENT_STEP', v);
+      getTaskType(v) {
+        return config.getConfig('TASK_TYPE', v);
       },
       formatData(data) {
-        const order = data.order;
-        const arr = [];
-        let temp = null;
+        /*
+        *
+        * taskName: "下载", taskType: "media_download", taskId: "59ae6ef758b26b017acc2eb2", status: "dealing",…}
+          createParams: "{"objectid":"5A73A94C-BA88-5995-4459-4B2F551B5962","inpoint":0,"outpoint":412435,"fileName":"testA.mp4"}"
+          errMsg: "can not stop,task not support"
+          fileName: "172545447testA.mp4"
+          filePath: "/root/media/2017/09/05/172545447testA.mp4"
+          position: 0
+          queryParams: "jobid=59ae6ef758b26b017acc2eb2"
+          serialNO: 0
+          status: "dealing"
+          taskId: "59ae6ef758b26b017acc2eb2"
+          taskName: "下载"
+          taskType: "media_download"
+        *
+        * */
 
-        for (let i = 0, len = order.length; i < len; i++) {
-          temp = data[order[i]];
-          if (!temp) { continue; }
-          for (let j = 0, l = temp.length; j < l; j++) {
-            temp[j]._type = order[i];
-            temp[j]._path = temp[j].filePath || temp[j].orgFilePath || temp[j].mergerdFilePath || '-';
-            temp[j]._totalTime = temp[j].totalTime ? utils.formatDuration(temp[j].totalTime) : '-';
-            arr.push(temp[j]);
-          }
+        for (let i = 0, len = data.length; i < len; i++) {
+          data[i]._type = data[i].taskType;
         }
 
-        return arr;
+        return data;
       },
 
       stopClick() {
@@ -208,7 +209,7 @@
       detailClick() {
         const childTaskData = [];
         const keys = Object.keys(this.table.currentRowInfo);
-        this.childTaskTitle = this.getCurrentStepConfig(this.table.currentRowInfo._type).text;
+        this.childTaskTitle = this.getTaskType(this.table.currentRowInfo._type).text;
         let tempValue = '';
 
         for (let i = 0, len = keys.length; i < len; i++) {
@@ -236,7 +237,7 @@
           me.listChildTask(true, () => {
             me.autoRefreshList();
           });
-        }, 3000);
+        }, 5000);
 
         return false;
       },
@@ -245,15 +246,16 @@
         const me = this;
 
         const param = {
-          parentId: this.parentInfo.id
+          jobId: this.parentInfo.id
         };
 
-        api.listChildTask({ params: param }, notNeedProcess ? '' : me).then((res) => {
+        api.queryJob({ params: param }, notNeedProcess ? '' : me).then((res) => {
           if (!notNeedProcess) {
             me.refreshBtn.loading = false;
             me.resetBtnStatus();
           }
-          me.tableData = me.formatData(res.data);
+
+          me.tableData = me.formatData(res.data.tasklist);
           completeFn && completeFn();
         }).catch((error) => {
           if (!notNeedProcess) {
@@ -267,12 +269,10 @@
         const me = this;
 
         const param = {
-          parentId: this.parentInfo.id,
-          childTaskId: this.table.currentRowInfo.id,
-          type: this.table.currentRowInfo._type
+          jobId: this.table.currentRowInfo.taskId
         };
 
-        if (!param.childTaskId) {
+        if (!param.jobId) {
           this.$message.error('请输入子任务id');
           return false;
         }
@@ -280,7 +280,7 @@
         if (this.stopBtn.loading) { return false; }
         this.stopBtn.loading = true;
 
-        api.stop({ params: param }).then((res) => {
+        api.stopJob({ params: param }).then((res) => {
           me.$message.success('任务已成功停止');
           me.stopBtn.loading = false;
           me.listChildTask();
@@ -296,12 +296,10 @@
         const me = this;
 
         const param = {
-          parentId: this.parentInfo.id,
-          childTaskId: this.table.currentRowInfo.id,
-          type: this.table.currentRowInfo._type
+          jobId: this.table.currentRowInfo.taskId,
         };
 
-        if (!param.childTaskId) {
+        if (!param.jobId) {
           this.$message.error('请输入子任务id');
           return false;
         }
@@ -309,7 +307,7 @@
         if (this.restartBtn.loading) { return false; }
         this.restartBtn.loading = true;
 
-        api.restart({ params: param }).then((res) => {
+        api.restartJob({ params: param }).then((res) => {
           me.$message.success('任务已成功重启');
           me.restartBtn.loading = false;
           me.listChildTask();
