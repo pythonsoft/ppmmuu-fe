@@ -29,6 +29,7 @@
         <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showUserStatusDialog('enable')">启用</fj-button>
         <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showUserStatusDialog('disabled')">禁用</fj-button>
         <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showUserStatusDialog('delete')">删除</fj-button>
+        <fj-button size="mini" type="primary" :disabled="selectedItems.length!=1" @click="showBindMediaExpressDialog">绑定快传账户</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -58,8 +59,16 @@
           :type="editUserDialogType"
           :companyId="companyId"
           :id="editUserDialogId"
+          :visible.sync="editUserDialogVisible"
           @close="editUserDialogVisible = false"
           @updateList="updateList"></edit-user-content>
+    </fj-slide-dialog>
+    <fj-slide-dialog
+            title="绑定快传账户"
+            :visible.sync="bindMediaExpressDialogVisible">
+            <bind-media-express
+              :id="bindMediaExpressDialogId"
+              @cancel="bindMediaExpressDialogVisible=false"></bind-media-express>
     </fj-slide-dialog>
     <fj-slide-dialog
       title="修改权限信息"
@@ -91,6 +100,7 @@
   import FourRowLayoutRightContent from '../../../../component/layout/fourRowLayoutRightContent';
   import EditUserContent from './editUserContent';
   import PermissionContent from './permissionContent';
+  import BindMediaExpress from './bindMediaExpress';
   import groupAPI from '../../../../api/group';
   import { formatQuery } from '../../../../common/utils';
   import AddGroup from '../../role/searchAddGroup';
@@ -122,7 +132,9 @@
         editUserStatusDialogTitle: '删除成员',
         editUserStatusIds: [],
         isEditUserStatusBtnLoading: false,
-        editUserStatusFn: () => {}
+        editUserStatusFn: () => {},
+        bindMediaExpressDialogVisible: false,
+        bindMediaExpressDialogId: ''
       };
     },
     created() {
@@ -207,6 +219,10 @@
           selectedItem.company._id
         ];
       },
+      showBindMediaExpressDialog() {
+        this.bindMediaExpressDialogVisible = true;
+        this.bindMediaExpressDialogId = this.selectedItems[0]._id;
+      },
       showUserStatusDialog(type) {
         this.editUserStatusDialogVisible = true;
         this.editUserStatusDialogTitle = this.EDIT_USER_STATUS_CONFIG[type].text;
@@ -265,7 +281,8 @@
       FourRowLayoutRightContent,
       EditUserContent,
       PermissionContent,
-      AddGroup
+      AddGroup,
+      BindMediaExpress
     }
   };
 </script>

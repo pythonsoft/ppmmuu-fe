@@ -98,6 +98,10 @@
           case 'delete':
             this.handleOpenDeleteDialog(title, node.info._id);
             break;
+          case 'newDepartment':
+            title = this.TYPE_CONFIG[this.APPENDCHILD_CONFIG[0]];
+            this.handleOpenAddDialog(this.APPENDCHILD_CONFIG[0], title, node.info._id);
+            break;
           case 'new':
             title = this.TYPE_CONFIG[childType];
             this.handleOpenAddDialog(childType, title, node.info._id);
@@ -114,10 +118,9 @@
       },
       listGroup(treeNode, cb) {
         const requestData = {
-          type: '0'
+          parentId: ''
         };
         if (treeNode.info) {
-          requestData.type = this.CHILD_NODE_CONFIG[treeNode.info.type];
           requestData.parentId = treeNode.info._id;
         }
 

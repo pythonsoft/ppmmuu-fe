@@ -97,6 +97,7 @@
   import Player from '../../mediaCenter/components/player';
   import { formatQuery } from '../../../common/utils';
   import { getTitle, getThumb } from '../../mediaCenter/common';
+
   const jobAPI = require('../../../api/job');
   const mediaAPI = require('../../../api/media');
   const ivideoAPI = require('../../../api/ivideo');
@@ -132,7 +133,7 @@
         templateInfo: {},
         fileInfo: {},
         downloadDialogDisplay: false
-      }
+      };
     },
     watch: {
       rightBoxStatus(val) {
@@ -200,9 +201,7 @@
         userAPI.getWatchHistory(formatQuery(data, true))
           .then((response) => {
             const responseData = response.data;
-            const tempList = responseData.docs.map((item) => {
-              return Object.assign(item.videoContent, { _id: item._id });
-            });
+            const tempList = responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id }));
             this.items = tempList;
           })
           .catch((error) => {
@@ -229,29 +228,29 @@
           this.url = url;
         }, this);
       },
-//      download(info) {
-//        const param = {
-//          objectid: this.objectId,
-//          inpoint: this.streamInfo.INPOINT,
-//          outpoint: this.streamInfo.OUTPOINT,
-//          fileName: this.streamInfo.FILENAME
-//        };
-//        if (info && !isEmptyObject(info)) {
-//          param.objectid = info.OBJECTID;
-//          param.fileName = info.FILENAME;
-//          param.inpoint = info.INPOINT;
-//          param.outpoint = info.OUTPOINT;
-//        }
-//
-//        jobAPI.download(param).then((res) => {
-//          this.$message.success('正在下载文件，请到"任务"查看详细情况');
-//        }).catch((error) => {
-//          this.$message.error(error);
-//        });
-//      },
+      //      download(info) {
+      //        const param = {
+      //          objectid: this.objectId,
+      //          inpoint: this.streamInfo.INPOINT,
+      //          outpoint: this.streamInfo.OUTPOINT,
+      //          fileName: this.streamInfo.FILENAME
+      //        };
+      //        if (info && !isEmptyObject(info)) {
+      //          param.objectid = info.OBJECTID;
+      //          param.fileName = info.FILENAME;
+      //          param.inpoint = info.INPOINT;
+      //          param.outpoint = info.OUTPOINT;
+      //        }
+      //
+      //        jobAPI.download(param).then((res) => {
+      //          this.$message.success('正在下载文件，请到"任务"查看详细情况');
+      //        }).catch((error) => {
+      //          this.$message.error(error);
+      //        });
+      //      },
       downloadListConfirm(templateInfo) {
         this.templateInfo = templateInfo || {};
-        if(!isEmptyObject(templateInfo)) {
+        if (!isEmptyObject(templateInfo)) {
           this.download();
         }
       },
@@ -272,7 +271,7 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id,
+          templateId: this.templateInfo._id
         };
 
         jobAPI.download(param).then((res) => {
@@ -309,7 +308,7 @@
       Player,
       MoreView,
       GridListView,
-      'download-list-view': downloadListView,
+      'download-list-view': downloadListView
     }
   };
 </script>

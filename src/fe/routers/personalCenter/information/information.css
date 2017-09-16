@@ -50,3 +50,7 @@
 .personal-information-btn-margin {
   margin-left: 10px;
 }
+
+.personal-information-default-photo {
+  background: #26B4D2 url(../../../img/avatar.png);
+}

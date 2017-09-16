@@ -49,7 +49,7 @@
       visible: {
         type: Boolean,
         default: false
-      },
+      }
     },
     data() {
       return {
@@ -60,7 +60,7 @@
           { name: 'paths', description: '可以全到当前存储区下所有的路径信息，如：${paths.路径ID}' },
           { name: 'year', description: '脚本运行时的年份，如:2017' },
           { name: 'month', description: '脚本运行时的月份，如:09' },
-          { name: 'day', description: '脚本运行时的日期，如:15' },
+          { name: 'day', description: '脚本运行时的日期，如:15' }
         ]
       };
     },
@@ -73,7 +73,7 @@
     methods: {
       close() {
         this.$emit('update:visible', false);
-      },
+      }
     }
   };
 </script>

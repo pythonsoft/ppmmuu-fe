@@ -3,7 +3,7 @@ const utils = require('../../../common/utils');
 const config = {};
 const method = {};
 
-//转码
+// 转码
 config.CURRENT_STEP = {
   all: { text: '全部', value: '', key: 'all' },
   generateIndex: { text: '帧索引创建', value: 'generateIndex', key: 'generateIndex' },
@@ -14,7 +14,7 @@ config.CURRENT_STEP = {
 
 // created, //创建 dealing, //处理中 error,//错误 complete //完成
 
-//转码任务状态
+// 转码任务状态
 config.STATUS = {
   all: { text: '全部', value: '', key: 'all' },
   created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
@@ -26,7 +26,7 @@ config.STATUS = {
   complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' }
 };
 
-//下载任务状态
+// 下载任务状态
 config.DOWNLOAD_STATUS = {
   all: { text: '全部', value: '', key: 'all' },
   created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
@@ -36,7 +36,7 @@ config.DOWNLOAD_STATUS = {
   restart: { text: '重启中', value: 'restart', key: 'restart', css: 'task-status-base task-status-created' },
   error: { text: '错误', value: 'error', key: 'error', css: 'task-status-base task-status-error' },
   complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' },
-  delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' },
+  delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' }
 };
 
 config.PERMISSION = {
@@ -77,7 +77,7 @@ config.FIELD_NAME = {
 };
 
 config.NODE_TEMPLATE = {
-  DOWNLOAD: { text: '下载模板', value: '1', key: 'DOWNLOAD' },
+  DOWNLOAD: { text: '下载模板', value: '1', key: 'DOWNLOAD' }
 };
 
 config.TEMPLATE_TYPE = Object.assign({
