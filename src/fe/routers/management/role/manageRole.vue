@@ -10,7 +10,7 @@
           <fj-button type="danger" size="mini" @click="manageSearchDeleteClick" v-bind:disabled="manageSearchDeleteDisabled">移除</fj-button>
         </div>
         <div class="manage-search">
-          <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="搜索" @on-icon-click="manageSearchClick" @keydown.native.enter.prevent="manageSearchClick"></fj-input>
+          <fj-input placeholder="输入人名/组织名/小组名" size="mini" v-model="keyword2" icon="icon-search input-search-icon" @on-icon-click="manageSearchClick" @keydown.native.enter.prevent="manageSearchClick"></fj-input>
         </div>
         <div v-if="searchItems.length" class="manage-search-content">
           <fj-table :data="searchItems" name="table3" ref="table3" @current-change="manageSearchHandleCurrentChange" :showThead=false highlight-current-row>
@@ -159,6 +159,7 @@
         return rs;
       },
       addOwner(row) {
+        row = row.info? row.info : role;
         const type = row.type || '3';
         const postData = {
           type: type,

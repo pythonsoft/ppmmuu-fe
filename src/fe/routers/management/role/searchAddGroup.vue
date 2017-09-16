@@ -93,6 +93,7 @@
         if (this.currentNodeParent) {
           this.currentNodeParent._id = this.currentNodeParent.id;
         }
+        console.log(this.currentNode);
         this.$emit('add-owner', this.currentNode, this.currentNodeParent);
         return true;
       },
@@ -101,7 +102,6 @@
         if (!this.visible) { return false; }
 
         const query = {
-          type: (node && node.info) ? this.CHILD_NODE_CONFIG[node.info.type] : this.type,
           parentId: node.id ? node.id : (this.parentId || '')
         };
 
