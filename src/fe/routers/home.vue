@@ -20,12 +20,6 @@
       showMenuIndex: []
     },
     created() {
-      const query = window.location.href.replace(/http[s]*:\/\//g, '').replace(window.location.host, '');
-      const paths = query.split('/');
-      let name = paths[paths.length - 1];
-
-      name = (name === '/' || !name) ? 'mediaCenter' : name;
-
       let showMenuIndex = this.$route.params.menu;
 
       if (showMenuIndex) {
@@ -35,8 +29,6 @@
         showMenuIndex = localStorage.getItem('menu');
         this.showMenuIndex = showMenuIndex ? showMenuIndex.split(',') : [];
       }
-
-      this.$router.push({ name: name });
     },
     data() {
       return {
