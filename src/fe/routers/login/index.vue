@@ -92,7 +92,8 @@
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
-            me.$router.push({ name: 'mediaCenter', params: { menu: res.data.menu } });
+            const index = res.data.menu.indexOf('management') !== -1 ? 'management' : 'mediaCenter';
+            me.$router.push({ name: index, params: { menu: res.data.menu, index } });
           })
           .catch((error) => {
             me.isBtnLoading = false;

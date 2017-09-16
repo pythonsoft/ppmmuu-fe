@@ -166,7 +166,7 @@
 
       },
       getStatus(v) {
-        return config.getConfig('STATUS', v);
+        return config.getConfig('DOWNLOAD_STATUS', v);
       },
       getTaskType(v) {
         return config.getConfig('TASK_TYPE', v);
