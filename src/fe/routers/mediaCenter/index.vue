@@ -172,7 +172,7 @@
         itemSize: { width: 198, height: 180 },
         timeId: '',
 
-        viewType: 'grid',
+        viewType: 'list',
         fl: 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03',
 
         datetimerange1: [],
