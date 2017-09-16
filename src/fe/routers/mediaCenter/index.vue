@@ -13,12 +13,16 @@
             @keydown.native.enter.prevent="searchClick"
           ></fj-input>
         </div>
-        <div class="media-search">
+        <div class="media-category">
+          <h4>houseNo</h4>
           <fj-input
                   placeholder="请输入houseNo"
                   size="small"
                   theme="fill"
                   v-model="houseNo"
+                  icon="icon-search input-search-icon"
+                  @on-icon-click="searchHouseNoClick"
+                  @keydown.native.enter.prevent="searchHouseNoClick"
           ></fj-input>
         </div>
         <template v-for="config in searchSelectConfigs">
@@ -365,6 +369,45 @@
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
         }).catch((error) => {
           me.$message.error(error);
+        });
+      },
+      searchHouseNoClick(){
+        const me = this;
+        this.listType = 'normal';
+        if(!me.houseNo){
+          return false;
+        }
+        let searchNotice = `检索词: ${this.keyword}`;
+        const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
+        if (this.keyword && searchChoose) {
+          searchNotice += `,${searchChoose}`;
+        } else {
+          searchNotice += searchChoose;
+        }
+        const noticeLength = getStringLength(searchNotice);
+        if (noticeLength > 15) {
+          searchNotice = searchNotice.substr(0, 15);
+          searchNotice += '...';
+        } else {
+          searchNotice += '   ';
+        }
+        const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
+        const options = {
+          q: `f_str_187:${me.houseNo}`,
+          fl: this.fl,
+          sort: 'last_modify desc',
+          start: start,
+          hl: 'off',
+          indent: 'off',
+          'hl.fl': HHIGHLIGHT_FIELDS1,
+          rows: this.pageSize
+        };
+        api.solrSearch({ params: options }, me).then((res) => {
+          me.items = res.data.docs;
+          me.total = res.data.numFound;
+          me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
+        }).catch((error) => {
+            me.$message.error(error);
         });
       },
       handleCurrentPageChange(page) {
