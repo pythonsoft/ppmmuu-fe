@@ -34,7 +34,7 @@
       </fj-form-item>
       <fj-form-item label="有效日期" prop="expiredTime">
         <fj-date-picker
-                type="datetime"
+                type="date"
                 placeholder="请选择有效日期"
                 v-model="formData.expiredTime"
         ></fj-date-picker>
@@ -65,7 +65,8 @@
     props: {
       type: String,
       companyId: String,
-      id: String
+      id: String,
+      visible: Boolean
     },
     data() {
       return {
@@ -131,9 +132,14 @@
             const key = keys[i];
             this.formData[key] = '';
           }
-          this.formData[key] = new Date('9999 23:59:59');
+          this.formData['expiredTime'] = new Date('9999 23:59:59');
           this.groupName = '';
         } else {
+          this.initEditUser();
+        }
+      },
+      visible(val){
+        if(val && this.type == 'edit') {
           this.initEditUser();
         }
       }

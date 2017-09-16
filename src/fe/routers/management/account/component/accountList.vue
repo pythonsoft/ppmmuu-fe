@@ -58,6 +58,7 @@
           :type="editUserDialogType"
           :companyId="companyId"
           :id="editUserDialogId"
+          :visible.sync="editUserDialogVisible"
           @close="editUserDialogVisible = false"
           @updateList="updateList"></edit-user-content>
     </fj-slide-dialog>
