@@ -20,11 +20,10 @@
       showMenuIndex: []
     },
     created() {
-      const query = window.location.href.replace(/http[s]*:\/\//g, '').replace(window.location.host, '');
-      const paths = query.split('/');
-      let name = paths[paths.length - 1];
-
-      name = (name === '/' || !name) ? 'mediaCenter' : name;
+    //      const query = window.location.href.replace(/http[s]*:\/\//g, '').replace(window.location.host, '');
+    //      const paths = query.split('/');
+    //      let name = paths[paths.length - 1];
+    //      name = (name === '/' || !name) ? 'mediaCenter' : name;
 
       let showMenuIndex = this.$route.params.menu;
 
@@ -36,7 +35,15 @@
         this.showMenuIndex = showMenuIndex ? showMenuIndex.split(',') : [];
       }
 
-      this.$router.push({ name: name });
+      const name = this.$route.params.index;
+
+      if (name) {
+        this.$router.push({ name });
+      }
+
+      if (window.location.pathname === '/') {
+        this.$router.push({ name: 'mediaCenter' });
+      }
     },
     data() {
       return {

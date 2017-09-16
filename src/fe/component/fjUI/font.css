@@ -121,3 +121,6 @@
 
 .icon-mute:before { content: "\e696"; }
 
+.icon-toggle-right:before { content: "\e697"; }
+
+.icon-toggle-left:before { content: "\e698"; }

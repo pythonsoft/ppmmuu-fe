@@ -59,8 +59,8 @@
   import utils from '../../../../common/utils';
 
   const api = require('../../../../api/job');
-  const config = require('./config');
-  const common = require('./common');
+  const config = require('../config');
+  const common = require('../common');
 
   export default {
     name: 'engineBaseSlideDialogView',
@@ -166,7 +166,7 @@
 
       },
       getStatus(v) {
-        return config.getConfig('STATUS', v);
+        return config.getConfig('DOWNLOAD_STATUS', v);
       },
       getTaskType(v) {
         return config.getConfig('TASK_TYPE', v);
@@ -296,7 +296,7 @@
         const me = this;
 
         const param = {
-          jobId: this.table.currentRowInfo.taskId,
+          jobId: this.table.currentRowInfo.taskId
         };
 
         if (!param.jobId) {

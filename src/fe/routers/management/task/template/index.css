@@ -50,3 +50,22 @@
 .task-slide-dialog-item-bar {
   float: right;
 }
+
+.template-dialog-select-wrap {
+  padding-bottom: 24px;
+}
+
+.group-input {
+  float: left;
+  width: 215px;
+  margin-right: 10px;
+}
+
+.template-dialog-footer{
+  text-align: right;
+}
+
+.template-download-link{
+  color: #38B1EB;
+  cursor: default;
+}

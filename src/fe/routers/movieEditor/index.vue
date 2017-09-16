@@ -7,7 +7,7 @@
           视频编辑器
         </div>
         <ul class="movie-editor-top-bar">
-          <li @click="">
+          <li @click="back">
             <span class="iconfont icon-small-close"></span>
           </li>
         </ul>
@@ -125,6 +125,9 @@
       updateCurrentSource(item) {
         this.sourceVideoId = item.snippet.objectId || '';
         this.sourceTitle = item.name;
+      },
+      back() {
+        this.$router.go(-1);
       }
     }
   };

@@ -1,7 +1,7 @@
 <template>
   <div style="position:relative;">
     <div class="upload-img-content">
-      <img :src="path" class="upload-img-content-photo">
+      <img :src="path" class="upload-img-content-photo" :style="imgStyle">
     </div>
     <input id="img-input" accept="image/gif,image/png,image/jpeg,image/bmp" class="upload-img-input" @change='chooseImg' type="file">
     <label for="img-input" class="upload-img-content-change">修改头像</label>
@@ -24,14 +24,20 @@
     },
     data() {
       return {
-        path: this.imgPath
+        path: this.imgPath,
+        imgStyle: {}
       };
     },
     mounted() {
     },
+    created() {
+    },
     watch: {
       imgPath(val) {
         this.path = val;
+        if (!this.path) {
+          this.imgStyle = { background: 'url(../../../img/avatar.png) no-repeat', backgroundSize: '100% 100%', overflow: 'hidden' };
+        }
       }
     },
     methods: {

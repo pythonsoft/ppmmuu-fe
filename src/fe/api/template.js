@@ -1,10 +1,10 @@
 const api = {};
 const axios = require('../config');
 
-api.solrSearch = function solrSearch(data, scope) {
+api.list = function list(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/solrSearch', data).then((response) => {
+    axios.get('/template/list', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -23,10 +23,10 @@ api.solrSearch = function solrSearch(data, scope) {
   });
 };
 
-api.getMediaList = function getMediaList(data, scope) {
+api.createDownloadTemplate = function createDownloadTemplate(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getMediaList', data).then((response) => {
+    axios.post('/template/createDownloadTemplate', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -45,10 +45,10 @@ api.getMediaList = function getMediaList(data, scope) {
   });
 };
 
-api.defaultMedia = function defaultMedia(data, scope) {
+api.remove = function remove(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/defaultMedia', data).then((response) => {
+    axios.post('/template/remove', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -67,10 +67,10 @@ api.defaultMedia = function defaultMedia(data, scope) {
   });
 };
 
-api.getSearchConfig = function getSearchConfig(data, scope) {
+api.update = function update(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getSearchConfig', data).then((response) => {
+    axios.post('/template/update', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -89,80 +89,10 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
   });
 };
 
-api.getIcon = function getIcon(id) {
-  return `${axios.defaults.baseURL}/media/getIcon?objectid=${id}`;
-};
-
-api.getObject = function getObject(data, scope) {
+api.getDetail = function getDetail(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getObject', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getStream = function getStream(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/media/getStream', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getSearchHistory = function getSearchHistory(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/media/getSearchHistory', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getWatchHistory = function getWatchHistory(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/media/getWatchHistory', data).then((response) => {
+    axios.get('/template/getDetail', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;

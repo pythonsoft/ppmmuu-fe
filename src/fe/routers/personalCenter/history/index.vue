@@ -1,29 +1,33 @@
 <template>
-  <div :class="$style.browseBox" ref="browseBox">
-    <h1 :class="$style.title">观看历史</h1>
-    <div :class="$style.contentHeader" class="clearfix">
-      <p :class="$style.headerText">共{{ total }}条记录</p>
-      <i class="iconfont icon-delete" :class="$style.headerRight" @click="showClearHistoryDialog"></i>
-    </div>
-    <grid-list-view
-      :editable="true"
-      type="grid"
-      :width="listWidth"
-      :items="items"
-      @deleteItem="deleteItem"
-    ></grid-list-view>
-    <div :class="$style.pagination" v-show="items.length">
-      <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
-    </div>
-    <fj-dialog
-      title="清空"
-      :visible.sync="clearHistoryDialogVisible">
-      <p>您确定要清空吗？</p>
-      <div slot="footer" class="dialog-footer">
-        <fj-button @click.stop="clearHistoryDialogVisible=false">取消</fj-button><!--
-        --><fj-button type="primary" :loading="isClearBtnLoading" @click.stop="clearHistory">确定</fj-button>
+  <div>
+    <div v-show="visible" :class="$style.browseBox" ref="browseBox">
+      <h1 :class="$style.title">观看历史</h1>
+      <div :class="$style.contentHeader" class="clearfix">
+        <p :class="$style.headerText">共{{ total }}条记录</p>
+        <i class="iconfont icon-delete" :class="$style.headerRight" @click="showClearHistoryDialog"></i>
       </div>
-    </fj-dialog>
+      <grid-list-view
+        :editable="true"
+        type="grid"
+        :width="listWidth"
+        :items="items"
+        @deleteItem="deleteItem"
+        @currentItemChange="currentItemChange"
+      ></grid-list-view>
+      <div :class="$style.pagination" v-show="items.length">
+        <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
+      </div>
+      <fj-dialog
+        title="清空"
+        :visible.sync="clearHistoryDialogVisible">
+        <p>您确定要清空吗？</p>
+        <div slot="footer" class="dialog-footer">
+          <fj-button @click.stop="clearHistoryDialogVisible=false">取消</fj-button><!--
+          --><fj-button type="primary" :loading="isClearBtnLoading" @click.stop="clearHistory">确定</fj-button>
+        </div>
+      </fj-dialog>
+    </div>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -40,15 +44,29 @@
         total: 0,
         currentPage: 1,
         clearHistoryDialogVisible: false,
-        isClearBtnLoading: false
+        isClearBtnLoading: false,
+        visible: true
       };
     },
     mounted() {
-      this.updateList();
-      this.updateListWidth();
-      window.addEventListener('resize', this.updateListWidth);
+      this.updateVisible();
+    },
+    watch: {
+      '$route.path'(val) {
+        this.updateVisible();
+      }
     },
     methods: {
+      updateVisible() {
+        if (this.$route.path.indexOf('watch') > -1) {
+          this.visible = false;
+        } else {
+          this.visible = true;
+          this.updateList();
+          this.updateListWidth();
+          window.addEventListener('resize', this.updateListWidth);
+        }
+      },
       showClearHistoryDialog() {
         this.clearHistoryDialogVisible = true;
       },
@@ -65,6 +83,9 @@
             this.isClearBtnLoading = false;
             this.$message.error(error);
           });
+      },
+      currentItemChange(item) {
+        this.$router.push({ name: 'historyWatch', params: { objectId: item.id } });
       },
       deleteItem(item) {
         const id = item._id;
@@ -86,9 +107,7 @@
         userAPI.getWatchHistory(formatQuery(data, true))
           .then((response) => {
             const responseData = response.data;
-            const tempList = responseData.docs.map((item) => {
-              return Object.assign(item.videoContent, { _id: item._id });
-            });
+            const tempList = responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id }));
             this.items = tempList;
             this.currentPage = responseData.page;
             this.total = responseData.total;
@@ -101,13 +120,12 @@
         const browseBoxWidth = this.$refs.browseBox.getBoundingClientRect().width;
         this.listWidth = browseBoxWidth;
       },
-      currentItemChange() {},
       handleCurrentPageChange() {}
     },
     components: {
       GridListView
     }
-  }
+  };
 </script>
 <style module>
   .browseBox {
