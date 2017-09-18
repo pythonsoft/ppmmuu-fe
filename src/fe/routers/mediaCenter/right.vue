@@ -274,6 +274,7 @@
         }
       },
       prepareDownload(fileInfo) {
+        console.log('fileInfo', fileInfo);
         this.fileInfo = fileInfo;
         this.downloadDialogDisplay = true;
       },

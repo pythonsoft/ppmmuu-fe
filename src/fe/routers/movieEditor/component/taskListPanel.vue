@@ -78,7 +78,7 @@
     data() {
       return {
         taskListType: '',
-        status: config.getConfig('STATUS'),
+        status: config.getConfig('DOWNLOAD_STATUS'),
         taskList: [],
         currentRow: {},
         dialogVisible: false,
@@ -130,7 +130,7 @@
         this.currentRow = val;
       },
       getStatus(v) {
-        return config.getConfig('STATUS', v);
+        return config.getConfig('DOWNLOAD_STATUS', v);
       },
       listTask() {
         const param = {
@@ -188,13 +188,13 @@
     background: #38B1EB;
   }
   .task-status-dealing {
-    background: #C0C003;
+    background: #636363;
   }
   .task-status-error {
-    background: #FF3366;
+    background: #BF3054;
   }
   .task-status-complete {
-    background: #2EC4B6;
+    background: #199D90;
   }
   .pagination {
     text-align: center;

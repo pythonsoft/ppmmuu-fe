@@ -92,13 +92,19 @@
     },
     methods: {
       inputValueChange(val) {
+        this.$emit('input', val);
         if (val.length > 0) {
-          this.remoteMethod(val);
+          // this.remoteMethod(val);
+          this.visible = false;
         } else {
+          this.visible = true;
           this.historyMethod();
         }
       },
       handleFocus(e) {
+        if (this.remote && this.selectedLabel.length > 0) {
+          return;
+        }
         this.visible = true;
       },
       handleMouseDown(e) {
@@ -110,6 +116,11 @@
       },
       handleIconClick(e) {
         // 如果为remote就触发搜索函数
+        if (this.remote) {
+          this.$emit('search', this.selectedLabel);
+          this.visible = false;
+          return;
+        }
         if (this.iconClass.indexOf('icon-fill-close select-delete-icon') > -1) {
           this.deleteSelected(e);
         } else {
@@ -178,6 +189,11 @@
         }
       },
       selectOption() {
+        // 如果为remote就触发搜索函数
+        if (this.remote) {
+          this.$emit('search', this.selectedLabel);
+          this.visible = false;
+        }
         if (this.options[this.hoverIndex]) {
           this.handleOptionClick(this.options[this.hoverIndex]);
         }
@@ -202,9 +218,11 @@
     watch: {
       visible(val) {
         if (!val) {
-          this.$refs.reference.$el.querySelector('input').blur();
-          this.handleIconHide();
-          this.resetHoverIndex();
+          if (!this.remote) {
+            this.$refs.reference.$el.querySelector('input').blur();
+            this.handleIconHide();
+            this.resetHoverIndex();
+          }
         } else {
           // 如果输入框的值为空就调historyMethod(), 否则就调用remoteMethod()
           if (this.selectedLabel.length === 0) {
