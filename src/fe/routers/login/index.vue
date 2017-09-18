@@ -93,7 +93,8 @@
           .then((res) => {
             me.$message.success('登陆成功!');
             const index = res.data.menu.indexOf('management') !== -1 ? 'management' : 'mediaCenter';
-            me.$router.push({ name: index, params: { menu: res.data.menu, index } });
+            localStorage.setItem('menu', res.data.menu.join(','));
+            me.$router.push({ name: index });
           })
           .catch((error) => {
             me.isBtnLoading = false;
