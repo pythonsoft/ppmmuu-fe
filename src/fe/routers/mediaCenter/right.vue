@@ -12,9 +12,9 @@
               <!--<li>-->
                 <!--<span title="下载" class="iconfont icon-video-download" @click.stop="download"></span>-->
               <!--</li>-->
-              <li>
+              <!-- <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
-              </li>
+              </li> -->
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="添加" class="iconfont icon-addto"></span>
               </li>
@@ -199,7 +199,8 @@
         const addtoBtnPosition = getPosition(addtoBtn);
         const addtoBtnHeight = addtoBtn.getBoundingClientRect().height;
         menuPosition.top = `${addtoBtnPosition.y + addtoBtnHeight}px`;
-        menuPosition.left = `${addtoBtnPosition.x - 163}px`;
+        menuPosition.left = `${addtoBtnPosition.x - 227}px`;
+        // menuPosition.left = `${addtoBtnPosition.x - 163}px`;
         return menuPosition;
       },
       mountMenu() {
