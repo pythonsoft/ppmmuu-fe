@@ -68,6 +68,7 @@
             :visible.sync="bindMediaExpressDialogVisible">
             <bind-media-express
               :id="bindMediaExpressDialogId"
+              :dialogVisible="bindMediaExpressDialogVisible"
               @cancel="bindMediaExpressDialogVisible=false"></bind-media-express>
     </fj-slide-dialog>
     <fj-slide-dialog
