@@ -179,7 +179,7 @@
         itemSize: { width: 198, height: 180 },
         timeId: '',
 
-        viewType: 'grid',
+        viewType: 'list',
         fl: FILETR_FIELDS,
 
         datetimerange1: [],
