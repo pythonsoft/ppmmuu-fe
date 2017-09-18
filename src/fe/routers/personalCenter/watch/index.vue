@@ -16,9 +16,9 @@
               <!--<li>-->
                 <!--<span title="下载" class="iconfont icon-video-download" @click.stop="download()"></span>-->
               <!--</li>-->
-              <li>
+              <!-- <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="leftBoxFooter">
