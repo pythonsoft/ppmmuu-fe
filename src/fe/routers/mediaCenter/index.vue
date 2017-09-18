@@ -3,7 +3,7 @@
     <template slot="left">
       <div class="media-left">
         <div class="media-search">
-          <fj-input
+          <!-- <fj-input
             placeholder="请输入检索关键词"
             size="small"
             theme="fill"
@@ -11,7 +11,25 @@
             icon="icon-search input-search-icon"
             @on-icon-click="searchClick"
             @keydown.native.enter.prevent="searchClick"
-          ></fj-input>
+          ></fj-input> -->
+          <fj-select
+            remote
+            :clear-history-method="clearHistory"
+            :history-method="getSearchHistory"
+            :remote-method="remoteMethod"
+            :loading="loading"
+            @search="searchClick"
+            v-model="keyword"
+            placeholder="请输入检索关键词"
+            size="small"
+            theme="fill">
+            <fj-option
+              v-for="item in keywordOptions"
+              :key="item._id"
+              :label="item.label"
+              :value="item.value">
+            </fj-option>
+          </fj-select>
         </div>
         <div class="media-category">
           <h4>houseNo</h4>
@@ -150,6 +168,7 @@
   import mediaRight from './right';
 
   const api = require('../../api/media');
+  const userAPI = require('../../api/user');
 
   export default {
     components: {
@@ -188,7 +207,9 @@
 
         parentSize: { width: '100', height: '100' },
         listType: 'default',
-        defaultList: []
+        defaultList: [],
+        loading: false,
+        keywordOptions: []
       };
     },
     created() {
@@ -202,6 +223,31 @@
       }
     },
     methods: {
+      clearHistory() {
+        userAPI.clearSearchHistory()
+          .then((response) => {
+            this.getSearchHistory();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getSearchHistory() {
+        this.loading = true;
+        api.getSearchHistory().then((res) => {
+          this.loading = false;
+          const data = res.data;
+          this.keywordOptions = res.data.map(item => {
+            item.value = item.keyword;
+            item.label = item.keyword;
+            return item;
+          });
+        }).catch((error) => {
+          this.loading = false;
+          this.$message.error(error);
+        });
+      },
+      remoteMethod() {},
       getDefaultMedia() {
         api.defaultMedia().then((res) => {
           this.defaultList = res.data;
