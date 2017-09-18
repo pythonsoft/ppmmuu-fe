@@ -25,21 +25,9 @@
     //      let name = paths[paths.length - 1];
     //      name = (name === '/' || !name) ? 'mediaCenter' : name;
 
-      let showMenuIndex = this.$route.params.menu;
 
-      if (showMenuIndex) {
-        localStorage.setItem('menu', showMenuIndex.join(','));
-        this.showMenuIndex = showMenuIndex;
-      } else {
-        showMenuIndex = localStorage.getItem('menu');
-        this.showMenuIndex = showMenuIndex ? showMenuIndex.split(',') : [];
-      }
-
-      const name = this.$route.params.index;
-
-      if (name) {
-        this.$router.push({ name });
-      }
+      const showMenuIndex = localStorage.getItem('menu');
+      this.showMenuIndex = showMenuIndex ? showMenuIndex.split(',') : [];
 
       if (window.location.pathname === '/') {
         this.$router.push({ name: 'mediaCenter' });
