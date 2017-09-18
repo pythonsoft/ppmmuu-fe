@@ -1,7 +1,7 @@
 <template>
   <fj-dialog
     title="下载地址选择列表"
-    :visible.sync="visible"
+    :visible.sync="dialogVisible"
     @close="close">
     <div class="bucket-browser-content">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
@@ -30,6 +30,7 @@
     },
     watch: {
       visible(val) {
+        this.dialogVisible = val;
         if (val) {
           this.listTemplate();
         } else {
@@ -40,7 +41,8 @@
     data() {
       return {
         tableData: [],
-        currentRow: {}
+        currentRow: {},
+        dialogVisible: this.visible
       };
     },
     methods: {

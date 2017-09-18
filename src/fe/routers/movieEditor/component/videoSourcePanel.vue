@@ -2,7 +2,7 @@
   <div
     :class="['video-source-wrap', {'active-panel':isActivePanel}]"
     @click="()=>{this.$emit('update:activePanel', 'sourcePanel')}">
-    <div class="video-source-title">{{ `源：${title || '素材名称'} ${displayDuration}` }}</div>
+    <div class="video-source-title">{{ `源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
       <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
     </div>
@@ -114,7 +114,12 @@
         imageDialogVisible: false,
         screenshotURL: '',
         screenshotTitle: '',
-        videoSource: ''
+        videoSource: '',
+        videoInfo: {
+          FILENAME: '',
+          INPOINT: '',
+          OUTPOINT: ''
+        }
       };
     },
     computed: {
@@ -219,13 +224,14 @@
     },
     methods: {
       getStream(id) {
-        getStreamURL(id, (err, url) => {
+        getStreamURL(id, (err, url, res) => {
           if (err) {
             this.$message.error(err);
             return;
           }
 
           this.videoSource = url;
+          this.videoInfo = res.result;
         }, this);
       },
       reset() {
@@ -498,8 +504,8 @@
       },
       insertClip() {
         const info = {
-          objectId: this.videoId,
-          title: this.title,
+          objectId: this.videoId || this.$route.params.objectId,
+          title: this.title || this.videoInfo.FILENAME,
           range: [this.inTime, this.outTime],
           duration: this.outTime - this.inTime,
           screenshot: this.inTimeScreenshot
