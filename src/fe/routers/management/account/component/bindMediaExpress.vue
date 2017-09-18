@@ -45,9 +45,6 @@
     },
     watch: {
       dialogVisible(val) {
-        this.visible = val;
-      },
-      id(val) {
         if (val) {
           this.initEditUser();
         }
@@ -55,7 +52,6 @@
     },
     methods: {
       initEditUser() {
-        console.log('fgggg');
         api.getGroupUserDetail(formatQuery({ _id: this.id }, true))
           .then((response) => {
             const user = response.data.mediaExpressUser || '';
