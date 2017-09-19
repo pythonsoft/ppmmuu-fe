@@ -11,15 +11,19 @@
         <div>{{ item.text }}</div>
       </div>
     </fj-menu-item>
-    <div class="menu-logout" @click.stop="logout">
+    <div class="app-profile-entry" ref="profileEntry" @click="showProfilePopover" v-clickoutside="closeProfilePopover">
+      <img :src="userInfo.photo" class="app-profile-avatar" width="24" height="24">
+      <div>{{ userInfo.name }}</div>
+    </div>
+    <!-- <div class="menu-logout" @click.stop="logout">
       <div class="fj-menu-item">
         <div class="menu-box">
           <i class="iconfont menu-icon icon-logout"></i>
           <div>退出</div>
         </div>
       </div>
-    </div>
-    <fj-dialog title="退出当前帐户" :visible.sync="display" @close="cancelDialog">
+    </div> -->
+    <!-- <fj-dialog title="退出当前帐户" :visible.sync="display" @close="cancelDialog">
       <template>
         <span>确定退出当前帐户吗?</span>
       </template>
@@ -27,10 +31,14 @@
         <fj-button @click="cancelDialog">取消</fj-button>
         <fj-button type="primary" @click="confirmDialog">确定</fj-button>
       </div>
-    </fj-dialog>
+    </fj-dialog> -->
   </fj-menu>
 </template>
 <script>
+  import Vue from 'vue';
+  import ProfilePopover from './profilePopover';
+  import Clickoutside from '../component/fjUI/utils/clickoutside';
+
   const config = require('../config');
   const api = require('../api/user');
 
@@ -42,6 +50,7 @@
     { text: '管理', index: 'management', route: '/management', icon: 'icon-setting' }
   ];
   export default {
+    directives: { Clickoutside },
     props: {
       showMenuIndex: {
         type: Array,
@@ -54,10 +63,16 @@
       return {
         menu: menu,
         defaultRoute: '/',
-        display: false
+        display: false,
+        userInfo: {
+          name: '',
+          email: '',
+          photo: ''
+        }
       };
     },
     created() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
       this.getMenu();
       this.defaultRoute = this.getActiveRoute(this.$route.path, 1);
     },
@@ -66,6 +81,29 @@
       }
     },
     methods: {
+      closeProfilePopover(target) {
+        if (this.popover && this.popover.$el.contains(target)) return;
+        if (this.popover) this.unmountMenu();
+      },
+      showProfilePopover() {
+        if (!this.popover) {
+          this.mountMenu();
+        }
+      },
+      mountMenu() {
+        this.popover = new Vue(ProfilePopover).$mount();
+        this.popover.avatar = this.userInfo.photo;
+        this.popover.name = this.userInfo.name;
+        this.popover.email = this.userInfo.email;
+        document.body.appendChild(this.popover.$el);
+      },
+      unmountMenu() {
+        if (this.popover) {
+          this.popover.$destroy();
+          document.body.removeChild(this.popover.$el);
+          this.popover = null;
+        }
+      },
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
@@ -129,5 +167,25 @@
     left: 0;
     width: 84px;
     height: 77px;
+  }
+  .app-profile-entry {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 84px;
+    height: 77px;
+    padding: 18px 0;
+    font-size: 12px;
+    text-align: center;
+    color: #8CA2BB;
+    cursor: pointer;
+  }
+  .app-profile-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    overflow: hidden;
   }
 </style>

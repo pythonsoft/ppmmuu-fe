@@ -395,7 +395,7 @@
         const me = this;
         this.listType = 'normal';
         if (!me.houseNo) {
-          return false;
+          return;
         }
         let searchNotice = `检索词: ${me.houseNo}`;
         const noticeLength = getStringLength(searchNotice);
