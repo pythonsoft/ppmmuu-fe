@@ -5,7 +5,7 @@
         <fj-input v-model="formData.username"></fj-input>
       </fj-form-item>
       <fj-form-item label="密码" prop="password">
-        <fj-input v-model="formData.password"></fj-input>
+        <fj-input v-model="formData.password" type="password"></fj-input>
       </fj-form-item>
     </fj-form>
     <div slot="footer" class="edit-user-dialog-footer">
