@@ -120,7 +120,9 @@
         const browseBoxWidth = this.$refs.browseBox.getBoundingClientRect().width;
         this.listWidth = browseBoxWidth;
       },
-      handleCurrentPageChange() {}
+      handleCurrentPageChange() {
+        this.updateList();
+      }
     },
     components: {
       GridListView
