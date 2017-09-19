@@ -14,10 +14,10 @@
         <fj-table-column prop="description" label="描述" ></fj-table-column>
       </fj-table>
     </div>
-    <div slot="footer">
-      <fj-button @click="close">取消</fj-button>
-      <fj-button type="info" @click="addAllowedClick">添加允许权限</fj-button>
-      <fj-button type="danger" @click="addDeniedClick">添加拒绝权限</fj-button>
+    <div slot="footer" class="dialog-footer">
+      <fj-button @click="close">取消</fj-button><!--
+      --><fj-button type="info" @click="addAllowedClick">添加允许权限</fj-button><!--
+      --><fj-button type="danger" @click="addDeniedClick">添加拒绝权限</fj-button>
     </div>
 
   </fj-dialog>

@@ -7,9 +7,9 @@
     <template v-else>
       <span>{{ message }}</span>
     </template>
-    <div slot="footer">
-      <fj-button @click="cancelDialog">取消</fj-button>
-      <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+    <div slot="footer" class="dialog-footer">
+      <fj-button @click="cancelDialog">取消</fj-button><!--
+      --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
     </div>
   </fj-dialog>
 </template>
