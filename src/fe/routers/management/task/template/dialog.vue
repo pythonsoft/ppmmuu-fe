@@ -27,9 +27,9 @@
   </fj-slide-dialog>
 </template>
 <script>
-  const config = require('../config');
-
   import downloadTemplateView from './component/download';
+
+  const config = require('../config');
 
   export default {
     components: {

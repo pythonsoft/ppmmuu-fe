@@ -142,9 +142,8 @@ method.getOrder = function getOrder(selectedValue) {
       }
     }
     return '';
-  } else {
-    return '';
   }
+  return '';
 };
 
 module.exports = method;

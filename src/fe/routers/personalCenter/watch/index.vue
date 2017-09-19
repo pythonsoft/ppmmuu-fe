@@ -91,19 +91,17 @@
 </template>
 <script>
   import './index.css';
-  import { formatSize, formatDuration, formatContent, getStreamURL, isEmptyObject } from '../../../common/utils';
+  import { formatSize, formatDuration, formatContent, getStreamURL, isEmptyObject, formatQuery } from '../../../common/utils';
   import GridListView from '../../mediaCenter/gridAndList';
   import MoreView from '../../mediaCenter/moreView';
   import Player from '../../mediaCenter/components/player';
-  import { formatQuery } from '../../../common/utils';
   import { getTitle, getThumb } from '../../mediaCenter/common';
+  import downloadListView from '../../management/task/template/component/downloadDialog';
 
   const jobAPI = require('../../../api/job');
   const mediaAPI = require('../../../api/media');
   const ivideoAPI = require('../../../api/ivideo');
   const userAPI = require('../../../api/user');
-
-  import downloadListView from '../../management/task/template/component/downloadDialog';
 
   const playerMinWidth = 792;
   const playerMaxWidth = 1188;
@@ -201,7 +199,9 @@
         userAPI.getWatchHistory(formatQuery(data, true))
           .then((response) => {
             const responseData = response.data;
-            const tempList = responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id }));
+            const tempList = responseData.docs.map(
+              item => Object.assign(item.videoContent, { _id: item._id })
+            );
             this.items = tempList;
           })
           .catch((error) => {
