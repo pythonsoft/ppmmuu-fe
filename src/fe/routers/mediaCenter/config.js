@@ -81,22 +81,31 @@ method.getTimeRange = function getTimeRange(datetimerange) {
   return result;
 };
 
-method.getQuery = function getQuery(configs) {
-  let q = '';
+method.getQuery = function getQuery(must, configs) {
   for (let i = 0, len = configs.length; i < len; i++) {
     const temp = configs[i];
     const key = temp.key;
     if (temp.selected !== undefined && temp.selected !== '' && temp.selected !== 'all') {
-      if (q) {
-        q += ` AND ${key}:${temp.selected}`;
-      } else {
-        q += `${key}:${temp.selected}`;
+      const item = {
+        match: {}
       }
+      item['match'][key] = temp.selected;
+      must.push(item)
     }
   }
-
-  return q;
 };
+
+method.formatMust = function(must, obj){
+  for(let key in obj){
+    if(obj[key]){
+      const item = {
+        match: {}
+      }
+      item['match'][key] = obj[key];
+      must.push(item)
+    }
+  }
+}
 
 method.getSearchNotice = function getSearchNotice(configs) {
   const q = [];
@@ -119,10 +128,10 @@ method.getSearchNotice = function getSearchNotice(configs) {
 
 const ORDER_OPTIONS = [
   { value: 'order1', label: '关联度排序', sort: '' },
-  { value: 'order2', label: '新闻时间由远到近', sort: 'f_date_162 asc' },
-  { value: 'order3', label: '新闻时间由近到远', sort: 'f_date_162 desc' },
-  { value: 'order4', label: '首播时间由近到远', sort: 'f_date_36 desc' },
-  { value: 'order5', label: '首播时间由远到近', sort: 'f_date_36 asc' }
+  { value: 'order2', label: '新闻时间由远到近', sort: 'asc', key: 'f_date_162' },
+  { value: 'order3', label: '新闻时间由近到远', sort: 'desc', key: 'f_date_162' },
+  { value: 'order4', label: '首播时间由近到远', sort: 'desc', key: 'f_date_36' },
+  { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'f_date_36' }
 ];
 
 const HHIGHLIGHT_FIELDS1 = 'name,program_name_cn,program_name_en,f_str_03,f_str_187';
@@ -135,16 +144,28 @@ method.HHIGHLIGHT_FIELDS2 = HHIGHLIGHT_FIELDS2;
 method.FILETR_FIELDS = FILETR_FIELDS;
 
 method.getOrder = function getOrder(selectedValue) {
+  const sort = [];
   if (selectedValue) {
     for (let i = 0, len = ORDER_OPTIONS.length; i < len; i++) {
-      if (selectedValue === ORDER_OPTIONS[i].value) {
-        return ORDER_OPTIONS[i].sort;
+      if (selectedValue === ORDER_OPTIONS[i].value && ORDER_OPTIONS[i].sort) {
+        const item = {};
+        item[ORDER_OPTIONS[i].key] = {
+          order: ORDER_OPTIONS[i].sort
+        }
+        sort.push(item);
       }
     }
-    return '';
-  } else {
-    return '';
   }
+  return sort;
 };
+
+method.getHighLightFields = function getHighLightFields(fields){
+  const obj = {};
+  fields = fields.split(',');
+  for(let i = 0, len = fields.length; i < len; i++){
+    obj[fields[i]] = {};
+  }
+  return obj;
+}
 
 module.exports = method;
