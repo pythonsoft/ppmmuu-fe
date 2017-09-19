@@ -438,7 +438,7 @@ utils.getPosition = function getPosition(ele, oRefer) {
 };
 
 utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
-  mediaAPI.getStream({ params: { objectId: objectId } }, scope).then((res) => {
+  mediaAPI.getStream({ params: { objectid: objectId } }, scope).then((res) => {
     let dateString = res.result.UNCPATH;
     const fileName = res.result.FILENAME;
 
