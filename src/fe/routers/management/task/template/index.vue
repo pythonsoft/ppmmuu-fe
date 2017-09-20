@@ -57,9 +57,9 @@
       <template>
         <span>确定要删 {{ table.currentRowInfo.name }} 这块模板？</span>
       </template>
-      <div slot="footer">
-        <fj-button @click="confirmDialogDisplay=false">取消</fj-button>
-        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="confirmDialogDisplay=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
       </div>
     </fj-dialog>
 

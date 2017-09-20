@@ -437,6 +437,35 @@ utils.getPosition = function getPosition(ele, oRefer) {
   return { x, y };
 };
 
+function formatSRTTime(timeStr = '00:00:00,00', fps = 25) {
+  let timeArr = timeStr.split(',');
+  let seconds = Number(timeArr[1]) / fps;
+  timeArr = timeArr[0].split(':');
+  seconds += Number(timeArr[2]);
+  seconds += Number(timeArr[1]) * 60;
+  seconds += Number(timeArr[0]) * 60 * 60;
+  return seconds;
+}
+
+utils.getSRT = function (objectId, cb, scope, fps = 25) {
+  mediaAPI.xml2srt({ params: { objectid: objectId } }, scope).then((res) => {
+    const tempArr = res.data.split('\n\n');
+    tempArr.pop();
+    const data = tempArr.map((str) => {
+      const item = {};
+      const tempStrArr = str.split('\n');
+      item.text = tempStrArr[2];
+      const durationArr = tempStrArr[1].split(' --> ');
+      item.start = formatSRTTime(durationArr[0], fps);
+      item.end = formatSRTTime(durationArr[1], fps);
+      return item;
+    });
+    cb && cb(null, data, res);
+  }).catch((error) => {
+    cb && cb(error);
+  });
+};
+
 utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
   mediaAPI.getStream({ params: { objectid: objectId } }, scope).then((res) => {
     let dateString = res.result.UNCPATH;

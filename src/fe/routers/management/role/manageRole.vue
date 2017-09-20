@@ -35,9 +35,9 @@
 
       <span>确定要移除吗?</span>
 
-      <div slot="footer">
-        <fj-button @click="dialogVisible=false">取消</fj-button>
-        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="dialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
       </div>
 
     </fj-dialog>

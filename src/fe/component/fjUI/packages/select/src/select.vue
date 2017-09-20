@@ -234,9 +234,11 @@
         }
       },
       value(val) {
-        this.setSelected();
-        if (this.$parent.$options.name === 'FjFormItem') {
-          this.$parent.$emit('form-change', val);
+        if (!this.remote) {
+          this.setSelected();
+          if (this.$parent.$options.name === 'FjFormItem') {
+            this.$parent.$emit('form-change', val);
+          }
         }
       },
       options(val) {
