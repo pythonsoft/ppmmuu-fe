@@ -219,6 +219,7 @@
     },
     watch: {
       orderVal(val) {
+        this.currentPage = 1;
         this.getMediaList();
       }
     },
@@ -302,6 +303,7 @@
         return pathArr[level] || '';
       },
       searchClick() {
+        this.currentPage = 1;
         this.resize();
       },
       getSeachConfigs() {
@@ -323,11 +325,13 @@
           source: this.fl,
           match: [],
           should: [],
-          hl: [],
-          sort: []
+          hl: HHIGHLIGHT_FIELDS1,
+          sort: {},
+          start: start,
+          pageSize: this.pageSize
         }
-        const must = q['bool']['must'];
-        getQuery(q['bool']['must'], this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
+        const must = options['match'];
+        getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
         if (this.keyword && searchChoose) {
@@ -354,38 +358,31 @@
 
         formatMust(must, obj);
 
-        const sort = getOrder(this.orderVal);
-
-        const options = {
-          source: this.fl,
-          query: q,
-          sort: sort,
-          from: start,
-          highlight: {
-            "require_field_match": false, "fields": getHighLightFields(HHIGHLIGHT_FIELDS2)
-          },
-          size: this.pageSize
-        };
+        options['sort'] = getOrder(this.orderVal);
 
         if (this.keyword) {
-          if (sort.length) {
+          if (options['sort'].length) {
             for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
               if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
-                options['highlight']['fields'] = getHighLightFields(HHIGHLIGHT_FIELDS1)
+                options['hl'] = HHIGHLIGHT_FIELDS2;
               }
             }
           }else{
             const item = {
               match: {}
             }
-            item['match'] = { name: this.keyword};
-            options['query']['bool']['should'].push(item);
+            formatMust(options['should'], {name: this.keyword});
+          }
+        }else {
+          if (!options['sort'].length){
+            options['sort'] = [{
+              key: 'last_modify',
+              value: 'desc'
+            }]
           }
         }
 
-
-
-        api.esSearch({ params: options }, me).then((res) => {
+        api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
@@ -394,18 +391,13 @@
         });
       },
       searchHouseNoClick() {
+        this.currentPage = 1;
         const me = this;
         this.listType = 'normal';
         if (!me.houseNo) {
           return false;
         }
-        let searchNotice = `检索词: ${this.keyword}`;
-        const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
-        if (this.keyword && searchChoose) {
-          searchNotice += `,${searchChoose}`;
-        } else {
-          searchNotice += searchChoose;
-        }
+        let searchNotice = `检索词: ${me.houseNo}`;
         const noticeLength = getStringLength(searchNotice);
         if (noticeLength > 15) {
           searchNotice = searchNotice.substr(0, 15);
@@ -415,16 +407,19 @@
         }
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const options = {
-          q: `f_str_187:${me.houseNo}`,
-          fl: this.fl,
-          sort: 'last_modify desc',
+          source: this.fl,
+          match: [],
+          should: [],
+          sort: {},
           start: start,
-          hl: 'off',
-          indent: 'off',
-          'hl.fl': HHIGHLIGHT_FIELDS1,
-          rows: this.pageSize
-        };
-        api.solrSearch({ params: options }, me).then((res) => {
+          pageSize: this.pageSize
+        }
+        const obj = {
+          f_str_187: me.houseNo,
+          publish_status: 1,
+        }
+        formatMust(options['match'], obj);
+        api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;

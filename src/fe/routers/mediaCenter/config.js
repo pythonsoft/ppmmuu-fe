@@ -87,9 +87,9 @@ method.getQuery = function getQuery(must, configs) {
     const key = temp.key;
     if (temp.selected !== undefined && temp.selected !== '' && temp.selected !== 'all') {
       const item = {
-        match: {}
+        key: temp.key,
+        value: temp.selected
       }
-      item['match'][key] = temp.selected;
       must.push(item)
     }
   }
@@ -99,9 +99,9 @@ method.formatMust = function(must, obj){
   for(let key in obj){
     if(obj[key]){
       const item = {
-        match: {}
+        key: key,
+        value: obj[key]
       }
-      item['match'][key] = obj[key];
       must.push(item)
     }
   }
@@ -148,10 +148,10 @@ method.getOrder = function getOrder(selectedValue) {
   if (selectedValue) {
     for (let i = 0, len = ORDER_OPTIONS.length; i < len; i++) {
       if (selectedValue === ORDER_OPTIONS[i].value && ORDER_OPTIONS[i].sort) {
-        const item = {};
-        item[ORDER_OPTIONS[i].key] = {
-          order: ORDER_OPTIONS[i].sort
-        }
+        const item = {
+          key: ORDER_OPTIONS[i].key,
+          value: ORDER_OPTIONS[i].sort
+        };
         sort.push(item);
       }
     }
