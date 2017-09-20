@@ -238,7 +238,7 @@
         api.getSearchHistory().then((res) => {
           this.loading = false;
           const data = res.data;
-          this.keywordOptions = res.data.map(item => {
+          this.keywordOptions = res.data.map((item) => {
             item.value = item.keyword;
             item.label = item.keyword;
             return item;
