@@ -15,9 +15,9 @@
         </fj-table-column>
       </fj-table>
     </div>
-    <div slot="footer">
-      <fj-button @click="close">取消</fj-button>
-      <fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
+    <div slot="footer" class="dialog-footer">
+      <fj-button @click="close">取消</fj-button><!--
+      --><fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
     </div>
   </fj-dialog>
 </template>

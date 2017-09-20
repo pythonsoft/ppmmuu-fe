@@ -75,9 +75,9 @@
       @close="dialog.visible=false"
     >
       <span>确定要删除此任务 {{ table.currentRowInfo.fileName }} 吗?</span>
-      <div slot="footer">
-        <fj-button @click="dialog.visible=false">取消</fj-button>
-        <fj-button type="primary" @click="dialogConfirm">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="dialog.visible=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="dialogConfirm">确定</fj-button>
       </div>
     </fj-dialog>
 

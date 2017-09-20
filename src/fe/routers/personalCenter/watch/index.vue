@@ -9,7 +9,7 @@
     <div class="mainBox">
       <div class="leftBox" ref="leftBox" :style="{ right: rightboxWidth }">
         <div class="leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
-          <player :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
+          <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="streamInfo.FILENAME"></div>
             <ul class="media-video-title-bar">

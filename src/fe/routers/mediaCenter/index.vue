@@ -142,7 +142,7 @@
             ></grid-list-view>
 
             <div class="media-pagination" v-if="items.length">
-              <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
+              <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></pagination>
             </div>
           </template>
         </div>
@@ -162,6 +162,7 @@
   import './index.css';
   import { getTimeRange, getQuery, getSearchNotice, getOrder, formatMust, getHighLightFields, ORDER_OPTIONS,
     HHIGHLIGHT_FIELDS1, HHIGHLIGHT_FIELDS2, FILETR_FIELDS } from './config';
+  import Pagination from './components/pagination';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
@@ -174,7 +175,8 @@
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-list-view': gridAndList
+      'grid-list-view': gridAndList,
+      Pagination
     },
     data() {
       return {
@@ -395,7 +397,7 @@
         const me = this;
         this.listType = 'normal';
         if (!me.houseNo) {
-          return false;
+          return;
         }
         let searchNotice = `检索词: ${me.houseNo}`;
         const noticeLength = getStringLength(searchNotice);

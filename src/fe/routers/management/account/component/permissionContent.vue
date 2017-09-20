@@ -43,9 +43,9 @@
         <fj-table-column prop="description" label="描述"></fj-table-column>
       </fj-table>
 
-      <div slot="footer">
-        <fj-button @click="dialogVisible=false">取消</fj-button>
-        <fj-button type="primary" @click="addRoles">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="dialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="addRoles">确定</fj-button>
       </div>
 
     </fj-dialog>

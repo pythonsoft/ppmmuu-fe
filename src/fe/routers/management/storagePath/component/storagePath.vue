@@ -96,9 +96,9 @@
 
       <span>确定要删除这个存储区吗?</span>
 
-      <div slot="footer">
-        <fj-button @click="deleteDialogVisible=false">取消</fj-button>
-        <fj-button type="primary" @click="confirmDeleteDialog">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="deleteDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="confirmDeleteDialog">确定</fj-button>
       </div>
 
     </fj-dialog>

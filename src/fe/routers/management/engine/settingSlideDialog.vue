@@ -31,9 +31,9 @@
       @close="dialog.visible=false"
     >
       <span>确定要删除这些配置项吗?</span>
-      <div slot="footer">
-        <fj-button @click="dialog.visible=false">取消</fj-button>
-        <fj-button type="primary" @click="dialogConfirm">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="dialog.visible=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="dialogConfirm">确定</fj-button>
       </div>
     </fj-dialog>
 
@@ -56,9 +56,9 @@
           <fj-input type="textarea" :rows="5" v-model.trim="itemInfo.description" />
         </div>
       </template>
-      <div slot="footer">
-        <fj-button @click="itemDialog.visible=false">取消</fj-button>
-        <fj-button type="primary" @click="itemDialogConfirm">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="itemDialog.visible=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="itemDialogConfirm">确定</fj-button>
       </div>
     </fj-dialog>
 
