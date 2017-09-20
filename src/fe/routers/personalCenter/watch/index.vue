@@ -91,7 +91,14 @@
 </template>
 <script>
   import './index.css';
-  import { formatSize, formatDuration, formatContent, getStreamURL, isEmptyObject, formatQuery } from '../../../common/utils';
+  import {
+    formatSize,
+    formatDuration,
+    formatContent,
+    getStreamURL,
+    isEmptyObject,
+    formatQuery
+  } from '../../../common/utils';
   import GridListView from '../../mediaCenter/gridAndList';
   import MoreView from '../../mediaCenter/moreView';
   import Player from '../../mediaCenter/components/player';

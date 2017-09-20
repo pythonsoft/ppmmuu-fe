@@ -48,7 +48,13 @@
       const indexKey = this.indexKey;
 
       for (let i = 0, len = d.length; i < len; i++) {
-        arr.push({ id: d[i][indexKey], name: d[i].name, info: d[i], children: d[i].children, parentId: parentId || `__root__${d[i][indexKey]}` });
+        arr.push({
+          id: d[i][indexKey],
+          name: d[i].name,
+          info: d[i],
+          children: d[i].children,
+          parentId: parentId || `__root__${d[i][indexKey]}`
+        });
       }
       return arr;
     },

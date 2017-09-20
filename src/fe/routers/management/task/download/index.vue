@@ -227,7 +227,11 @@
                     "taskId":"59ae6ef758b26b017acc2eb2",
                     "status":"dealing",
                     "position":0,
-                    "createParams":"{\"objectid\":\"5A73A94C-BA88-5995-4459-4B2F551B5962\",\"inpoint\":0,\"outpoint\":412435,\"fileName\":\"testA.mp4\"}",
+                    "createParams":"{
+                      \"objectid\":\"5A73A94C-BA88-5995-4459-4B2F551B5962\",
+                      \"inpoint\":0,
+                      \"outpoint\":412435,
+                      \"fileName\":\"testA.mp4\"}",
                     "queryParams":"jobid\u003d59ae6ef758b26b017acc2eb2",
                     "serialNO":0,
                     "errMsg":"can not stop,task not support",

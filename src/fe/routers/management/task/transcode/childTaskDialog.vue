@@ -186,7 +186,10 @@
           if (temp) {
             for (let j = 0, l = temp.length; j < l; j++) {
               temp[j]._type = order[i];
-              temp[j]._path = temp[j].filePath || temp[j].orgFilePath || temp[j].mergerdFilePath || '-';
+              temp[j]._path = temp[j].filePath
+                || temp[j].orgFilePath
+                || temp[j].mergerdFilePath
+                || '-';
               temp[j]._totalTime = temp[j].totalTime ? utils.formatDuration(temp[j].totalTime) : '-';
               arr.push(temp[j]);
             }
@@ -223,7 +226,10 @@
             tempValue = utils.formatDuration(tempValue);
           }
 
-          childTaskData.push({ key: config.getConfig('FIELD_NAME', keys[i]).cn || keys[i], value: tempValue });
+          childTaskData.push({
+            key: config.getConfig('FIELD_NAME', keys[i]).cn || keys[i],
+            value: tempValue
+          });
         }
         this.childTaskData = childTaskData;
         this.childSlideDialogVisible = true;

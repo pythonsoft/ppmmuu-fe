@@ -55,7 +55,15 @@
 <script>
   import Vue from 'vue';
   import VueLazyload from 'vue-lazyload';
-  import { getDuration, getThumb, getMediaFormat, getMediaFormatStyle, getReplaceName, getTitle, getDescription } from './common';
+  import {
+    getDuration,
+    getThumb,
+    getMediaFormat,
+    getMediaFormatStyle,
+    getReplaceName,
+    getTitle,
+    getDescription
+  } from './common';
   import { isEmptyObject, deepClone, formatSize, getStringLength } from '../../common/utils';
 
   Vue.use(VueLazyload, {

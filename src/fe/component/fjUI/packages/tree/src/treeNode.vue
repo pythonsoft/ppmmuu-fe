@@ -63,7 +63,11 @@
         return this.tree.currentNode === this.node[this.nodeKey];
       },
       innerNodeStyle() {
-        return Object.assign({}, this.nodeStyle, { paddingLeft: `${this.indent}px`, position: 'relative' });
+        return Object.assign(
+          {},
+          this.nodeStyle,
+          { paddingLeft: `${this.indent}px`, position: 'relative' }
+        );
       }
     },
     methods: {

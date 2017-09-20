@@ -174,8 +174,15 @@
       formatData(data) {
         /*
         *
-        * taskName: "下载", taskType: "media_download", taskId: "59ae6ef758b26b017acc2eb2", status: "dealing",…}
-          createParams: "{"objectid":"5A73A94C-BA88-5995-4459-4B2F551B5962","inpoint":0,"outpoint":412435,"fileName":"testA.mp4"}"
+        * taskName: "下载",
+        * taskType: "media_download",
+        * taskId: "59ae6ef758b26b017acc2eb2",
+        * status: "dealing",…}
+          createParams: "{
+          "objectid":"5A73A94C-BA88-5995-4459-4B2F551B5962",
+          "inpoint":0,
+          "outpoint":412435,
+          "fileName":"testA.mp4"}"
           errMsg: "can not stop,task not support"
           fileName: "172545447testA.mp4"
           filePath: "/root/media/2017/09/05/172545447testA.mp4"
@@ -223,7 +230,10 @@
             tempValue = utils.formatDuration(tempValue);
           }
 
-          childTaskData.push({ key: config.getConfig('FIELD_NAME', keys[i]).cn || keys[i], value: tempValue });
+          childTaskData.push({
+            key: config.getConfig('FIELD_NAME', keys[i]).cn || keys[i],
+            value: tempValue
+          });
         }
         this.childTaskData = childTaskData;
         this.childSlideDialogVisible = true;

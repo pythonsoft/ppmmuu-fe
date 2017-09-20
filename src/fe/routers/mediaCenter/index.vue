@@ -158,10 +158,26 @@
 </template>
 <script>
   import Vue from 'vue';
-  import { getTimeByStr, formatDuration, getPosition, appendToBody, getStringLength } from '../../common/utils';
+  import {
+    getTimeByStr,
+    formatDuration,
+    getPosition,
+    appendToBody,
+    getStringLength
+  } from '../../common/utils';
   import './index.css';
-  import { getTimeRange, getQuery, getSearchNotice, getOrder, formatMust, getHighLightFields, ORDER_OPTIONS,
-    HHIGHLIGHT_FIELDS1, HHIGHLIGHT_FIELDS2, FILETR_FIELDS } from './config';
+  import {
+    getTimeRange,
+    getQuery,
+    getSearchNotice,
+    getOrder,
+    formatMust,
+    getHighLightFields,
+    ORDER_OPTIONS,
+    HHIGHLIGHT_FIELDS1,
+    HHIGHLIGHT_FIELDS2,
+    FILETR_FIELDS
+  } from './config';
   import Pagination from './components/pagination';
 
   import threeColumn from '../../component/layout/threeColumn';

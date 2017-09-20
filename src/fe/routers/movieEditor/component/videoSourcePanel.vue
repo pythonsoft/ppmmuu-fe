@@ -297,15 +297,60 @@
         const controllerArr = controller.split(',');
         const list = [];
         const controllerConfig = {
-          inPoint: { name: 'in-point', icon: 'icon-in-point', tooltip: '标记入点(I)', clickFn: this.markIn },
-          outPoint: { name: 'out-point', icon: 'icon-out-point', tooltip: '标记出点(O)', clickFn: this.markOut },
-          gotoInPoint: { name: 'goto-in-point', icon: 'icon-goto-in-point', tooltip: '转到入点(Shift+I)', clickFn: this.gotoInPoint },
-          prevFrame: { name: 'prev-frame', icon: 'icon-video-prev', tooltip: '后退一帧(左侧)', clickFn: this.gotoPrevFrame },
-          play: { name: 'play', icon: 'icon-play', tooltip: '播放-停止切换(Space)', clickFn: this.updatePlayerStatus },
-          nextFrame: { name: 'next-frame', icon: 'icon-video-next', tooltip: '前进一帧(右侧)', clickFn: this.gotoNextFrame },
-          gotoOutPoint: { name: 'goto-out-point', icon: 'icon-goto-out-point', tooltip: '转到出点(Shift+O)', clickFn: this.gotoOutPoint },
-          insert: { name: 'insert', icon: 'icon-insert', tooltip: '插入(,)', clickFn: this.insertClip },
-          camera: { name: 'camera', icon: 'icon-camera', tooltip: '导出帧(Shift+E)', clickFn: this.screenshot }
+          inPoint: {
+            name: 'in-point',
+            icon: 'icon-in-point',
+            tooltip: '标记入点(I)',
+            clickFn: this.markIn
+          },
+          outPoint: {
+            name: 'out-point',
+            icon: 'icon-out-point',
+            tooltip: '标记出点(O)',
+            clickFn: this.markOut
+          },
+          gotoInPoint: {
+            name: 'goto-in-point',
+            icon: 'icon-goto-in-point',
+            tooltip: '转到入点(Shift+I)',
+            clickFn: this.gotoInPoint
+          },
+          prevFrame: {
+            name: 'prev-frame',
+            icon: 'icon-video-prev',
+            tooltip: '后退一帧(左侧)',
+            clickFn: this.gotoPrevFrame
+          },
+          play: {
+            name: 'play',
+            icon: 'icon-play',
+            tooltip: '播放-停止切换(Space)',
+            clickFn: this.updatePlayerStatus
+          },
+          nextFrame: {
+            name: 'next-frame',
+            icon: 'icon-video-next',
+            tooltip: '前进一帧(右侧)',
+            clickFn: this.gotoNextFrame
+          },
+          gotoOutPoint: {
+            name: 'goto-out-point',
+            icon: 'icon-goto-out-point',
+            tooltip: '转到出点(Shift+O)',
+            clickFn: this.gotoOutPoint
+          },
+          insert: {
+            name: 'insert',
+            icon: 'icon-insert',
+            tooltip: '插入(,)',
+            clickFn: this.insertClip
+          },
+          camera: {
+            name: 'camera',
+            icon: 'icon-camera',
+            tooltip: '导出帧(Shift+E)',
+            clickFn: this.screenshot
+          }
         };
         controllerArr.forEach((name) => {
           list.push(controllerConfig[name]);

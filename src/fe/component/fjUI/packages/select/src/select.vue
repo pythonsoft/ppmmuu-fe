@@ -250,7 +250,9 @@
         if (this.remote) {
           return 'icon-search fill-icon-btn';
         }
-        return this.clearable && this.inputHovering && this.value !== '' ? 'icon-fill-close select-delete-icon' : this.icon;
+        return this.clearable && this.inputHovering && this.value !== ''
+          ? 'icon-fill-close select-delete-icon'
+          : this.icon;
       },
       emptyText() {
         if (this.loading) {
