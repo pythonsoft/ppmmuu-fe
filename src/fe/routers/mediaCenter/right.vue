@@ -32,11 +32,11 @@
               <tr v-for="(info, key) in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info">{{ info.value }}</span>
+                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ info.value }}</span>
+                    <span v-else>{{ formatValue(info.value) }}</span>
                   </template>
                   <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
                 </td>
@@ -88,7 +88,7 @@
   import Vue from 'vue';
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject, formatSize, formatDuration, formatContent, getStreamURL } from '../../common/utils';
+  import { isEmptyObject, formatSize, formatDuration, formatContent, getStreamURL, formatTime } from '../../common/utils';
   import moreView from './moreView';
   import SourceMenuDialog from './components/sourceMenuDialog';
   import Player from './components/player';
@@ -302,6 +302,17 @@
         });
 
         return false;
+      },
+      formatValue(str) {
+        let rs = str;
+
+        if(/[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(str)) {
+          rs = formatTime(str);
+        }
+
+        console.log(str, rs);
+
+        return rs;
       }
     }
   };
