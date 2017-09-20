@@ -160,7 +160,7 @@
   import Vue from 'vue';
   import { getTimeByStr, formatDuration, getPosition, appendToBody, getStringLength } from '../../common/utils';
   import './index.css';
-  import { getTimeRange, getQuery, getSearchNotice, getOrder, ORDER_OPTIONS,
+  import { getTimeRange, getQuery, getSearchNotice, getOrder, formatMust, getHighLightFields, ORDER_OPTIONS,
     HHIGHLIGHT_FIELDS1, HHIGHLIGHT_FIELDS2, FILETR_FIELDS } from './config';
 
   import threeColumn from '../../component/layout/threeColumn';
@@ -219,6 +219,7 @@
     },
     watch: {
       orderVal(val) {
+        this.currentPage = 1;
         this.getMediaList();
       }
     },
@@ -302,6 +303,7 @@
         return pathArr[level] || '';
       },
       searchClick() {
+        this.currentPage = 1;
         this.resize();
       },
       getSeachConfigs() {
@@ -319,7 +321,17 @@
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
-        let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
+        const options = {
+          source: this.fl,
+          match: [],
+          should: [],
+          hl: HHIGHLIGHT_FIELDS1,
+          sort: {},
+          start: start,
+          pageSize: this.pageSize
+        };
+        const must = options.match;
+        getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
         if (this.keyword && searchChoose) {
@@ -336,80 +348,41 @@
         }
         this.searchResult = searchNotice;
 
-        if (f_date_162) {
-          if (q) {
-            q += ` AND f_date_162:${f_date_162}`;
-          } else {
-            q = `f_date_162:${f_date_162}`;
-          }
-        }
-
-        if (me.houseNo) {
-          if (q) {
-            q += ` AND f_str_187:${me.houseNo}`;
-          } else {
-            q = `f_str_187:${me.houseNo}`;
-          }
-        }
-
-        if (f_date_36) {
-          if (q) {
-            q += ` AND f_date_36:${f_date_36}`;
-          } else {
-            q = `f_date_36:${f_date_36}`;
-          }
-        }
-
-        const sort = getOrder(this.orderVal);
-
-        const options = {
-          q: q,
-          fl: this.fl,
-          sort: sort,
-          start: start,
-          hl: 'off',
-          indent: 'off',
-          'hl.fl': HHIGHLIGHT_FIELDS1,
-          rows: this.pageSize
+        const obj = {
+          f_date_162: f_date_162,
+          f_str_187: me.houseNo,
+          f_date_36: f_date_36,
+          publish_status: 1,
+          full_text: this.keyword
         };
 
-        const hit = function (val) {
-        //          const keywords = 'name,program_name_cn,program_name_en,f_str_03'.split(',');
-          const keywords = 'name'.split(',');
-          const query = [];
+        formatMust(must, obj);
 
-          for (let i = 0, len = keywords.length; i < len; i++) {
-            query.push(` OR ${keywords[i]}:${val}`);
-          }
-
-          return query.join(' ');
-        };
+        options.sort = getOrder(this.orderVal);
 
         if (this.keyword) {
-          const fullText = sort ? this.keyword : (this.keyword + hit(this.keyword));
-          options.hl = 'on';
-          options.indent = 'on';
-          if (q) {
-            q += ` AND (full_text:${fullText})`;
+          if (options.sort.length) {
             for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
               if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
-                options['hl.fl'] = HHIGHLIGHT_FIELDS1;
+                options.hl = HHIGHLIGHT_FIELDS2;
               }
             }
           } else {
-            q = `(full_text:${fullText})`;
+            const item = {
+              match: {}
+            };
+            formatMust(options.should, { name: this.keyword });
+          }
+        } else {
+          if (!options.sort.length) {
+            options.sort = [{
+              key: 'last_modify',
+              value: 'desc'
+            }];
           }
         }
 
-        if (q) {
-          q += ' AND publish_status:1';
-        } else {
-          q = 'publish_status:1';
-        }
-
-        options.q = q;
-
-        api.solrSearch({ params: options }, me).then((res) => {
+        api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
@@ -418,18 +391,13 @@
         });
       },
       searchHouseNoClick() {
+        this.currentPage = 1;
         const me = this;
         this.listType = 'normal';
         if (!me.houseNo) {
           return false;
         }
-        let searchNotice = `检索词: ${this.keyword}`;
-        const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
-        if (this.keyword && searchChoose) {
-          searchNotice += `,${searchChoose}`;
-        } else {
-          searchNotice += searchChoose;
-        }
+        let searchNotice = `检索词: ${me.houseNo}`;
         const noticeLength = getStringLength(searchNotice);
         if (noticeLength > 15) {
           searchNotice = searchNotice.substr(0, 15);
@@ -439,16 +407,19 @@
         }
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const options = {
-          q: `f_str_187:${me.houseNo}`,
-          fl: this.fl,
-          sort: 'last_modify desc',
+          source: this.fl,
+          match: [],
+          should: [],
+          sort: {},
           start: start,
-          hl: 'off',
-          indent: 'off',
-          'hl.fl': HHIGHLIGHT_FIELDS1,
-          rows: this.pageSize
+          pageSize: this.pageSize
         };
-        api.solrSearch({ params: options }, me).then((res) => {
+        const obj = {
+          f_str_187: me.houseNo,
+          publish_status: 1
+        };
+        formatMust(options.match, obj);
+        api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
