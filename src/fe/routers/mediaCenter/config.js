@@ -89,23 +89,23 @@ method.getQuery = function getQuery(must, configs) {
       const item = {
         key: temp.key,
         value: temp.selected
-      }
-      must.push(item)
+      };
+      must.push(item);
     }
   }
 };
 
-method.formatMust = function(must, obj){
-  for(let key in obj){
-    if(obj[key]){
+method.formatMust = function (must, obj) {
+  for (const key in obj) {
+    if (obj[key]) {
       const item = {
         key: key,
         value: obj[key]
-      }
-      must.push(item)
+      };
+      must.push(item);
     }
   }
-}
+};
 
 method.getSearchNotice = function getSearchNotice(configs) {
   const q = [];
@@ -159,13 +159,13 @@ method.getOrder = function getOrder(selectedValue) {
   return sort;
 };
 
-method.getHighLightFields = function getHighLightFields(fields){
+method.getHighLightFields = function getHighLightFields(fields) {
   const obj = {};
   fields = fields.split(',');
-  for(let i = 0, len = fields.length; i < len; i++){
+  for (let i = 0, len = fields.length; i < len; i++) {
     obj[fields[i]] = {};
   }
   return obj;
-}
+};
 
 module.exports = method;

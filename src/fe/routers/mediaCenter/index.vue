@@ -329,8 +329,8 @@
           sort: {},
           start: start,
           pageSize: this.pageSize
-        }
-        const must = options['match'];
+        };
+        const must = options.match;
         getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
@@ -354,31 +354,31 @@
           f_date_36: f_date_36,
           publish_status: 1,
           full_text: this.keyword
-        }
+        };
 
         formatMust(must, obj);
 
-        options['sort'] = getOrder(this.orderVal);
+        options.sort = getOrder(this.orderVal);
 
         if (this.keyword) {
-          if (options['sort'].length) {
+          if (options.sort.length) {
             for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
               if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
-                options['hl'] = HHIGHLIGHT_FIELDS2;
+                options.hl = HHIGHLIGHT_FIELDS2;
               }
             }
-          }else{
+          } else {
             const item = {
               match: {}
-            }
-            formatMust(options['should'], {name: this.keyword});
+            };
+            formatMust(options.should, { name: this.keyword });
           }
-        }else {
-          if (!options['sort'].length){
-            options['sort'] = [{
+        } else {
+          if (!options.sort.length) {
+            options.sort = [{
               key: 'last_modify',
               value: 'desc'
-            }]
+            }];
           }
         }
 
@@ -413,12 +413,12 @@
           sort: {},
           start: start,
           pageSize: this.pageSize
-        }
+        };
         const obj = {
           f_str_187: me.houseNo,
-          publish_status: 1,
-        }
-        formatMust(options['match'], obj);
+          publish_status: 1
+        };
+        formatMust(options.match, obj);
         api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
