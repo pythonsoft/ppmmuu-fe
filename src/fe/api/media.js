@@ -134,7 +134,7 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
 };
 
 api.getIcon = function getIcon(id) {
-  return `${axios.defaults.baseURL}/media/getIcon?objectid=${id}`;
+  return axios.defaults.baseURL + '/media/getIcon?objectid=' + id;
 };
 
 api.getObject = function getObject(data, scope) {

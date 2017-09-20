@@ -3,7 +3,7 @@
     <div class="media-video">
       <div v-if="url" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <player :height="288" :width="448" :url="url" :streamInfo="streamInfo"></player>
+          <player :videoId="videoId" :height="288" :width="448" :url="url" :streamInfo="streamInfo"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -127,7 +127,8 @@
         },
         templateInfo: {},
         fileInfo: {},
-        downloadDialogDisplay: false
+        downloadDialogDisplay: false,
+        videoId: ''
       };
     },
     watch: {
@@ -136,6 +137,7 @@
         this.program = {};
         this.poster = this.getThumb(val);
         this.item = val;
+        this.videoId = val.id;
         this.getDetail();
         this.getStream();
       },

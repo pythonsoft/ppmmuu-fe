@@ -5,6 +5,9 @@
     <div class="video-source-title">{{ `源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
       <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
+      <div v-show="currentVideoSRT" class="video-srt">
+        <span class="video-srt-text">{{ currentVideoSRT }}</span>
+      </div>
     </div>
     <div class="video-source-bottom">
       <div v-if="duration===0" class="player-mask"></div>
@@ -55,7 +58,7 @@
   </div>
 </template>
 <script>
-  import { getStreamURL, transformSecondsToStr } from '../../../common/utils';
+  import { getStreamURL, getSRT, transformSecondsToStr } from '../../../common/utils';
 
   export default {
     props: {
@@ -115,6 +118,9 @@
         screenshotURL: '',
         screenshotTitle: '',
         videoSource: '',
+        videoSRT: [],
+        videoSRTPosition: 0,
+        currentVideoSRT: '',
         videoInfo: {
           FILENAME: '',
           INPOINT: '',
@@ -157,6 +163,7 @@
     watch: {
       videoId(val) {
         this.getStream(val);
+        this.getSRTArr(val);
       },
       isActivePanel(val) {
         if (val) {
@@ -203,6 +210,7 @@
     mounted() {
       if (this.$route.params.objectId) {
         this.getStream(this.$route.params.objectId);
+        this.getSRTArr(this.$route.params.objectId);
       }
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
@@ -234,7 +242,16 @@
           this.videoInfo = res.result;
         }, this);
       },
+      getSRTArr(id) {
+        getSRT(id, (err, data, res) => {
+          if (err) {
+            return;
+          }
+          this.videoSRT = data;
+        }, this);
+      },
       reset() {
+        this.videoSRTPosition = 0;
         this.currentTime = 0;
         this.offset = 0;
         this.isPlaying = false;
@@ -317,9 +334,33 @@
         }
         this.video.currentTime = this.inTime;
         this.currentTime = this.inTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
+      },
+      updateCurrentSRT() {
+        if (this.videoSRT.length === 0) return;
+        if (this.currentTime < this.videoSRT[0].start) {
+          this.videoSRTPosition = 0;
+          this.currentVideoSRT = '';
+          return;
+        }
+        for (let i = 0; i < this.videoSRT.length; i++) {
+          if (this.videoSRT[i].start <= this.currentTime
+            && this.videoSRT[i].end >= this.currentTime) {
+            this.videoSRTPosition = i;
+            this.currentVideoSRT = this.videoSRT[i].text;
+            return;
+          }
+          if (i > 0
+            && this.videoSRT[i - 1].end < this.currentTime
+            && this.videoSRT[i].start > this.currentTime) {
+            this.videoSRTPosition = i;
+            this.currentVideoSRT = '';
+            return;
+          }
+        }
       },
       gotoOutPoint() {
         if (this.isPlaying) {
@@ -327,6 +368,7 @@
         }
         this.video.currentTime = this.outTime;
         this.currentTime = this.outTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
@@ -388,6 +430,16 @@
             const progressBar = this.getProgressBarStyle();
             const progressBarWidth = progressBar.width;
             this.currentTime = this.video.currentTime;
+            if (this.videoSRT.length > 0) {
+              if (this.videoSRT[this.videoSRTPosition].start >= this.currentTime - 1 / this.fps
+                && this.videoSRT[this.videoSRTPosition].start <= this.currentTime + 1 / this.fps) {
+                this.currentVideoSRT = this.videoSRT[this.videoSRTPosition].text;
+              } else if (this.videoSRT[this.videoSRTPosition].end >= this.currentTime - 1 / this.fps
+                && this.videoSRT[this.videoSRTPosition].end <= this.currentTime + 1 / this.fps) {
+                this.videoSRTPosition += 1;
+                this.currentVideoSRT = '';
+              }
+            }
             if (this.currentTime === this.video.duration) {
               this.isPlaying = false;
               clearInterval(this.moveIndicatorTimer);
@@ -407,7 +459,8 @@
         if (this.video.currentTime < 1 / this.fps) return;
         this.video.currentTime -= 1 / this.fps;
         this.currentTime = this.video.currentTime;
-        this.video.currentTime = this.currentTime;
+        // this.video.currentTime = this.currentTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
@@ -419,7 +472,8 @@
         if (this.video.currentTime > this.video.duration - 1 / this.fps) return;
         this.video.currentTime += 1 / this.fps;
         this.currentTime = this.video.currentTime;
-        this.video.currentTime = this.currentTime;
+        // this.video.currentTime = this.currentTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
@@ -463,6 +517,7 @@
         this.offset = currentLeft;
         this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
         this.currentTime = this.video.currentTime;
+        this.updateCurrentSRT();
       },
       indicatorMousedown(e) {
         if (this.isPlaying) {
@@ -496,6 +551,7 @@
           }
           this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
           this.currentTime = this.video.currentTime;
+          this.updateCurrentSRT();
         }, this.interval);
       },
       bodyMouseupHandler(e) {

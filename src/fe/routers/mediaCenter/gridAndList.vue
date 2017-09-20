@@ -32,7 +32,7 @@
     </div>
 
     <ul v-else class="media-center-grid" :style="{ width: !width ? '100%' : width + 'px' }">
-      <li v-for="item in items" :key="item.id" @click="change(item)">
+      <li v-for="item in items" v-if="item" :key="item.id" @click="change(item)">
         <div class="iconfont icon-phoenixtv media-center-grid-image">
           <img class="media-center-thumb" v-lazy="getThumb(item)" >
           <div class="media-center-duration">{{getDuration(item)}}</div>
