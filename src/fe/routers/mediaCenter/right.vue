@@ -9,12 +9,12 @@
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
-              <!--<li>-->
-                <!--<span title="下载" class="iconfont icon-video-download" @click.stop="download"></span>-->
-              <!--</li>-->
-              <!-- <li>
+              <li>
+                <span title="下载" class="iconfont icon-video-download" @click.stop="(e) => prepareDownload()"></span>
+              </li>
+              <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
-              </li> -->
+              </li>
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="添加" class="iconfont icon-addto"></span>
               </li>
@@ -100,6 +100,8 @@
   const api = require('../../api/media');
   const jobAPI = require('../../api/job');
 
+  const config = require('./config');
+
 
   export default {
     name: 'right',
@@ -116,7 +118,7 @@
       return {
         title: '',
         program: {},
-        files: [],
+        files: [], //所有的文件信息
         poster: '',
         activeTabName: 'tab1',
         item: {},
@@ -218,43 +220,62 @@
         }
       },
       handleAddtoMenu(data, leaveOrNot) {
+        if(isEmptyObject(this.fileInfo)) {
+          this.fileInfo = this.getDefaultFileInfo();
+        }
+
+        if(isEmptyObject(this.fileInfo)) {
+          this.$message.error('当前没有视频可以进行编辑');
+          return false;
+        }
+
         const reqData = Object.assign({}, data);
         reqData.name = this.title;
+
         reqData.snippet = {
-          objectId: this.item.id,
+          objectId: this.fileInfo.OBJECTID,
           thumb: this.poster,
-          input: 0,
-          output: this.item.duration,
-          duration: this.item.duration
+          input: this.fileInfo.INPOINT,
+          output: this.fileInfo.OUTPOINT,
+          duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
+          fileTypeId: this.fileInfo.FILETYPEID,
         };
-        ivideoAPI.createItem(reqData)
-          .then((response) => {
-            this.unmountMenu();
-            if (leaveOrNot) {
-              this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
-            }
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          });
+
+        ivideoAPI.createItem(reqData).then((response) => {
+          this.unmountMenu();
+          if (leaveOrNot) {
+            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
+          }
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       },
       gotoEditer() {
+        if(isEmptyObject(this.fileInfo)) {
+          this.fileInfo = this.getDefaultFileInfo();
+        }
+
+        if(isEmptyObject(this.fileInfo)) {
+          this.$message.error('当前没有视频可以进行编辑');
+          return false;
+        }
+
         const reqData = { parentId: '' };
         reqData.name = this.title;
         reqData.snippet = {
-          objectId: this.item.id,
+          objectId: this.fileInfo.OBJECTID,
           thumb: this.poster,
-          input: 0,
-          output: this.item.duration,
-          duration: this.item.duration
+          input: this.fileInfo.INPOINT,
+          output: this.fileInfo.OUTPOINT,
+          duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
+          fileTypeId: this.fileInfo.FILETYPEID,
         };
-        ivideoAPI.createItem(reqData)
-          .then((response) => {
-            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          });
+
+        ivideoAPI.createItem(reqData).then((response) => {
+          this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       },
       getStream() {
         const me = this;
@@ -276,15 +297,39 @@
           this.download();
         }
       },
-      prepareDownload(fileInfo) {
-        this.fileInfo = fileInfo;
-        this.downloadDialogDisplay = true;
+      getDefaultFileInfo() {
+        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
+        const files = this.files;
+
+        if(files.length === 0) {
+          return {};
+        }
+
+        for(let i = 0, len = files.length; i < len; i++) {
+          for(let j = 0, l = ft.length; j < l; j++) {
+            if(files[i].FILETYPEID === ft[j]) {
+              return files[i];
+            }
+          }
+        }
+
+        return {};
       },
-      download() {
-        if (isEmptyObject(this.streamInfo)) {
+      prepareDownload(fileInfo) {
+        if(fileInfo) {
+          this.fileInfo = fileInfo;
+        }else {
+          this.fileInfo = this.getDefaultFileInfo();
+        }
+
+        if(isEmptyObject(this.fileInfo)) {
+          this.$message.error('当前没有视频可以下载，下载其它信息可以到文件信息中选取下载');
           return false;
         }
 
+        this.downloadDialogDisplay = true;
+      },
+      download() {
         const me = this;
 
         const param = {
