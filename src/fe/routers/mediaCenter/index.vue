@@ -103,6 +103,7 @@
               v-for="categoryItem in defaultList">
               <h3 class="category-title">{{ categoryItem.category }}</h3>
               <grid-list-view
+                class="media-center-category-list"
                 type="grid"
                 :width="listWidth"
                 :items="categoryItem.docs"
