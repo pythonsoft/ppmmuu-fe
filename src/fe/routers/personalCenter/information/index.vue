@@ -124,6 +124,13 @@
         api.postUserUpdate(this.userInfo)
           .then((res) => {
             me.$message.success('保存成功!');
+            try {
+              const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+              userInfo.photo = me.userInfo.photo;
+              localStorage.setItem('userInfo', JSON.stringify(userInfo));
+            } catch (e) {
+
+            }
           })
           .catch((error) => {
             me.$message.error(error);

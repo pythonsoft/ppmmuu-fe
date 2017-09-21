@@ -2,7 +2,12 @@
   <div class="profile-popover">
     <div class="profile-content clearfix">
       <div class="profile-avatar-box">
-        <img :src="avatar" class="profile-avatar" width="24" height="24">
+        <template v-if="avatar">
+          <img :src="avatar" class="profile-avatar" width="24" height="24">
+        </template>
+        <template v-else>
+          <img class="profile-avatar imgStyle" width="24" height="24">
+        </template>
       </div>
       <div class="profile-info-box">
         <p class="profile-info-name">{{name}}</p>
@@ -84,5 +89,10 @@
   }
   .profile-info-email {
     color: #9FB3CA;
+  }
+  .imgStyle {
+    background: url(../img/avatar.png) no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
   }
 </style>

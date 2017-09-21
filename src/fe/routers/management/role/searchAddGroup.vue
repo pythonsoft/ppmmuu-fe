@@ -106,6 +106,11 @@
         };
 
         groupApi.getGroupList(formatQuery(query, true)).then((res) => {
+          const docs = res.data.docs || [];
+          if (docs.length === 0) {
+            me.close();
+            me.$message.error('没有部门信息');
+          }
           cb && cb(res.data.docs);
         }).catch((err) => {
           me.showErrorInfo(err);

@@ -1,7 +1,12 @@
 <template>
   <div style="position:relative;">
     <div class="upload-img-content">
-      <img :src="path" class="upload-img-content-photo" :style="imgStyle">
+      <template v-if="path">
+        <img :src="path" class="upload-img-content-photo">
+      </template>
+      <template v-else>
+        <img class="upload-img-content-photo imgStyle">
+      </template>
     </div>
     <input id="img-input" accept="image/gif,image/png,image/jpeg,image/bmp" class="upload-img-input" @change='chooseImg' type="file">
     <label for="img-input" class="upload-img-content-change">修改头像</label>
@@ -24,8 +29,7 @@
     },
     data() {
       return {
-        path: this.imgPath,
-        imgStyle: {}
+        path: this.imgPath
       };
     },
     mounted() {
@@ -35,12 +39,6 @@
     watch: {
       imgPath(val) {
         this.path = val;
-        if (!this.path) {
-          this.imgStyle = {
-            background: 'url(../../../img/avatar.png) no-repeat',
-            backgroundSize: '100% 100%', overflow: 'hidden'
-          };
-        }
       }
     },
     methods: {
@@ -109,5 +107,11 @@
     top: 74px;
     left: 5px;
     z-index: 1;
+  }
+
+  .imgStyle {
+    background: url(../../../img/avatar.png) no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
   }
 </style>
