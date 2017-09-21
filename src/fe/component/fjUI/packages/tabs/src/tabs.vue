@@ -1,5 +1,5 @@
 <template>
-  <div :class="[{'theme-dark': theme === 'dark'}, customClass]">
+  <div :class="customClass">
     <div class="fj-tabs-header" :class="customHeaderClass">
       <div
         v-for="(pane, index) in panes"
@@ -19,10 +19,6 @@
     name: 'FjTabs',
     props: {
       value: {},
-      theme: {
-        type: String,
-        default: 'normal'
-      },
       customClass: String,
       customHeaderClass: String
     },
