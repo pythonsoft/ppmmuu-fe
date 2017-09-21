@@ -11,7 +11,7 @@ axios.defaults.baseURL = 'http://localhost:8080';
 axios.defaults.streamURL = 'http://localhost:8080';
 
 if (window.location.hostname.indexOf('hk') !== -1) {
-  axios.defaults.baseURL = 'http://hk.ump.phoenxitv.cn';
+  axios.defaults.baseURL = 'http://hk.api.szdev.cn';
   axios.defaults.streamURL = 'http://hk.live.szdev.cn/u';
 }
 
