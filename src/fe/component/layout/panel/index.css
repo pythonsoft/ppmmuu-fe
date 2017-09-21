@@ -11,19 +11,19 @@
 }
 
 .layout-panel-slide-horizontal-bar{
-  border-top: 4px solid #222;
+  border-top: 4px solid #F2F6FA;
   cursor: ns-resize;
 }
 
 .layout-panel-slide-vertical-bar{
-  border-left: 4px solid #222;
+  border-left: 4px solid #F2F6FA;
   cursor: ew-resize;
 }
 
 .layout-panel-slide-horizontal-bar-no-resize{
-  border-top: 4px solid #222;
+  border-top: 4px solid #F2F6FA;
 }
 
 .layout-panel-slide-vertical-bar-no-resize{
-  border-left: 4px solid #222;
+  border-left: 4px solid #F2F6FA;
 }

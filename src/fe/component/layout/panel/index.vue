@@ -156,14 +156,14 @@
           css.top = `${p.top}px`;
           css.left = `${p.left}px`;
           css.width = `${this.parentSize.width}px`;
-          css.height = `${size}px`;
-          p.top += size;
+          css.height = `${size - 2}px`;
+          p.top += size + 2;
         } else {
           css.top = `${p.top}px`;
           css.left = `${p.left}px`;
-          css.width = `${size}px`;
+          css.width = `${size - 2}px`;
           css.height = `${this.parentSize.height}px`;
-          p.left += size;
+          p.left += size + 2;
         }
 
         return { css: css, nextPosition: p };
