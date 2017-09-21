@@ -5,19 +5,7 @@
     width="700px"
     @close="close"
   >
-    <div class="template-dialog-select-wrap" v-if="type === 'add'">
-      <fj-select placeholder="请选择" size="small" theme="fill" clearable v-model="currentType" >
-        <fj-option
-          v-for="item in templateType"
-          :key="item.key"
-          :label="item.text"
-          :value="item.value">
-        </fj-option>
-      </fj-select>
-    </div>
-
      <download-template-view
-       v-if="currentType === templateType.DOWNLOAD.value"
        :templateInfo="templateInfo"
        :type="type"
        @close="close"
@@ -29,7 +17,7 @@
 <script>
   import downloadTemplateView from './component/download';
 
-  const config = require('../config');
+  const config = require('../../task/config');
 
   export default {
     components: {
@@ -57,10 +45,10 @@
         if (val) {
           this.dialogVisible = true;
           if (this.type !== 'add') {
-            this.title = '变更模板信息';
+            this.title = '变更下载模板信息';
             this.currentType = this.templateInfo.type;
           } else {
-            this.title = '添加模板信息';
+            this.title = '添加下载模板信息';
           }
         } else {
           this.dialogVisible = false;
