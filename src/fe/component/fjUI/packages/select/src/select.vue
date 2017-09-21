@@ -193,6 +193,7 @@
         if (this.remote) {
           this.$emit('search', this.selectedLabel);
           this.visible = false;
+          return;
         }
         if (this.options[this.hoverIndex]) {
           this.handleOptionClick(this.options[this.hoverIndex]);

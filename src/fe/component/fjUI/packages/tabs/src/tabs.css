@@ -19,26 +19,3 @@
 .fj-tabs-item.active {
   border-bottom: 2px solid var(--tabs-item-active-color);
 }
-
-.theme-dark .fj-tabs-header {
-  margin-bottom: 10px;
-  border-bottom: 0;
-}
-.theme-dark .fj-tabs-item {
-  padding: 0;
-  margin-right: 20px;
-  height: 27px;
-  line-height: 25px;
-  display: inline-block;
-  font-size: 12px;
-  color: #9FB3CA;
-  cursor: pointer;
-}
-.theme-dark .fj-tabs-item.active,
-.theme-dark .fj-tabs-item:hover {
-  color: #CED9E5;
-}
-.theme-dark .fj-tabs-item.active {
-  font-weight: bold;
-  border-bottom: 2px solid #CED9E5;
-}

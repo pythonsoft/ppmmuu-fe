@@ -5,9 +5,13 @@ export default {
         {
           this.data.map((row, rowIndex) => {
             let className = rowIndex % 2 === 1 ? 'fj-table-striped' : null;
-            if (this.highlight
-              && (row === this.store.states.currentRow
-              || this.store.states.selection.indexOf(row) > -1)) {
+            let isCurrentRow = row === this.store.states.currentRow
+              || this.store.states.selection.indexOf(row) > -1;
+            if (this.highlightKey && this.store.states.currentRow) {
+              isCurrentRow = row[this.highlightKey] === this.store.states.currentRow[this.highlightKey]
+              || this.store.states.selection.indexOf(row) > -1;
+            }
+            if (this.highlight && isCurrentRow) {
               className = className ? `${className} fj-current-row` : 'fj-current-row';
             }
             return (
@@ -34,7 +38,8 @@ export default {
     store: {
       required: true
     },
-    highlight: Boolean
+    highlight: Boolean,
+    highlightKey: String
   },
   computed: {
     table() {

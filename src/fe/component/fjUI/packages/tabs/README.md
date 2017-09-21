@@ -4,7 +4,7 @@
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
 | vulue | 绑定值，选项卡中的name | string | - | - | ✅ |
-| theme | tab主题 | string | normal, dark | normal | ✅ |
+| size | 尺寸 | string | normal, small | normal | ✅ |
 | custom-class, custom-header-class | 自定义类 | string | - | - | ✅ |
 
 

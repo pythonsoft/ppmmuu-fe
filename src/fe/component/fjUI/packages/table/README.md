@@ -4,6 +4,8 @@
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
 | showThead | 是否显示表头 | boolean | - | true | ✅ |
+| highlightCurrentRow | 是否高亮选中行 | boolean | - | true | ✅ |
+| highlightKey | 判断是否高亮的字段名(仅适用于单选) | string | - | - | ✅ |
 | data | 显示的数据 | array | - | - | ✅ |
 | empty-text | 空数据时显示的文本内容，也可以通过slot="empty"设置 | string | - | 暂无数据 | ✅ |
 | theme | 主题样式 | string | normal, drak | normal | ✅ |

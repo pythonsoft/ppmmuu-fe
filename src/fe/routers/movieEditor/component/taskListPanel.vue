@@ -2,7 +2,7 @@
   <div>
     <div class="task-list-controller-wrap">
       <div class="player-control-item-wrap select-wrap">
-        <fj-select size="small" v-model="taskListType" theme="drak">
+        <fj-select size="small" v-model="taskListType">
           <fj-option
             v-for="item in status"
             :key="item.value"
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="task-list">
-      <fj-table :data="taskList" @current-change="handleCurrentChange" theme="dark">
+      <fj-table :data="taskList" @current-change="handleCurrentChange" highlightKey="id">
         <fj-table-column prop="status" width="90" label="状态">
           <template scope="props">
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
@@ -44,9 +44,8 @@
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
-      <div class="pagination">
+      <div class="task-list-pagination">
         <fj-pagination
-          theme="dark"
           :page-size="pageSize"
           :total="total"
           :current-page.sync="page"
@@ -173,31 +172,3 @@
     }
   };
 </script>
-<style>
-  .task-status-base {
-    font-size: 12px;
-    color: #fff;
-    width: 48px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 2px;
-    text-align: center;
-    display: block;
-  }
-  .task-status-created {
-    background: #38B1EB;
-  }
-  .task-status-dealing {
-    background: #636363;
-  }
-  .task-status-error {
-    background: #BF3054;
-  }
-  .task-status-complete {
-    background: #199D90;
-  }
-  .pagination {
-    text-align: center;
-    margin-top: 10px;
-  }
-</style>

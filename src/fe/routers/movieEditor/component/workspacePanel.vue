@@ -4,7 +4,6 @@
     @click="()=>{this.$emit('update:activePanel', 'workspacePanel')}">
     <fj-tabs
       v-model="activeTabName"
-      theme="dark"
       custom-class="workspace-wrap"
       custom-header-class="workspace-header">
       <fj-tab-pane label="我的素材" name="timeline">
