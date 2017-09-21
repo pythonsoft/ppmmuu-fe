@@ -55,6 +55,7 @@
   export default {
     name: 'FjDatePicker',
     props: {
+      parentEl: {},
       size: String,
       placeholder: String,
       pickerPosition: String,
@@ -173,12 +174,13 @@
         const inputHeight = this.$el.getBoundingClientRect().height;
         const inputWidth = this.$el.getBoundingClientRect().width;
         // const pickerHeight = this.picker.$el.getBoundingClientRect().height;
-        const pickerHeight = 343;
+        const pickerHeight = this.type === 'date' ? 314 : 343;
         let marginTop = window.getComputedStyle(this.picker.$el).marginTop || 0;
         marginTop = parseInt(marginTop, 10);
         let transitionName = 'fj-zoom-in-top';
+        const parentElScrollTop = this.parentEl ? this.parentEl.scrollTop : 0;
         if (bottom < top) {
-          pickerPosition.top = `${inputPosition.y - pickerHeight - (marginTop * 2)}px`;
+          pickerPosition.top = `${inputPosition.y - pickerHeight - (marginTop * 2) - parentElScrollTop}px`;
           transitionName = 'fj-zoom-in-bottom';
         } else {
           pickerPosition.top = `${inputPosition.y + inputHeight}px`;
