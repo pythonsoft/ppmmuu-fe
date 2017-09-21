@@ -143,7 +143,8 @@
         //   const row = tableData[i];
         //   for (let j = 0; j < row.length; j++) {
         //     const cell = row[j];
-        //     cell.inRange = cell.value >= new Date(minDate).getTime() && cell.value <= new Date(maxDate).getTime();
+        //     cell.inRange = cell.value >= new Date(minDate).getTime()
+          //     && cell.value <= new Date(maxDate).getTime();
         //     cell.isStart = minDate && cell.value === new Date(minDate).getTime();
         //     cell.isEnd = maxDate && cell.value === new Date(maxDate).getTime();
         //   }

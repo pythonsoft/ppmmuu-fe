@@ -36,7 +36,10 @@
       imgPath(val) {
         this.path = val;
         if (!this.path) {
-          this.imgStyle = { background: 'url(../../../img/avatar.png) no-repeat', backgroundSize: '100% 100%', overflow: 'hidden' };
+          this.imgStyle = {
+            background: 'url(../../../img/avatar.png) no-repeat',
+            backgroundSize: '100% 100%', overflow: 'hidden'
+          };
         }
       }
     },

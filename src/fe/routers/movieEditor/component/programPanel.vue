@@ -222,8 +222,18 @@
         const controllerArr = controller.split(',');
         const list = [];
         const controllerConfig = {
-          play: { name: 'play', icon: 'icon-play', tooltip: '播放-停止切换(Space)', clickFn: this.updatePlayerStatus },
-          camera: { name: 'camera', icon: 'icon-camera', tooltip: '导出帧(Shift+E)', clickFn: this.screenshot }
+          play: {
+            name: 'play',
+            icon: 'icon-play',
+            tooltip: '播放-停止切换(Space)',
+            clickFn: this.updatePlayerStatus
+          },
+          camera: {
+            name: 'camera',
+            icon: 'icon-camera',
+            tooltip: '导出帧(Shift+E)',
+            clickFn: this.screenshot
+          }
         };
         controllerArr.forEach((name) => {
           list.push(controllerConfig[name]);

@@ -29,6 +29,7 @@
                 <video-source-panel
                   :title="sourceTitle"
                   :videoId="sourceVideoId"
+                  :videoSnippet="sourceSnippet"
                   :activePanel.sync="activePanel"
                   :size="{ width: props.width, height: props.height }"
                   @insert="importSource"></video-source-panel>
@@ -97,6 +98,7 @@
         importSourceInfo: null,
         sourceTitle: '',
         sourceVideoId: '',
+        sourceSnippet: {},
         activePanel: 'sourcePanel',
         size: { width: document.body.clientWidth, height: document.body.clientHeight },
         programInfo: { id: '', objectId: '', title: '', range: [0, 0] }
@@ -125,6 +127,7 @@
       updateCurrentSource(item) {
         this.sourceVideoId = item.snippet.objectId || '';
         this.sourceTitle = item.name;
+        this.sourceSnippet = item.snippet;
       },
       back() {
         this.$router.go(-1);

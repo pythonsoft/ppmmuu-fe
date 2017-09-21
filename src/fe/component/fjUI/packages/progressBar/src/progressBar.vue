@@ -14,7 +14,9 @@
 
         style.transition = `width ${transition.speed} ease, opacity ${transition.opacity} ease`;
         style.backgroundColor = this.progress.canSuccess ? '#aeff00' : 'red';
-        style.boxShadow = this.progress.canSuccess ? '0 0 10px rgba(62, 173, 186, .7)' : '0 0 10px rgba(255, 107, 144, .7)';
+        style.boxShadow = this.progress.canSuccess
+          ? '0 0 10px rgba(62, 173, 186, .7)'
+          : '0 0 10px rgba(255, 107, 144, .7)';
 
         style.opacity = this.progress.show ? 1 : 0;
         style.width = `${this.progress.percent * 100}%`;

@@ -179,13 +179,13 @@
         const selected = this.options[this.hoverIndex].$el;
         scrollIntoViewBottom(container, selected);
       },
-      setSelected() {
+      setSelected(inputVal = '') {
         const option = this.getOption(this.value);
         if (option) {
           this.selected = option;
           this.selectedLabel = option.label;
         } else {
-          this.selectedLabel = '';
+          this.selectedLabel = this.remote ? inputVal : '';
         }
       },
       selectOption() {
@@ -234,11 +234,9 @@
         }
       },
       value(val) {
-        if (!this.remote) {
-          this.setSelected();
-          if (this.$parent.$options.name === 'FjFormItem') {
-            this.$parent.$emit('form-change', val);
-          }
+        this.setSelected(val);
+        if (this.$parent.$options.name === 'FjFormItem') {
+          this.$parent.$emit('form-change', val);
         }
       },
       options(val) {
@@ -250,7 +248,9 @@
         if (this.remote) {
           return 'icon-search fill-icon-btn';
         }
-        return this.clearable && this.inputHovering && this.value !== '' ? 'icon-fill-close select-delete-icon' : this.icon;
+        return this.clearable && this.inputHovering && this.value !== ''
+          ? 'icon-fill-close select-delete-icon'
+          : this.icon;
       },
       emptyText() {
         if (this.loading) {
