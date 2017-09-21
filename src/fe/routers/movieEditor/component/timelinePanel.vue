@@ -26,7 +26,7 @@
 </template>
 <script>
   import { transformSecondsToStr, isEmptyObject } from '../../../common/utils';
-  import DownloadListView from '../../management/task/template/component/downloadDialog';
+  import DownloadListView from '../../management/template/download/component/downloadDialog';
   import jobAPI from '../../../api/job';
 
   const TIMELINE_CONFIG = {

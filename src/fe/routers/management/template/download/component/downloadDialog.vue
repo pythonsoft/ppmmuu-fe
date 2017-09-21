@@ -18,7 +18,7 @@
 </template>
 <script>
   const api = require('../../../../../api/template');
-  const config = require('../../config');
+  const config = require('../../../task/config');
 
   export default {
     name: 'mediaCenterDownloadDialogView',

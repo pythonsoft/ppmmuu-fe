@@ -1,6 +1,6 @@
 <template>
   <layout-four-row>
-    <template slot="search-left">模板管理</template>
+    <template slot="search-left">下载模板管理</template>
     <template slot="search-right">
       <div class="layout-four-row-search-item" :style="{ width: '100px' }">
         <fj-select size="small" placeholder="请选择" v-model="formData.type">
@@ -72,7 +72,7 @@
   import utils from '../../../../common/utils';
 
   const templateAPI = require('../../../../api/template');
-  const config = require('../config');
+  const config = require('../../task/config');
 
   export default {
     components: {

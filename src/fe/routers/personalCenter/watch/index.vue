@@ -103,7 +103,7 @@
   import MoreView from '../../mediaCenter/moreView';
   import Player from '../../mediaCenter/components/player';
   import { getTitle, getThumb } from '../../mediaCenter/common';
-  import downloadListView from '../../management/task/template/component/downloadDialog';
+  import downloadListView from '../../management/template/download/component/downloadDialog';
 
   const config = require('../../mediaCenter/config');
   const jobAPI = require('../../../api/job');
