@@ -298,10 +298,17 @@
 
         return false;
       },
-      downloadListConfirm(templateInfo) {
+      downloadListConfirm(templateInfo, actionName) {
         this.templateInfo = templateInfo || {};
+
         if (!isEmptyObject(templateInfo)) {
-          this.download();
+          console.log('actonname ===>', actionName);
+
+          if(!actionName) {
+            this.download();
+          }else {
+            this.$message.success(actionName + '功能正在开发中');
+          }
         }
       },
       getDefaultFileInfo() {
