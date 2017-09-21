@@ -107,10 +107,9 @@
     height: 18px;
     line-height: 18px;
     padding: 0 6px;
-    background: #151515;
+    background: #fff;
     border: 0;
     border-radius: 2px;
-    color: #9FB3CA;
   }
   .mediaWrap {
     position: relative;
@@ -118,7 +117,7 @@
     height: 29px;
   }
   .currentMedia {
-    background-color: #2A3E52;
+    /*background-color: #2A3E52;*/
   }
   .mediaDuration {
     position: absolute;

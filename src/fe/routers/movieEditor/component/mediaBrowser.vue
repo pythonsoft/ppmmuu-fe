@@ -21,7 +21,6 @@
     </div>
     <div class="media-browser-content">
       <tree-view
-        theme="dark"
         :autoExpand="false"
         :showUpper="false"
         :vue-instance="vueInstance"

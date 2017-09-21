@@ -7,8 +7,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: #292929;
-  color: #bbb;
+  background: #fff;
   overflow: hidden;
   font-size: 12px;
 }
@@ -17,37 +16,40 @@
   position: relative;
   height: 100%;
   width: 100%;
-  padding-top: 25px;
+  padding-top: 32px;
   box-sizing: border-box;
+  color: #2A3E52;
 }
 
 .movie-editor-top{
-  height: 24px;
-  line-height: 24px;
-  border-bottom: 1px solid #242627;
+  height: 32px;
+  line-height: 32px;
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  background: #4b4b4b;
+  color: #4C637B;
+  background: #F2F6FA;
   box-sizing: border-box;
   padding-right: 30px;
 }
 
 .movie-editor-title {
+  margin-left: 13px;
   white-space: nowrap;
   text-overflow: ellipsis;
   box-sizing: border-box;
   text-indent: 4px;
   overflow: hidden;
-  height: 22px;
-  line-height: 22px;
+}
+.movie-editor-title .icon-phoenixtv {
+  font-size: 12px;
 }
 
 .movie-editor-top-bar {
-  height: 24px;
-  width: 24px;
+  height: 32px;
+  width: 32px;
   position: absolute;
   right: 0;
   top: 0;
@@ -55,9 +57,9 @@
 }
 
 .movie-editor-top-bar li{
-  height: 24px;
-  line-height: 24px;
-  width: 24px;
+  height: 32px;
+  line-height: 32px;
+  width: 32px;
   text-align: center;
   float: left;
 }
@@ -68,7 +70,7 @@
 }
 
 .movie-editor-top-bar li:hover {
-  background: #666;
+  background: #CED9E5;
   color: #fff;
 }
 
@@ -77,4 +79,103 @@
   height: 100%;
   box-sizing: border-box;
 }
+.workspace-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 4px;
+}
 
+.workspace-wrap .fj-tabs-header {
+  margin-bottom: 10px;
+  border-bottom: 0;
+}
+.workspace-wrap .fj-tabs-item {
+  padding: 0;
+  margin-right: 20px;
+  height: 27px;
+  line-height: 25px;
+  display: inline-block;
+  font-size: 12px;
+  cursor: pointer;
+}
+.workspace-wrap .fj-tabs-item.active {
+  font-weight: bold;
+  border-bottom: 2px solid #CED9E5;
+}
+
+.workspace-header {
+  padding-left: 20px;
+}
+.task-list-controller-wrap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.task-list-controller-wrap .select-wrap {
+  width: 92px;
+}
+.task-list {
+  margin-top: 14px;
+  border-top: 1px solid #EBF3FB;
+}
+.timeline-title {
+  margin: 10px 20px;
+  font-size: 12px;
+  color: #4C637B;
+}
+.timeline-content {
+  position: absolute;
+  top: 90px;
+  right: 0;
+  left: 4px;
+  bottom: 0;
+}
+.task-status-base {
+  font-size: 12px;
+  color: #fff;
+  width: 48px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 2px;
+  text-align: center;
+  display: block;
+}
+.task-status-created {
+  background: #38B1EB;
+}
+.task-status-dealing {
+  background: #C0C003;
+}
+.task-status-error {
+  background: #FF3366;
+}
+.task-status-complete {
+  background: #2EC4B6;
+}
+.task-list-pagination {
+  text-align: center;
+  margin-top: 10px;
+}
+/*.dark .task-status-base {
+  font-size: 12px;
+  color: #fff;
+  width: 48px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 2px;
+  text-align: center;
+  display: block;
+}
+.dark .task-status-created {
+  background: #38B1EB;
+}
+.dark .task-status-dealing {
+  background: #636363;
+}
+.dark .task-status-error {
+  background: #BF3054;
+}
+.dark .task-status-complete {
+  background: #199D90;
+}*/
