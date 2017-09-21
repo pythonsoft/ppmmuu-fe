@@ -1,7 +1,7 @@
 <template>
   <layout-three-column :leftWidth="201" :rightWidth="448">
     <template slot="left">
-      <div class="media-left">
+      <div class="media-left" ref="mediaLeft">
         <div class="media-search">
           <!-- <fj-input
             placeholder="请输入检索关键词"
@@ -74,6 +74,7 @@
           <h4>新聞日期</h4>
           <div id="media-category-date">
             <fj-date-picker
+              :parentEl="(()=>{return this.$refs.mediaLeft})()"
               type="datetimerange"
               placeholder="请选择日期范围"
               v-model="datetimerange1"
@@ -85,9 +86,10 @@
           <h4>首播日期</h4>
           <div id="media-category-date">
             <fj-date-picker
-                    type="datetimerange"
-                    placeholder="请选择日期范围"
-                    v-model="datetimerange2"
+              :parentEl="(()=>{return this.$refs.mediaLeft})()"
+              type="datetimerange"
+              placeholder="请选择日期范围"
+              v-model="datetimerange2"
             ></fj-date-picker>
           </div>
         </div>
