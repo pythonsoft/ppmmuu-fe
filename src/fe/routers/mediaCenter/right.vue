@@ -118,7 +118,7 @@
       return {
         title: '',
         program: {},
-        files: [], //所有的文件信息
+        files: [], // 所有的文件信息
         poster: '',
         activeTabName: 'tab1',
         item: {},
@@ -220,11 +220,11 @@
         }
       },
       handleAddtoMenu(data, leaveOrNot) {
-        if(isEmptyObject(this.fileInfo)) {
+        if (isEmptyObject(this.fileInfo)) {
           this.fileInfo = this.getDefaultFileInfo();
         }
 
-        if(isEmptyObject(this.fileInfo)) {
+        if (isEmptyObject(this.fileInfo)) {
           this.$message.error('当前没有视频可以进行编辑');
           return false;
         }
@@ -238,7 +238,7 @@
           input: this.fileInfo.INPOINT,
           output: this.fileInfo.OUTPOINT,
           duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
-          fileTypeId: this.fileInfo.FILETYPEID,
+          fileTypeId: this.fileInfo.FILETYPEID
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
@@ -251,11 +251,11 @@
         });
       },
       gotoEditer() {
-        if(isEmptyObject(this.fileInfo)) {
+        if (isEmptyObject(this.fileInfo)) {
           this.fileInfo = this.getDefaultFileInfo();
         }
 
-        if(isEmptyObject(this.fileInfo)) {
+        if (isEmptyObject(this.fileInfo)) {
           this.$message.error('当前没有视频可以进行编辑');
           return false;
         }
@@ -268,7 +268,7 @@
           input: this.fileInfo.INPOINT,
           output: this.fileInfo.OUTPOINT,
           duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
-          fileTypeId: this.fileInfo.FILETYPEID,
+          fileTypeId: this.fileInfo.FILETYPEID
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
@@ -301,13 +301,13 @@
         const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
         const files = this.files;
 
-        if(files.length === 0) {
+        if (files.length === 0) {
           return {};
         }
 
-        for(let i = 0, len = files.length; i < len; i++) {
-          for(let j = 0, l = ft.length; j < l; j++) {
-            if(files[i].FILETYPEID === ft[j]) {
+        for (let i = 0, len = files.length; i < len; i++) {
+          for (let j = 0, l = ft.length; j < l; j++) {
+            if (files[i].FILETYPEID === ft[j]) {
               return files[i];
             }
           }
@@ -316,13 +316,13 @@
         return {};
       },
       prepareDownload(fileInfo) {
-        if(fileInfo) {
+        if (fileInfo) {
           this.fileInfo = fileInfo;
-        }else {
+        } else {
           this.fileInfo = this.getDefaultFileInfo();
         }
 
-        if(isEmptyObject(this.fileInfo)) {
+        if (isEmptyObject(this.fileInfo)) {
           this.$message.error('当前没有视频可以下载，下载其它信息可以到文件信息中选取下载');
           return false;
         }
@@ -352,7 +352,7 @@
       formatValue(str) {
         let rs = str;
 
-        if(/[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(str)) {
+        if (/[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(str)) {
           rs = formatTime(str);
         }
 

@@ -89,6 +89,9 @@
       login() {
         const me = this;
         me.isBtnLoading = true;
+        me.userInfo.username = me.userInfo.username.trim();
+        me.userInfo.password = me.userInfo.password.trim();
+
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
