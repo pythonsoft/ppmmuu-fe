@@ -427,6 +427,7 @@
   float: left;
   font-style: italic;
   cursor: pointer;
+  color: #2B6DBA;
 }
 .item-folded-btn {
   position: relative;
@@ -448,9 +449,13 @@
   border-color: transparent transparent #4C637B transparent;
 }
 .category-title {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 28px;
+  margin-bottom: 20px;
   font-size: 14px;
   font-weight: bold;
   color: #2A3E52;
+}
+
+.media-center-category-list{
+  border-bottom: 1px solid #EBF3FB;
 }

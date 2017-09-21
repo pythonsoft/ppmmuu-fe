@@ -171,7 +171,7 @@
 
       },
       getStatus(v) {
-        return config.getConfig('STATUS', v);
+        return config.getConfig('TASK_STATUS', v);
       },
       getCurrentStepConfig(v) {
         return config.getConfig('CURRENT_STEP', v);
