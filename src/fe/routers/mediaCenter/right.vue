@@ -102,7 +102,7 @@
   import { getPosition } from '../../component/fjUI/utils/position';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import ivideoAPI from '../../api/ivideo';
-  import downloadListView from '../management/task/template/component/downloadDialog';
+  import downloadListView from '../management/template/download/component/downloadDialog';
 
   const api = require('../../api/media');
   const jobAPI = require('../../api/job');

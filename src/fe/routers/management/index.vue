@@ -4,23 +4,23 @@
       <fj-submenu :default-active="defaultRoute" router>
         <template v-for="item in menu">
           <fj-submenu-item
-            v-if="item.text"
-            :index="item.index"
-            :route="item.route">
+                  v-if="item.text"
+                  :index="item.index"
+                  :route="item.route">
             {{ item.text }}
           </fj-submenu-item>
           <fj-submenu-group
-            v-else
-            :index="item.index">
-              <template slot="title">{{ item.title }}</template>
-              <fj-submenu-item
-                v-for="subItem in item.children"
-                :key="subItem.index"
-                :index="subItem.index"
-                :route="subItem.route">
-                {{ subItem.text }}
-              </fj-submenu-item>
-            </fj-submenu-group>
+                  v-else
+                  :index="item.index">
+            <template slot="title">{{ item.title }}</template>
+            <fj-submenu-item
+                    v-for="subItem in item.children"
+                    :key="subItem.index"
+                    :index="subItem.index"
+                    :route="subItem.route">
+              {{ subItem.text }}
+            </fj-submenu-item>
+          </fj-submenu-group>
         </template>
       </fj-submenu>
     </div>
@@ -49,7 +49,12 @@
       children: [
         { text: '转码任务', index: 'transcode', route: 'transcode' },
         { text: '下载任务', index: 'download', route: 'download' },
-        { text: '模板管理', index: 'templateManager', route: 'templateManager' }
+      ] },
+    { title: '模板管理',
+      index: 'templateManager',
+      children: [
+        { text: '下载模板', index: 'downloadTemplate', route: 'downloadTemplate' },
+        { text: '转码模板', index: 'transcodeTemplate', route: 'transcodeTemplate' },
       ] },
     { text: '设置', index: 'configuration', route: 'configuration' },
     { title: '帮助',
