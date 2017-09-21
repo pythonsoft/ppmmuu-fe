@@ -6,7 +6,7 @@ export const getPosition = function getPosition(ele, oRefer = document.body) {
   let x = ele.offsetLeft;
   let y = ele.offsetTop;
   let p = ele.offsetParent;
-  while (p !== oRefer && p !== document.body) {
+  while (p && p !== oRefer && p !== document.body) {
     if (window.navigator.userAgent.indexOf('MSIE 8.0') > -1) {
       x += p.offsetLeft;
       y += p.offsetTop;

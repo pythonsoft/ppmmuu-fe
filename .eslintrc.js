@@ -1,7 +1,7 @@
 module.exports = {
   "root": true,
-  "parser": "babel-eslint",
   "parserOptions": {
+    "parser": "babel-eslint",
     "sourceType": "module",
     "ecmaVersion": 6
   },
@@ -9,9 +9,12 @@ module.exports = {
     "browser": true,
     "es6": true
   },
-  "extends": "airbnb-base",
+  "extends": [
+    "airbnb-base",
+    "plugin:vue/recommended"
+  ],
   "plugins": [
-      "html"
+    "html"
   ],
   "settings": {
     "import/resolver": {

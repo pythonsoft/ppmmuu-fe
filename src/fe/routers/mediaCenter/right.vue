@@ -88,7 +88,14 @@
   import Vue from 'vue';
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject, formatSize, formatDuration, formatContent, getStreamURL, formatTime } from '../../common/utils';
+  import {
+    isEmptyObject,
+    formatSize,
+    formatDuration,
+    formatContent,
+    getStreamURL,
+    formatTime
+  } from '../../common/utils';
   import moreView from './moreView';
   import SourceMenuDialog from './components/sourceMenuDialog';
   import Player from './components/player';

@@ -127,7 +127,7 @@
           inpoint: item.range[0] * 1000,
           outpoint: item.range[1] * 1000,
           filename: item.title,
-          filetypeid: 'this.fileInfo.FILETYPEID',
+          filetypeid: item.filetypeid,
           templateId: this.templateInfo._id
         };
         jobAPI.download(param).then((res) => {

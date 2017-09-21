@@ -63,7 +63,13 @@
   import AccountList from './component/accountList';
   import groupAPI from '../../../api/group';
   import { formatTree, formatQuery, getTreeNode } from '../../../common/utils';
-  import { TYPE_CONFIG, APPENDCHILD_CONFIG, GROUP_CONFIG, CHILD_NODE_CONFIG, MENU_CONFIG } from './config';
+  import {
+    TYPE_CONFIG,
+    APPENDCHILD_CONFIG,
+    GROUP_CONFIG,
+    CHILD_NODE_CONFIG,
+    MENU_CONFIG
+  } from './config';
 
   export default {
     data() {
