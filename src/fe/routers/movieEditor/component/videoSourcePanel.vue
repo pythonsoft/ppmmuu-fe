@@ -60,6 +60,9 @@
 <script>
   import { getStreamURL, getSRT, transformSecondsToStr } from '../../../common/utils';
 
+  const config = require('../../mediaCenter/config');
+  const api = require('../../../api/media');
+
   export default {
     props: {
       activePanel: String,
@@ -76,6 +79,12 @@
       videoId: {
         type: String,
         default: ''
+      },
+      videoSnippet: {
+        type: Object,
+        default() {
+          return { fileTypeId: '' };
+        }
       },
       size: {
         type: Object,
@@ -94,6 +103,8 @@
     },
     data() {
       return {
+        files: '',
+        fileTypeId: '',
         currentTime: 0,
         duration: 0,
         clipDuration: 0,
@@ -165,6 +176,9 @@
         this.getStream(val);
         this.getSRTArr(val);
       },
+      videoSnippet(val) {
+        this.fileTypeId = val.fileTypeId;
+      },
       isActivePanel(val) {
         if (val) {
           if (!this.video.duration) return;
@@ -211,6 +225,7 @@
       if (this.$route.params.objectId) {
         this.getStream(this.$route.params.objectId);
         this.getSRTArr(this.$route.params.objectId);
+        this.getDetail(this.$route.params.objectId);
       }
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
@@ -231,6 +246,32 @@
       }
     },
     methods: {
+      getDefaultFileInfo() {
+        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
+        const files = this.files;
+
+        if(files.length === 0) {
+          return {};
+        }
+
+        for(let i = 0, len = files.length; i < len; i++) {
+          for(let j = 0, l = ft.length; j < l; j++) {
+            if(files[i].FILETYPEID === ft[j]) {
+              return files[i];
+            }
+          }
+        }
+
+        return {};
+      },
+      getDetail(id) {
+        api.getObject({ params: { objectid: id } }).then((res) => {
+          this.files = res.data.result.files;
+          this.fileTypeId = this.getDefaultFileInfo().FILETYPEID;
+        }).catch((error) => {
+          this.$message.error(error);
+        });
+      },
       getStream(id) {
         getStreamURL(id, (err, url, res) => {
           if (err) {
@@ -606,6 +647,7 @@
       insertClip() {
         const info = {
           objectId: this.videoId || this.$route.params.objectId,
+          filetypeid: this.fileTypeId || '',
           title: this.title || this.videoInfo.FILENAME,
           range: [this.inTime, this.outTime],
           duration: this.outTime - this.inTime,
