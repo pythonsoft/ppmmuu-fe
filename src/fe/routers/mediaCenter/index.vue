@@ -32,9 +32,9 @@
           </fj-select>
         </div>
         <div class="media-category">
-          <h4>houseNo</h4>
+          <h4>HOUSENO</h4>
           <fj-input
-                  placeholder="请输入houseNo"
+                  placeholder="请输入HOUSENO"
                   size="small"
                   theme="fill"
                   v-model="houseNo"

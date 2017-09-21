@@ -427,6 +427,7 @@
   float: left;
   font-style: italic;
   cursor: pointer;
+  color: #2B6DBA;
 }
 .item-folded-btn {
   position: relative;
