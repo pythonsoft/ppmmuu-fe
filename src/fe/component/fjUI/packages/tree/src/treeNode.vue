@@ -72,6 +72,7 @@
     },
     methods: {
       handleExpandIconClick() {
+        if (this.autoExpand) return;
         if (this.isFolder) {
           if (!this.open) {
             this.tree.$emit('node-expand', this.node);
