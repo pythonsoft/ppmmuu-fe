@@ -45,10 +45,10 @@ api.esSearch = function esSearch(data, scope) {
   });
 };
 
-api.getEsMediaList = function getEsMediaList(data, scope) {
+api.getMediaList = function getMediaList(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getEsMediaList', data).then((response) => {
+    axios.get('/media/getMediaList', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -67,10 +67,10 @@ api.getEsMediaList = function getEsMediaList(data, scope) {
   });
 };
 
-api.getMediaList = function getMediaList(data, scope) {
+api.getEsMediaList = function getEsMediaList(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getMediaList', data).then((response) => {
+    axios.get('/media/getEsMediaList', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -134,7 +134,7 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
 };
 
 api.getIcon = function getIcon(id) {
-  return `${axios.defaults.baseURL}/media/getIcon?objectid=${id}`;
+  return axios.defaults.baseURL + '/media/getIcon?objectid=' + id;
 };
 
 api.getObject = function getObject(data, scope) {
