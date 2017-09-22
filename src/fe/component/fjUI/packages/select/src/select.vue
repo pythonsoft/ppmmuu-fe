@@ -189,14 +189,15 @@
         }
       },
       selectOption() {
+        if (this.options[this.hoverIndex]) {
+          this.handleOptionClick(this.options[this.hoverIndex]);
+        }
+
         // 如果为remote就触发搜索函数
         if (this.remote) {
           this.$emit('search', this.selectedLabel);
           this.visible = false;
-          return;
-        }
-        if (this.options[this.hoverIndex]) {
-          this.handleOptionClick(this.options[this.hoverIndex]);
+          this.hoverIndex = -1;
         }
       },
       resetHoverIndex() {
