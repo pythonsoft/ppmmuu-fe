@@ -17,7 +17,7 @@ config.fields = [
     options: [
       { text: 'mp4', value: 'mp4', key: 'mp4' },
       { text: 'mxf', value: 'mxf', key: 'mxf' },
-      { text: 'mxf', value: 'mxf', key: 'mxf' }
+      { text: 'mov', value: 'mov', key: 'mov' }
     ]
   },
   {
