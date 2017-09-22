@@ -130,6 +130,7 @@
         api.update(this.formData, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
+          me.close();
         }).catch((error) => {
           me.$message.error(error);
         });
