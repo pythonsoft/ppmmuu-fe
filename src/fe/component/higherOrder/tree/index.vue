@@ -21,6 +21,7 @@
     <template v-else slot="tree">
       <fj-tree
         :data="treeData"
+        :autoExpand="autoExpand"
         :node-key="nodeKey"
         :render-content="renderItem"
         @node-click="_treeNodeClick"
