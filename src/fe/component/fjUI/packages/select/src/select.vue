@@ -158,6 +158,11 @@
       handleOptionClick(option) {
         this.$emit('input', option.value);
         this.visible = false;
+        // 如果为remote就触发搜索函数
+        if (this.remote) {
+          this.$emit('search', this.selectedLabel);
+          this.hoverIndex = -1;
+        }
       },
       navigateOptions(direction) {
         if (!this.visible) return;
