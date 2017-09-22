@@ -302,8 +302,6 @@
         this.templateInfo = templateInfo || {};
 
         if (!isEmptyObject(templateInfo)) {
-          console.log('actonname ===>', actionName);
-
           if(!actionName) {
             this.download();
           }else {

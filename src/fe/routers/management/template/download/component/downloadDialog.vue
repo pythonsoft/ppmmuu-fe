@@ -12,7 +12,7 @@
       </fj-table>
 
       <div v-else>
-        <div v-if="permissions.length === 0">正在加载数据...</div>
+        <div v-if="permissions.length === 0">{{ tips }}</div>
         <fj-table v-else style="font-size: 12px;" :data="permissions" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
           <fj-table-column prop="acceptor" width="60" label="类型">
             <template scope="props">
@@ -70,7 +70,8 @@
           }}
         },
         actionName: '',
-        mediaExpressDomain: 'https://console.cloudifeng.com/'
+        mediaExpressDomain: 'https://console.cloudifeng.com/',
+        tips: '正在加载数据...'
       };
     },
     methods: {
@@ -128,10 +129,14 @@
       getPermission() {
         const me = this;
 
+        this.tips = '正在加载数据...';
         transcodeAPI.directAuthorizeAcceptorList({ params: {} }, me).then((res) => {
           me.permissions = res.data;
+          if(me.permissions.length === 0) {
+            me.tips = '您的授权列表没有相关信息';
+          }
         }).catch((error) => {
-          me.$message.error(error);
+          me.tips = error;
         });
       }
     }
