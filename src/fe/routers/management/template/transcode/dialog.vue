@@ -46,10 +46,10 @@
         if (val) {
           this.dialogVisible = true;
           if (this.type !== 'add') {
-            this.title = '变更下载模板信息';
-            this.currentType = this.templateInfo.type;
+            this.title = '变更转码模板信息';
+            this.currentType = '2';
           } else {
-            this.title = '添加下载模板信息';
+            this.title = '添加转码模板信息';
             this.currentType = '1';
           }
         } else {

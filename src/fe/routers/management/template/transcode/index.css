@@ -1,0 +1,71 @@
+.layout-four-row-search-item{
+  float: left;
+  margin-left: 10px;
+  line-height: 1;
+}
+
+.layout-btn-mini-margin {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.layout-btn-margin {
+  margin-left: 18px;
+  font-size: 12px;
+}
+
+.task-status-base {
+  font-size: 12px;
+  color: #fff;
+  width: 48px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 2px;
+  text-align: center;
+  display: block;
+}
+.task-status-created {
+  background: #38B1EB;
+}
+.task-status-dealing {
+  background: #C0C003;
+}
+.task-status-error {
+  background: #FF3366;
+}
+.task-status-complete {
+  background: #2EC4B6;
+}
+
+.task-slide-dialog-item{
+  padding-bottom: 30px;
+}
+
+.task-slide-dialog-item-title{
+  height: 30px;
+  line-height: 20px;
+  position: relative;
+}
+
+.task-slide-dialog-item-bar {
+  float: right;
+}
+
+.template-dialog-select-wrap {
+  padding-bottom: 24px;
+}
+
+.group-input {
+  float: left;
+  width: 215px;
+  margin-right: 10px;
+}
+
+.template-dialog-footer{
+  text-align: right;
+}
+
+.template-download-link{
+  color: #38B1EB;
+  cursor: default;
+}
