@@ -42,7 +42,7 @@
                   <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                   <td class="item-info-value">
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ info.value }}</span>
+                    <span v-else>{{ formatValue(info.value) }}</span>
                   </td>
                 </tr>
               </table>
@@ -97,7 +97,8 @@
     formatContent,
     getStreamURL,
     isEmptyObject,
-    formatQuery
+    formatQuery,
+    formatTime,
   } from '../../../common/utils';
   import GridListView from '../../mediaCenter/gridAndList';
   import MoreView from '../../mediaCenter/moreView';
@@ -337,6 +338,17 @@
       },
       back() {
         this.$router.push({ name: 'history' });
+      },
+      formatValue(str) {
+        let rs = str;
+
+        if (/[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(str)) {
+          rs = formatTime(str);
+        }
+
+        console.log(str, rs);
+
+        return rs;
       }
     },
     components: {
