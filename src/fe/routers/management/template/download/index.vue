@@ -1,18 +1,6 @@
 <template>
   <layout-four-row>
-    <template slot="search-left">模板管理</template>
-    <template slot="search-right">
-      <div class="layout-four-row-search-item" :style="{ width: '100px' }">
-        <fj-select size="small" placeholder="请选择" v-model="formData.type">
-          <fj-option
-            v-for="item in type"
-            :key="item.value"
-            :label="item.text"
-            :value="item.value"
-          ></fj-option>
-        </fj-select>
-      </div>
-    </template>
+    <template slot="search-left">下载模板管理</template>
     <template slot="operation">
       <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" @click="addClick">添加</fj-button>
@@ -57,9 +45,9 @@
       <template>
         <span>确定要删 {{ table.currentRowInfo.name }} 这块模板？</span>
       </template>
-      <div slot="footer">
-        <fj-button @click="confirmDialogDisplay=false">取消</fj-button>
-        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="confirmDialogDisplay=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
       </div>
     </fj-dialog>
 
@@ -72,7 +60,7 @@
   import utils from '../../../../common/utils';
 
   const templateAPI = require('../../../../api/template');
-  const config = require('../config');
+  const config = require('../../task/config');
 
   export default {
     components: {

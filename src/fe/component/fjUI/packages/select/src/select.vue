@@ -92,13 +92,19 @@
     },
     methods: {
       inputValueChange(val) {
+        this.$emit('input', val);
         if (val.length > 0) {
-          this.remoteMethod(val);
+          // this.remoteMethod(val);
+          this.visible = false;
         } else {
+          this.visible = true;
           this.historyMethod();
         }
       },
       handleFocus(e) {
+        if (this.remote && this.selectedLabel.length > 0) {
+          return;
+        }
         this.visible = true;
       },
       handleMouseDown(e) {
@@ -110,6 +116,11 @@
       },
       handleIconClick(e) {
         // 如果为remote就触发搜索函数
+        if (this.remote) {
+          this.$emit('search', this.selectedLabel);
+          this.visible = false;
+          return;
+        }
         if (this.iconClass.indexOf('icon-fill-close select-delete-icon') > -1) {
           this.deleteSelected(e);
         } else {
@@ -147,6 +158,11 @@
       handleOptionClick(option) {
         this.$emit('input', option.value);
         this.visible = false;
+        // 如果为remote就触发搜索函数
+        if (this.remote) {
+          this.$emit('search', this.selectedLabel);
+          this.hoverIndex = -1;
+        }
       },
       navigateOptions(direction) {
         if (!this.visible) return;
@@ -168,18 +184,25 @@
         const selected = this.options[this.hoverIndex].$el;
         scrollIntoViewBottom(container, selected);
       },
-      setSelected() {
+      setSelected(inputVal = '') {
         const option = this.getOption(this.value);
         if (option) {
           this.selected = option;
           this.selectedLabel = option.label;
         } else {
-          this.selectedLabel = '';
+          this.selectedLabel = this.remote ? inputVal : '';
         }
       },
       selectOption() {
         if (this.options[this.hoverIndex]) {
           this.handleOptionClick(this.options[this.hoverIndex]);
+        }
+
+        // 如果为remote就触发搜索函数
+        if (this.remote) {
+          this.$emit('search', this.selectedLabel);
+          this.visible = false;
+          this.hoverIndex = -1;
         }
       },
       resetHoverIndex() {
@@ -202,9 +225,11 @@
     watch: {
       visible(val) {
         if (!val) {
-          this.$refs.reference.$el.querySelector('input').blur();
-          this.handleIconHide();
-          this.resetHoverIndex();
+          if (!this.remote) {
+            this.$refs.reference.$el.querySelector('input').blur();
+            this.handleIconHide();
+            this.resetHoverIndex();
+          }
         } else {
           // 如果输入框的值为空就调historyMethod(), 否则就调用remoteMethod()
           if (this.selectedLabel.length === 0) {
@@ -216,7 +241,7 @@
         }
       },
       value(val) {
-        this.setSelected();
+        this.setSelected(val);
         if (this.$parent.$options.name === 'FjFormItem') {
           this.$parent.$emit('form-change', val);
         }
@@ -230,7 +255,9 @@
         if (this.remote) {
           return 'icon-search fill-icon-btn';
         }
-        return this.clearable && this.inputHovering && this.value !== '' ? 'icon-fill-close select-delete-icon' : this.icon;
+        return this.clearable && this.inputHovering && this.value !== ''
+          ? 'icon-fill-close select-delete-icon'
+          : this.icon;
       },
       emptyText() {
         if (this.loading) {

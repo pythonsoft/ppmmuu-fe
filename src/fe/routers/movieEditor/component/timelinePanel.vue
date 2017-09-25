@@ -8,7 +8,7 @@
         <div class="player-control-tooltip">删除</div>
       </div>
       <div class="player-control-item-wrap">
-        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" @click="download">
+        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" @click="downloadDialogDisplay=true">
           <i class="iconfont icon-video-download"></i>
         </div>
         <div class="player-control-tooltip">下载</div>
@@ -18,10 +18,15 @@
     <div class="timeline-content">
       <canvas ref="timeline">您的浏览器不支持canvas</canvas>
     </div>
+    <download-list-view
+      :visible.sync="downloadDialogDisplay"
+      @confirm="downloadListConfirm"
+    ></download-list-view>
   </div>
 </template>
 <script>
-  import { transformSecondsToStr } from '../../../common/utils';
+  import { transformSecondsToStr, isEmptyObject } from '../../../common/utils';
+  import DownloadListView from '../../management/template/download/component/downloadDialog';
   import jobAPI from '../../../api/job';
 
   const TIMELINE_CONFIG = {
@@ -29,10 +34,10 @@
     marginTop: 64,
     marginLeft: 4,
     font: '12px sans-serif',
-    fontColor: '#CED9E5',
-    sequenceColor: '#CED9E5',
+    fontColor: '#2A3E52',
+    sequenceColor: '#F2F6FA',
     currentSequenceColor: '#CAEBFA',
-    currentSequenceBorderColor: '#fff',
+    currentSequenceBorderColor: '#CAEBFA',
     currentSequenceBorderWidth: 2,
     sequenceImageWidth: 120,
     sequenceImageHeight: 68,
@@ -40,6 +45,9 @@
   };
 
   export default {
+    components: {
+      DownloadListView
+    },
     props: {
       projectBus: {},
       size: {
@@ -82,7 +90,9 @@
       return {
         sequences: [],
         currentSequenceIndex: 0,
-        dpr: 1
+        dpr: 1,
+        downloadDialogDisplay: false,
+        templateInfo: {}
       };
     },
     computed: {
@@ -103,14 +113,22 @@
       this.dpr = window.devicePixelRatio;
     },
     methods: {
-      download(info) {
+      downloadListConfirm(templateInfo) {
+        this.templateInfo = templateInfo || {};
+        if (!isEmptyObject(templateInfo)) {
+          this.download();
+        }
+      },
+      download() {
         if (this.sequences.length === 0 || this.currentSequenceIndex < 0) return;
         const item = this.sequences[this.currentSequenceIndex];
         const param = {
           objectid: item.objectId,
           inpoint: item.range[0] * 1000,
           outpoint: item.range[1] * 1000,
-          fileName: item.title
+          filename: item.title,
+          filetypeid: item.filetypeid,
+          templateId: this.templateInfo._id
         };
         jobAPI.download(param).then((res) => {
           this.$message.success('正在下载文件，请到"任务"查看详细情况');

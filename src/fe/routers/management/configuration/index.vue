@@ -210,8 +210,12 @@
 
       handleDeleteClick() {
         const me = this;
-        const func = this.dialogTitle === '组' ? apiConfig.postDeleteGroup : apiConfig.postDeleteConfig;
-        const _id = this.dialogTitle === '组' ? this.deleteDialogId : this.currentConfig._id;
+        const func = this.dialogTitle === '组'
+          ? apiConfig.postDeleteGroup
+          : apiConfig.postDeleteConfig;
+        const _id = this.dialogTitle === '组'
+          ? this.deleteDialogId
+          : this.currentConfig._id;
         me.isDeleteBtnLoading = true;
 
         func({ _id: _id })

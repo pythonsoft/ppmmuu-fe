@@ -11,7 +11,7 @@
         </th>
       </tr>
     </thead>
-    <table-body :store="store" :highlight="highlightCurrentRow"></table-body>
+    <table-body :store="store" :highlight="highlightCurrentRow" :highlightKey="highlightKey"></table-body>
     <tr v-if="!data || data.length === 0">
       <td class="fj-table-empty-block" :colspan="store.states.columns.length">{{emptyText}}</td>
     </tr>
@@ -35,6 +35,7 @@
         type: String,
         default: '暂无数据'
       },
+      highlightKey: String,
       highlightCurrentRow: {
         type: Boolean,
         default: true

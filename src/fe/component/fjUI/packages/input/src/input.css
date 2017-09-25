@@ -129,6 +129,9 @@
 .fj-input-icon+.fj-input-inner-stroke {
   padding-right: 35px;
 }
+.fj-input-icon+.fj-input-inner-fill {
+  padding-right: 35px;
+}
 .fj-input-icon:after {
   content: '';
   display: inline-block;

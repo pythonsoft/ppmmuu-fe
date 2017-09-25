@@ -107,7 +107,8 @@
         userAPI.getWatchHistory(formatQuery(data, true))
           .then((response) => {
             const responseData = response.data;
-            const tempList = responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id }));
+            const tempList =
+              responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id }));
             this.items = tempList;
             this.currentPage = responseData.page;
             this.total = responseData.total;
@@ -120,7 +121,9 @@
         const browseBoxWidth = this.$refs.browseBox.getBoundingClientRect().width;
         this.listWidth = browseBoxWidth;
       },
-      handleCurrentPageChange() {}
+      handleCurrentPageChange() {
+        this.updateList();
+      }
     },
     components: {
       GridListView

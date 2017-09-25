@@ -11,9 +11,9 @@
               :treeNodeCurrentChange="treeNodeCurrentChange"
       ></tree-view>
     </div>
-    <div slot="footer">
-      <fj-button @click="close">取消</fj-button>
-      <fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
+    <div slot="footer" class="dialog-footer">
+      <fj-button @click="close">取消</fj-button><!--
+      --><fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
     </div>
   </fj-dialog>
 </template>
@@ -106,6 +106,11 @@
         };
 
         groupApi.getGroupList(formatQuery(query, true)).then((res) => {
+          const docs = res.data.docs || [];
+          if (docs.length === 0) {
+            me.close();
+            me.$message.error('没有部门信息');
+          }
           cb && cb(res.data.docs);
         }).catch((err) => {
           me.showErrorInfo(err);

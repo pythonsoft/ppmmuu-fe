@@ -12,7 +12,7 @@
           <div class="player-control-tooltip">添加文件夹</div>
         </div>
         <div class="player-control-item-wrap">
-          <div class="player-control-item" @click="showDeleteNodeDialog">
+          <div class="player-control-item" @click="showDeleteNodeDialog" :class="{'disabled-control-item': !currentNodeId}">
             <i class="iconfont icon-delete"></i>
           </div>
           <div class="player-control-tooltip">删除</div>
@@ -21,7 +21,6 @@
     </div>
     <div class="media-browser-content">
       <tree-view
-        theme="dark"
         :autoExpand="false"
         :showUpper="false"
         :vue-instance="vueInstance"

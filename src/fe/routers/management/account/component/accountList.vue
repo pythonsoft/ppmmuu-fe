@@ -68,6 +68,7 @@
             :visible.sync="bindMediaExpressDialogVisible">
             <bind-media-express
               :id="bindMediaExpressDialogId"
+              :dialogVisible="bindMediaExpressDialogVisible"
               @cancel="bindMediaExpressDialogVisible=false"></bind-media-express>
     </fj-slide-dialog>
     <fj-slide-dialog
@@ -104,7 +105,12 @@
   import groupAPI from '../../../../api/group';
   import { formatQuery } from '../../../../common/utils';
   import AddGroup from '../../role/searchAddGroup';
-  import { STATUS_OPTIONS, STATUS_CONFIG, VERIFY_TYPE_CONFIG, PERMISSION_TYPE_CONFIG } from '../config';
+  import {
+    STATUS_OPTIONS,
+    STATUS_CONFIG,
+    VERIFY_TYPE_CONFIG,
+    PERMISSION_TYPE_CONFIG
+  } from '../config';
 
   export default {
     props: {

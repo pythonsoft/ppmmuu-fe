@@ -1,9 +1,9 @@
 <template>
   <layout-three-column :leftWidth="201" :rightWidth="448">
     <template slot="left">
-      <div class="media-left">
+      <div class="media-left" ref="mediaLeft">
         <div class="media-search">
-          <fj-input
+          <!-- <fj-input
             placeholder="请输入检索关键词"
             size="small"
             theme="fill"
@@ -11,12 +11,30 @@
             icon="icon-search input-search-icon"
             @on-icon-click="searchClick"
             @keydown.native.enter.prevent="searchClick"
-          ></fj-input>
+          ></fj-input> -->
+          <fj-select
+            remote
+            :clear-history-method="clearHistory"
+            :history-method="getSearchHistory"
+            :remote-method="remoteMethod"
+            :loading="loading"
+            @search="searchClick"
+            v-model="keyword"
+            placeholder="请输入检索关键词"
+            size="small"
+            theme="fill">
+            <fj-option
+              v-for="item in keywordOptions"
+              :key="item._id"
+              :label="item.label"
+              :value="item.value">
+            </fj-option>
+          </fj-select>
         </div>
         <div class="media-category">
-          <h4>houseNo</h4>
+          <h4>HOUSENO</h4>
           <fj-input
-                  placeholder="请输入houseNo"
+                  placeholder="请输入HOUSENO"
                   size="small"
                   theme="fill"
                   v-model="houseNo"
@@ -56,6 +74,7 @@
           <h4>新聞日期</h4>
           <div id="media-category-date">
             <fj-date-picker
+              :parentEl="(()=>{return this.$refs.mediaLeft})()"
               type="datetimerange"
               placeholder="请选择日期范围"
               v-model="datetimerange1"
@@ -67,9 +86,10 @@
           <h4>首播日期</h4>
           <div id="media-category-date">
             <fj-date-picker
-                    type="datetimerange"
-                    placeholder="请选择日期范围"
-                    v-model="datetimerange2"
+              :parentEl="(()=>{return this.$refs.mediaLeft})()"
+              type="datetimerange"
+              placeholder="请选择日期范围"
+              v-model="datetimerange2"
             ></fj-date-picker>
           </div>
         </div>
@@ -83,6 +103,7 @@
               v-for="categoryItem in defaultList">
               <h3 class="category-title">{{ categoryItem.category }}</h3>
               <grid-list-view
+                class="media-center-category-list"
                 type="grid"
                 :width="listWidth"
                 :items="categoryItem.docs"
@@ -124,7 +145,7 @@
             ></grid-list-view>
 
             <div class="media-pagination" v-if="items.length">
-              <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
+              <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></pagination>
             </div>
           </template>
         </div>
@@ -140,22 +161,41 @@
 </template>
 <script>
   import Vue from 'vue';
-  import { getTimeByStr, formatDuration, getPosition, appendToBody, getStringLength } from '../../common/utils';
+  import {
+    getTimeByStr,
+    formatDuration,
+    getPosition,
+    appendToBody,
+    getStringLength
+  } from '../../common/utils';
   import './index.css';
-  import { getTimeRange, getQuery, getSearchNotice, getOrder, ORDER_OPTIONS,
-    HHIGHLIGHT_FIELDS1, HHIGHLIGHT_FIELDS2, FILETR_FIELDS } from './config';
+  import {
+    getTimeRange,
+    getQuery,
+    getSearchNotice,
+    getOrder,
+    formatMust,
+    getHighLightFields,
+    ORDER_OPTIONS,
+    HHIGHLIGHT_FIELDS1,
+    HHIGHLIGHT_FIELDS2,
+    FILETR_FIELDS
+  } from './config';
+  import Pagination from './components/pagination';
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
   import mediaRight from './right';
 
   const api = require('../../api/media');
+  const userAPI = require('../../api/user');
 
   export default {
     components: {
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
-      'grid-list-view': gridAndList
+      'grid-list-view': gridAndList,
+      Pagination
     },
     data() {
       return {
@@ -188,7 +228,9 @@
 
         parentSize: { width: '100', height: '100' },
         listType: 'default',
-        defaultList: []
+        defaultList: [],
+        loading: false,
+        keywordOptions: []
       };
     },
     created() {
@@ -198,10 +240,36 @@
     },
     watch: {
       orderVal(val) {
+        this.currentPage = 1;
         this.getMediaList();
       }
     },
     methods: {
+      clearHistory() {
+        userAPI.clearSearchHistory()
+          .then((response) => {
+            this.getSearchHistory();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getSearchHistory() {
+        this.loading = true;
+        api.getSearchHistory().then((res) => {
+          this.loading = false;
+          const data = res.data;
+          this.keywordOptions = res.data.map((item) => {
+            item.value = item.keyword;
+            item.label = item.keyword;
+            return item;
+          });
+        }).catch((error) => {
+          this.loading = false;
+          this.$message.error(error);
+        });
+      },
+      remoteMethod() {},
       getDefaultMedia() {
         api.defaultMedia().then((res) => {
           this.defaultList = res.data;
@@ -256,6 +324,7 @@
         return pathArr[level] || '';
       },
       searchClick() {
+        this.currentPage = 1;
         this.resize();
       },
       getSeachConfigs() {
@@ -273,7 +342,17 @@
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
-        let q = getQuery(this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
+        const options = {
+          source: this.fl,
+          match: [],
+          should: [],
+          hl: HHIGHLIGHT_FIELDS1,
+          sort: {},
+          start: start,
+          pageSize: this.pageSize
+        };
+        const must = options.match;
+        getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
         if (this.keyword && searchChoose) {
@@ -290,80 +369,41 @@
         }
         this.searchResult = searchNotice;
 
-        if (f_date_162) {
-          if (q) {
-            q += ` AND f_date_162:${f_date_162}`;
-          } else {
-            q = `f_date_162:${f_date_162}`;
-          }
-        }
-
-        if (me.houseNo) {
-          if (q) {
-            q += ` AND f_str_187:${me.houseNo}`;
-          } else {
-            q = `f_str_187:${me.houseNo}`;
-          }
-        }
-
-        if (f_date_36) {
-          if (q) {
-            q += ` AND f_date_36:${f_date_36}`;
-          } else {
-            q = `f_date_36:${f_date_36}`;
-          }
-        }
-
-        const sort = getOrder(this.orderVal);
-
-        const options = {
-          q: q,
-          fl: this.fl,
-          sort: sort,
-          start: start,
-          hl: 'off',
-          indent: 'off',
-          'hl.fl': HHIGHLIGHT_FIELDS1,
-          rows: this.pageSize
+        const obj = {
+          f_date_162: f_date_162,
+          f_str_187: me.houseNo,
+          f_date_36: f_date_36,
+          publish_status: 1,
+          full_text: this.keyword
         };
 
-        const hit = function (val) {
-        //          const keywords = 'name,program_name_cn,program_name_en,f_str_03'.split(',');
-          const keywords = 'name'.split(',');
-          const query = [];
+        formatMust(must, obj);
 
-          for (let i = 0, len = keywords.length; i < len; i++) {
-            query.push(` OR ${keywords[i]}:${val}`);
-          }
-
-          return query.join(' ');
-        };
+        options.sort = getOrder(this.orderVal);
 
         if (this.keyword) {
-          const fullText = sort ? this.keyword : (this.keyword + hit(this.keyword));
-          options.hl = 'on';
-          options.indent = 'on';
-          if (q) {
-            q += ` AND (full_text:${fullText})`;
+          if (options.sort.length) {
             for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
               if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
-                options['hl.fl'] = HHIGHLIGHT_FIELDS1;
+                options.hl = HHIGHLIGHT_FIELDS2;
               }
             }
           } else {
-            q = `(full_text:${fullText})`;
+            const item = {
+              match: {}
+            };
+            formatMust(options.should, { name: this.keyword });
+          }
+        } else {
+          if (!options.sort.length) {
+            options.sort = [{
+              key: 'last_modify',
+              value: 'desc'
+            }];
           }
         }
 
-        if (q) {
-          q += ' AND publish_status:1';
-        } else {
-          q = 'publish_status:1';
-        }
-
-        options.q = q;
-
-        api.solrSearch({ params: options }, me).then((res) => {
+        api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
@@ -372,18 +412,13 @@
         });
       },
       searchHouseNoClick() {
+        this.currentPage = 1;
         const me = this;
         this.listType = 'normal';
         if (!me.houseNo) {
-          return false;
+          return;
         }
-        let searchNotice = `检索词: ${this.keyword}`;
-        const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
-        if (this.keyword && searchChoose) {
-          searchNotice += `,${searchChoose}`;
-        } else {
-          searchNotice += searchChoose;
-        }
+        let searchNotice = `检索词: ${me.houseNo}`;
         const noticeLength = getStringLength(searchNotice);
         if (noticeLength > 15) {
           searchNotice = searchNotice.substr(0, 15);
@@ -393,16 +428,19 @@
         }
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const options = {
-          q: `f_str_187:${me.houseNo}`,
-          fl: this.fl,
-          sort: 'last_modify desc',
+          source: this.fl,
+          match: [],
+          should: [],
+          sort: {},
           start: start,
-          hl: 'off',
-          indent: 'off',
-          'hl.fl': HHIGHLIGHT_FIELDS1,
-          rows: this.pageSize
+          pageSize: this.pageSize
         };
-        api.solrSearch({ params: options }, me).then((res) => {
+        const obj = {
+          f_str_187: me.houseNo,
+          publish_status: 1
+        };
+        formatMust(options.match, obj);
+        api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;

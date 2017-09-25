@@ -13,12 +13,12 @@
             <fj-form :model="userInfo" :rules="rules" ref="form" label-width="80px">
               <div class="login-label">账户</div>
               <div class="login-input">
-                <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()" placeholder="请输入邮箱"></fj-input>
+                <fj-input v-model="userInfo.username" ref="usernameInput" icon="icon-fill-close" @on-icon-click="clearUsername" @focus="focusInput()" @blur="handleBlur()" placeholder="请输入邮箱" @keydown.native.enter.prevent="login"></fj-input>
                 <div class="login-message" :style="{ display: isDisplay}"><span>{{error}}</span></div>
               </div>
               <div class="login-label login-password">密码</div>
               <div class="login-input">
-                <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword" @focus="focusInput2()" placeholder="请输入密码"></fj-input>
+                <fj-input v-model="userInfo.password" type="password" icon="icon-fill-close" @on-icon-click="clearPassword" @focus="focusInput2()" placeholder="请输入密码" @keydown.native.enter.prevent="login"></fj-input>
               </div>
               <div class="login-extra">
                 <fj-checkbox-group v-model="userInfo.autoLogin">
@@ -89,11 +89,16 @@
       login() {
         const me = this;
         me.isBtnLoading = true;
+        me.userInfo.username = me.userInfo.username.trim();
+        me.userInfo.password = me.userInfo.password.trim();
+
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
             const index = res.data.menu.indexOf('management') !== -1 ? 'management' : 'mediaCenter';
-            me.$router.push({ name: index, params: { menu: res.data.menu, index } });
+            localStorage.setItem('menu', res.data.menu.join(','));
+            localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
+            me.$router.push({ name: index });
           })
           .catch((error) => {
             me.isBtnLoading = false;

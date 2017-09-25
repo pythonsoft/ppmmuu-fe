@@ -3,15 +3,15 @@
     <div class="media-video">
       <div v-if="url" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <player :height="288" :width="448" :url="url" :streamInfo="streamInfo"></player>
+          <player :videoId="videoId" :height="288" :width="448" :url="url" :streamInfo="streamInfo"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
-              <!--<li>-->
-                <!--<span title="下载" class="iconfont icon-video-download" @click.stop="download"></span>-->
-              <!--</li>-->
+              <li>
+                <span title="下载" class="iconfont icon-video-download" @click.stop="(e) => prepareDownload()"></span>
+              </li>
               <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
@@ -32,11 +32,11 @@
               <tr v-for="(info, key) in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info">{{ info.value }}</span>
+                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ info.value }}</span>
+                    <span v-else>{{ formatValue(info.value) }}</span>
                   </template>
                   <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
                 </td>
@@ -88,17 +88,26 @@
   import Vue from 'vue';
   import './index.css';
   import { getTitle, getThumb } from './common';
-  import { isEmptyObject, formatSize, formatDuration, formatContent, getStreamURL } from '../../common/utils';
+  import {
+    isEmptyObject,
+    formatSize,
+    formatDuration,
+    formatContent,
+    getStreamURL,
+    formatTime
+  } from '../../common/utils';
   import moreView from './moreView';
   import SourceMenuDialog from './components/sourceMenuDialog';
   import Player from './components/player';
   import { getPosition } from '../../component/fjUI/utils/position';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import ivideoAPI from '../../api/ivideo';
-  import downloadListView from '../management/task/template/component/downloadDialog';
+  import downloadListView from '../management/template/download/component/downloadDialog';
 
   const api = require('../../api/media');
   const jobAPI = require('../../api/job');
+
+  const config = require('./config');
 
 
   export default {
@@ -116,7 +125,7 @@
       return {
         title: '',
         program: {},
-        files: [],
+        files: [], // 所有的文件信息
         poster: '',
         activeTabName: 'tab1',
         item: {},
@@ -127,7 +136,8 @@
         },
         templateInfo: {},
         fileInfo: {},
-        downloadDialogDisplay: false
+        downloadDialogDisplay: false,
+        videoId: ''
       };
     },
     watch: {
@@ -136,6 +146,7 @@
         this.program = {};
         this.poster = this.getThumb(val);
         this.item = val;
+        this.videoId = val.id;
         this.getDetail();
         this.getStream();
       },
@@ -199,7 +210,8 @@
         const addtoBtnPosition = getPosition(addtoBtn);
         const addtoBtnHeight = addtoBtn.getBoundingClientRect().height;
         menuPosition.top = `${addtoBtnPosition.y + addtoBtnHeight}px`;
-        menuPosition.left = `${addtoBtnPosition.x - 163}px`;
+        menuPosition.left = `${addtoBtnPosition.x - 227}px`;
+        // menuPosition.left = `${addtoBtnPosition.x - 163}px`;
         return menuPosition;
       },
       mountMenu() {
@@ -215,43 +227,62 @@
         }
       },
       handleAddtoMenu(data, leaveOrNot) {
+        if (isEmptyObject(this.fileInfo)) {
+          this.fileInfo = this.getDefaultFileInfo();
+        }
+
+        if (isEmptyObject(this.fileInfo)) {
+          this.$message.error('当前没有视频可以进行编辑');
+          return false;
+        }
+
         const reqData = Object.assign({}, data);
         reqData.name = this.title;
+
         reqData.snippet = {
-          objectId: this.item.id,
+          objectId: this.fileInfo.OBJECTID,
           thumb: this.poster,
-          input: 0,
-          output: this.item.duration,
-          duration: this.item.duration
+          input: this.fileInfo.INPOINT,
+          output: this.fileInfo.OUTPOINT,
+          duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
+          fileTypeId: this.fileInfo.FILETYPEID
         };
-        ivideoAPI.createItem(reqData)
-          .then((response) => {
-            this.unmountMenu();
-            if (leaveOrNot) {
-              this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
-            }
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          });
+
+        ivideoAPI.createItem(reqData).then((response) => {
+          this.unmountMenu();
+          if (leaveOrNot) {
+            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
+          }
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       },
       gotoEditer() {
+        if (isEmptyObject(this.fileInfo)) {
+          this.fileInfo = this.getDefaultFileInfo();
+        }
+
+        if (isEmptyObject(this.fileInfo)) {
+          this.$message.error('当前没有视频可以进行编辑');
+          return false;
+        }
+
         const reqData = { parentId: '' };
         reqData.name = this.title;
         reqData.snippet = {
-          objectId: this.item.id,
+          objectId: this.fileInfo.OBJECTID,
           thumb: this.poster,
-          input: 0,
-          output: this.item.duration,
-          duration: this.item.duration
+          input: this.fileInfo.INPOINT,
+          output: this.fileInfo.OUTPOINT,
+          duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
+          fileTypeId: this.fileInfo.FILETYPEID
         };
-        ivideoAPI.createItem(reqData)
-          .then((response) => {
-            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          });
+
+        ivideoAPI.createItem(reqData).then((response) => {
+          this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       },
       getStream() {
         const me = this;
@@ -267,21 +298,50 @@
 
         return false;
       },
-      downloadListConfirm(templateInfo) {
+      downloadListConfirm(templateInfo, actionName) {
         this.templateInfo = templateInfo || {};
+
         if (!isEmptyObject(templateInfo)) {
-          this.download();
+          if(!actionName) {
+            this.download();
+          }else {
+            this.$message.success(actionName + '功能正在开发中');
+          }
         }
       },
-      prepareDownload(fileInfo) {
-        this.fileInfo = fileInfo;
-        this.downloadDialogDisplay = true;
+      getDefaultFileInfo() {
+        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
+        const files = this.files;
+
+        if (files.length === 0) {
+          return {};
+        }
+
+        for (let i = 0, len = files.length; i < len; i++) {
+          for (let j = 0, l = ft.length; j < l; j++) {
+            if (files[i].FILETYPEID === ft[j]) {
+              return files[i];
+            }
+          }
+        }
+
+        return {};
       },
-      download() {
-        if (isEmptyObject(this.streamInfo)) {
+      prepareDownload(fileInfo) {
+        if (fileInfo) {
+          this.fileInfo = fileInfo;
+        } else {
+          this.fileInfo = this.getDefaultFileInfo();
+        }
+
+        if (isEmptyObject(this.fileInfo)) {
+          this.$message.error('当前没有视频可以下载，下载其它信息可以到文件信息中选取下载');
           return false;
         }
 
+        this.downloadDialogDisplay = true;
+      },
+      download() {
         const me = this;
 
         const param = {
@@ -300,6 +360,15 @@
         });
 
         return false;
+      },
+      formatValue(str) {
+        let rs = str;
+
+        if (/[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(str)) {
+          rs = formatTime(str);
+        }
+
+        return rs;
       }
     }
   };

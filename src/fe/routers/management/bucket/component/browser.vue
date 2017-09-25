@@ -15,17 +15,16 @@
         </fj-table-column>
       </fj-table>
     </div>
-    <div slot="footer">
-      <fj-button @click="close">取消</fj-button>
-      <fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
+    <div slot="footer" class="dialog-footer">
+      <fj-button @click="close">取消</fj-button><!--
+      --><fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
     </div>
   </fj-dialog>
 </template>
 <script>
-  const api = require('../../../../api/storage');
-
   import utils from '../../../../common/utils';
 
+  const api = require('../../../../api/storage');
   const config = require('../config');
 
   export default {
@@ -72,18 +71,11 @@
       formatType(v) {
         return utils.getTextByValue(config, v, 'TYPE');
       },
-      handleCurrentChange(current) {
-        this.currentRow = current;
-        this.resetEditDialog();
-      },
       formatStatus(v) {
         if (v === config.STATUS.NORMAL.value) {
           return '<span class="bucket-status-span bucket-enable">正常</span>';
         }
         return '<span class="bucket-status-span bucket-disable">挂起</span>';
-      },
-      formatType(v) {
-        return utils.getTextByValue(config, v, 'TYPE');
       },
       showErrorInfo(message) {
         this.$message.error(message);

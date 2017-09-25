@@ -49,6 +49,25 @@ config.FIELD_NAME = {
   VIDEOSTANDARD: { cn: '' }
 };
 
+config.FILE_TYPE_ID = [
+  { filetypeid: '575D9E77-91AF-4CBE-B2C6-AAF89B08380B', name: '字幕', fileclass: 11, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '997C86F2-0129-425D-A343-6109F843DB18', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: '040130E8-9C84-4D0B-B181-AC5B9D523EF0', name: '高清視頻', fileclass: 5, streamtype: 2, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '6C5DC27E-BCCC-41A9-BB90-9CD068E91528', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: '75C908C1-2C45-4E3F-AFA0-11859C3FC174', name: '低碼流視音頻', fileclass: 2, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '04B18414-2477-41F9-B89A-96CDBE49D7E8', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: 'A2694839-8D87-42D8-87B5-419DFC0FDFCE', name: '視頻服務器', fileclass: 3, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '6C5DC27E-BCCC-41A9-BB90-9CD068E91528', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: 'A8480910-490C-4CCF-B997-25D3FF9D1C9E', name: '立體聲音頻', fileclass: 6, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '6C5DC27E-BCCC-41A9-BB90-9CD068E91528', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: 'B1ECE21B-3DAF-4B82-9874-C49600BE9837', name: '單聲道音頻', fileclass: 1, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '6C5DC27E-BCCC-41A9-BB90-9CD068E91528', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: 'D51E2DDC-8742-4F9A-9CC8-84CC2255A689', name: '關鍵幀', fileclass: 4, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: 'C7D8D39C-F0B2-43D1-B320-D2BD89043A47', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: 'E2255D0F-2E98-4F93-B389-6542C8685B76', name: '標清視頻', fileclass: 0, streamtype: 16, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 15, said: '6C5DC27E-BCCC-41A9-BB90-9CD068E91528', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: 'EE92684D-42A9-449C-8B78-774BDE860AEC', name: '附件', fileclass: 100, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '6767D518-4481-40C9-BDFF-F47FE19CE6D9', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: 'EE92684D-42A9-449C-8B78-774BDE860AFC', name: '圖文', fileclass: 7, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, said: '6767D518-4481-40C9-BDFF-F47FE19CE6D9', status: 0, filterclass: 0, standardrate: 0 },
+  { filetypeid: '454E105B-F521-444a-A0E8-3763A6471DC2', name: '肖像', fileclass: 10, streamtype: 0, videotype: 0, audiotype: 0, minbitrate: 0, maxbitrate: 0, status: 0, filterclass: 0, standardrate: 0 }
+];
+
+config.IVIDEO_EDIT_FILE_TYPE_ID = [
+  '040130E8-9C84-4D0B-B181-AC5B9D523EF0',
+  'E2255D0F-2E98-4F93-B389-6542C8685B76'
+];
+
 method.getTextByValue = function (v, st) {
   return utils.getTextByValue(config, v, st) || {};
 };
@@ -81,21 +100,30 @@ method.getTimeRange = function getTimeRange(datetimerange) {
   return result;
 };
 
-method.getQuery = function getQuery(configs) {
-  let q = '';
+method.getQuery = function getQuery(must, configs) {
   for (let i = 0, len = configs.length; i < len; i++) {
     const temp = configs[i];
     const key = temp.key;
     if (temp.selected !== undefined && temp.selected !== '' && temp.selected !== 'all') {
-      if (q) {
-        q += ` AND ${key}:${temp.selected}`;
-      } else {
-        q += `${key}:${temp.selected}`;
-      }
+      const item = {
+        key: temp.key,
+        value: temp.selected
+      };
+      must.push(item);
     }
   }
+};
 
-  return q;
+method.formatMust = function (must, obj) {
+  for (const key in obj) {
+    if (obj[key]) {
+      const item = {
+        key: key,
+        value: obj[key]
+      };
+      must.push(item);
+    }
+  }
 };
 
 method.getSearchNotice = function getSearchNotice(configs) {
@@ -119,10 +147,10 @@ method.getSearchNotice = function getSearchNotice(configs) {
 
 const ORDER_OPTIONS = [
   { value: 'order1', label: '关联度排序', sort: '' },
-  { value: 'order2', label: '新闻时间由远到近', sort: 'f_date_162 asc' },
-  { value: 'order3', label: '新闻时间由近到远', sort: 'f_date_162 desc' },
-  { value: 'order4', label: '首播时间由近到远', sort: 'f_date_36 desc' },
-  { value: 'order5', label: '首播时间由远到近', sort: 'f_date_36 asc' }
+  { value: 'order2', label: '新闻时间由远到近', sort: 'asc', key: 'f_date_162' },
+  { value: 'order3', label: '新闻时间由近到远', sort: 'desc', key: 'f_date_162' },
+  { value: 'order4', label: '首播时间由近到远', sort: 'desc', key: 'f_date_36' },
+  { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'f_date_36' }
 ];
 
 const HHIGHLIGHT_FIELDS1 = 'name,program_name_cn,program_name_en,f_str_03,f_str_187';
@@ -135,16 +163,28 @@ method.HHIGHLIGHT_FIELDS2 = HHIGHLIGHT_FIELDS2;
 method.FILETR_FIELDS = FILETR_FIELDS;
 
 method.getOrder = function getOrder(selectedValue) {
+  const sort = [];
   if (selectedValue) {
     for (let i = 0, len = ORDER_OPTIONS.length; i < len; i++) {
-      if (selectedValue === ORDER_OPTIONS[i].value) {
-        return ORDER_OPTIONS[i].sort;
+      if (selectedValue === ORDER_OPTIONS[i].value && ORDER_OPTIONS[i].sort) {
+        const item = {
+          key: ORDER_OPTIONS[i].key,
+          value: ORDER_OPTIONS[i].sort
+        };
+        sort.push(item);
       }
     }
-    return '';
-  } else {
-    return '';
   }
+  return sort;
+};
+
+method.getHighLightFields = function getHighLightFields(fields) {
+  const obj = {};
+  fields = fields.split(',');
+  for (let i = 0, len = fields.length; i < len; i++) {
+    obj[fields[i]] = {};
+  }
+  return obj;
 };
 
 module.exports = method;

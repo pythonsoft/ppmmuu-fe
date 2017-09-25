@@ -26,6 +26,19 @@ config.STATUS = {
   complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' }
 };
 
+config.TASK_STATUS = {
+  all: { text: '全部', value: '', key: 'all' },
+  created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
+  dealing: { text: '处理中', value: 'dealing', key: 'dealing', css: 'task-status-base task-status-dealing' },
+  stopping: { text: '停止中', value: 'stopping', key: 'stopping', css: 'task-status-base task-status-dealing' },
+  stop: { text: '已停止', value: 'stop', key: 'stop', css: 'task-status-base task-status-dealing' },
+  restart: { text: '重启中', value: 'restart', key: 'restart', css: 'task-status-base task-status-created' },
+  error: { text: '错误', value: 'error', key: 'error', css: 'task-status-base task-status-error' },
+  complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' },
+  delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' },
+  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' },
+};
+
 // 下载任务状态
 config.DOWNLOAD_STATUS = {
   all: { text: '全部', value: '', key: 'all' },
@@ -49,6 +62,11 @@ config.TYPE = {
   STANDARD: { text: '标准存储', value: '0', key: 'STANDARD' },
   IA: { text: '低频存储', value: '1', key: 'IA' },
   ARCHIVE: { text: '归档存储', value: '2', key: 'ARCHIVE' }
+};
+
+config.TARGET_TYPE = {
+  PERSONAL: { text: '个人', value: '0', key: 'PERSONAL' },
+  COMPANY: { text: '企业', value: '1', key: 'COMPANY' },
 };
 
 config.DELETE_DENY = {

@@ -11,9 +11,7 @@ const StoragePath = resolve => require.ensure([], () => resolve(require('./manag
 const StorageTactics = resolve => require.ensure([], () => resolve(require('./management/storageTactics/index')), 'storageTactics');
 
 const Transcode = resolve => require.ensure([], () => resolve(require('./management/task/transcode/index')), 'transcode');
-const TemplateManager = resolve => require.ensure([], () => resolve(require('./management/task/template/index')), 'TemplateManager');
 const Download = resolve => require.ensure([], () => resolve(require('./management/task/download/index')), 'download');
-const Backmoving = resolve => require.ensure([], () => resolve(require('./management/task/backmoving/index')), 'backmoving');
 
 const ManagementAbout = resolve => require.ensure([], () => resolve(require('./management/help/about/index')), 'managementAbout');
 const ManagementFeedback = resolve => require.ensure([], () => resolve(require('./management/help/feedback/index')), 'managementFeedback');
@@ -32,6 +30,9 @@ const MovieEditor = resolve => require.ensure([], () => resolve(require('./movie
 
 const TaskCenter = resolve => require.ensure([], () => resolve(require('./taskCenter/index')), 'taskCenter');
 const TaskDownload = resolve => require.ensure([], () => resolve(require('./taskCenter/download/index')), 'taskDownload');
+
+const DownloadTemplate = resolve => require.ensure([], () => resolve(require('./management/template/download/index')), 'DownloadTemplate');
+const TranscodeTemplate = resolve => require.ensure([], () => resolve(require('./management/template/transcode/index')), 'TranscodeTemplate');
 
 export default [{
   path: '/',
@@ -54,11 +55,11 @@ export default [{
         { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' }, name: 'storageTactics' },
         { path: 'transcode', component: Transcode, meta: { title: '转码任务' }, name: 'transcode' },
         { path: 'download', component: Download, meta: { title: '下载任务' }, name: 'download' },
-        { path: 'backmoving', component: Backmoving, meta: { title: '回迁任务' }, name: 'backmoving' },
         { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' },
         { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
         { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' },
-        { path: 'templateManager', component: TemplateManager, meta: { title: '模板管理' }, name: 'templateManager' }
+        { path: 'downloadTemplate', component: DownloadTemplate, meta: { title: '下载模板' }, name: 'downloadTemplate' },
+        { path: 'transcodeTemplate', component: TranscodeTemplate, meta: { title: '转码模板' }, name: 'transcodeTemplate' }
       ]
     },
     {

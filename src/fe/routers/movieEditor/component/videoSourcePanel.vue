@@ -2,9 +2,12 @@
   <div
     :class="['video-source-wrap', {'active-panel':isActivePanel}]"
     @click="()=>{this.$emit('update:activePanel', 'sourcePanel')}">
-    <div class="video-source-title">{{ `源：${title || '素材名称'} ${displayDuration}` }}</div>
+    <div class="video-source-title">{{ `源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
       <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
+      <div v-show="currentVideoSRT" class="video-srt">
+        <span class="video-srt-text">{{ currentVideoSRT }}</span>
+      </div>
     </div>
     <div class="video-source-bottom">
       <div v-if="duration===0" class="player-mask"></div>
@@ -55,7 +58,10 @@
   </div>
 </template>
 <script>
-  import { getStreamURL, transformSecondsToStr } from '../../../common/utils';
+  import { getStreamURL, getSRT, transformSecondsToStr } from '../../../common/utils';
+
+  const config = require('../../mediaCenter/config');
+  const api = require('../../../api/media');
 
   export default {
     props: {
@@ -74,6 +80,12 @@
         type: String,
         default: ''
       },
+      videoSnippet: {
+        type: Object,
+        default() {
+          return { fileTypeId: '' };
+        }
+      },
       size: {
         type: Object,
         default() {
@@ -91,6 +103,8 @@
     },
     data() {
       return {
+        files: '',
+        fileTypeId: '',
         currentTime: 0,
         duration: 0,
         clipDuration: 0,
@@ -114,7 +128,15 @@
         imageDialogVisible: false,
         screenshotURL: '',
         screenshotTitle: '',
-        videoSource: ''
+        videoSource: '',
+        videoSRT: [],
+        videoSRTPosition: 0,
+        currentVideoSRT: '',
+        videoInfo: {
+          FILENAME: '',
+          INPOINT: '',
+          OUTPOINT: ''
+        }
       };
     },
     computed: {
@@ -152,6 +174,10 @@
     watch: {
       videoId(val) {
         this.getStream(val);
+        this.getSRTArr(val);
+      },
+      videoSnippet(val) {
+        this.fileTypeId = val.fileTypeId;
       },
       isActivePanel(val) {
         if (val) {
@@ -198,6 +224,8 @@
     mounted() {
       if (this.$route.params.objectId) {
         this.getStream(this.$route.params.objectId);
+        this.getSRTArr(this.$route.params.objectId);
+        this.getDetail(this.$route.params.objectId);
       }
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
@@ -218,17 +246,53 @@
       }
     },
     methods: {
+      getDefaultFileInfo() {
+        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
+        const files = this.files;
+
+        if(files.length === 0) {
+          return {};
+        }
+
+        for(let i = 0, len = files.length; i < len; i++) {
+          for(let j = 0, l = ft.length; j < l; j++) {
+            if(files[i].FILETYPEID === ft[j]) {
+              return files[i];
+            }
+          }
+        }
+
+        return {};
+      },
+      getDetail(id) {
+        api.getObject({ params: { objectid: id } }).then((res) => {
+          this.files = res.data.result.files;
+          this.fileTypeId = this.getDefaultFileInfo().FILETYPEID;
+        }).catch((error) => {
+          this.$message.error(error);
+        });
+      },
       getStream(id) {
-        getStreamURL(id, (err, url) => {
+        getStreamURL(id, (err, url, res) => {
           if (err) {
             this.$message.error(err);
             return;
           }
 
           this.videoSource = url;
+          this.videoInfo = res.result;
+        }, this);
+      },
+      getSRTArr(id) {
+        getSRT(id, (err, data, res) => {
+          if (err) {
+            return;
+          }
+          this.videoSRT = data;
         }, this);
       },
       reset() {
+        this.videoSRTPosition = 0;
         this.currentTime = 0;
         this.offset = 0;
         this.isPlaying = false;
@@ -274,15 +338,60 @@
         const controllerArr = controller.split(',');
         const list = [];
         const controllerConfig = {
-          inPoint: { name: 'in-point', icon: 'icon-in-point', tooltip: '标记入点(I)', clickFn: this.markIn },
-          outPoint: { name: 'out-point', icon: 'icon-out-point', tooltip: '标记出点(O)', clickFn: this.markOut },
-          gotoInPoint: { name: 'goto-in-point', icon: 'icon-goto-in-point', tooltip: '转到入点(Shift+I)', clickFn: this.gotoInPoint },
-          prevFrame: { name: 'prev-frame', icon: 'icon-video-prev', tooltip: '后退一帧(左侧)', clickFn: this.gotoPrevFrame },
-          play: { name: 'play', icon: 'icon-play', tooltip: '播放-停止切换(Space)', clickFn: this.updatePlayerStatus },
-          nextFrame: { name: 'next-frame', icon: 'icon-video-next', tooltip: '前进一帧(右侧)', clickFn: this.gotoNextFrame },
-          gotoOutPoint: { name: 'goto-out-point', icon: 'icon-goto-out-point', tooltip: '转到出点(Shift+O)', clickFn: this.gotoOutPoint },
-          insert: { name: 'insert', icon: 'icon-insert', tooltip: '插入(,)', clickFn: this.insertClip },
-          camera: { name: 'camera', icon: 'icon-camera', tooltip: '导出帧(Shift+E)', clickFn: this.screenshot }
+          inPoint: {
+            name: 'in-point',
+            icon: 'icon-in-point',
+            tooltip: '标记入点(I)',
+            clickFn: this.markIn
+          },
+          outPoint: {
+            name: 'out-point',
+            icon: 'icon-out-point',
+            tooltip: '标记出点(O)',
+            clickFn: this.markOut
+          },
+          gotoInPoint: {
+            name: 'goto-in-point',
+            icon: 'icon-goto-in-point',
+            tooltip: '转到入点(Shift+I)',
+            clickFn: this.gotoInPoint
+          },
+          prevFrame: {
+            name: 'prev-frame',
+            icon: 'icon-video-prev',
+            tooltip: '后退一帧(左侧)',
+            clickFn: this.gotoPrevFrame
+          },
+          play: {
+            name: 'play',
+            icon: 'icon-play',
+            tooltip: '播放-停止切换(Space)',
+            clickFn: this.updatePlayerStatus
+          },
+          nextFrame: {
+            name: 'next-frame',
+            icon: 'icon-video-next',
+            tooltip: '前进一帧(右侧)',
+            clickFn: this.gotoNextFrame
+          },
+          gotoOutPoint: {
+            name: 'goto-out-point',
+            icon: 'icon-goto-out-point',
+            tooltip: '转到出点(Shift+O)',
+            clickFn: this.gotoOutPoint
+          },
+          insert: {
+            name: 'insert',
+            icon: 'icon-insert',
+            tooltip: '插入(,)',
+            clickFn: this.insertClip
+          },
+          camera: {
+            name: 'camera',
+            icon: 'icon-camera',
+            tooltip: '导出帧(Shift+E)',
+            clickFn: this.screenshot
+          }
         };
         controllerArr.forEach((name) => {
           list.push(controllerConfig[name]);
@@ -311,9 +420,33 @@
         }
         this.video.currentTime = this.inTime;
         this.currentTime = this.inTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
+      },
+      updateCurrentSRT() {
+        if (this.videoSRT.length === 0) return;
+        if (this.currentTime < this.videoSRT[0].start) {
+          this.videoSRTPosition = 0;
+          this.currentVideoSRT = '';
+          return;
+        }
+        for (let i = 0; i < this.videoSRT.length; i++) {
+          if (this.videoSRT[i].start <= this.currentTime
+            && this.videoSRT[i].end >= this.currentTime) {
+            this.videoSRTPosition = i;
+            this.currentVideoSRT = this.videoSRT[i].text;
+            return;
+          }
+          if (i > 0
+            && this.videoSRT[i - 1].end < this.currentTime
+            && this.videoSRT[i].start > this.currentTime) {
+            this.videoSRTPosition = i;
+            this.currentVideoSRT = '';
+            return;
+          }
+        }
       },
       gotoOutPoint() {
         if (this.isPlaying) {
@@ -321,6 +454,7 @@
         }
         this.video.currentTime = this.outTime;
         this.currentTime = this.outTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
@@ -382,6 +516,16 @@
             const progressBar = this.getProgressBarStyle();
             const progressBarWidth = progressBar.width;
             this.currentTime = this.video.currentTime;
+            if (this.videoSRT.length > 0) {
+              if (this.videoSRT[this.videoSRTPosition].start >= this.currentTime - 1 / this.fps
+                && this.videoSRT[this.videoSRTPosition].start <= this.currentTime + 1 / this.fps) {
+                this.currentVideoSRT = this.videoSRT[this.videoSRTPosition].text;
+              } else if (this.videoSRT[this.videoSRTPosition].end >= this.currentTime - 1 / this.fps
+                && this.videoSRT[this.videoSRTPosition].end <= this.currentTime + 1 / this.fps) {
+                this.videoSRTPosition += 1;
+                this.currentVideoSRT = '';
+              }
+            }
             if (this.currentTime === this.video.duration) {
               this.isPlaying = false;
               clearInterval(this.moveIndicatorTimer);
@@ -401,7 +545,8 @@
         if (this.video.currentTime < 1 / this.fps) return;
         this.video.currentTime -= 1 / this.fps;
         this.currentTime = this.video.currentTime;
-        this.video.currentTime = this.currentTime;
+        // this.video.currentTime = this.currentTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
@@ -413,7 +558,8 @@
         if (this.video.currentTime > this.video.duration - 1 / this.fps) return;
         this.video.currentTime += 1 / this.fps;
         this.currentTime = this.video.currentTime;
-        this.video.currentTime = this.currentTime;
+        // this.video.currentTime = this.currentTime;
+        this.updateCurrentSRT();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
@@ -457,6 +603,7 @@
         this.offset = currentLeft;
         this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
         this.currentTime = this.video.currentTime;
+        this.updateCurrentSRT();
       },
       indicatorMousedown(e) {
         if (this.isPlaying) {
@@ -490,6 +637,7 @@
           }
           this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
           this.currentTime = this.video.currentTime;
+          this.updateCurrentSRT();
         }, this.interval);
       },
       bodyMouseupHandler(e) {
@@ -498,8 +646,9 @@
       },
       insertClip() {
         const info = {
-          objectId: this.videoId,
-          title: this.title,
+          objectId: this.videoId || this.$route.params.objectId,
+          filetypeid: this.fileTypeId || '',
+          title: this.title || this.videoInfo.FILENAME,
           range: [this.inTime, this.outTime],
           duration: this.outTime - this.inTime,
           screenshot: this.inTimeScreenshot

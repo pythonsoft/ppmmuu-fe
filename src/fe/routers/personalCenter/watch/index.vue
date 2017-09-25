@@ -9,13 +9,13 @@
     <div class="mainBox">
       <div class="leftBox" ref="leftBox" :style="{ right: rightboxWidth }">
         <div class="leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
-          <player :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
+          <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="streamInfo.FILENAME"></div>
             <ul class="media-video-title-bar">
-              <!--<li>-->
-                <!--<span title="下载" class="iconfont icon-video-download" @click.stop="download()"></span>-->
-              <!--</li>-->
+              <li>
+                <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
+              </li>
               <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
@@ -42,7 +42,7 @@
                   <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                   <td class="item-info-value">
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ info.value }}</span>
+                    <span v-else>{{ formatValue(info.value) }}</span>
                   </td>
                 </tr>
               </table>
@@ -91,19 +91,26 @@
 </template>
 <script>
   import './index.css';
-  import { formatSize, formatDuration, formatContent, getStreamURL, isEmptyObject } from '../../../common/utils';
+  import {
+    formatSize,
+    formatDuration,
+    formatContent,
+    getStreamURL,
+    isEmptyObject,
+    formatQuery,
+    formatTime,
+  } from '../../../common/utils';
   import GridListView from '../../mediaCenter/gridAndList';
   import MoreView from '../../mediaCenter/moreView';
   import Player from '../../mediaCenter/components/player';
-  import { formatQuery } from '../../../common/utils';
   import { getTitle, getThumb } from '../../mediaCenter/common';
+  import downloadListView from '../../management/template/download/component/downloadDialog';
 
+  const config = require('../../mediaCenter/config');
   const jobAPI = require('../../../api/job');
   const mediaAPI = require('../../../api/media');
   const ivideoAPI = require('../../../api/ivideo');
   const userAPI = require('../../../api/user');
-
-  import downloadListView from '../../management/task/template/component/downloadDialog';
 
   const playerMinWidth = 792;
   const playerMaxWidth = 1188;
@@ -201,7 +208,9 @@
         userAPI.getWatchHistory(formatQuery(data, true))
           .then((response) => {
             const responseData = response.data;
-            const tempList = responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id }));
+            const tempList = responseData.docs.map(
+              item => Object.assign(item.videoContent, { _id: item._id })
+            );
             this.items = tempList;
           })
           .catch((error) => {
@@ -228,34 +237,61 @@
           this.url = url;
         }, this);
       },
-      //      download(info) {
-      //        const param = {
-      //          objectid: this.objectId,
-      //          inpoint: this.streamInfo.INPOINT,
-      //          outpoint: this.streamInfo.OUTPOINT,
-      //          fileName: this.streamInfo.FILENAME
-      //        };
-      //        if (info && !isEmptyObject(info)) {
-      //          param.objectid = info.OBJECTID;
-      //          param.fileName = info.FILENAME;
-      //          param.inpoint = info.INPOINT;
-      //          param.outpoint = info.OUTPOINT;
-      //        }
-      //
-      //        jobAPI.download(param).then((res) => {
-      //          this.$message.success('正在下载文件，请到"任务"查看详细情况');
-      //        }).catch((error) => {
-      //          this.$message.error(error);
-      //        });
-      //      },
+      // download(info) {
+      //   const param = {
+      //     objectid: this.objectId,
+      //     inpoint: this.streamInfo.INPOINT,
+      //     outpoint: this.streamInfo.OUTPOINT,
+      //     fileName: this.streamInfo.FILENAME
+      //   };
+      //   if (info && !isEmptyObject(info)) {
+      //     param.objectid = info.OBJECTID;
+      //     param.fileName = info.FILENAME;
+      //     param.inpoint = info.INPOINT;
+      //     param.outpoint = info.OUTPOINT;
+      //   }
+
+      //   jobAPI.download(param).then((res) => {
+      //     this.$message.success('正在下载文件，请到"任务"查看详细情况');
+      //   }).catch((error) => {
+      //     this.$message.error(error);
+      //   });
+      // },
       downloadListConfirm(templateInfo) {
         this.templateInfo = templateInfo || {};
         if (!isEmptyObject(templateInfo)) {
           this.download();
         }
       },
+      getDefaultFileInfo() {
+        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
+        const files = this.files;
+
+        if(files.length === 0) {
+          return {};
+        }
+
+        for(let i = 0, len = files.length; i < len; i++) {
+          for(let j = 0, l = ft.length; j < l; j++) {
+            if(files[i].FILETYPEID === ft[j]) {
+              return files[i];
+            }
+          }
+        }
+
+        return {};
+      },
       prepareDownload(fileInfo) {
-        this.fileInfo = fileInfo;
+        if(fileInfo) {
+          this.fileInfo = fileInfo;
+        }else {
+          this.fileInfo = this.getDefaultFileInfo();
+        }
+
+        if(isEmptyObject(this.fileInfo)) {
+          this.$message.error('当前没有视频可以下载，下载其它信息可以到文件信息中选取下载');
+          return;
+        }
         this.downloadDialogDisplay = true;
       },
       download() {
@@ -302,6 +338,17 @@
       },
       back() {
         this.$router.push({ name: 'history' });
+      },
+      formatValue(str) {
+        let rs = str;
+
+        if (/[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(str)) {
+          rs = formatTime(str);
+        }
+
+        console.log(str, rs);
+
+        return rs;
       }
     },
     components: {

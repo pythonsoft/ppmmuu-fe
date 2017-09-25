@@ -19,7 +19,8 @@
 .media-browser-title {
   float: left;
   font-size: 12px;
-  color: #CED9E5;
+  font-weight: bold;
+  color: #2A3E52;
   line-height: 24px;
 }
 .media-browser-controller-wrap {
@@ -50,7 +51,6 @@
   height: 37px;
   line-height: 37px;
   font-size: 12px;
-  color: #CED9E5;
 }
 .video-source-box {
   position: absolute;
@@ -71,7 +71,7 @@
   height: 34px;
   line-height: 34px;
   font-size: 14px;
-  color: #CED9E5;
+  color: #4C637B;
 }
 .player-progress-bar-box {
   position: relative;
@@ -81,7 +81,7 @@
 .player-progress-bar {
   width: 100%;
   height: 14px;
-  background: #353535;
+  background: #E3EAF3;
 }
 .player-controls {
   position: relative;
@@ -94,8 +94,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.4;
-  background: #292929;
+  background: rgba(255, 255, 255, .7);
   z-index: 1;
 }
 .player-control-item-wrap {
@@ -109,14 +108,17 @@
   line-height: 24px;
   border-radius: 2px;
   font-size: 14px;
-  color: #CED9E5;
+  color: #4C637B;
   text-align: center;
 }
 .player-control-item:hover {
-  background: #353535;
+  background: #E3EAF3;
+}
+.player-control-item:active {
+  color: #38B1EB;
 }
 .disabled-control-item {
-  color: #555;
+  color: #CED9E5;
 }
 .player-control-item i {
   font-size: 14px;
@@ -127,10 +129,10 @@
   top: 26px;
   left: 50%;
   transform: translateX(-50%);
-  background: #555555;
+  background: #EBF3FB;
   border-radius: 2px;
   font-size: 12px;
-  color: #CED9E5;
+  color: #4C637B;
   padding: 0 6px;
   line-height: 22px;
   white-space: nowrap;
@@ -159,7 +161,7 @@
   position: absolute;
   top: 0px;
   height: 14px;
-  background: #555555;
+  background: #CED9E5;
 }
 .player-tooltip {
   position: absolute;
@@ -167,10 +169,10 @@
   z-index: 10;
 }
 .player-tooltip-text {
-  background: #555555;
+  background: #EBF3FB;
   border-radius: 2px;
   font-size: 12px;
-  color: #CED9E5;
+  color: #4C637B;
   padding: 0 6px;
   line-height: 22px;
   white-space: nowrap;
@@ -187,36 +189,18 @@
   color: #fff;
   display: none;
 }
-.workspace-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding-top: 4px;
-}
-.workspace-header {
-  padding-left: 20px;
-}
-.task-list-controller-wrap {
+
+.video-srt {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  bottom: 20px;
+  right: 20px;
+  left: 20px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #FFFFFF;
 }
-.task-list-controller-wrap .select-wrap {
-  width: 92px;
-}
-.task-list {
-  margin-top: 14px;
-  border-top: 1px solid #444;
-}
-.timeline-title {
-  margin: 10px 20px;
-  font-size: 12px;
-  color: #CED9E5;
-}
-.timeline-content {
-  position: absolute;
-  top: 90px;
-  right: 0;
-  left: 4px;
-  bottom: 0;
+.video-srt-text {
+  background: rgba(0, 0, 0, .5);
+  padding: 3px;
 }
