@@ -5,6 +5,7 @@
       :node="item"
       :node-key="nodeKey"
       :node-style="nodeStyle"
+      :node-level="1"
       :indent="indent"
       :autoExpand="autoExpand"
       :render-content="renderContent"

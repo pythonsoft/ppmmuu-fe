@@ -11,12 +11,12 @@
           <div
             @click="handleExpandIconClick"
             class="expand-wrap"
-            :style="{ left: (open ? indent - 5 : indent) + 'px' }">
+            :style="{ left: (open ? (indent * nodeLevel) - 5 : (indent * nodeLevel)) + 'px' }">
             <i :class="open ? 'tri-bottom' : 'tri-right'"></i>
           </div>
           <div :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
         </template>
-        <node-content v-else :node="node"></node-content>
+        <div v-else :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
       </div>
     </div>
     <ul v-if="isFolder" v-show="open">
@@ -26,7 +26,8 @@
         :node-key="nodeKey"
         :node-style="nodeStyle"
         :node="item"
-        :indent="indent*2"
+        :node-level="nodeLevel + 1"
+        :indent="indent"
         :render-content="renderContent"
         :key="getNodeKey(item, index)"></fj-tree-node>
     </ul>
@@ -42,6 +43,7 @@
       nodeKey: String,
       nodeStyle: Object,
       indent: {},
+      nodeLevel: Number,
       renderContent: Function,
       autoExpand: {
         type: Boolean,
@@ -66,12 +68,13 @@
         return Object.assign(
           {},
           this.nodeStyle,
-          { paddingLeft: `${this.indent}px`, position: 'relative' }
+          { paddingLeft: `${this.indent * this.nodeLevel}px`, position: 'relative' }
         );
       }
     },
     methods: {
       handleExpandIconClick() {
+        if (this.autoExpand) return;
         if (this.isFolder) {
           if (!this.open) {
             this.tree.$emit('node-expand', this.node);

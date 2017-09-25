@@ -434,6 +434,7 @@
   display: block;
   font-style: italic;
   cursor: pointer;
+  color: #2B6DBA;
 }
 .item-expand-btn .tri-bottom {
   vertical-align: middle;

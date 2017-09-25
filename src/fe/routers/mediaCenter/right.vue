@@ -396,8 +396,6 @@
           rs = formatTime(str);
         }
 
-        console.log(str, rs);
-
         return rs;
       }
     }
