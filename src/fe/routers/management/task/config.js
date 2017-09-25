@@ -36,7 +36,7 @@ config.TASK_STATUS = {
   error: { text: '错误', value: 'error', key: 'error', css: 'task-status-base task-status-error' },
   complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' },
   delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' },
-  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' },
+  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' }
 };
 
 // 下载任务状态
@@ -66,7 +66,7 @@ config.TYPE = {
 
 config.TARGET_TYPE = {
   PERSONAL: { text: '个人', value: '0', key: 'PERSONAL' },
-  COMPANY: { text: '企业', value: '1', key: 'COMPANY' },
+  COMPANY: { text: '企业', value: '1', key: 'COMPANY' }
 };
 
 config.DELETE_DENY = {
