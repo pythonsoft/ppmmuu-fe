@@ -42,6 +42,10 @@
       title: {
         type: String,
         default: ''
+      },
+      departmentId: {
+        type: String,
+        default: ''
       }
     },
     data() {
@@ -68,7 +72,8 @@
       },
       searchOwnerClick() {
         const query = {
-          keyword: this.keyword
+          keyword: this.keyword,
+          departmentId: this.departmentId
         };
         this.$emit('search-user-api', query);
       },
