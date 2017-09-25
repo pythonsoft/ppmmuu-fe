@@ -1,10 +1,10 @@
 const api = {};
 const axios = require('../config');
 
-api.solrSearch = function solrSearch(data, scope) {
+api.createCatalogTask = function createCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/solrSearch', data).then((response) => {
+    axios.post('/library/createCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -23,10 +23,10 @@ api.solrSearch = function solrSearch(data, scope) {
   });
 };
 
-api.esSearch = function esSearch(data, scope) {
+api.listCatalogTask = function listCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/media/esSearch', data).then((response) => {
+    axios.get('/library/listCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -45,10 +45,10 @@ api.esSearch = function esSearch(data, scope) {
   });
 };
 
-api.getMediaList = function getMediaList(data, scope) {
+api.listDepartmentCatalogTask = function listDepartmentCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getMediaList', data).then((response) => {
+    axios.get('/library/listDepartmentCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -67,10 +67,10 @@ api.getMediaList = function getMediaList(data, scope) {
   });
 };
 
-api.getEsMediaList = function getEsMediaList(data, scope) {
+api.listMyCatalogTask = function listMyCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getEsMediaList', data).then((response) => {
+    axios.get('/library/listMyCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -89,10 +89,10 @@ api.getEsMediaList = function getEsMediaList(data, scope) {
   });
 };
 
-api.defaultMedia = function defaultMedia(data, scope) {
+api.assignCatalogTask = function assignCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/defaultMedia', data).then((response) => {
+    axios.post('/library/assignCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -111,10 +111,10 @@ api.defaultMedia = function defaultMedia(data, scope) {
   });
 };
 
-api.getSearchConfig = function getSearchConfig(data, scope) {
+api.applyCatalogTask = function applyCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getSearchConfig', data).then((response) => {
+    axios.post('/library/applyCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -133,14 +133,10 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
   });
 };
 
-api.getIcon = function getIcon(id) {
-  return `${axios.defaults.baseURL}/media/getIcon?objectid=${id}`;
-};
-
-api.getObject = function getObject(data, scope) {
+api.sendBackCatalogTask = function sendBackCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getObject', data).then((response) => {
+    axios.post('/library/sendBackCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -159,10 +155,10 @@ api.getObject = function getObject(data, scope) {
   });
 };
 
-api.getStream = function getStream(data, scope) {
+api.submitCatalogTask = function submitCatalogTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getStream', data).then((response) => {
+    axios.post('/library/submitCatalogTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -181,10 +177,10 @@ api.getStream = function getStream(data, scope) {
   });
 };
 
-api.getSearchHistory = function getSearchHistory(data, scope) {
+api.listCatalog = function listCatalog(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getSearchHistory', data).then((response) => {
+    axios.get('/library/listCatalog', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -203,10 +199,10 @@ api.getSearchHistory = function getSearchHistory(data, scope) {
   });
 };
 
-api.getWatchHistory = function getWatchHistory(data, scope) {
+api.createCatalog = function createCatalog(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getWatchHistory', data).then((response) => {
+    axios.post('/library/createCatalog', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -225,10 +221,54 @@ api.getWatchHistory = function getWatchHistory(data, scope) {
   });
 };
 
-api.xml2srt = function xml2srt(data, scope) {
+api.updateCatalog = function updateCatalog(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/xml2srt', data).then((response) => {
+    axios.post('/library/updateCatalog', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.createFile = function createFile(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/library/createFile', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.updateFile = function updateFile(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/library/updateFile', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
