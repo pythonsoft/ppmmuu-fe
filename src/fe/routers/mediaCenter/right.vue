@@ -305,7 +305,7 @@
           if(!actionName) {
             this.download();
           }else {
-            this.$message.success(actionName + '功能正在开发中');
+            this.downloadAndTransfer(templateInfo, actionName);
           }
         }
       },
@@ -354,6 +354,34 @@
         };
 
         jobAPI.download(param).then((res) => {
+          me.$message.success('正在下载文件，请到"任务"查看详细情况');
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
+      },
+      downloadAndTransfer(templateInfo, actionName) {
+        const me = this;
+
+        const downloadParams = {
+          objectid: this.fileInfo.OBJECTID,
+          inpoint: this.fileInfo.INPOINT,
+          outpoint: this.fileInfo.OUTPOINT,
+          filename: this.fileInfo.FILENAME,
+          filetypeid: this.fileInfo.FILETYPEID,
+          destination: '',
+          targetname: ''
+        };
+
+        const params = {
+          downloadParams: downloadParams,
+          receiverId: templateInfo.acceptor._id,
+          receiverType: templateInfo.acceptor.targetType,
+          templateId: actionName
+        }
+
+        jobAPI.downloadAndTransfer(params).then((res) => {
           me.$message.success('正在下载文件，请到"任务"查看详细情况');
         }).catch((error) => {
           me.$message.error(error);

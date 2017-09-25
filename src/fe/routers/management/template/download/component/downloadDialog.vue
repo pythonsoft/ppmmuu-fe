@@ -35,7 +35,7 @@
 </template>
 <script>
   const api = require('../../../../../api/template');
-  const transcodeAPI = require('../../../../../api/transcode');
+  const userAPI = require('../../../../../api/user');
   const config = require('../../../task/config');
 
   export default {
@@ -121,7 +121,6 @@
 
         api.list({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
-          me.tableData = me.tableData.concat(this.getMenu());
         }).catch((error) => {
           me.$message.error(error);
         });
@@ -130,7 +129,7 @@
         const me = this;
 
         this.tips = '正在加载数据...';
-        transcodeAPI.directAuthorizeAcceptorList({ params: {} }, me).then((res) => {
+        userAPI.directAuthorizeAcceptorList({ params: {} }, me).then((res) => {
           me.permissions = res.data;
           if(me.permissions.length === 0) {
             me.tips = '您的授权列表没有相关信息';
