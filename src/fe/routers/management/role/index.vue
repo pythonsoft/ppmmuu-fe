@@ -261,7 +261,7 @@
       },
       handleCurrentChange(row) {
         this.currentRow = row;
-        this.slideDialogVisible = false;
+        //this.slideDialogVisible = false;
         this.enableBtn();
       },
       manageBtnClick() {
