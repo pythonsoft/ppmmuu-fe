@@ -340,18 +340,21 @@
         this.listType = 'normal';
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        const f_date_162 = getTimeRange(this.datetimerange1); // 新聞日期
-        const f_date_36 = getTimeRange(this.datetimerange2); // 首播日期
+        const f_date_162 = getTimeRange(this.datetimerange1, 'f_date_162'); // 新聞日期
+        const f_date_36 = getTimeRange(this.datetimerange2, 'f_date_36'); // 首播日期
         const options = {
           source: this.fl,
           match: [],
           should: [],
+          range: [],
           hl: HHIGHLIGHT_FIELDS1,
           sort: {},
           start: start,
           pageSize: this.pageSize
         };
         const must = options.match;
+        options.range.push(f_date_162);
+        options.range.push(f_date_36);
         getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
@@ -370,9 +373,7 @@
         this.searchResult = searchNotice;
 
         const obj = {
-          f_date_162: f_date_162,
           f_str_187: me.houseNo,
-          f_date_36: f_date_36,
           publish_status: 1,
           full_text: this.keyword
         };
