@@ -28,6 +28,8 @@
   </div>
 </template>
 <script>
+  import { getChildMenuByIndex } from '../../common/utils';
+
   const menu = [
     { title: '账户管理',
       index: 'accountCenter',
@@ -67,17 +69,46 @@
   export default {
     data() {
       return {
-        menu: menu,
+        menu: [],
         defaultRoute: '/'
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.menu = this.getMenu();
     },
     methods: {
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
+      },
+      getMenu(){
+        const menu = [];
+        const firstMenu = getChildMenuByIndex('management', true);
+        for(let i = 0, len = firstMenu.length; i < len; i++){
+          const item = {
+            title: firstMenu[i].name,
+            index: firstMenu[i].index,
+            children: []
+          }
+          const secondMenu = getChildMenuByIndex(firstMenu[i].index, true);
+          for(let j = 0, len2 = secondMenu.length; j < len2; j++){
+            const item2 = {
+              text: secondMenu[j].name,
+              index: secondMenu[j].index,
+              route: secondMenu[j].index
+            }
+            item.children.push(item2);
+          }
+          if(item.children.length === 0){
+            item.route = firstMenu[i].index;
+            item.text = firstMenu[i].name;
+            delete item.children;
+            delete item.title;
+          }
+          menu.push(item);
+        }
+        return menu;
       }
     }
   };

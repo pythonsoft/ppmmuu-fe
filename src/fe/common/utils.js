@@ -487,4 +487,19 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
   });
 };
 
+utils.getChildMenuByIndex = function getChildMenuByIndex(index, isGetObject = false) {
+  const menu = JSON.parse(localStorage.getItem('menu'));
+  const rs = [];
+  for (let i = 0, len = menu.length; i < len; i++) {
+    if (menu[i].parentIndex === index) {
+      if (isGetObject) {
+        rs.push(menu[i]);
+      } else {
+        rs.push(menu[i].index);
+      }
+    }
+  }
+  return rs;
+};
+
 module.exports = utils;
