@@ -17,6 +17,7 @@
         </fj-table-column>
       </fj-table>
     </div>
+    <div class="manage-search-nodata" v-else>无数据</div>
     <div slot="footer" class="dialog-footer">
       <fj-button @click="close">取消</fj-button><!--
       --><fj-button type="primary" @click="addOwnerConfirm">确定</fj-button>
@@ -123,5 +124,9 @@
     top: 0;
     width: 20px;
     height: 20px;
+  }
+
+  .manage-search-nodata {
+    text-align: center;
   }
 </style>
