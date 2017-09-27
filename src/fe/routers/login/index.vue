@@ -96,7 +96,7 @@
           .then((res) => {
             me.$message.success('登陆成功!');
             const index = res.data.menu.indexOf('management') !== -1 ? 'management' : 'mediaCenter';
-            localStorage.setItem('menu', res.data.menu.join(','));
+            localStorage.setItem('menu', JSON.stringify(res.data.menu));
             localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
             me.$router.push({ name: index });
           })

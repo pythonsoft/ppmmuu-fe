@@ -83,7 +83,7 @@ method.getConfig = function (configName, key) {
 };
 
 method.getTimeRange = function getTimeRange(datetimerange, key) {
-  let result = { key: key, gte: '', lt: ''};
+  const result = { key: key, gte: '', lt: '' };
   if (datetimerange.length) {
     let startTime = datetimerange[0];
     let endTime = datetimerange[1];
