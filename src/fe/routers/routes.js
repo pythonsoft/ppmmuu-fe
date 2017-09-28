@@ -27,12 +27,17 @@ const Account = resolve => require.ensure([], () => resolve(require('./managemen
 
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 const MovieEditor = resolve => require.ensure([], () => resolve(require('./movieEditor')), 'movieEditor');
+const Catalog = resolve => require.ensure([], () => resolve(require('./library/catalog')), 'catalog');
 
 const TaskCenter = resolve => require.ensure([], () => resolve(require('./taskCenter/index')), 'taskCenter');
 const TaskDownload = resolve => require.ensure([], () => resolve(require('./taskCenter/download/index')), 'taskDownload');
 
 const DownloadTemplate = resolve => require.ensure([], () => resolve(require('./management/template/download/index')), 'DownloadTemplate');
 const TranscodeTemplate = resolve => require.ensure([], () => resolve(require('./management/template/transcode/index')), 'TranscodeTemplate');
+
+const Library = resolve => require.ensure([], () => resolve(require('./library/index')), 'library');
+const DepartmentCatalogTask = resolve => require.ensure([], () => resolve(require('./library/departmentCatalogTask')), 'library');
+const PersonalCatalogTask = resolve => require.ensure([], () => resolve(require('./library/personalCatalogTask')), 'library');
 
 export default [{
   path: '/',
@@ -81,6 +86,22 @@ export default [{
         { path: 'searchHistory', component: SearchHistory, meta: { title: '检索历史' }, name: 'searchHistory' },
         { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
       ]
+    },
+    {
+      path: 'library',
+      redirect: 'library/department_catalog_task_unassigned',
+      component: Library,
+      meta: { title: '入库' },
+      children: [
+        { path: 'department_catalog_task_unassigned', component: DepartmentCatalogTask, meta: { title: '待认领任务' }, name: 'department_catalog_task_unassigned' },
+        { path: 'department_catalog_task_all', component: DepartmentCatalogTask, meta: { title: '全部任务' }, name: 'department_catalog_task_all' },
+        { path: 'personal_catalog_task_all', component: PersonalCatalogTask, meta: { title: '全部任务' }, name: 'personal_catalog_task_all' },
+        { path: 'personal_catalog_task_doing', component: PersonalCatalogTask, meta: { title: '编目中' }, name: 'personal_catalog_task_doing' },
+        { path: 'personal_catalog_task_submitted', component: PersonalCatalogTask, meta: { title: '已提交' }, name: 'personal_catalog_task_submitted' },
+        { path: 'personal_catalog_task_deleted', component: PersonalCatalogTask, meta: { title: '已删除' }, name: 'personal_catalog_task_deleted' },
+        { path: 'catalog/:objectId/:taskId', component: Catalog, name: 'catalog', meta: { title: '编目' } }
+      ],
+      name: 'library'
     },
     {
       path: 'mediaCenter',

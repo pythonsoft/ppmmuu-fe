@@ -14,9 +14,13 @@
             :style="{ left: (open ? (indent * nodeLevel) - 5 : (indent * nodeLevel)) + 'px' }">
             <i :class="open ? 'tri-bottom' : 'tri-right'"></i>
           </div>
-          <div :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
+          <div :style="{ marginLeft: '13px' }">
+            <node-content :node="node"></node-content>
+          </div>
         </template>
-        <div v-else :style="{ marginLeft: '13px' }"><node-content :node="node"></node-content></div>
+        <div v-else :style="{ marginLeft: '13px' }">
+          <node-content :node="node"></node-content>
+        </div>
       </div>
     </div>
     <ul v-if="isFolder" v-show="open">

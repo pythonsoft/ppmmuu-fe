@@ -49,6 +49,7 @@
 
   const menu = [
     { text: '媒体库', index: 'mediaCenter', route: '/mediaCenter', icon: 'icon-media-library' },
+    { text: '入库', index: 'library', route: '/library', icon: 'icon-library' },
     // { text: '订阅', index: '2', route: '/2', icon: 'icon-subscription' },
     { text: '任务', index: 'taskCenter', route: '/taskCenter', icon: 'icon-menu' },
     { text: '个人中心', index: 'personalCenter', route: '/personalCenter', icon: 'icon-person' },
@@ -60,7 +61,7 @@
       showMenuIndex: {
         type: Array,
         default() {
-          return ['mediaCenter', 'taskCenter', 'personalCenter'];
+          return ['mediaCenter', 'taskCenter', 'library', 'personalCenter'];
         }
       }
     },

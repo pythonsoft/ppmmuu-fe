@@ -83,12 +83,12 @@
       if (this.$refs.reference && this.$refs.reference.$el) {
         this.resetInputWidth();
         window.addEventListener('resize', this.resetInputWidth);
-        document.addEventListener('scroll', this.resetDropdownPosition);
+        document.body.addEventListener('scroll', this.resetDropdownPosition);
       }
     },
     beforDestroy() {
       window.removeEventListener('resize', this.resetInputWidth);
-      document.removeEventListener('scroll', this.resetDropdownPosition);
+      document.body.removeEventListener('scroll', this.resetDropdownPosition);
     },
     methods: {
       inputValueChange(val) {

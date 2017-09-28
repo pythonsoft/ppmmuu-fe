@@ -10,7 +10,7 @@
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
               <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="(e) => prepareDownload()"></span>
+                <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
               </li>
               <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
@@ -68,10 +68,10 @@
               </tr>
             </table>
             <more-view
-              :info=file
+              :info="file"
             ></more-view>
             <div class="media-center-operation-bar">
-              <fj-button type="info" size="mini" @click.stop="(e) => prepareDownload(file)">下载</fj-button>
+              <fj-button type="info" size="mini" @click.stop=" prepareDownload(file)">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>
