@@ -59,7 +59,7 @@
 </template>
 <script>
   import { getStreamURL, getSRT, transformSecondsToStr } from '../../../common/utils';
-
+  import './videoPanel.css';
   const config = require('../../mediaCenter/config');
   const api = require('../../../api/media');
 
