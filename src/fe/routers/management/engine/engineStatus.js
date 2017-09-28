@@ -26,9 +26,9 @@ status.command = {
 };
 
 status.active = {
-  NORMAL: { text: '正常', value: 30, key: 'NORMAL' },
-  WARNING: { text: '警告', value: 60, key: 'WARNING' },
-  CRASH: { text: '宕机', value: 90, key: 'CRASH' }
+  NORMAL: { text: '正常', value: 30, key: 'NORMAL', css: 'engine-status-base engine-status-created' },
+  WARNING: { text: '警告', value: 60, key: 'WARNING', css: 'engine-status-base engine-status-dealing' },
+  CRASH: { text: '宕机', value: 90, key: 'CRASH', css: 'engine-status-base engine-status-error' }
 };
 
 method.getTextByValue = function (v, st) {
@@ -41,25 +41,25 @@ method.getTextByValue = function (v, st) {
  * @returns {string}
  */
 method.getRunStatus = function (command, time) {
-  let text = '';
+  let rs = '';
 
   if (command === '0') {
     const now = new Date();
     const activeTime = new Date(time); // 转为当地时间
     const t = now - activeTime;
 
-    if (t < 30000) {
-      text = status.active.NORMAL.text;
-    } else if (t < 90000) {
-      text = status.active.WARNING.text;
+    if (t < 1000 * 60) {
+      rs = status.active.NORMAL;
+    } else if (t < 1000 * 60 * 5) {
+      rs = status.active.WARNING;
     } else {
-      text = status.active.CRASH.text;
+      rs = status.active.CRASH;
     }
   } else {
-    text = method.getTextByValue(command, 'command');
+    rs = method.command[command];
   }
 
-  return text;
+  return rs;
 };
 
 module.exports = method;
