@@ -23,28 +23,25 @@
                   <td class="item-info-key" width="80">文件名: </td>
                   <td class="item-info-value" width="303">
                     <div class="media-center-file-name">
-                      {{ file.FILENAME || '无文件名' }}
+                      {{ file.fileInfo.name || '无文件名' }}
                       <span class="media-center-file-type">
-                        {{ file.SANAME || '无信息' }}
+                        {{ FILE_TYPE_MAP[file.fileInfo.type].text || '无信息' }}
                       </span>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td class="item-info-key">文件大小: </td>
-                  <td class="item-info-value" >{{ formatSize(file.FILESIZE) }}</td>
+                  <td class="item-info-value" >{{ formatSize(file.fileInfo.size) }}</td>
                 </tr>
                 <tr>
                   <td class="item-info-key">时长: </td>
-                  <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
+                  <td class="item-info-value">{{ file.duration }}</td>
                 </tr>
               </table>
               <more-view
                 :info="file"
               ></more-view>
-              <div class="media-center-operation-bar">
-                <fj-button type="info" size="mini" @click.stop="">预览</fj-button>
-              </div>
             </div>
           </fj-tab-pane>
         </fj-tabs>
@@ -67,6 +64,14 @@
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import '../../mediaCenter/index.css';
   const api = require('../../../api/media');
+  const libraryAPI = require('../../../api/library');
+  const FILE_TYPE_MAP = {
+    0: { text: '源文件' },
+    1: { text: '低码流' },
+    2: { text: '字幕' },
+    3: { text: '缩略图' },
+    4: { text: '其它' }
+  };
 
   export default {
     props: {
@@ -87,7 +92,8 @@
         item: {},
         files: [], // 所有的文件信息
         activeTabName: 'tab2',
-        videoId: ''
+        videoId: '',
+        FILE_TYPE_MAP: FILE_TYPE_MAP
       };
     },
     watch: {
@@ -125,13 +131,18 @@
         }, this);
       },
       getDetail() {
-        api.getObject({ params: { objectid: this.objectId } }).then((res) => {
-          this.program = res.data.result.detail.program;
-          this.files = res.data.result.files;
-          delete this.program.OBJECTID;
+        libraryAPI.listCatalog({ params: { objectId: this.objectId } }).then((res) => {
+          this.files = res.data;
         }).catch((error) => {
           this.$message.error(error);
         });
+        // api.getObject({ params: { objectid: this.objectId } }).then((res) => {
+        //   this.program = res.data.result.detail.program;
+        //   this.files = res.data.result.files;
+        //   delete this.program.OBJECTID;
+        // }).catch((error) => {
+        //   this.$message.error(error);
+        // });
       },
       handleClose() {
         this.$emit('update:visible', false);
