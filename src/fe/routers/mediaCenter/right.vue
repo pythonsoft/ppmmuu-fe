@@ -317,8 +317,8 @@
           return {};
         }
 
-        for (let i = 0, len = files.length; i < len; i++) {
-          for (let j = 0, l = ft.length; j < l; j++) {
+        for (let j = 0, l = ft.length; j < l; j++) {
+          for (let i = 0, len = files.length; i < len; i++) {
             if (files[i].FILETYPEID === ft[j]) {
               return files[i];
             }
