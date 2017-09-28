@@ -121,7 +121,6 @@
 
         api.list({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
-          me.tableData = me.tableData.concat(this.getMenu());
         }).catch((error) => {
           me.$message.error(error);
         });

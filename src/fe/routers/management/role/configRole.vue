@@ -51,6 +51,11 @@
         } else {
           this.configSlideDialogVisible = val;
         }
+      },
+      roleId(val){
+        if(val && this.visible){
+          this.getRoleDetail();
+        }
       }
     },
     methods: {

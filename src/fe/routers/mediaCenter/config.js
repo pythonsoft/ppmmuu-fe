@@ -82,19 +82,20 @@ method.getConfig = function (configName, key) {
   return cfg || {};
 };
 
-method.getTimeRange = function getTimeRange(datetimerange) {
-  let result = '';
+method.getTimeRange = function getTimeRange(datetimerange, key) {
+  const result = { key: key, gte: '', lt: '' };
   if (datetimerange.length) {
     let startTime = datetimerange[0];
     let endTime = datetimerange[1];
     startTime = startTime ? new Date(startTime).toISOString() : '';
     endTime = endTime ? new Date(endTime).toISOString() : '';
     if (startTime && !endTime) {
-      result = `[${startTime} TO *]`;
+      result.gte = startTime;
     } else if (!startTime && endTime) {
-      result = `[0 TO ${endTime}]`;
+      result.lt = endTime;
     } else if (startTime && endTime) {
-      result = `[${startTime} TO ${endTime}]`;
+      result.gte = startTime;
+      result.lt = endTime;
     }
   }
   return result;

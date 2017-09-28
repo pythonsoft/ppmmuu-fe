@@ -10,9 +10,9 @@ axios.defaults.baseURL = 'http://localhost:8080';
 
 axios.defaults.streamURL = 'http://localhost:8080';
 
-if (window.location.hostname.indexOf('hk') !== -1) {
-  axios.defaults.baseURL = 'http://hk.api.szdev.cn';
-  axios.defaults.streamURL = 'http://hk.live.szdev.cn/u';
+if (window.location.hostname.indexOf('phoenixtv.com') !== -1) {
+  axios.defaults.baseURL = 'http://api.phoenixtv.com';
+  axios.defaults.streamURL = 'http://live.phoenixtv.com/u';
 }
 
 axios.interceptors.request.use((config) => {
@@ -34,7 +34,7 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use((response) => {
   // Do something with response data
   const res = response.data;
-  const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004'];
+  const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004', '-3005'];
   if (loginStatusCodeArr.indexOf(res.status) !== -1 && response.config.url.indexOf('/user/auth') === -1) {
     window.location.href = '/login';
   }
