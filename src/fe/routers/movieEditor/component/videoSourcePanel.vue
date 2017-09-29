@@ -61,6 +61,7 @@
   import { getStreamURL, getSRT, transformSecondsToStr } from '../../../common/utils';
   import './videoPanel.css';
   const config = require('../../mediaCenter/config');
+  const mediaConfig = require('../../mediaCenter/config');
   const api = require('../../../api/media');
 
   export default {
@@ -280,8 +281,12 @@
           }
 
           this.videoSource = url;
-          this.videoInfo = res.result;
         }, this);
+
+        this.getDetail(id);
+      },
+      getFile(id) {
+
       },
       getSRTArr(id) {
         getSRT(id, (err, data, res) => {
@@ -672,7 +677,33 @@
         ctx.drawImage(this.video, 0, 0, canvas.width, canvas.height);
         const imageURL = canvas.toDataURL('image/png');
         return imageURL;
-      }
+      },
+      getDetail(objectid) {
+        const me = this;
+        api.getObject({ params: { objectid: objectid } }).then((res) => {
+          const files = res.data.result.files;
+          me.videoInfo = me.getDefaultFileInfo(files);
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+      },
+      getDefaultFileInfo(files) {
+        const ft = mediaConfig.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
+
+        if (files.length === 0) {
+          return {};
+        }
+
+        for (let j = 0, l = ft.length; j < l; j++) {
+          for (let i = 0, len = files.length; i < len; i++) {
+            if (files[i].FILETYPEID === ft[j]) {
+              return files[i];
+            }
+          }
+        }
+
+        return {};
+      },
     }
   };
 </script>
