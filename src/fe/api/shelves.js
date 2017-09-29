@@ -1,10 +1,10 @@
 const api = {};
 const axios = require('../config');
 
-api.solrSearch = function solrSearch(data, scope) {
+api.createShelfTask = function createShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/solrSearch', data).then((response) => {
+    axios.post('/shelves/createShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -23,10 +23,10 @@ api.solrSearch = function solrSearch(data, scope) {
   });
 };
 
-api.esSearch = function esSearch(data, scope) {
+api.getShelfDetail = function getShelfDetail(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/media/esSearch', data).then((response) => {
+    axios.get('/shelves/getShelfDetail', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -45,10 +45,10 @@ api.esSearch = function esSearch(data, scope) {
   });
 };
 
-api.getMediaList = function getMediaList(data, scope) {
+api.listDepartmentPrepareShelfTask = function listDepartmentPrepareShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getMediaList', data).then((response) => {
+    axios.get('/shelves/listDepartmentPrepareShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -67,10 +67,10 @@ api.getMediaList = function getMediaList(data, scope) {
   });
 };
 
-api.getEsMediaList = function getEsMediaList(data, scope) {
+api.claimShelfTask = function claimShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getEsMediaList', data).then((response) => {
+    axios.post('/shelves/claimShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -89,10 +89,10 @@ api.getEsMediaList = function getEsMediaList(data, scope) {
   });
 };
 
-api.defaultMedia = function defaultMedia(data, scope) {
+api.assignShelfTask = function assignShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/defaultMedia', data).then((response) => {
+    axios.post('/shelves/assignShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -111,10 +111,10 @@ api.defaultMedia = function defaultMedia(data, scope) {
   });
 };
 
-api.getSearchConfig = function getSearchConfig(data, scope) {
+api.deleteShelfTask = function deleteShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getSearchConfig', data).then((response) => {
+    axios.post('/shelves/deleteShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -133,14 +133,10 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
   });
 };
 
-api.getIcon = function getIcon(id) {
-  return `${axios.defaults.baseURL}/media/getIcon?objectid=${id}`;
-};
-
-api.getObject = function getObject(data, scope) {
+api.listDepartmentShelfTask = function listDepartmentShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getObject', data).then((response) => {
+    axios.get('/shelves/listDepartmentShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -159,10 +155,10 @@ api.getObject = function getObject(data, scope) {
   });
 };
 
-api.getStream = function getStream(data, scope) {
+api.listMyselfShelfTask = function listMyselfShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getStream', data).then((response) => {
+    axios.get('/shelves/listMyselfShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -181,10 +177,10 @@ api.getStream = function getStream(data, scope) {
   });
 };
 
-api.getSearchHistory = function getSearchHistory(data, scope) {
+api.saveShelf = function saveShelf(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getSearchHistory', data).then((response) => {
+    axios.post('/shelves/saveShelf', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -203,10 +199,10 @@ api.getSearchHistory = function getSearchHistory(data, scope) {
   });
 };
 
-api.getWatchHistory = function getWatchHistory(data, scope) {
+api.submitShelf = function submitShelf(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/getWatchHistory', data).then((response) => {
+    axios.post('/shelves/submitShelf', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -225,10 +221,120 @@ api.getWatchHistory = function getWatchHistory(data, scope) {
   });
 };
 
-api.xml2srt = function xml2srt(data, scope) {
+api.sendBackShelf = function sendBackShelf(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/media/xml2srt', data).then((response) => {
+    axios.post('/shelves/sendBackShelf', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.listLineShelfTask = function listLineShelfTask(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.get('/shelves/listLineShelfTask', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.onlineShelfTask = function onlineShelfTask(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/shelves/onlineShelfTask', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.offlineShelfTask = function offlineShelfTask(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/shelves/offlineShelfTask', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.editShelfTaskAgain = function editShelfTaskAgain(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/shelves/editShelfTaskAgain', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.searchUser = function searchUser(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.get('/shelves/searchUser', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;

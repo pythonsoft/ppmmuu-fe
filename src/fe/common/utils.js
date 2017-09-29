@@ -487,8 +487,19 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
   });
 };
 
-utils.getChildMenuByIndex = function getChildMenuByIndex(index, isGetObject = false) {
-  const menu = JSON.parse(localStorage.getItem('menu'));
+utils.getItemFromLocalStorage = function getItemFromLocalStorage(key, scope) {
+  try {
+    const item = JSON.parse(localStorage.getItem(key));
+    return item;
+  } catch (e) {
+    if (scope) {
+      scope.$message.error('请重新登录');
+    }
+  }
+};
+
+utils.getChildMenuByIndex = function getChildMenuByIndex(index, isGetObject = false, scope) {
+  const menu = utils.getItemFromLocalStorage('menu', scope);
   const rs = [];
   for (let i = 0, len = menu.length; i < len; i++) {
     if (menu[i].parentIndex === index) {
@@ -502,12 +513,12 @@ utils.getChildMenuByIndex = function getChildMenuByIndex(index, isGetObject = fa
   return rs;
 };
 
-utils.isVideoType = function(filePath) {
+utils.isVideoType = function (filePath) {
   const exts = ['.mp4', '.mxf'];
   let flag = false;
 
-  for(let i = 0, len = exts.length; i < len; i++) {
-    if(filePath.indexOf(exts[i]) !== -1) {
+  for (let i = 0, len = exts.length; i < len; i++) {
+    if (filePath.indexOf(exts[i]) !== -1) {
       flag = true;
       break;
     }

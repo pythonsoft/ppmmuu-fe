@@ -84,14 +84,15 @@
       },
       getMenu(){
         const menu = [];
-        const firstMenu = getChildMenuByIndex('management', true);
+        const me = this;
+        const firstMenu = getChildMenuByIndex('management', true, me);
         for(let i = 0, len = firstMenu.length; i < len; i++){
           const item = {
             title: firstMenu[i].name,
             index: firstMenu[i].index,
             children: []
           }
-          const secondMenu = getChildMenuByIndex(firstMenu[i].index, true);
+          const secondMenu = getChildMenuByIndex(firstMenu[i].index, true, me);
           for(let j = 0, len2 = secondMenu.length; j < len2; j++){
             const item2 = {
               text: secondMenu[j].name,
