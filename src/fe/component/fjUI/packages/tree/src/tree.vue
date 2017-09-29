@@ -8,6 +8,8 @@
       :node-level="1"
       :indent="indent"
       :autoExpand="autoExpand"
+      :lazy="lazy"
+      :load="load"
       :render-content="renderContent"
       :key="getNodeKey(item, index)"></fj-tree-node>
   </ul>
@@ -37,7 +39,12 @@
       autoExpand: {
         type: Boolean,
         default: true
-      }
+      },
+      lazy: {
+        type: Boolean,
+        default: false
+      },
+      load: Function
     },
     data() {
       return {

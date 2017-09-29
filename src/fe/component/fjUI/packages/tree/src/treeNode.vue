@@ -15,7 +15,10 @@
             <i :class="open ? 'tri-bottom' : 'tri-right'"></i>
           </div>
           <div :style="{ marginLeft: '13px' }">
-            <node-content :node="node"></node-content>
+            <i :style="{ float: 'left', width: '12px' }" class="iconfont fj-icon-loading" v-if="loading">&#xe674;</i>
+            <div :style="loading?{marginLeft: '15px'}:{}">
+              <node-content :node="node"></node-content>
+            </div>
           </div>
         </template>
         <div v-else :style="{ marginLeft: '13px' }">
@@ -32,6 +35,8 @@
         :node="item"
         :node-level="nodeLevel + 1"
         :indent="indent"
+        :lazy="lazy"
+        :load="load"
         :render-content="renderContent"
         :key="getNodeKey(item, index)"></fj-tree-node>
     </ul>
@@ -52,12 +57,19 @@
       autoExpand: {
         type: Boolean,
         default: true
-      }
+      },
+      lazy: {
+        type: Boolean,
+        default: false
+      },
+      load: Function
     },
     data() {
       return {
         open: false,
-        tree: null
+        tree: null,
+        loading: false,
+        loaded: false
       };
     },
     computed: {
@@ -88,9 +100,21 @@
           this.open = !this.open;
         }
       },
+      shouldLoadData() {
+        return this.lazy && this.load && !this.loaded && !this.loading;
+      },
       handleClick() {
         if (this.isFolder && this.autoExpand) {
           if (!this.open) {
+            if (this.shouldLoadData()) {
+              this.loading = true;
+              const resolve = (children) => {
+                this.loaded = true;
+                this.loading = false;
+                if (children) this.node.children = children;
+              };
+              this.load(this.node, resolve);
+            }
             this.tree.$emit('node-expand', this.node);
           } else {
             this.tree.$emit('node-collapse', this.node);
