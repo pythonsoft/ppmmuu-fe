@@ -296,7 +296,7 @@
   .search-item {
     float: left;
     margin-left: 10px;
-    height: 100%;
+    line-height: 100%;
   }
   .operation-btn-group {
     display: inline-block;
