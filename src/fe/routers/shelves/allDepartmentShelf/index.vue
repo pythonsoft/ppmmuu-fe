@@ -22,15 +22,15 @@
     <template slot="operation">
       <div class="operation-btn-group">
          <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="canDeleteIds.length < 1" @click="handleClickClaim">认领</fj-button>
+           <fj-button type="info" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
          </span>
         <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="canAssignIds.length < 1" @click="handleClickAssign">派发</fj-button>
+           <fj-button type="info" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
          </span>
       </div>
       <div class="operation-btn-group">
          <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="canDeleteIds.length < 1" @click="handleClickDelete">删除</fj-button>
+           <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
          </span>
       </div>
     </template>
@@ -104,12 +104,21 @@
         currentPage: 1,
         total: 0,
         pageSize: 15,
-        formatTime: formatTime
+        formatTime: formatTime,
+        claimDisable: true,
+        assignDisable: true,
+        deleteDisable: true
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.handleClickSearch();
+    },
+    watch: {
+      status(val) {
+        this.currentPage = 1;
+        this.handleClickSearch();
+      }
     },
     methods: {
       getActiveRoute(path, level) {
@@ -195,8 +204,14 @@
         this.canClaimIds = [];
         this.canAssignIds = [];
         if (rows && rows.length) {
+          let flag = true;
+          let flag1 = true;
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
+
+            if(row.status !== STATUS.PREPARE){
+              flag = false;
+            }
             if(row.status === STATUS.PREPARE){
               this.canClaimIds.push(row._id);
               this.canAssignIds.push(row._id);
@@ -204,8 +219,13 @@
 
             if(row.status !== STATUS.DELETE){
               this.canDeleteIds.push(row._id);
+            }else{
+              flag1 = false;
             }
           }
+          this.claimDisable = !flag;
+          this.assignDisable = !flag;
+          this.deleteDisable = !flag1;
         }
       },
       clearTableSelection() {

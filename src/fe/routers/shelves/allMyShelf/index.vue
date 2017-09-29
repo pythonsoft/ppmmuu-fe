@@ -26,12 +26,12 @@
              <fj-button type="info" size="mini" v-bind:disabled="canEditRows.length !== 1" @click="handleClickEdit">编辑</fj-button>
            </span>
           <span class="permission-btn-mini-margin">
-             <fj-button type="info" size="mini" v-bind:disabled="canSendBackIds.length < 1" @click="handleClickSendBack">退回</fj-button>
+             <fj-button type="info" size="mini" v-bind:disabled="sendBackDisable" @click="handleClickSendBack">退回</fj-button>
            </span>
         </div>
         <div class="operation-btn-group">
            <span class="permission-btn-mini-margin">
-             <fj-button type="info" size="mini" v-bind:disabled="canDeleteIds.length < 1" @click="handleClickDelete">删除</fj-button>
+             <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
            </span>
         </div>
       </template>
@@ -101,6 +101,8 @@
         currentPage: 1,
         total: 0,
         pageSize: 15,
+        sendBackDisable: true,
+        deleteDisable: true,
         selectedIds: [],
         canEditRows: [],
         canSendBackIds: [],
@@ -114,6 +116,12 @@
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.handleClickSearch();
+    },
+    watch: {
+      status(val) {
+        this.currentPage = 1;
+        this.handleClickSearch();
+      }
     },
     methods: {
       getActiveRoute(path, level) {
@@ -204,19 +212,28 @@
         this.canSendBackIds = [];
         this.canDeleteIds = [];
         if (rows && rows.length) {
+          let flag1 = true;
+          let flag2 = true;
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             if(row.status === STATUS.DOING){
               this.canEditRows.push(row);
+            }
+            if(row.status !== STATUS.DOING){
+              flag1 = false;
             }
             if(row.status === STATUS.DOING){
               this.canSendBackIds.push(row._id);
             }
             if(row.status !== STATUS.DELETE){
               this.canDeleteIds.push(row._id)
+            }else{
+              flag2 = false;
             }
             this.selectedIds.push(row._id);
           }
+          this.sendBackDisable = !flag1;
+          this.deleteDisable = !flag2;
         }
       },
       clearTableSelection() {

@@ -48,6 +48,7 @@
     <shelf-detail
             btnText="下架"
             btnType="danger"
+            :editorInfo="editorInfo"
             :objectId="objectId"
             :visible.sync="detailDialogVisible"
             @operation-click="offlineShelf">
@@ -82,6 +83,7 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
+        editorInfo: {},
         objectId: '',
         formatTime: formatTime
       };
@@ -119,6 +121,7 @@
       handleClickEdit() {
         this.detailDialogVisible = true;
         this.objectId = this.selectedObjectIds[0];
+        this.editorInfo = this.selectedRows[0].editorInfo;
         //this.objectId = 'D4F532D4-2EC4-435F-A9C5-F3DF1D202AF8';
         this.editId = this.selectedIds[0];
       },
@@ -139,12 +142,22 @@
         let postData = {};
         let message = '';
         let apiFunc = '';
-
-        postData = {
-          _ids: this.selectedIds.join(','),
-        };
-        message = '删除';
-        apiFunc = api.deleteShelfTask;
+        if(this.operation === 'delete') {
+          postData = {
+            _ids: this.selectedIds.join(','),
+          };
+          message = '删除';
+          apiFunc = api.deleteShelfTask;
+        }else if(this.operation === 'offline'){
+          postData = {
+            _ids: me.editId,
+          };
+          message = '下架';
+          apiFunc = api.offlineShelfTask;
+        }else{
+          this.resetDialog();
+          return;
+        }
 
         apiFunc(postData)
           .then((response) => {
@@ -158,25 +171,20 @@
           });
       },
       offlineShelf(){
-        const me = this;
-        api.offlineShelfTask({_ids: me.editId})
-          .then((response) => {
-            me.showSuccessInfo('下架成功');
-            me.detailDialogVisible = false;
-            me.handleClickSearch();
-          })
-          .catch((error) => {
-            me.showErrorInfo(error);
-          });
+        this.operation = 'offline';
+        this.dialogMessage = '确定要上架这个节目吗?';
+        this.dialogVisible = true;
       },
       handleSelectionChange(rows) {
         this.selectedIds = [];
         this.selectedObjectIds = [];
+        this.selectedRows = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
             this.selectedObjectIds.push(row.objectId);
+            this.selectedRows.push(row);
           }
         }
       },

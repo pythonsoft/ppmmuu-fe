@@ -2,7 +2,7 @@
   <div style="position:relative;">
     <div class="shelf-upload-img-content" @click="handleClick">
       <template v-if="path">
-        <img :src="path" class="shelf-upload-img-content-photo">
+        <img :src="path" class="shelf-upload-img-content-photo" @mouseenter="isHover=true">
       </template>
       <template v-else>
         <div :class="['shelf-upload-img-content-photo', !isLoading ? 'shelf-img-style': 'fj-button-loading']">
@@ -10,7 +10,11 @@
         </div>
       </template>
     </div>
-    <input id="shelf-img-input" ref="fileBtn" accept="image/gif,image/png,image/jpeg,image/bmp" class="shelf-upload-img-input" @change='chooseImg' type="file">
+    <div class="img-hover-class" v-if="isHover" @click="handleClick" @mouseleave="isHover=false">
+      <div><span class="iconfont icon-shangchuan"></span></div>
+      <div class="upload-text">点击上传</div>
+    </div>
+    <input id="shelf-img-input" ref="fileBtn" accept="image/png,image/jpeg,image/bmp" class="shelf-upload-img-input" @change='chooseImg' type="file">
     <div class="upload-description">＊支持JPG、PNG格式，图片尺寸宽640高360px，大小在5M以内</div>
   </div>
 </template>
@@ -32,7 +36,8 @@
     data() {
       return {
         path: this.imgPath,
-        isLoading: false
+        isLoading: false,
+        isHover: false
       };
     },
     mounted() {
@@ -118,6 +123,25 @@
     left: 0;
     font-size: 12px;
     color: #4C637B;
+  }
+
+  .img-hover-class {
+    width: 192px;
+    height: 108px;
+    position: absolute;
+    padding-top:40px;
+    padding-left: 80px;
+    top: 0;
+    left: 0;
+    font-size: 12px;
+    color: #9FB3CA;
+    opacity: 0.5;
+    background: #000000;
+    z-index: 999;
+  }
+
+  .upload-text {
+    margin-left: -10px;
   }
 
   .shelf-img-style {

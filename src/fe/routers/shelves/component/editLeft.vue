@@ -86,12 +86,12 @@
     },
     methods: {
       expand(info, key) {
-        const newInfo = Object.assign({}, this.program[key], { isFoldedContent: false });
-        this.$set(this.program, key, newInfo);
+        const newInfo = Object.assign({}, this.programDetails[key], { isFoldedContent: false });
+        this.$set(this.programDetails, key, newInfo);
       },
       folded(info, key) {
-        const newInfo = Object.assign({}, this.program[key], { isFoldedContent: true });
-        this.$set(this.program, key, newInfo);
+        const newInfo = Object.assign({}, this.programDetails[key], { isFoldedContent: true });
+        this.$set(this.programDetails, key, newInfo);
       },
       initData() {
         //this.videoId = this.shelfInfo.objectId;

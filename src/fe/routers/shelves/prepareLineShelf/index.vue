@@ -51,10 +51,12 @@
 
     </fj-dialog>
     <shelf-detail
-            :btnShow="false"
+            btnText="上架"
             btnType="info"
+            :editorInfo="editorInfo"
             :objectId="objectId"
-            :visible.sync="detailDialogVisible">
+            :visible.sync="detailDialogVisible"
+            @operation-click="onlineShelf">
     </shelf-detail>
   </four-row-layout-right-content>
 </template>
@@ -85,6 +87,7 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
+        editorInfo: {},
         objectId: '',
         formatTime: formatTime
       };
@@ -122,16 +125,16 @@
       handleClickEdit() {
         this.detailDialogVisible = true;
         this.objectId = this.selectedObjectIds[0];
-        //this.objectId = 'D4F532D4-2EC4-435F-A9C5-F3DF1D202AF8';
+        this.editorInfo = this.selectedRows[0].editorInfo;
         this.editId = this.selectedIds[0];
       },
       handleClickOnline() {
-        this.dialogMessage = '确定要上架这些节目吗?';
+        this.dialogMessage = '确定要上架这些任务吗?';
         this.dialogVisible = true;
         this.operation = 'online';
       },
       handleClickDelete() {
-        this.dialogMessage = '确定要删除这些节目吗?';
+        this.dialogMessage = '确定要删除这些任务吗?';
         this.dialogVisible = true;
         this.operation = 'delete';
       },
@@ -153,6 +156,12 @@
           };
           message = '上架';
           apiFunc = api.onlineShelfTask;
+        } else if(this.operation === 'onlineOne') {
+          postData = {
+            _ids: this.editId,
+          };
+          message = '上架';
+          apiFunc = api.onlineShelfTask;
         } else if (this.operation === 'delete') {
           postData = {
             _ids: this.selectedIds.join(','),
@@ -167,6 +176,7 @@
         apiFunc(postData)
           .then((response) => {
             me.showSuccessInfo(`${message}成功!`);
+            me.detailDialogVisible = false;
             me.resetDialog();
             me.handleClickSearch();
           })
@@ -175,14 +185,21 @@
             me.resetDialog();
           });
       },
+      onlineShelf(){
+        this.operation = 'onlineOne';
+        this.dialogMessage = '确定要上架这个任务吗?';
+        this.dialogVisible = true;
+      },
       handleSelectionChange(rows) {
         this.selectedIds = [];
         this.selectedObjectIds = [];
+        this.selectedRows = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
             this.selectedObjectIds.push(row.objectId);
+            this.selectedRows.push(row);
           }
         }
       },

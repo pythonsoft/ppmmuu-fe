@@ -14,4 +14,10 @@ config.STATUS = {
   ONLINE: '4', // 已上架
   OFFLINE: '5' // 已下架
 };
+
+config.SUBSCRIBE_TYPE = {
+  0: '政治',
+  1: '体育',
+  2: '娱乐'
+};
 module.exports = config;

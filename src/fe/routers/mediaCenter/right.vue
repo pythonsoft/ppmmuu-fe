@@ -83,7 +83,7 @@
     <fj-dialog
             title="上架"
             :visible.sync="shelfDialogVisible">
-      <p>此视频之前已经上架过，您确定还要上架吗</p>
+      <p>已添加至上架，确定再次添加</p>
       <div slot="footer" class="dialog-footer">
         <fj-button @click.stop="shelfDialogVisible=false">取消</fj-button><!--
         --><fj-button type="primary" :loading="shelfDialogBtnLoading" @click.stop="confirmCreateShelf">确定</fj-button>
@@ -180,14 +180,6 @@
     created() {
     },
     methods: {
-      expand(info, key) {
-        const newInfo = Object.assign({}, this.program[key], { isFoldedContent: false });
-        this.$set(this.program, key, newInfo);
-      },
-      folded(info, key) {
-        const newInfo = Object.assign({}, this.program[key], { isFoldedContent: true });
-        this.$set(this.program, key, newInfo);
-      },
       handleTabClick(tab) {
 
       },

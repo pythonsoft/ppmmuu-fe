@@ -494,6 +494,7 @@ utils.getItemFromLocalStorage = function getItemFromLocalStorage(key, scope) {
   } catch (e) {
     if (scope) {
       scope.$message.error('请重新登录');
+      window.location.href = '/login';
     }
   }
 };

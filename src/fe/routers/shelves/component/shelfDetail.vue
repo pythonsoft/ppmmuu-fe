@@ -20,7 +20,7 @@
             <table class="media-center-table">
               <tr v-for="(info, key) in programDetails" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                <td class="item-info-value clearfix">
+                <td class="item-info-value clearfix" v-if="key!=='cover'">
                   <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
@@ -28,6 +28,9 @@
                     <span v-else>{{ formatValue(info.value) }}</span>
                   </template>
                   <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
+                </td>
+                <td class="item-info-value " v-else>
+                  <img :src="info.value" height="108px" width="192px">
                 </td>
               </tr>
             </table>
@@ -51,10 +54,13 @@
     formatTime,
     formatQuery
   } from '../../../common/utils';
+  import { SUBSCRIBE_TYPE } from '../config';
   import Player from '../../mediaCenter/components/player';
   import MoreView from '../../mediaCenter/moreView';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import '../../mediaCenter/index.css';
+
+
   const api = require('../../../api/media');
   const libraryAPI = require('../../../api/library');
   const FILE_TYPE_MAP = {
@@ -72,6 +78,10 @@
         default: false
       },
       objectId: String,
+      editorInfo: {
+        type: Object,
+        default: {}
+      },
       btnText: String,
       btnType: String,
       btnShow: {
@@ -115,6 +125,14 @@
       formatContent,
       getStreamURL,
       formatTime,
+      expand(info, key) {
+        const newInfo = Object.assign({}, this.programDetails[key], { isFoldedContent: false });
+        this.$set(this.programDetails, key, newInfo);
+      },
+      folded(info, key) {
+        const newInfo = Object.assign({}, this.programDetails[key], { isFoldedContent: true });
+        this.$set(this.programDetails, key, newInfo);
+      },
       getStream() {
         getStreamURL(this.objectId, (err, url, res) => {
           if (err) {
@@ -128,15 +146,32 @@
       },
       getDetail() {
         const me = this;
+        me.programDetails['subscribeType'] = {
+          cn: '订阅类型',
+          value: SUBSCRIBE_TYPE[me.editorInfo['subscribeType']]
+        };
+        me.programDetails['source'] = {
+          cn: '来源',
+          value: me.editorInfo['source']
+        };
+        me.programDetails['limit'] = {
+          cn: '限制',
+          value: me.editorInfo['limit']
+        };
+        me.programDetails['cover'] = {
+          cn: '封面',
+          value: me.editorInfo['cover']
+        };
         api.getObject(formatQuery({ objectid: me.objectId }, true))
           .then((res)=>{
-            me.programDetails = res.data.result.detail.program;
-            const keys = Object.keys(me.programDetails);
+            const data = res.data.result.detail.program;
+            const keys = Object.keys(data);
             for (let i = 0; i < keys.length; i++) {
-              const info = me.programDetails[keys[i]];
+              const info = data[keys[i]];
               if (info.value.length > 60) {
                 info.isFoldedContent = true;
               }
+              me.programDetails[keys[i]] = info;
             }
           })
           .catch((error)=>{
