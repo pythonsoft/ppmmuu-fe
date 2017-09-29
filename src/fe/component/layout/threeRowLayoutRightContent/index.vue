@@ -16,9 +16,6 @@
           <slot name="search-right"></slot>
       </div>
     </div>
-    <div class="layout-operation">
-      <slot name="operation"></slot>
-    </div>
     <slot name="table"></slot>
     <div class="layout-table-pagination">
       <slot name="pagination"></slot>
@@ -84,15 +81,6 @@
   .layout-top-search .layout-search-right-content{
     position: absolute;
     right: 20px;
-  }
-
-  .layout-operation {
-    background: #F2F6FA;
-    line-height: 46px;
-    height: 46px;
-    margin-top: 10px;
-    padding-left: 14px;
-    overflow: hidden;
   }
 
   .layout-table-pagination {

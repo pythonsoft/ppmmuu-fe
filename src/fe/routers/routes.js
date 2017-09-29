@@ -34,6 +34,17 @@ const TaskDownload = resolve => require.ensure([], () => resolve(require('./task
 const DownloadTemplate = resolve => require.ensure([], () => resolve(require('./management/template/download/index')), 'DownloadTemplate');
 const TranscodeTemplate = resolve => require.ensure([], () => resolve(require('./management/template/transcode/index')), 'TranscodeTemplate');
 
+const Shelf = resolve => require.ensure([], () => resolve(require('./shelves/index')), 'Shelf');
+const PrepareDepartmentShelf = resolve => require.ensure([], () => resolve(require('./shelves/prepareDepartmentShelf/index')), 'PrepareDepartmentShelf');
+const AllDepartmentShelf = resolve => require.ensure([], () => resolve(require('./shelves/allDepartmentShelf/index')), 'AllDepartmentShelf');
+const DoingMyShelf = resolve => require.ensure([], () => resolve(require('./shelves/doingMyShelf/index')), 'DoingMyShelf');
+const SubmittedMyShelf = resolve => require.ensure([], () => resolve(require('./shelves/submittedMyShelf/index')), 'SubmittedMyShelf');
+const DeletedMyShelf = resolve => require.ensure([], () => resolve(require('./shelves/deletedMyShelf/index')), 'DeletedMyShelf');
+const AllMyShelf = resolve => require.ensure([], () => resolve(require('./shelves/allMyShelf/index')), 'AllMyShelf');
+const PrepareLineShelf = resolve => require.ensure([], () => resolve(require('./shelves/prepareLineShelf/index')), 'PrepareLineShelf');
+const OnlineShelf = resolve => require.ensure([], () => resolve(require('./shelves/onlineShelf/index')), 'OnlineShelf');
+const OfflineShelf = resolve => require.ensure([], () => resolve(require('./shelves/offlineShelf/index')), 'OfflineShelf');
+
 export default [{
   path: '/',
   component: Home,
@@ -81,6 +92,23 @@ export default [{
         { path: 'searchHistory', component: SearchHistory, meta: { title: '检索历史' }, name: 'searchHistory' },
         { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
       ]
+    },
+    {
+      path: 'shelf',
+      component: Shelf,
+      meta: { title: '上架' },
+      children: [
+        { path: 'prepareDepartmentShelf', component: PrepareDepartmentShelf, meta: { title: '待认领' }, name: 'prepareDepartmentShelf' },
+        { path: 'allDepartmentShelf', component: AllDepartmentShelf, meta: { title: '全部' }, name: 'allDepartmentShelf' },
+        { path: 'doingMyShelf', component: DoingMyShelf, meta: { title: '处理中' }, name: 'doingMyShelf' },
+        { path: 'submittedMyShelf', component: SubmittedMyShelf, meta: { title: '已提交' }, name: 'submittedMyShelf' },
+        { path: 'deletedMyShelf', component: DeletedMyShelf, meta: { title: '已删除' }, name: 'deletedMyShelf' },
+        { path: 'allMyShelf', component: AllMyShelf, meta: { title: '全部' }, name: 'allMyShelf' },
+        { path: 'prepareLineShelf', component: PrepareLineShelf, meta: { title: '待上架' }, name: 'prepareLineShelf' },
+        { path: 'onlineShelf', component: OnlineShelf, meta: { title: '已上架' }, name: 'onlineShelf' },
+        { path: 'offlineShelf', component: OfflineShelf, meta: { title: '下架' }, name: 'offlineShelf' }
+      ],
+      name: 'shelf'
     },
     {
       path: 'mediaCenter',

@@ -1,10 +1,10 @@
 const api = {};
 const axios = require('../config');
 
-api.postUserLogin = function postUserLogin(data, scope) {
+api.createShelfTask = function createShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/login', data).then((response) => {
+    axios.post('/shelves/createShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -23,10 +23,10 @@ api.postUserLogin = function postUserLogin(data, scope) {
   });
 };
 
-api.getToken = function getToken(data, scope) {
+api.getShelfDetail = function getShelfDetail(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/getToken', data).then((response) => {
+    axios.get('/shelves/getShelfDetail', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -45,10 +45,10 @@ api.getToken = function getToken(data, scope) {
   });
 };
 
-api.postUserUpdate = function postUserUpdate(data, scope) {
+api.listDepartmentPrepareShelfTask = function listDepartmentPrepareShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/update', data).then((response) => {
+    axios.get('/shelves/listDepartmentPrepareShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -67,10 +67,10 @@ api.postUserUpdate = function postUserUpdate(data, scope) {
   });
 };
 
-api.getUserDetail = function getUserDetail(data, scope) {
+api.claimShelfTask = function claimShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/detail', data).then((response) => {
+    axios.post('/shelves/claimShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -89,10 +89,10 @@ api.getUserDetail = function getUserDetail(data, scope) {
   });
 };
 
-api.postUserLogout = function postUserLogout(data, scope) {
+api.assignShelfTask = function assignShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/logout', data).then((response) => {
+    axios.post('/shelves/assignShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -111,10 +111,10 @@ api.postUserLogout = function postUserLogout(data, scope) {
   });
 };
 
-api.getUserAuth = function getUserAuth(data, scope) {
+api.deleteShelfTask = function deleteShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/auth', data).then((response) => {
+    axios.post('/shelves/deleteShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -133,10 +133,10 @@ api.getUserAuth = function getUserAuth(data, scope) {
   });
 };
 
-api.postUserChangePassword = function postUserChangePassword(data, scope) {
+api.listDepartmentShelfTask = function listDepartmentShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/changePassword', data).then((response) => {
+    axios.get('/shelves/listDepartmentShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -155,10 +155,10 @@ api.postUserChangePassword = function postUserChangePassword(data, scope) {
   });
 };
 
-api.getSearchHistory = function getSearchHistory(data, scope) {
+api.listMyselfShelfTask = function listMyselfShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/getSearchHistory', data).then((response) => {
+    axios.get('/shelves/listMyselfShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -177,10 +177,10 @@ api.getSearchHistory = function getSearchHistory(data, scope) {
   });
 };
 
-api.removeSearchHistory = function removeSearchHistory(data, scope) {
+api.saveShelf = function saveShelf(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/removeSearchHistory', data).then((response) => {
+    axios.post('/shelves/saveShelf', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -199,10 +199,10 @@ api.removeSearchHistory = function removeSearchHistory(data, scope) {
   });
 };
 
-api.clearSearchHistory = function clearSearchHistory(data, scope) {
+api.submitShelf = function submitShelf(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/clearSearchHistory', data).then((response) => {
+    axios.post('/shelves/submitShelf', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -221,10 +221,10 @@ api.clearSearchHistory = function clearSearchHistory(data, scope) {
   });
 };
 
-api.getWatchHistory = function getWatchHistory(data, scope) {
+api.sendBackShelf = function sendBackShelf(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/getWatchHistory', data).then((response) => {
+    axios.post('/shelves/sendBackShelf', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -243,10 +243,10 @@ api.getWatchHistory = function getWatchHistory(data, scope) {
   });
 };
 
-api.removeWatchHistory = function removeWatchHistory(data, scope) {
+api.listLineShelfTask = function listLineShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/removeWatchHistory', data).then((response) => {
+    axios.get('/shelves/listLineShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -265,10 +265,10 @@ api.removeWatchHistory = function removeWatchHistory(data, scope) {
   });
 };
 
-api.clearWatchHistory = function clearWatchHistory(data, scope) {
+api.onlineShelfTask = function onlineShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/user/clearWatchHistory', data).then((response) => {
+    axios.post('/shelves/onlineShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -287,10 +287,10 @@ api.clearWatchHistory = function clearWatchHistory(data, scope) {
   });
 };
 
-api.listJob = function listJob(data, scope) {
+api.offlineShelfTask = function offlineShelfTask(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/listJob', data).then((response) => {
+    axios.post('/shelves/offlineShelfTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -309,10 +309,10 @@ api.listJob = function listJob(data, scope) {
   });
 };
 
-api.queryJob = function queryJob(data, scope) {
+api.editShelfTaskAgain = function editShelfTaskAgain(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/queryJob', data).then((response) => {
+    axios.post('/shelves/editShelfTaskAgain', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -331,98 +331,10 @@ api.queryJob = function queryJob(data, scope) {
   });
 };
 
-api.restartJob = function restartJob(data, scope) {
+api.searchUser = function searchUser(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/user/restartJob', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.stopJob = function stopJob(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/user/stopJob', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.deleteJob = function deleteJob(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/user/deleteJob', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.directAuthorizeAcceptorList = function directAuthorizeAcceptorList(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/user/directAuthorize/acceptorList', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.listUserByDepartment = function listUserByDepartment(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/user/listUserByDepartment', data).then((response) => {
+    axios.get('/shelves/searchUser', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
