@@ -81,7 +81,7 @@
       </fj-tabs>
     </div>
     <fj-dialog
-            :title="上架"
+            title="上架"
             :visible.sync="shelfDialogVisible">
       <p>此视频之前已经上架过，您确定还要上架吗</p>
       <div slot="footer" class="dialog-footer">
