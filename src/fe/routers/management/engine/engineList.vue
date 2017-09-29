@@ -70,6 +70,20 @@
         @current-change="pageChange">
       </fj-pagination>
     </template>
+    <fj-dialog
+              :title="enterAuthenticationDialogTitle"
+              :visible.sync="enterAuthenticationDialogVisible">
+      <fj-input
+        placeholder="用户名"
+        v-model="username"></fj-input></br>
+      <fj-input
+        placeholder="密码"
+        v-model="password"></fj-input>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="enterAuthenticationDialogVisible=false">取消</fj-button>
+        <fj-button type="primary" :loading="isEnterAuthenticationBtnLoading" @click="installMonitor">确定</fj-button>
+      </div>
+    </fj-dialog>
   </layout-four-row>
 </template>
 <script>
@@ -102,7 +116,12 @@
         keyword: '',
         page: 1,
         pageSize: 20,
-        total: 0
+        total: 0,
+        enterAuthenticationDialogTitle: '',
+        enterAuthenticationDialogVisible: false,
+        isEnterAuthenticationBtnLoading: false,
+        username: '',
+        password: '',
       };
     },
     created() {
@@ -158,7 +177,8 @@
         me.$emit('display-dialog', true, 'deleteEngine');
       },
       installBtnClick() {
-        this.installMonitor();
+        this.enterAuthenticationDialogTitle = '请输入服务器的用户名密码';
+        this.enterAuthenticationDialogVisible = true;
       },
       stopBtnClick() {},
       rebootBtnClick() {},
@@ -206,6 +226,7 @@
         });
       },
       installMonitor() {
+        this.isEnterAuthenticationBtnLoading = true;
         const me = this;
         if (utils.isEmptyObject(me.table.currentRowInfo)) {
           me.$message.error('请先选择需要安装的引擎');
@@ -215,10 +236,17 @@
         const param = {
           ip: me.table.currentRowInfo.intranetIp
         };
+        if (this.username && this.password) {
+          param.username = this.username;
+          param.password = this.password;
+        }
 
         api.installMonitor(param, me).then((res) => {
+          this.isEnterAuthenticationBtnLoading = false;
+          this.enterAuthenticationDialogVisible = false;
           me.$message.success('正在安装引擎');
         }).catch((error) => {
+          this.isEnterAuthenticationBtnLoading = false;
           me.showErrorInfo(error);
         });
 
