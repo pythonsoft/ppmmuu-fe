@@ -51,7 +51,6 @@
 
     </fj-dialog>
     <shelf-detail
-            btnText="上架"
             :btnShow="false"
             btnType="info"
             :objectId="objectId"
