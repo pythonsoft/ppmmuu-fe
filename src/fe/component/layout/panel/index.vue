@@ -83,11 +83,20 @@
         if (this.bars.length !== 0) {
           bars = this.bars;
 
-          if (this.size[flag] !== this.parentSize[flag]) {
-            for (let i = 0, len = bars.length; i < len; i++) {
-              bars[i][flag] = `${this.parentSize[flag]}px`;
+          for (let i = 0, len = this.splits.length; i < len; i++) {
+            if (i < len - 1) {
+              const keys = Object.keys(bars[i]);
+              const newBars = this.setSlideBarStyle(this.splits[i]);
+              keys.forEach(key => {
+                bars[i][key] = newBars[key];
+              });
             }
           }
+          // if (this.size[flag] !== this.parentSize[flag]) {
+          //   for (let i = 0, len = bars.length; i < len; i++) {
+          //     bars[i][flag] = `${this.parentSize[flag]}px`;
+          //   }
+          // }
         } else {
           for (let i = 0, len = this.splits.length; i < len; i++) {
             if (i < len - 1) {
@@ -105,15 +114,22 @@
         let temp = 0;
         let rs = null;
         let arr = [];
-
         if (this.splits.length !== 0) {
           arr = this.splits;
 
-          if (this.size[flag] !== this.parentSize[flag]) {
-            for (let i = 0, len = arr.length; i < len; i++) {
-              arr[i][flag] = `${this.parentSize[flag]}px`;
-            }
+          for (let i = 0, len = splits.length; i < len; i++) {
+            temp = this.calculate(splits[i], size, splits);
+            rs = this.getCssAndPos(temp, rs ? rs.nextPosition : null);
+            const keys = Object.keys(arr[i]);
+            keys.forEach(key => {
+              arr[i][key] = rs.css[key];
+            });
           }
+          // if (this.size[flag] !== this.parentSize[flag]) {
+          //   for (let i = 0, len = arr.length; i < len; i++) {
+          //     arr[i][flag] = `${this.parentSize[flag]}px`;
+          //   }
+          // }
         } else {
           for (let i = 0, len = splits.length; i < len; i++) {
             temp = this.calculate(splits[i], size, splits);
@@ -131,7 +147,6 @@
         let v = (`${exp}`).replace(/#/g, size);
         const arr = this.getArray(v);
         let temp = '';
-
         if (arr) {
           for (let i = 0, len = arr.length; i < len; i++) {
             temp = splits[arr[i].substring(1) * 1];

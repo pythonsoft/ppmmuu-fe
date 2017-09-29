@@ -124,8 +124,8 @@
         const item = this.sequences[this.currentSequenceIndex];
         const param = {
           objectid: item.objectId,
-          inpoint: item.range[0] * 1000,
-          outpoint: item.range[1] * 1000,
+          inpoint: Math.floor(item.range[0] * 25),
+          outpoint: Math.floor(item.range[1] * 25),
           filename: item.title,
           filetypeid: item.filetypeid,
           templateId: this.templateInfo._id
