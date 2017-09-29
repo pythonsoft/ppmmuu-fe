@@ -254,7 +254,7 @@
         }
 
         const reqData = Object.assign({}, data);
-        reqData.name = this.title;
+        reqData.name = this.fileInfo.FILENAME;
 
         reqData.snippet = {
           objectId: this.fileInfo.OBJECTID,
@@ -285,7 +285,7 @@
         }
 
         const reqData = { parentId: '' };
-        reqData.name = this.title;
+        reqData.name = this.fileInfo.FILENAME;
         reqData.snippet = {
           objectId: this.fileInfo.OBJECTID,
           thumb: this.poster,
