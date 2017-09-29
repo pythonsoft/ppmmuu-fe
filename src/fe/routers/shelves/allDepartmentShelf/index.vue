@@ -22,15 +22,15 @@
     <template slot="operation">
       <div class="operation-btn-group">
          <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
+           <fj-button type="info" size="mini" v-bind:disabled="canDeleteIds.length < 1" @click="handleClickClaim">认领</fj-button>
          </span>
         <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
+           <fj-button type="info" size="mini" v-bind:disabled="canAssignIds.length < 1" @click="handleClickAssign">派发</fj-button>
          </span>
       </div>
       <div class="operation-btn-group">
          <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
+           <fj-button type="info" size="mini" v-bind:disabled="canDeleteIds.length < 1" @click="handleClickDelete">删除</fj-button>
          </span>
       </div>
     </template>
@@ -66,7 +66,7 @@
 </template>
 <script>
   import { formatQuery, formatTime } from '../../../common/utils';
-  import { formatStatus } from '../config';
+  import { formatStatus, STATUS } from '../config';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import AddUser from '../../management/role/searchAddUser';
 
@@ -95,12 +95,12 @@
         status: '',
         options: OPTIONS,
         claimOrDelete: '',
-        claimDisable: true,
-        assignDisable: true,
-        deleteDisable: true,
         keyword: '',
         tableData: [],
         searchOwner: [],
+        canDeleteIds: [],
+        canClaimIds: [],
+        canAssignIds: [],
         currentPage: 1,
         total: 0,
         pageSize: 15,
@@ -164,13 +164,13 @@
         let apiFunc = '';
         if (this.claimOrDelete === 'claim') {
           postData = {
-            _ids: this.selectedIds.join(','),
+            _ids: this.canClaimIds.join(','),
           };
           message = '认领';
           apiFunc = api.claimShelfTask;
         } else if (this.claimOrDelete === 'delete') {
           postData = {
-            _ids: this.selectedIds.join(','),
+            _ids: this.canDeleteIds.join(','),
           };
           message = '删除';
           apiFunc = api.deleteShelfTask;
@@ -191,16 +191,22 @@
           });
       },
       handleSelectionChange(rows) {
-        this.selectedIds = [];
+        this.canDeleteIds = [];
+        this.canClaimIds = [];
+        this.canAssignIds = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
-            this.selectedIds.push(row._id);
+            if(row.status === STATUS.PREPARE){
+              this.canClaimIds.push(row._id);
+              this.canAssignIds.push(row._id);
+            }
+
+            if(row.status !== STATUS.DELETE){
+              this.canDeleteIds.push(row._id);
+            }
           }
         }
-        this.claimDisable = !this.selectedIds.length;
-        this.assignDisable = !this.selectedIds.length;
-        this.deleteDisable = !this.selectedIds.length;;
       },
       clearTableSelection() {
         this.$refs.table.clearSelection();
@@ -210,9 +216,8 @@
       },
       addOwner(row) {
         row = row.info ? row.info : row;
-        const type = row.type || '3';
         const postData = {
-          _ids: this.selectedIds.join(','),
+          _ids: this.canAssignIds.join(','),
           dealer: {
             _id: row._id,
             name: row.name
