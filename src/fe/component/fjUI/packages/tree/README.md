@@ -10,6 +10,8 @@
 | render-content | 树节点内容的渲染函数 | function(h, {node}) | - | - | ✅ |
 | theme | tab主题 | string | normal, dark | normal | ✅ |
 | autoExpand | 是否点击节点自动展开 | boolean | - | true | ✅ |
+| lazy | 是否在点击时加载子节点 | boolean | - | false | ✅ |
+| load | 加载子节点的方法 | function(node, resolve) | - | - | ✅ |
 
 ### events
 | 事件名称 | 说明 | 回调参数 | 实现 |

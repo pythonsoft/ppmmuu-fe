@@ -1,5 +1,7 @@
 <template>
   <fj-tree
+    lazy
+    :load="loadChildren"
     v-if="!showUpper"
     :theme="theme"
     :data="treeData"
@@ -20,6 +22,8 @@
     <div class="ho-empty-line" v-if="treeData.length === 0">没有数据</div>
     <template v-else slot="tree">
       <fj-tree
+        lazy
+        :load="loadChildren"
         :data="treeData"
         :autoExpand="autoExpand"
         :node-key="nodeKey"
@@ -117,6 +121,25 @@
 
       return true;
     },
+    updateIndexs(parentId) {
+      const val = this.get(parentId);
+
+      if (val) {
+        const info = val.info;
+        const parentIndex = val.parentIndex;
+        const children = info.children || [];
+        const infos = info.children || [];
+
+        for (let i = 0, len = infos.length; i < len; i++) {
+          this.indexs[infos[i].info[this.indexKey]] = `${parentIndex}-${i}`;
+        }
+
+      } else {
+        for (let i = 0, len = this.td.length; i < len; i++) {
+          this.indexs[this.td[i][this.indexKey]] = `${i}`;
+        }
+      }
+    },
     removeChildren(id) {
       if (!id) {
         this.td = [];
@@ -186,6 +209,7 @@
       this.td = JSON.parse(str).key;
 
       delete this.indexs[id];
+      this.updateIndexs(val.info.parentId);
       return true;
     },
     reset() {
@@ -301,6 +325,10 @@
       me.bubble.$off('tree.getParentsId');
     },
     methods: {
+      loadChildren(node, resolve) {
+        this.selectedNodeInfo = node;
+        this._listGroup(resolve);
+      },
       showErrorInfo(message) {
         this.$message.error(message);
       },
@@ -315,8 +343,8 @@
         me.treeNodeCurrentChange && me.treeNodeCurrentChange(node, parentNode);
       },
       _treeNodeExpand(node) {
-        this.selectedNodeInfo = node;
-        this._listGroup();
+        // this.selectedNodeInfo = node;
+        // this._listGroup();
         this.treeNodeExpand && this.treeNodeExpand(node);
       },
       _treeNodeCollapse(node) {
@@ -383,7 +411,7 @@
         }
       },
 
-      _listGroup() {
+      _listGroup(resolve) {
         const me = this;
 
         this.listGroup && this.listGroup(this.selectedNodeInfo, (data) => {
@@ -394,6 +422,7 @@
             me.treeDataBaseInstance.reset();
             me.insertNode('', data);
           }
+          resolve && resolve();
         });
       }
 
