@@ -10,13 +10,16 @@
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
               <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="(e) => prepareDownload()"></span>
+                <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
               </li>
               <li>
                 <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
               </li>
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="添加" class="iconfont icon-addto"></span>
+              </li>
+              <li>
+                <span title="上架" class="iconfont icon-shangjialine" @click.stop="createShelf"></span>
               </li>
             </ul>
           </div>
@@ -68,16 +71,24 @@
               </tr>
             </table>
             <more-view
-              :info=file
+              :info="file"
             ></more-view>
             <div class="media-center-operation-bar">
-              <fj-button type="info" size="mini" @click.stop="(e) => prepareDownload(file)">下载</fj-button>
+              <fj-button type="info" size="mini" @click.stop=" prepareDownload(file)">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>
       </fj-tabs>
     </div>
-
+    <fj-dialog
+            :title="上架"
+            :visible.sync="shelfDialogVisible">
+      <p>此视频之前已经上架过，您确定还要上架吗</p>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click.stop="shelfDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="shelfDialogBtnLoading" @click.stop="confirmCreateShelf">确定</fj-button>
+      </div>
+    </fj-dialog>
     <download-list-view
       :visible.sync="downloadDialogDisplay"
       @confirm="downloadListConfirm"
@@ -106,6 +117,7 @@
 
   const api = require('../../api/media');
   const jobAPI = require('../../api/job');
+  const shelfApi = require('../../api/shelves');
 
   const config = require('./config');
 
@@ -137,12 +149,17 @@
         templateInfo: {},
         fileInfo: {},
         downloadDialogDisplay: false,
-        videoId: ''
+        shelfDialogVisible: false,
+        shelfDialogBtnLoading: false,
+        videoId: '',
+        shelfName: ''
       };
     },
     watch: {
       videoInfo(val) {
         this.title = this.getTitle(val);
+        this.shelfName = this.title.replace('<em>','');
+        this.shelfName = this.shelfName.replace('</em>','');
         this.program = {};
         this.poster = this.getThumb(val);
         this.item = val;
@@ -317,8 +334,8 @@
           return {};
         }
 
-        for (let i = 0, len = files.length; i < len; i++) {
-          for (let j = 0, l = ft.length; j < l; j++) {
+        for (let j = 0, l = ft.length; j < l; j++) {
+          for (let i = 0, len = files.length; i < len; i++) {
             if (files[i].FILETYPEID === ft[j]) {
               return files[i];
             }
@@ -326,6 +343,33 @@
         }
 
         return {};
+      },
+      confirmCreateShelf(){
+        this.shelfDialogBtnLoading = true;
+        this.createShelfTask(true);
+      },
+      createShelf(){
+        this.createShelfTask();
+      },
+      createShelfTask(force=false){
+        const me = this;
+        const postData = {
+          objectId: me.videoId,
+          name: me.shelfName,
+          force: force
+        };
+        shelfApi.createShelfTask(postData).then((res) => {
+          me.shelfDialogBtnLoading = false;
+          me.shelfDialogVisible = false;
+          me.$message.success('已经加入到上架中，请前去查看');
+        }).catch((error) => {
+          if(error === '之前上架过'){
+            me.shelfDialogVisible = true;
+            me.shelfDialogVisible = true;
+          }else {
+            me.$message.error(error);
+          }
+        });
       },
       prepareDownload(fileInfo) {
         if (fileInfo) {

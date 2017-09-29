@@ -45,33 +45,19 @@
       </div>
 
     </fj-dialog>
-    <fj-slide-dialog
-            :title="slideDialogTitle"
-            :visible.sync="slideDialogVisible">
-
-      <fj-form :model="formData" :rules="rules" ref="form" label-width="80px">
-        <fj-form-item label="标识" prop="_id">
-          <fj-input v-model="formData._id" :readonly="isEdit()"></fj-input>
-        </fj-form-item>
-        <fj-form-item label="名称" prop="name">
-          <fj-input v-model="formData.name"></fj-input>
-        </fj-form-item>
-        <fj-form-item label="描述" prop="description">
-          <fj-input type="textarea" :rows="5" v-model="formData.description"></fj-input>
-        </fj-form-item>
-      </fj-form>
-
-      <div slot="footer">
-        <fj-button @click="slideDialogVisible=false">取消</fj-button>
-        <fj-button type="primary" :loading="isBtnLoading" @click="confirmSlideDialogClick">保存</fj-button>
-      </div>
-
-    </fj-slide-dialog>
+    <shelf-detail
+            btnText="下架"
+            btnType="danger"
+            :objectId="objectId"
+            :visible.sync="detailDialogVisible"
+            @operation-click="offlineShelf">
+    </shelf-detail>
   </four-row-layout-right-content>
 </template>
 <script>
   import { formatQuery, formatTime} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
+  import ShelfDetail from '../component/shelfDetail';
   import { STATUS } from '../config';
 
   const api = require('../../../api/shelves');
@@ -79,12 +65,13 @@
   export default {
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
+      'shelf-detail': ShelfDetail
     },
     data() {
       return {
         defaultRoute: '/',
         dialogVisible: false,
-        assignDialogVisible: false,
+        detailDialogVisible: false,
         dialogMessage: '',
         departmentId: '',
         operation: '',
@@ -95,6 +82,7 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
+        objectId: '',
         formatTime: formatTime
       };
     },
@@ -129,7 +117,10 @@
           });
       },
       handleClickEdit() {
-        this.assignDialogVisible = true;
+        this.detailDialogVisible = true;
+        this.objectId = this.selectedObjectIds[0];
+        //this.objectId = 'D4F532D4-2EC4-435F-A9C5-F3DF1D202AF8';
+        this.editId = this.selectedIds[0];
       },
       handleClickDelete() {
         this.dialogMessage = '确定要删除这些节目吗?';
@@ -148,22 +139,12 @@
         let postData = {};
         let message = '';
         let apiFunc = '';
-        if (this.operation === 'online') {
-          postData = {
-            _ids: this.selectedIds.join(','),
-          };
-          message = '上架';
-          apiFunc = api.onlineShelfTask;
-        } else if (this.operation === 'delete') {
-          postData = {
-            _ids: this.selectedIds.join(','),
-          };
-          message = '删除';
-          apiFunc = api.deleteShelfTask;
-        } else {
-          this.resetDialog();
-          return;
-        }
+
+        postData = {
+          _ids: this.selectedIds.join(','),
+        };
+        message = '删除';
+        apiFunc = api.deleteShelfTask;
 
         apiFunc(postData)
           .then((response) => {
@@ -176,12 +157,26 @@
             me.resetDialog();
           });
       },
+      offlineShelf(){
+        const me = this;
+        api.offlineShelfTask({_ids: me.editId})
+          .then((response) => {
+            me.showSuccessInfo('下架成功');
+            me.detailDialogVisible = false;
+            me.handleClickSearch();
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
+      },
       handleSelectionChange(rows) {
         this.selectedIds = [];
+        this.selectedObjectIds = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
+            this.selectedObjectIds.push(row.objectId);
           }
         }
       },

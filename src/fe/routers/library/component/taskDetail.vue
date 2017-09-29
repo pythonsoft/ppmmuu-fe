@@ -1,7 +1,7 @@
 <template>
   <transition name="slide-in-right">
     <div v-show="visible" class="slide-dialog-wrapper" v-clickoutside="handleClose">
-      <div class="shelf-detail-video">
+      <div class="task-detail-video">
         <div v-if="url" class="media-video-wrap">
           <div class="media-video-content" id="video" ref="video">
             <player :videoId="videoId" :height="288" :width="448" :url="url" :streamInfo="streamInfo"></player>
@@ -14,28 +14,37 @@
         </div>
         <div v-else class="iconfont icon-phoenixtv media-video-wrap-bg"></div>
       </div>
-      <div class="shelf-detail-video-panel">
-        <fj-tabs v-model="activeTabName" class="media-video-panel-wrap">
+      <div class="task-detail-video-panel">
+        <fj-tabs v-if="files.length>0" v-model="activeTabName" class="media-video-panel-wrap">
           <fj-tab-pane label="文件信息" name="tab2">
-            <table class="media-center-table">
-              <tr v-for="(info, key) in programDetails" v-if="info.value" >
-                <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
-                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
-                  <template v-else>
-                    <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ formatValue(info.value) }}</span>
-                  </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
-                </td>
-              </tr>
-            </table>
+            <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in files">
+              <table class="media-center-table">
+                <tr>
+                  <td class="item-info-key" width="80">文件名: </td>
+                  <td class="item-info-value" width="303">
+                    <div class="media-center-file-name">
+                      {{ file.fileInfo.name || '无文件名' }}
+                      <span class="media-center-file-type">
+                        {{ FILE_TYPE_MAP[file.fileInfo.type].text || '无信息' }}
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="item-info-key">文件大小: </td>
+                  <td class="item-info-value" >{{ formatSize(file.fileInfo.size) }}</td>
+                </tr>
+                <tr>
+                  <td class="item-info-key">时长: </td>
+                  <td class="item-info-value">{{ file.duration }}</td>
+                </tr>
+              </table>
+              <more-view
+                :info="file"
+              ></more-view>
+            </div>
           </fj-tab-pane>
         </fj-tabs>
-        <div class="detail-operation" v-if="btnShow">
-          <fj-button :type="btnType || 'danger'" @click="handleClick" size="small">{{btnText || '上架'}}</fj-button>
-        </div>
       </div>
       <i class="iconfont icon-close closebtn" @click="handleClose"></i>
     </div>
@@ -48,8 +57,7 @@
     formatDuration,
     formatContent,
     getStreamURL,
-    formatTime,
-    formatQuery
+    formatTime
   } from '../../../common/utils';
   import Player from '../../mediaCenter/components/player';
   import MoreView from '../../mediaCenter/moreView';
@@ -71,13 +79,7 @@
         type: Boolean,
         default: false
       },
-      objectId: String,
-      btnText: String,
-      btnType: String,
-      btnShow: {
-        type: Boolean,
-        default: true
-      }
+      objectId: String
     },
     data() {
       return {
@@ -87,7 +89,8 @@
           OUTPOINT: 0,
           FILENAME: ''
         },
-        programDetails: {},
+        item: {},
+        files: [], // 所有的文件信息
         activeTabName: 'tab2',
         videoId: '',
         FILE_TYPE_MAP: FILE_TYPE_MAP
@@ -119,6 +122,7 @@
         getStreamURL(this.objectId, (err, url, res) => {
           if (err) {
             console.log('err', err);
+            // this.$message.error(err);
             return;
           }
 
@@ -127,36 +131,21 @@
         }, this);
       },
       getDetail() {
-        const me = this;
-        api.getObject(formatQuery({ objectid: me.objectId }, true))
-          .then((res)=>{
-            me.programDetails = res.data.result.detail.program;
-            const keys = Object.keys(me.programDetails);
-            for (let i = 0; i < keys.length; i++) {
-              const info = me.programDetails[keys[i]];
-              if (info.value.length > 60) {
-                info.isFoldedContent = true;
-              }
-            }
-          })
-          .catch((error)=>{
-            me.showErrorInfo(error);
-          })
+        libraryAPI.listCatalog({ params: { objectId: this.objectId } }).then((res) => {
+          this.files = res.data;
+        }).catch((error) => {
+          this.$message.error(error);
+        });
+        // api.getObject({ params: { objectid: this.objectId } }).then((res) => {
+        //   this.program = res.data.result.detail.program;
+        //   this.files = res.data.result.files;
+        //   delete this.program.OBJECTID;
+        // }).catch((error) => {
+        //   this.$message.error(error);
+        // });
       },
       handleClose() {
         this.$emit('update:visible', false);
-      },
-      handleClick() {
-        this.$emit('operation-click');
-      },
-      formatValue(str) {
-        let rs = str;
-
-        if (/[0-9]{4}-[0-9]{2}-[0-9]{2}T/.test(str)) {
-          rs = formatTime(str);
-        }
-
-        return rs;
       }
     },
     directives: { Clickoutside },
@@ -178,7 +167,7 @@
     box-shadow: 2px 2px 15px 0px #9FB3CA;
     overflow: auto;
   }
-  .shelf-detail-video {
+  .task-detail-video {
     height: 330px;
     width: 100%;
     text-align: center;
@@ -187,7 +176,7 @@
     box-sizing: border-box;
     color: #E3EAF3;
   }
-  .shelf-detail-video-panel {
+  .task-detail-video-panel {
     position: absolute;
     top: 330px;
     left: 0;
@@ -196,15 +185,6 @@
     background: #F8FAFB;
     font-size: 12px;
     color: #2A3E52;
-  }
-
-  .shelf-detail-video-panel .media-video-panel-wrap{
-    height: 500px;
-  }
-
-  .shelf-detail-video-panel .fj-tabs-content{
-    padding-top: 18px;
-    padding-left: 15px;
   }
   .closebtn {
     position: absolute;
@@ -221,9 +201,5 @@
   .closebtn:hover {
     background-color: #CED9E5;
     color: #fff;
-  }
-  .detail-operation {
-    margin-top: 10px;
-    margin-left: 72px;
   }
 </style>

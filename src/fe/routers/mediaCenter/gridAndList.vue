@@ -24,6 +24,12 @@
           <li>
             <span title="编目类别" class="media-center-list-bar-color-span">{{ item.ccid }}</span>
           </li>
+          <li v-if="item.f_str_187">
+            <span title="HOUSENO" class="media-center-list-bar-color-span">{{ item.f_str_187 }}</span>
+          </li>
+          <li v-if="item.f_str_314">
+            <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.f_str_314 }}</span>
+          </li>
           <li>
             <span title="入库时间">{{ item.last_modify | formatTime }}</span>
           </li>

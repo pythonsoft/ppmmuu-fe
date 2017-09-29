@@ -1,6 +1,6 @@
 <template>
   <div class="layout-content">
-    <div class="layout-top-search">
+    <div class="layout-top-search clearfix">
 
       <div v-if="isIncludeArrow"  class="layout-search-title title-left">
         <span class="iconfont icon-arrow-left arrow-left" @click="back">
@@ -47,15 +47,14 @@
   .layout-content {
     margin-left: 20px;
     margin-top: 10px;
+    min-width: 700px;
   }
 
   .layout-top-search {
     height: 40px;
+    line-height: 40px;
     width: 100%;
-    line-height: 38px;
     position: relative;
-    min-width: 700px;
-    margin-bottom: 10px;
   }
 
   .layout-top-search .layout-search-title-color {
@@ -64,12 +63,13 @@
 
   .layout-top-search .layout-search-title{
     font-size: 14px;
-    position: absolute;
-    left: 20px;
+    /*position: absolute;*/
+    float: left;
+    margin-left: 20px;
   }
 
   .layout-top-search .title-left {
-    left:4px;
+    margin-left:4px;
   }
 
   .layout-top-search .arrow-left {
@@ -82,8 +82,10 @@
   }
 
   .layout-top-search .layout-search-right-content{
-    position: absolute;
-    right: 20px;
+    /*position: absolute;*/
+    float: right;
+    margin-top: 5px;
+    margin-right: 20px;
   }
 
   .layout-operation {

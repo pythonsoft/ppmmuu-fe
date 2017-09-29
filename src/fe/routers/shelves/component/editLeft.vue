@@ -137,7 +137,6 @@
           }
           me.streamInfo = rs.result;
           me.url = url;
-          console.log("url===>", url);
         }, me);
 
         return false;

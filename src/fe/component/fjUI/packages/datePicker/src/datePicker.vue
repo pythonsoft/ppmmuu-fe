@@ -165,6 +165,15 @@
         this.picker.format = this.format;
         this.picker.$on('pick', this.handleDatePick);
         document.body.appendChild(this.picker.$el);
+        const parentEl = this.parentEl || document.body;
+        parentEl.addEventListener('scroll', this.updatePickerPosition);
+      },
+      updatePickerPosition() {
+        if (this.picker && this.picker.visible) {
+          const { pickerPosition, transitionName } = this.getPickerPosition();
+          this.picker.pickerPosition = pickerPosition;
+          this.picker.transitionName = transitionName;
+        }
       },
       getPickerPosition() {
         const pickerPosition = {};
@@ -198,6 +207,13 @@
         this.panel = DateRangePanel;
       } else {
         this.panel = DatePanel;
+      }
+    },
+    beforeDestroy() {
+      if (this.picker) {
+        const parentEl = this.parentEl || document.body;
+        parentEl.removeEventListener('scroll', this.updatePickerPosition);
+        document.body.removeChild(this.picker.$el);
       }
     },
     directives: { Clickoutside },

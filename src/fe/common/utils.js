@@ -513,4 +513,18 @@ utils.getChildMenuByIndex = function getChildMenuByIndex(index, isGetObject = fa
   return rs;
 };
 
+utils.isVideoType = function (filePath) {
+  const exts = ['.mp4', '.mxf'];
+  let flag = false;
+
+  for (let i = 0, len = exts.length; i < len; i++) {
+    if (filePath.indexOf(exts[i]) !== -1) {
+      flag = true;
+      break;
+    }
+  }
+
+  return flag;
+};
+
 module.exports = utils;

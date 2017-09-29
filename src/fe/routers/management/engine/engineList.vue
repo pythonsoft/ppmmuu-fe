@@ -37,14 +37,16 @@
       <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="monitorBtnClick">服务监控</fj-button>
       </span>
+      <span class="layout-engine-btn-margin">
+        <fj-button type="info" size="mini" @click="refreshBtnClick">刷新</fj-button>
+      </span>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
-        <fj-table-column prop="isInstallMonitor" width="90" align="center" label="是否安装">
-          <template scope="props">{{ getTextByValue(props.row.isInstallMonitor, 'isInstallMonitor') }}</template>
-        </fj-table-column>
         <fj-table-column prop="status" width="90" align="center" label="运行状态" >
-          <template scope="props">{{ getRunStatus(props.row.command, props.row.modifyTime) }}</template>
+          <template scope="props">
+            <span :class="getRunStatus(props.row.command, props.row.modifyTime).css">{{ getRunStatus(props.row.command, props.row.modifyTime).text }}</span>
+          </template>
         </fj-table-column>
         <fj-table-column prop="code" width="100" label="编号"></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
@@ -179,7 +181,9 @@
         this.page = val;
         this.listEngine();
       },
-
+      refreshBtnClick() {
+        this.listEngine();
+      },
       /* api */
       listEngine(completeFn) {
         const me = this;

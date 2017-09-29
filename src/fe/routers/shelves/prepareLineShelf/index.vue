@@ -50,11 +50,19 @@
       </div>
 
     </fj-dialog>
+    <shelf-detail
+            btnText="上架"
+            :btnShow="false"
+            btnType="info"
+            :objectId="objectId"
+            :visible.sync="detailDialogVisible">
+    </shelf-detail>
   </four-row-layout-right-content>
 </template>
 <script>
   import { formatQuery, formatTime} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
+  import ShelfDetail from '../component/shelfDetail';
   import { STATUS } from '../config';
 
   const api = require('../../../api/shelves');
@@ -62,22 +70,23 @@
   export default {
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
+      'shelf-detail': ShelfDetail
     },
     data() {
       return {
         defaultRoute: '/',
         dialogVisible: false,
-        assignDialogVisible: false,
+        detailDialogVisible: false,
         dialogMessage: '',
         departmentId: '',
         operation: '',
         keyword: '',
         tableData: [],
-        searchOwner: [],
         currentPage: 1,
         total: 0,
         pageSize: 15,
         selectedIds: [],
+        objectId: '',
         formatTime: formatTime
       };
     },
@@ -111,13 +120,16 @@
             me.showErrorInfo(error);
           });
       },
+      handleClickEdit() {
+        this.detailDialogVisible = true;
+        this.objectId = this.selectedObjectIds[0];
+        //this.objectId = 'D4F532D4-2EC4-435F-A9C5-F3DF1D202AF8';
+        this.editId = this.selectedIds[0];
+      },
       handleClickOnline() {
         this.dialogMessage = '确定要上架这些节目吗?';
         this.dialogVisible = true;
         this.operation = 'online';
-      },
-      handleClickEdit() {
-        this.assignDialogVisible = true;
       },
       handleClickDelete() {
         this.dialogMessage = '确定要删除这些节目吗?';
@@ -166,10 +178,12 @@
       },
       handleSelectionChange(rows) {
         this.selectedIds = [];
+        this.selectedObjectIds = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
+            this.selectedObjectIds.push(row.objectId);
           }
         }
       },
@@ -206,24 +220,6 @@
     height: 28px;
     line-height: 28px;
     color: #4C637B;
-  }
-
-  .permission-status-span {
-    font-size: 12px;
-    color: #FFFFFF;
-    width: 48px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 2px;
-    text-align:center;
-    display: block;
-  }
-  .permission-enable {
-    background: #2EC4B6;
-  }
-
-  .permission-disable {
-    background: #FF3366;
   }
 
   .operation-btn-group {

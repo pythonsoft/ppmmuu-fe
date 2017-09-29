@@ -1,6 +1,6 @@
 <template>
   <four-row-layout-right-content>
-    <template slot="search-left">下架</template>
+    <template slot="search-left">上架</template>
     <template slot="search-right">
       <div class="permission-search-item">
         <fj-input placeholder="请输入关键词" v-model="keyword" size="small"></fj-input>
@@ -45,11 +45,19 @@
       </div>
 
     </fj-dialog>
+    <shelf-detail
+            btnText="再编辑"
+            btnType="info"
+            :objectId="objectId"
+            :visible.sync="detailDialogVisible"
+            @operation-click="editShelfAgain">
+    </shelf-detail>
   </four-row-layout-right-content>
 </template>
 <script>
   import { formatQuery, formatTime} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
+  import ShelfDetail from '../component/shelfDetail';
   import { STATUS } from '../config';
 
   const api = require('../../../api/shelves');
@@ -57,12 +65,13 @@
   export default {
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
+      'shelf-detail': ShelfDetail
     },
     data() {
       return {
         defaultRoute: '/',
         dialogVisible: false,
-        assignDialogVisible: false,
+        detailDialogVisible: false,
         dialogMessage: '',
         departmentId: '',
         operation: '',
@@ -73,6 +82,7 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
+        objectId: '',
         formatTime: formatTime
       };
     },
@@ -107,7 +117,10 @@
           });
       },
       handleClickEdit() {
-        this.assignDialogVisible = true;
+        this.detailDialogVisible = true;
+        this.objectId = this.selectedObjectIds[0];
+        //this.objectId = 'D4F532D4-2EC4-435F-A9C5-F3DF1D202AF8';
+        this.editId = this.selectedIds[0];
       },
       handleClickDelete() {
         this.dialogMessage = '确定要删除这些节目吗?';
@@ -126,22 +139,12 @@
         let postData = {};
         let message = '';
         let apiFunc = '';
-        if (this.operation === 'online') {
-          postData = {
-            _ids: this.selectedIds.join(','),
-          };
-          message = '上架';
-          apiFunc = api.onlineShelfTask;
-        } else if (this.operation === 'delete') {
-          postData = {
-            _ids: this.selectedIds.join(','),
-          };
-          message = '删除';
-          apiFunc = api.deleteShelfTask;
-        } else {
-          this.resetDialog();
-          return;
-        }
+
+        postData = {
+          _ids: this.selectedIds.join(','),
+        };
+        message = '删除';
+        apiFunc = api.deleteShelfTask;
 
         apiFunc(postData)
           .then((response) => {
@@ -154,12 +157,26 @@
             me.resetDialog();
           });
       },
+      editShelfAgain(){
+        const me = this;
+        api.editShelfTaskAgain({_id: me.editId})
+          .then((response) => {
+            me.showSuccessInfo('再编辑成功,请到处理中列表查看');
+            me.detailDialogVisible = false;
+            me.handleClickSearch();
+          })
+          .catch((error) => {
+            me.showErrorInfo(error);
+          });
+      },
       handleSelectionChange(rows) {
         this.selectedIds = [];
+        this.selectedObjectIds = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
+            this.selectedObjectIds.push(row.objectId);
           }
         }
       },
@@ -196,24 +213,6 @@
     height: 28px;
     line-height: 28px;
     color: #4C637B;
-  }
-
-  .permission-status-span {
-    font-size: 12px;
-    color: #FFFFFF;
-    width: 48px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 2px;
-    text-align:center;
-    display: block;
-  }
-  .permission-enable {
-    background: #2EC4B6;
-  }
-
-  .permission-disable {
-    background: #FF3366;
   }
 
   .operation-btn-group {

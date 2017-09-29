@@ -17,6 +17,8 @@
 
 .icon-date:before { content: "\e627"; }
 
+.icon-library:before { content: "\e699"; }
+
 .icon-media-library:before { content: "\e660"; }
 
 .icon-fill-bottom:before { content: "\e661"; }
@@ -124,3 +126,12 @@
 .icon-toggle-right:before { content: "\e697"; }
 
 .icon-toggle-left:before { content: "\e698"; }
+
+.icon-shuaxin:before { content: "\e69a"; }
+
+.icon-shiyongqi:before { content: "\e69b"; }
+
+.icon-shangjialine:before { content: "\e69c"; }
+
+.icon-shangjia:before { content: "\e69d"; }
+
