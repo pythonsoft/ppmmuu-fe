@@ -34,11 +34,11 @@
                 </td>
               </tr>
             </table>
+            <div class="detail-operation" v-if="btnShow">
+              <fj-button :type="btnType || 'danger'" @click="handleClick" size="small">{{btnText || '上架'}}</fj-button>
+            </div>
           </fj-tab-pane>
         </fj-tabs>
-        <div class="detail-operation" v-if="btnShow">
-          <fj-button :type="btnType || 'danger'" @click="handleClick" size="small">{{btnText || '上架'}}</fj-button>
-        </div>
       </div>
       <i class="iconfont icon-close closebtn" @click="handleClose"></i>
     </div>
@@ -233,10 +233,6 @@
     color: #2A3E52;
   }
 
-  .shelf-detail-video-panel .media-video-panel-wrap{
-    height: 630px;
-  }
-
   .shelf-detail-video-panel .fj-tabs-content{
     padding-top: 18px;
     padding-left: 15px;
@@ -259,6 +255,6 @@
   }
   .detail-operation {
     margin-top: 10px;
-    margin-left: 98px;
+    margin-left: 85px;
   }
 </style>
