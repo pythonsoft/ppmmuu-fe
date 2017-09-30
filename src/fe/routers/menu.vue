@@ -72,7 +72,7 @@
         defaultRoute: '/',
         display: false,
         userInfo: {
-          name: '',
+          name: '',                                                                                                                                                                                                                                                        test_1.mp4
           email: '',
           photo: ''
         }
