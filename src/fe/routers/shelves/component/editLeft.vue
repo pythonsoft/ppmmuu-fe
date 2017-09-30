@@ -3,13 +3,13 @@
     <div class="edit-left-video">
       <div v-if="url" class="edit-left-video-wrap">
         <div class="edit-left-video-content" id="video" ref="video">
-          <player :videoId="videoId" :height="526" :url="url" :streamInfo="streamInfo"></player>
+          <player :videoId="videoId" :height="526" :url="url" :streamInfo="streamInfo" ref="player"></player>
         </div>
         <div class="media-video-title-wrap">
           <div class="media-video-title" v-html="title"></div>
           <ul class="media-video-title-bar">
             <li>
-              <span title="截图" class="iconfont icon-camera" @click.stop="(e) => prepareDownload()"></span>
+              <span title="截图" class="iconfont icon-camera" @click.stop="screenshot"></span>
             </li>
           </ul>
         </div>
@@ -34,6 +34,17 @@
         </table>
       </div>
     </div>
+    <fj-dialog
+            :visible.sync="imageDialogVisible"
+            :show-close="false"
+            :close-on-click-modal="true"
+            width="640px"
+            type="basic">
+      <div class="screenshot-wrap">
+        <img :src="screenshotURL" width="100%">
+        <a class="iconfont icon-download screenshot-download-icon" :href="screenshotURL" :download="screenshotTitle"></a>
+      </div>
+    </fj-dialog>
   </div>
 </template>
 <script>
@@ -47,7 +58,8 @@
     formatContent,
     getStreamURL,
     formatTime,
-    formatQuery
+    formatQuery,
+    transformSecondsToStr
   } from '../../../common/utils';
   import Player from '../../mediaCenter/components/player';
   import { getPosition } from '../../../component/fjUI/utils/position';
@@ -78,7 +90,10 @@
           INPOINT: 0,
           OUTPOINT: 0
         },
-        videoId: ''
+        videoId: '',
+        imageDialogVisible: false,
+        screenshotURL: '',
+        screenshotTitle: '',
       };
     },
     created(){
@@ -141,6 +156,25 @@
 
         return false;
       },
+      screenshot() {
+        this.screenshotURL = this.createImage();
+        this.screenshotTitle = this.title + transformSecondsToStr(this.currentTime);
+        this.imageDialogVisible = true;
+      },
+      createImage() {
+        const video = this.$refs.player.$refs.video;
+        const canvas = document.createElement('CANVAS');
+        const size = {
+          width: this.$refs.video.offsetWidth,
+          height: 526
+        };
+        canvas.width = size.width;
+        canvas.height = size.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageURL = canvas.toDataURL('image/png');
+        return imageURL;
+      },
       formatValue(str) {
         let rs = str;
 
@@ -191,5 +225,18 @@
     overflow: scroll;
     position: relative;
     box-sizing: border-box;
+  }
+
+  .screenshot-wrap:hover .screenshot-download-icon {
+    display: block;
+  }
+  .screenshot-download-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    color: #fff;
+    display: none;
   }
 </style>

@@ -47,6 +47,7 @@
   .layout-content {
     margin-top: 10px;
     min-width: 700px;
+    margin-left: 20px;
   }
 
   .layout-top-search {
@@ -62,9 +63,7 @@
 
   .layout-top-search .layout-search-title{
     font-size: 14px;
-    /*position: absolute;*/
     float: left;
-    margin-left: 20px;
   }
 
   .layout-top-search .title-left {

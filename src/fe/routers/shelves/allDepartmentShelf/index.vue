@@ -21,17 +21,11 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-         <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
-         </span>
-        <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
-         </span>
+        <fj-button type="info" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
       </div>
       <div class="operation-btn-group">
-         <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
-         </span>
+        <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -275,19 +269,6 @@
     float: left;
     margin-left: 10px;
     line-height: 100%;
-  }
-
-  .permission-btn-mini-margin {
-    margin-left: 6px;
-    font-size: 12px;
-  }
-
-  .permission-table-pagination {
-    margin-top: 30px;
-    text-align: center;
-    height: 28px;
-    line-height: 28px;
-    color: #4C637B;
   }
 
   .permission-status-span {

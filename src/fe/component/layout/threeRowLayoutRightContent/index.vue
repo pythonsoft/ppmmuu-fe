@@ -1,6 +1,6 @@
 <template>
   <div class="layout-content">
-    <div class="layout-top-search">
+    <div class="three-layout-top-search">
 
       <div v-if="isIncludeArrow"  class="layout-search-title title-left">
         <span class="iconfont icon-arrow-left arrow-left" @click="back">
@@ -43,43 +43,54 @@
 <style>
   .layout-content {
     margin-top: 10px;
-  }
-
-  .layout-top-search {
-    height: 40px;
-    width: 100%;
-    line-height: 38px;
-    position: relative;
     min-width: 700px;
-    margin-bottom: 10px;
+    margin-left: 20px;
   }
 
-  .layout-top-search .layout-search-title-color {
+  .three-layout-top-search {
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 10px;
+    width: 100%;
+    position: relative;
+  }
+
+  .three-layout-top-search .layout-search-title-color {
     color: #273F57;
   }
 
-  .layout-top-search .layout-search-title{
+  .three-layout-top-search .layout-search-title{
     font-size: 14px;
-    position: absolute;
-    left: 20px;
+    float: left;
   }
 
-  .layout-top-search .title-left {
-    left:4px;
+  .three-layout-top-search .title-left {
+    margin-left:4px;
   }
 
-  .layout-top-search .arrow-left {
+  .three-layout-top-search .arrow-left {
     cursor: default;
     color: #9fb3ca;
   }
 
-  .layout-top-search .arrow-left:hover{
+  .three-layout-top-search .arrow-left:hover{
     color: #4c637b;
   }
 
-  .layout-top-search .layout-search-right-content{
-    position: absolute;
-    right: 20px;
+  .three-layout-top-search .layout-search-right-content{
+    /*position: absolute;*/
+    float: right;
+    margin-top: 5px;
+    margin-right: 20px;
+  }
+
+  .layout-operation {
+    background: #F2F6FA;
+    line-height: 46px;
+    height: 46px;
+    margin-top: 10px;
+    padding-left: 14px;
+    overflow: hidden;
   }
 
   .layout-table-pagination {
