@@ -100,7 +100,7 @@
         sourceVideoId: '',
         sourceSnippet: {},
         activePanel: 'sourcePanel',
-        size: { width: document.body.clientWidth, height: document.body.clientHeight },
+        size: { width: document.body.clientWidth, height: document.body.clientHeight - 32 },
         programInfo: { id: '', objectId: '', title: '', range: [0, 0] }
       };
     },
@@ -119,7 +119,7 @@
     },
     methods: {
       resize(e) {
-        this.size = { width: document.body.clientWidth, height: document.body.clientHeight };
+        this.size = { width: document.body.clientWidth, height: document.body.clientHeight - 32 };
       },
       importSource(info) {
         this.importSourceInfo = info;
