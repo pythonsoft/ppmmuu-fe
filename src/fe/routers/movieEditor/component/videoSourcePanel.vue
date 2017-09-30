@@ -174,6 +174,7 @@
     },
     watch: {
       videoId(val) {
+        this.reset();
         this.getStream(val);
         this.getSRTArr(val);
       },
@@ -197,6 +198,8 @@
         this.inTimeScreenshot = this.createImage();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
+        // console.log('watch inTime this.video.duration', this.video.duration, progressBarWidth);
+        // console.log('watch inTime progressBarWidth', progressBarWidth);
         if (progressBarWidth > 0) {
           this.inPointOffset = val / this.video.duration * progressBarWidth - 9;
           if (val <= this.outTime) {
@@ -465,6 +468,8 @@
         this.offset = this.video.currentTime / this.video.duration * progressBarWidth;
       },
       markIn() {
+        // console.log('this.video.currentTime', this.video.currentTime);
+        // console.log('this.video.duration', this.video.duration);
         if (this.video.currentTime <= this.video.duration
           && this.video.currentTime >= this.video.duration - 1 / this.fps) {
           this.inTime = this.video.currentTime - 1 / this.fps;
