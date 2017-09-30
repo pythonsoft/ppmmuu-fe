@@ -22,7 +22,7 @@
           <edit-left :shelfInfo="shelfInfo"></edit-left>
         </div>
         <div class="shelf-edit-right">
-          <edit-right :editorInfo="shelfInfo.editorInfo"></edit-right>
+          <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight"></edit-right>
         </div>
       </div>
     </template>
@@ -63,14 +63,17 @@
           _id: me.shelfInfo._id,
           editorInfo: me.shelfInfo.editorInfo
         }
-
-        api.saveShelf(postData)
-          .then((res)=>{
-            me.showSuccessInfo('保存成功');
-          })
-          .catch((error)=>{
-            me.showErrorInfo(error);
-          });
+        this.$refs.editRight.$refs.editorInfoForm.validate((valid) => {
+          if (valid) {
+            api.saveShelf(postData)
+              .then((res)=>{
+                me.showSuccessInfo('保存成功');
+              })
+              .catch((error)=>{
+                me.showErrorInfo(error);
+              });
+          }
+        });
       },
       handleClickSubmit() {
         const me =this;
@@ -79,15 +82,19 @@
           editorInfo: me.shelfInfo.editorInfo
         }
 
-        api.submitShelf(postData)
-          .then((res)=>{
-            me.showSuccessInfo('提交成功');
-            me.$emit('update-list');
-            me.$emit('show-back');
-          })
-          .catch((error)=>{
-            me.showErrorInfo(error);
-          });
+        this.$refs.editRight.$refs.editorInfoForm.validate((valid) => {
+          if (valid) {
+            api.submitShelf(postData)
+              .then((res)=>{
+                me.showSuccessInfo('提交成功');
+                me.$emit('update-list');
+                me.$emit('show-back');
+              })
+              .catch((error)=>{
+                me.showErrorInfo(error);
+              });
+          }
+        });
       },
       handleClickCancel(){
         this.$emit('show-back');

@@ -30,13 +30,13 @@
 <script>
   const menu = [
     { title: '部门任务',
-      index: 'department',
+      index: 'departmentTask',
       children: [
         { text: '待认领', index: 'department_catalog_task_unassigned', route: 'department_catalog_task_unassigned' },
         { text: '全部', index: 'department_catalog_task_all', route: 'department_catalog_task_all' }
       ]
     }, { title: '我的任务',
-      index: 'personal',
+      index: 'personalTask',
       children: [
         { text: '编目中', index: 'personal_catalog_task_doing', route: 'personal_catalog_task_doing' },
         { text: '已提交', index: 'personal_catalog_task_submitted', route: 'personal_catalog_task_submitted' },

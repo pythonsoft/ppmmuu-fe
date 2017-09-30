@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1 class="shelf-edit-title">填写内容</h1>
-    <fj-form :model="editorInfo" label-width="90px">
-      <fj-form-item label="订阅类型">
+    <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="90px">
+      <fj-form-item label="订阅类型" prop="subscribeType">
         <fj-select v-model="editorInfo.subscribeType">
           <fj-option
                   v-for="(value, key) in subscribeType"
@@ -11,13 +11,13 @@
                   :label="value"></fj-option>
         </fj-select>
       </fj-form-item>
-      <fj-form-item label="来源">
+      <fj-form-item label="来源" prop="source">
         <fj-input v-model="editorInfo.source"></fj-input>
       </fj-form-item>
-      <fj-form-item label="限制">
+      <fj-form-item label="限制" prop="limit">
         <fj-input v-model="editorInfo.limit"></fj-input>
       </fj-form-item>
-      <fj-form-item label="封面">
+      <fj-form-item label="封面" prop="cover">
         <div class="shelf-edit-cover">
           <upload-img :imgPath="editorInfo.cover" @img-change="imgChange"></upload-img>
         </div>
@@ -43,7 +43,21 @@
     },
     data() {
       return {
-        subscribeType: SUBSCRIBE_TYPE
+        subscribeType: SUBSCRIBE_TYPE,
+        rules: {
+          subscribeType: [
+            { required: true, message: '请选择订阅类型' },
+          ],
+          source: [
+            { required: true, message: '请输入来源' }
+          ],
+          limit: [
+            { required: true, message: '请输入限制' }
+          ],
+          cover: [
+            { required: true, message: '请上传封面' }
+          ]
+        },
       };
     },
     created() {

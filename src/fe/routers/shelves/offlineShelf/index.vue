@@ -48,6 +48,7 @@
     <shelf-detail
             btnText="再编辑"
             btnType="info"
+            :editorInfo="editorInfo"
             :objectId="objectId"
             :visible.sync="detailDialogVisible"
             @operation-click="editShelfAgain">
@@ -72,6 +73,7 @@
         defaultRoute: '/',
         dialogVisible: false,
         detailDialogVisible: false,
+        editorInfo: {},
         dialogMessage: '',
         departmentId: '',
         operation: '',
@@ -119,6 +121,7 @@
       handleClickEdit() {
         this.detailDialogVisible = true;
         this.objectId = this.selectedObjectIds[0];
+        this.editorInfo = this.selectedRows[0].editorInfo;
         //this.objectId = 'D4F532D4-2EC4-435F-A9C5-F3DF1D202AF8';
         this.editId = this.selectedIds[0];
       },
@@ -161,7 +164,7 @@
         const me = this;
         api.editShelfTaskAgain({_id: me.editId})
           .then((response) => {
-            me.showSuccessInfo('再编辑成功,请到处理中列表查看');
+            me.showSuccessInfo('已处理,请前往处理中查看');
             me.detailDialogVisible = false;
             me.handleClickSearch();
           })
@@ -172,11 +175,13 @@
       handleSelectionChange(rows) {
         this.selectedIds = [];
         this.selectedObjectIds = [];
+        this.selectedRows = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
             this.selectedObjectIds.push(row.objectId);
+            this.selectedRows.push(row);
           }
         }
       },

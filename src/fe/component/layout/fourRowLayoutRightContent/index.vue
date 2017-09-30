@@ -45,7 +45,6 @@
 </script>
 <style>
   .layout-content {
-    margin-left: 20px;
     margin-top: 10px;
     min-width: 700px;
   }

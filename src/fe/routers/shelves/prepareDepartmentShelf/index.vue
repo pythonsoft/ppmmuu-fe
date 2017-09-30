@@ -1,6 +1,6 @@
 <template>
   <four-row-layout-right-content>
-    <template slot="search-left">待认领</template>
+    <template slot="search-left">待认领任务</template>
     <template slot="search-right">
       <div class="permission-search-item">
         <fj-input placeholder="请输入关键词" v-model="keyword" size="small"></fj-input>
@@ -29,8 +29,6 @@
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
         <fj-table-column prop="name" label="节目名称"></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" ></fj-table-column>
-        <fj-table-column prop="assignee" label="派发人"><template scope="props">{{props.row.assignee.name}}</template></fj-table-column>
-        <fj-table-column prop="dealer" label="认领人"><template scope="props">{{props.row.dealer.name}}</template></fj-table-column>
         <fj-table-column prop="operationTime" label="操作时间"><template scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
       </fj-table>
     </template>
