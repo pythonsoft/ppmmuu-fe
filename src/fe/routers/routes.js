@@ -101,6 +101,7 @@ export default [{
     },
     {
       path: 'shelf',
+      redirect: 'shelf/prepareDepartmentShelf',
       component: Shelf,
       meta: { title: '上架' },
       children: [
