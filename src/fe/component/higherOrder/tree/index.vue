@@ -136,7 +136,7 @@
 
       } else {
         for (let i = 0, len = this.td.length; i < len; i++) {
-          this.indexs[this.td[i][this.indexKey]] = `${i}`;
+          this.indexs[this.td[i].info[this.indexKey]] = `${i}`;
         }
       }
     },

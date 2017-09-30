@@ -9,7 +9,7 @@
       <div :style="innerNodeStyle">
         <template v-if="isFolder">
           <div
-            @click="handleExpandIconClick"
+            @click.stop="handleExpandIconClick"
             class="expand-wrap"
             :style="{ left: (open ? (indent * nodeLevel) - 5 : (indent * nodeLevel)) + 'px' }">
             <i :class="open ? 'tri-bottom' : 'tri-right'"></i>
@@ -93,6 +93,15 @@
         if (this.autoExpand) return;
         if (this.isFolder) {
           if (!this.open) {
+            if (this.shouldLoadData()) {
+              this.loading = true;
+              const resolve = (children) => {
+                this.loaded = true;
+                this.loading = false;
+                if (children) this.node.children = children;
+              };
+              this.load(this.node, resolve);
+            }
             this.tree.$emit('node-expand', this.node);
           } else {
             this.tree.$emit('node-collapse', this.node);
