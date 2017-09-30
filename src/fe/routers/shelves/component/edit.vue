@@ -97,6 +97,7 @@
         });
       },
       handleClickCancel(){
+        this.$emit('update-list');
         this.$emit('show-back');
       },
       showSuccessInfo(message) {

@@ -1,6 +1,6 @@
 <template>
   <four-row-layout-right-content>
-    <template slot="search-left">全部</template>
+    <template slot="search-left">部门任务(全部)</template>
     <template slot="search-right">
       <div class="permission-search-item">
         <fj-select placeholder="请选择" v-model="status" size="small">

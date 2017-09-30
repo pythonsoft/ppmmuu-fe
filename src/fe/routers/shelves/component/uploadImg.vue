@@ -12,7 +12,7 @@
     </div>
     <div class="img-hover-class" v-if="isHover" @click="handleClick" @mouseleave="isHover=false">
       <div><span class="iconfont icon-shangchuan"></span></div>
-      <div class="upload-text">点击上传</div>
+      <div class="upload-text">点击更改</div>
     </div>
     <input id="shelf-img-input" ref="fileBtn" accept="image/png,image/jpeg,image/bmp" class="shelf-upload-img-input" @change='chooseImg' type="file">
     <div class="upload-description">＊支持JPG、PNG格式，图片尺寸宽640高360px，大小在5M以内</div>

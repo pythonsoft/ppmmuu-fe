@@ -1,6 +1,6 @@
 <template>
   <four-row-layout-right-content>
-    <template slot="search-left">待认领任务</template>
+    <template slot="search-left">部门任务(待认领任务)</template>
     <template slot="search-right">
       <div class="permission-search-item">
         <fj-input placeholder="请输入关键词" v-model="keyword" size="small"></fj-input>

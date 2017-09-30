@@ -1,6 +1,6 @@
 <template>
   <three-row-layout-right-content>
-    <template slot="search-left">已删除</template>
+    <template slot="search-left">我的任务(已删除)</template>
     <template slot="search-right">
       <div class="permission-search-item">
         <fj-input placeholder="请输入关键词" v-model="keyword" size="small"></fj-input>

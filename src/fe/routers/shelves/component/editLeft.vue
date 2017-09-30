@@ -220,9 +220,7 @@
     background: #F8FAFB;
     font-size: 12px;
     color: #2A3E52;
-    height: 700px;
     width: 100%;
-    overflow: scroll;
     position: relative;
     box-sizing: border-box;
   }

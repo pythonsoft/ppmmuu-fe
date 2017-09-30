@@ -81,6 +81,6 @@
   .shelf-edit-cover {
     margin-top: 20px;
     padding-top: 10px;
-    height: 130px;
+    height: 150px;
   }
 </style>

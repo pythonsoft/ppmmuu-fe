@@ -234,7 +234,7 @@
   }
 
   .shelf-detail-video-panel .media-video-panel-wrap{
-    height: 500px;
+    height: 630px;
   }
 
   .shelf-detail-video-panel .fj-tabs-content{
@@ -259,6 +259,6 @@
   }
   .detail-operation {
     margin-top: 10px;
-    margin-left: 72px;
+    margin-left: 98px;
   }
 </style>
