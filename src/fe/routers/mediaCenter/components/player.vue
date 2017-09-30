@@ -126,6 +126,7 @@
     },
     watch: {
       videoId(val) {
+        this.reset();
         this.getSRTArr(val);
       },
       isMute(val) {
@@ -198,6 +199,23 @@
       document.addEventListener('msfullscreenchange', this.fullscreenchangeListener, false);
     },
     methods: {
+      reset() {
+        this.videoSRT = [];
+        this.videoSRTPosition = 0;
+        this.currentVideoSRT = '';
+        this.isPlaying = false;
+        this.moveIndicatorTimer = null;
+        this.progressBarHoverTimer = null;
+        this.moveIndicatorTimeId = null;
+        this.updateCurrentTimeTimeId = null;
+        this.currentTime = 0;
+        this.duration = 0;
+        this.indicatorOffset = 0;
+        this.playProgressPercent = 0;
+        this.hoverProgressPercent = 0;
+        this.isShowHoverProgress = false;
+        this.tooltipTime = 0;
+      },
       getSRTArr(id) {
         getSRT(id, (err, data, res) => {
           if (err) {
