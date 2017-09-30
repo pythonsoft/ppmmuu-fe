@@ -466,6 +466,8 @@ utils.getSRT = function (objectId, cb, scope, fps = 25) {
   });
 };
 
+let t = 0;
+
 utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
   mediaAPI.getStream({ params: { objectid: objectId } }, scope).then((res) => {
     let dateString = res.result.UNCPATH;
@@ -478,7 +480,13 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
       }
       let url = `${config.defaults.streamURL + dateString}/${fileName}`;
       if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
-        url = '/static/video/test.mp4';
+        if(t % 2 === 0) {
+          url = '/static/video/test.mp4';
+        }else {
+          url = '/static/video/test_1.mp4';
+        }
+
+        t++;
       }
       cb && cb(null, url, res);
     }
