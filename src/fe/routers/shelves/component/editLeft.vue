@@ -19,7 +19,7 @@
     <div class="edit-left-video-panel" :style="{height: detailWidth}">
       <div class="media-center-file-item">
         <table class="media-center-table">
-          <tr v-for="(info, key) in programDetails" v-if="info.value" >
+          <tr v-for="(info, key) in programDetails" v-if="info.cn && info.value" >
             <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
             <td class="item-info-value clearfix">
               <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
@@ -137,7 +137,7 @@
         const me = this;
         api.getObject(formatQuery({ objectid: me.videoId }, true))
           .then((res)=>{
-            me.programDetails = res.data.result.detail.program;
+            me.programDetails = Object.assign({'programNO': {cn: '节目编号', value: me.shelfInfo.programNO}},res.data.result.detail.program);
             const keys = Object.keys(me.programDetails);
             for (let i = 0; i < keys.length; i++) {
               const info = me.programDetails[keys[i]];

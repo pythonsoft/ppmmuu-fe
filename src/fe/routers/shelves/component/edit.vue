@@ -19,6 +19,8 @@
     <template slot="table">
       <div class="shelf-edit" ref="shelfEdit">
         <panel-view
+                :limitResize="true"
+                :limitResizeScale="230"
                 :parentSize="size"
                 panels="#/2,#-p0"
                 direction="x"

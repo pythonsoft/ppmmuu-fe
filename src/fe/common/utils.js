@@ -480,9 +480,9 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
       }
       let url = `${config.defaults.streamURL + dateString}/${fileName}`;
       if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
-        if(t % 2 === 0) {
+        if (t % 2 === 0) {
           url = '/static/video/test.mp4';
-        }else {
+        } else {
           url = '/static/video/test_1.mp4';
         }
 
