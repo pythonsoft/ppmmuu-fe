@@ -250,28 +250,11 @@
       }
     },
     methods: {
-      getDefaultFileInfo() {
-        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
-        const files = this.files;
-
-        if(files.length === 0) {
-          return {};
-        }
-
-        for(let i = 0, len = files.length; i < len; i++) {
-          for(let j = 0, l = ft.length; j < l; j++) {
-            if(files[i].FILETYPEID === ft[j]) {
-              return files[i];
-            }
-          }
-        }
-
-        return {};
-      },
       getDetail(id) {
         api.getObject({ params: { objectid: id } }).then((res) => {
-          this.files = res.data.result.files;
-          this.fileTypeId = this.getDefaultFileInfo().FILETYPEID;
+          const files = res.data.result.files;
+          this.videoInfo = this.getDefaultFileInfo(files);
+          this.fileTypeId = this.videoInfo.FILETYPEID;
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -682,15 +665,6 @@
         ctx.drawImage(this.video, 0, 0, canvas.width, canvas.height);
         const imageURL = canvas.toDataURL('image/png');
         return imageURL;
-      },
-      getDetail(objectid) {
-        const me = this;
-        api.getObject({ params: { objectid: objectid } }).then((res) => {
-          const files = res.data.result.files;
-          me.videoInfo = me.getDefaultFileInfo(files);
-        }).catch((error) => {
-          me.$message.error(error);
-        });
       },
       getDefaultFileInfo(files) {
         const ft = mediaConfig.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
