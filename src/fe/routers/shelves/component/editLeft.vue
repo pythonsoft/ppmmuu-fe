@@ -16,7 +16,7 @@
       </div>
       <div v-else class="iconfont icon-phoenixtv media-video-wrap-bg"></div>
     </div>
-    <div class="edit-left-video-panel">
+    <div class="edit-left-video-panel" :style="{height: detailWidth}">
       <div class="media-center-file-item">
         <table class="media-center-table">
           <tr v-for="(info, key) in programDetails" v-if="info.value" >
@@ -84,6 +84,7 @@
         title: '',
         programDetails: {},
         editorInfo: {},
+        detailWidth: '',
         poster: '',
         url: '',
         streamInfo: {
@@ -98,8 +99,15 @@
     },
     created(){
       this.initData();
+      this.resize();
+    },
+    mounted() {
+      window.addEventListener('resize', this.resize);
     },
     methods: {
+      resize(e) {
+        this.detailWidth = (document.body.clientHeight - 700) + 'px';
+      },
       expand(info, key) {
         const newInfo = Object.assign({}, this.programDetails[key], { isFoldedContent: false });
         this.$set(this.programDetails, key, newInfo);
@@ -221,6 +229,8 @@
     font-size: 12px;
     color: #2A3E52;
     width: 100%;
+    height: 600px;
+    overflow: scroll;
     position: relative;
     box-sizing: border-box;
   }

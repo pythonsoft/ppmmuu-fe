@@ -17,13 +17,24 @@
       </div>
     </template>
     <template slot="table">
-      <div class="shelf-edit clearfix">
-        <div class="shelf-edit-left">
-          <edit-left :shelfInfo="shelfInfo"></edit-left>
-        </div>
-        <div class="shelf-edit-right">
-          <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight"></edit-right>
-        </div>
+      <div class="shelf-edit" ref="shelfEdit">
+        <panel-view
+                :parentSize="size"
+                panels="#/2,#-p0"
+                direction="x"
+                name="child1"
+        >
+          <template slot="0" scope="props">
+            <div class="shelf-edit-left">
+              <edit-left :shelfInfo="shelfInfo"></edit-left>
+            </div>
+          </template>
+          <template slot="1" scope="props">
+            <div class="shelf-edit-right">
+              <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight"></edit-right>
+            </div>
+          </template>
+        </panel-view>
       </div>
     </template>
   </four-row-layout-right-content>
@@ -33,6 +44,7 @@
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import EditLeft from './editLeft';
   import EditRight from './editRight';
+  import PanelView from '../../../component/layout/panel/index';
 
   const api = require('../../../api/shelves');
 
@@ -40,7 +52,8 @@
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
       'edit-left': EditLeft,
-      'edit-right': EditRight
+      'edit-right': EditRight,
+      'panel-view': PanelView
     },
     props: {
       shelfInfo: { type: Object, default: {}}
@@ -48,14 +61,18 @@
     data() {
       return {
         defaultRoute: '/',
+        size: { width: document.body.clientWidth - 206, height: document.body.clientHeight }
       };
     },
     created() {
+      this.resize();
+    },
+    mounted() {
+      window.addEventListener('resize', this.resize);
     },
     methods: {
-      getActiveRoute(path, level) {
-        const pathArr = path.split('/');
-        return pathArr[level] || '';
+      resize(e) {
+        this.size = { width: document.body.clientWidth - 206, height: document.body.clientHeight };
       },
       handleClickSave() {
         const me =this;
@@ -109,7 +126,11 @@
     }
   };
 </script>
-<style>
+<style scope>
+  .main .right-content {
+    overflow: hidden;
+  }
+
   .permission-btn-mini-margin {
     margin-left: 6px;
     font-size: 12px;
@@ -130,21 +151,33 @@
   }
 
   .shelf-edit-left {
-    float:left;
     padding: 16px 40px 0 20px;
-    width: 50%;
     height: 100%;
-    min-width: 600px;
     overflow: hidden;
-    border-right: 4px solid #EBF3FB;
   }
 
   .shelf-edit-right {
-    float:left;
     padding: 16px 10% 0 10%;
-    width: 50%;
     height: 100%;
-    min-width: 600px;
     overflow: hidden;
   }
+
+  /*@media screen and (max-width:1425px){*/
+    /*.shelf-edit-left {*/
+      /*padding: 16px 40px 0 20px;*/
+      /*width: 100%;*/
+      /*height: 100%;*/
+      /*min-width: 600px;*/
+      /*overflow: hidden;*/
+      /*border-right: 4px solid #EBF3FB;*/
+    /*}*/
+
+    /*.shelf-edit-right {*/
+      /*padding: 50px 40px 0 20px;*/
+      /*width: 100%;*/
+      /*height: 100%;*/
+      /*min-width: 600px;*/
+      /*overflow: hidden;*/
+    /*}*/
+  /*}*/
 </style>
