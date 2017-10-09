@@ -104,7 +104,7 @@
           });
       },
       handleClickDelete() {
-        this.dialogMessage = '确定要删除这些任务吗?';
+        this.dialogMessage = '您确定要删除这些节目吗?';
         this.dialogVisible = true;
         this.sendBackOrDelete = 'delete';
       },

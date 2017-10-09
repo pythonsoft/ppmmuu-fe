@@ -44,6 +44,7 @@
     <shelf-detail
             btnText="下架"
             btnType="danger"
+            :programNO="programNO"
             :editorInfo="editorInfo"
             :objectId="objectId"
             :visible.sync="detailDialogVisible"
@@ -79,6 +80,7 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
+        programNO: '',
         editorInfo: {},
         objectId: '',
         formatTime: formatTime
@@ -118,11 +120,11 @@
         this.detailDialogVisible = true;
         this.objectId = this.selectedObjectIds[0];
         this.editorInfo = this.selectedRows[0].editorInfo;
-        //this.objectId = 'D4F532D4-2EC4-435F-A9C5-F3DF1D202AF8';
+        this.programNO = this.selectedRows[0].programNO;
         this.editId = this.selectedIds[0];
       },
       handleClickDelete() {
-        this.dialogMessage = '确定要删除这些节目吗?';
+        this.dialogMessage = '您确定要删除这些节目吗?';
         this.dialogVisible = true;
         this.operation = 'delete';
       },
@@ -168,7 +170,7 @@
       },
       offlineShelf(){
         this.operation = 'offline';
-        this.dialogMessage = '确定要上架这个节目吗?';
+        this.dialogMessage = '您确定要上架这个节目吗?';
         this.dialogVisible = true;
       },
       handleSelectionChange(rows) {

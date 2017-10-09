@@ -18,7 +18,7 @@
         <fj-tabs v-model="activeTabName" class="media-video-panel-wrap">
           <fj-tab-pane label="文件信息" name="tab2">
             <table class="media-center-table">
-              <tr v-for="(info, key) in programDetails" v-if="info.value" >
+              <tr v-for="(info, key) in programDetails" v-if="info.cn && info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix" v-if="key!=='cover'">
                   <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
@@ -78,6 +78,7 @@
         default: false
       },
       objectId: String,
+      programNO: String,
       editorInfo: {
         type: Object,
         default: {}
@@ -162,6 +163,10 @@
           cn: '封面',
           value: me.editorInfo['cover']
         };
+        me.programDetails['programNO'] = {
+          cn: '节目编号',
+          value: me.programNO
+        }
         api.getObject(formatQuery({ objectid: me.objectId }, true))
           .then((res)=>{
             const data = res.data.result.detail.program;

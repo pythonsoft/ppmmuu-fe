@@ -141,7 +141,7 @@
           });
       },
       handleClickClaim() {
-        this.dialogMessage = '确定要认领这些任务吗?';
+        this.dialogMessage = '您确定要认领这些任务吗?';
         this.dialogVisible = true;
         this.claimOrDelete = 'claim';
       },
@@ -149,7 +149,7 @@
         this.assignDialogVisible = true;
       },
       handleClickDelete() {
-        this.dialogMessage = '确定要删除这些任务吗?';
+        this.dialogMessage = '您确定要删除这些任务吗?';
         this.dialogVisible = true;
         this.claimOrDelete = 'delete';
       },

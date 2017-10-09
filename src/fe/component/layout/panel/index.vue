@@ -22,6 +22,8 @@
       panels: { type: String, default: '#-p1, 30' },
       direction: { type: String, default: 'x' },
       canResize: { type: Boolean, default: true },
+      limitResize: { type: Boolean, default: false },
+      limitResizeScale: { type: Number, default: 0 },
       name: { type: String }
     },
     data() {
@@ -199,6 +201,14 @@
       },
       mousemove(e) {
         if (!this.isStartMove) { return false; }
+        if(this.limitResize){
+          if(this.direction == 'x' && e.pageX < this.limitResizeScale) {
+            return false;
+          }
+          if(this.direction == 'y' && e.pageY < this.limitResizeScale) {
+            return false;
+          }
+        }
 
         const offset = { x: e.pageX - this.position.x, y: e.pageY - this.position.y };
         const index = this.index;

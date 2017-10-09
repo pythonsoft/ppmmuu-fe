@@ -50,7 +50,7 @@
       children: [
         { text: '待上架', index: 'prepareLineShelf', route: 'prepareLineShelf' },
         { text: '已上架', index: 'onlineShelf', route: 'onlineShelf' },
-        { text: '下架', index: 'offlineShelf', route: 'offlineShelf' },
+        { text: '已下架', index: 'offlineShelf', route: 'offlineShelf' },
       ] }};
   export default {
     data() {
