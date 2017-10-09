@@ -3,7 +3,7 @@
     <template slot="search-left">我的任务(已删除)</template>
     <template slot="search-right">
       <div class="permission-search-item">
-        <fj-input placeholder="请输入关键词" v-model="keyword" size="small"></fj-input>
+        <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
       </div>
       <div class="permission-search-item">
         <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
