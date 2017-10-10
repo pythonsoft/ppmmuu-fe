@@ -156,6 +156,7 @@
   };
 </script>
 <style>
+  .media-video-panel-wrap .fj-tabs-header .fj-tabs-item{ font-size: 12px; }
   .slide-dialog-wrapper {
     width: 449px;
     position: fixed;
