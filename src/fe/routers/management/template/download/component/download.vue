@@ -17,6 +17,15 @@
       <fj-input type="textarea" :rows="7" v-model="formData.script"></fj-input>
       <p class="template-download-link" @click="scriptDialogVisible=true">* 查看脚本说明</p>
     </fj-form-item>
+    <fj-form-item label="转码模版">
+      <transcode-template-list
+        :data="formData.transcodeTemplates"
+        @add-template="addTemplate"
+        @delete-template="deleteTemplate"></transcode-template-list>
+    </fj-form-item>
+    <fj-form-item label="转码脚本">
+      <fj-input type="textarea" :rows="7" v-model="formData.transcodeTemplateSelector"></fj-input>
+    </fj-form-item>
     <fj-form-item label="描述">
       <fj-input type="textarea" :rows="3" v-model="formData.description"></fj-input>
     </fj-form-item>
@@ -41,6 +50,7 @@
   import '../index.css';
   import bucketBrowserView from '../../../bucket/component/browser';
   import scriptDialogView from './scriptDialog';
+  import TranscodeTemplateList from './transcodeTemplateList';
 
   const api = require('../../../../../api/template');
 
@@ -52,7 +62,8 @@
     },
     components: {
       'bucket-browser-view': bucketBrowserView,
-      'script-dialog-view': scriptDialogView
+      'script-dialog-view': scriptDialogView,
+      TranscodeTemplateList
     },
     created() {
       if (this.type !== 'add') {
@@ -71,7 +82,9 @@
           id: '',
           name: '',
           bucketId: '',
-          script: ''
+          script: '',
+          transcodeTemplateSelector: '',
+          transcodeTemplates: []
         },
         isBtnLoading: false,
         rules: {
@@ -88,6 +101,19 @@
       };
     },
     methods: {
+      addTemplate(rows) {
+        rows.forEach((item) => {
+          this.formData.transcodeTemplates.push(item);
+        });
+      },
+      deleteTemplate(rows) {
+        rows.forEach(item => {
+          const index = this.formData.transcodeTemplates.indexOf(item);
+          if (index > -1) {
+            this.formData.transcodeTemplates.splice(index, 1);
+          }
+        });
+      },
       initParam() {
         this.formData = {
           id: '',
