@@ -9,6 +9,9 @@
           <fj-form-item label="标志" prop="_id">
             <fj-input v-model="formData._id"></fj-input>
           </fj-form-item>
+          <fj-form-item label="副标识" prop="viceId">
+            <fj-input v-model="formData.viceId"></fj-input>
+          </fj-form-item>
           <fj-form-item label="名称" prop="name">
             <fj-input v-model="formData.name"></fj-input>
           </fj-form-item>
@@ -108,7 +111,7 @@
       title: String,
       id: String,
       bucket: {
-        type: String,
+        type: Object,
         default: null
       },
       visible: {
@@ -151,6 +154,9 @@
           ],
           _id: [
             { required: true, message: '请输入标识' }
+          ],
+          viceId: [
+            { required: true, message: '请输入副标识' }
           ]
         },
         TYPE: config.TYPE,
@@ -174,6 +180,8 @@
           this.dialogVisible = true;
           if (this.type === 'edit') {
             this.initEditUser();
+          } else {
+            this.resetFormData();
           }
         } else {
           this.dialogVisible = false;
@@ -206,6 +214,9 @@
           maxSize: '',
           reserveCapability: ''
         };
+        if(this.bucket){
+          this.formData.bucket = this.bucket;
+        }
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {

@@ -1,10 +1,6 @@
 <template>
-  <layout-four-row>
+  <layout-four-row :isIncludeArrow="showBack" @back="showBackClick">
     <template slot="search-left">
-      <div class="iconfont icon-arrow-left storage-path-return" v-if="showBack"></div>
-      <div class="storage-path-back" v-if="showBack" @click="showBackClick">
-        <span>返回</span>
-      </div>
       <span>策略</span>
     </template>
     <template slot="search-right">

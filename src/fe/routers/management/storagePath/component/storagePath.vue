@@ -1,10 +1,6 @@
 <template>
-  <layout-four-row>
+  <layout-four-row :isIncludeArrow="showBack" @back="showBackClick">
     <template slot="search-left">
-      <div class="iconfont icon-arrow-left storage-path-return" v-if="showBack"></div>
-      <div class="storage-path-back" v-if="showBack" @click="showBackClick">
-        <span>返回</span>
-      </div>
       <span>路径</span>
     </template>
     <template slot="search-right">
@@ -56,6 +52,7 @@
           <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
         <fj-table-column prop="_id" width="160" label="标识"></fj-table-column>
+        <fj-table-column prop="viceId" width="160" label="副标识"></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="maxSize" width="160" label="容量 | 已使用">
           <template scope="props">{{ formatSize(props.row) }}</template>
@@ -86,6 +83,7 @@
             :id="currentRow._id"
             :title="title"
             :type="type"
+            :bucket="bucket"
             :visible.sync="editDialogVisible"
             @updateList="handleClickSearch">
     </edit-path>
