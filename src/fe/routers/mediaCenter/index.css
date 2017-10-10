@@ -165,6 +165,7 @@
   line-height: 42px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  overflow: hidden;
   box-sizing: border-box;
   text-align: left;
   text-indent: 1em;

@@ -16,9 +16,9 @@
       </div>
       <div class="shelf-detail-video-panel">
         <fj-tabs v-model="activeTabName" class="media-video-panel-wrap">
-          <fj-tab-pane label="文件信息" name="tab2">
+          <fj-tab-pane label="上架信息" name="tab2">
             <table class="media-center-table">
-              <tr v-for="(info, key) in programDetails" v-if="info.cn && info.value" >
+              <tr v-for="(info, key) in editorDetails" v-if="info.cn && info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix" v-if="key!=='cover'">
                   <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
@@ -30,15 +30,31 @@
                   <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
                 </td>
                 <td class="item-info-value " v-else>
-                  <img :src="info.value" height="108px" width="192px">
+                  <img :src="info.value" class="shelf-editor-cover" height="108px" width="192px">
                 </td>
               </tr>
             </table>
-            <div class="detail-operation" v-if="btnShow">
-              <fj-button :type="btnType || 'danger'" @click="handleClick" size="small">{{btnText || '上架'}}</fj-button>
-            </div>
+          </fj-tab-pane>
+          <fj-tab-pane label="编目信息" name="tab1">
+            <table class="media-center-table">
+              <tr v-for="(info, key) in programDetails" v-if="info.cn && info.value" >
+                <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
+                <td class="item-info-value clearfix">
+                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
+                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
+                  <template v-else>
+                    <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
+                    <span v-else>{{ formatValue(info.value) }}</span>
+                  </template>
+                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
+                </td>
+              </tr>
+            </table>
           </fj-tab-pane>
         </fj-tabs>
+        <div class="detail-operation" v-if="btnShow">
+          <fj-button :type="btnType || 'danger'" @click="handleClick" size="small">{{btnText || '上架'}}</fj-button>
+        </div>
       </div>
       <i class="iconfont icon-close closebtn" @click="handleClose"></i>
     </div>
@@ -99,6 +115,7 @@
           FILENAME: ''
         },
         programDetails: {},
+        editorDetails: {},
         activeTabName: 'tab2',
         videoId: '',
         FILE_TYPE_MAP: FILE_TYPE_MAP
@@ -147,19 +164,19 @@
       },
       getDetail() {
         const me = this;
-        me.programDetails['subscribeType'] = {
+        me.editorDetails['subscribeType'] = {
           cn: '订阅类型',
           value: SUBSCRIBE_TYPE[me.editorInfo['subscribeType']]
         };
-        me.programDetails['source'] = {
+        me.editorDetails['source'] = {
           cn: '来源',
           value: me.editorInfo['source']
         };
-        me.programDetails['limit'] = {
+        me.editorDetails['limit'] = {
           cn: '限制',
           value: me.editorInfo['limit']
         };
-        me.programDetails['cover'] = {
+        me.editorDetails['cover'] = {
           cn: '封面',
           value: me.editorInfo['cover']
         };
@@ -238,6 +255,14 @@
     color: #2A3E52;
   }
 
+  .shelf-detail-video-panel .fj-tabs-item{
+    font-size: 12px;
+  }
+
+  .shelf-editor-cover {
+    margin-top: 3px;
+  }
+
   .shelf-detail-video-panel .fj-tabs-content{
     padding-top: 18px;
     padding-left: 15px;
@@ -259,7 +284,10 @@
     color: #fff;
   }
   .detail-operation {
-    margin-top: 10px;
-    margin-left: 85px;
+    position: absolute;
+    top: 0;
+    right: 14px;
+    height: 42px;
+    line-height: 42px;
   }
 </style>
