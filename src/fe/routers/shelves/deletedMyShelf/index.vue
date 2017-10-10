@@ -12,9 +12,9 @@
     <template slot="table">
       <fj-table :data="tableData" name="table1" ref="table">
         <fj-table-column prop="name" label="节目名称"></fj-table-column>
-        <fj-table-column prop="programNO" label="节目编号" align="center" width="260"></fj-table-column>
-        <fj-table-column prop="assignee" label="派发人" align="center" width="260"><template scope="props">{{props.row.assignee.name}}</template></fj-table-column>
-        <fj-table-column prop="operationTime" label="操作时间" align="center" width="260"><template scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
+        <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
+        <fj-table-column prop="assignee" label="派发人" width="100"><template scope="props">{{props.row.assignee.name}}</template></fj-table-column>
+        <fj-table-column prop="operationTime" label="操作时间" width="160"><template scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination">
