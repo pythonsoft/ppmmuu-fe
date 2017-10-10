@@ -21,6 +21,7 @@
     </fj-form-item>
     <fj-form-item label="转码脚本">
       <fj-input type="textarea" :rows="7" v-model="formData.transcodeTemplateSelector"></fj-input>
+      <p class="template-download-link" @click="transcodeScriptDialogVisible=true">* 查看脚本说明</p>
     </fj-form-item>
     <fj-form-item label="下载脚本" prop="script">
       <fj-input type="textarea" :rows="7" v-model="formData.script"></fj-input>
@@ -44,12 +45,17 @@
     <script-dialog-view
       :visible.sync="scriptDialogVisible"
     ></script-dialog-view>
+
+    <transcode-script-dialog-view
+      :visible.sync="transcodeScriptDialogVisible"
+    ></transcode-script-dialog-view>
   </div>
 </template>
 <script>
   import '../index.css';
   import bucketBrowserView from '../../../bucket/component/browser';
   import scriptDialogView from './scriptDialog';
+  import transcodeScriptDialogView from './transcodeScriptDialog.vue';
   import TranscodeTemplateList from './transcodeTemplateList';
 
   const api = require('../../../../../api/template');
@@ -63,6 +69,7 @@
     components: {
       'bucket-browser-view': bucketBrowserView,
       'script-dialog-view': scriptDialogView,
+      'transcode-script-dialog-view': transcodeScriptDialogView,
       TranscodeTemplateList
     },
     created() {
@@ -80,6 +87,7 @@
     data() {
       return {
         scriptDialogVisible: false,
+        transcodeScriptDialogVisible: false,
         bucketBrowserVisible: false,
         formData: {
           id: '',

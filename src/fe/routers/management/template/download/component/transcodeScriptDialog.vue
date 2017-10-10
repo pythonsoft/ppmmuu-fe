@@ -25,17 +25,11 @@
         <li>
           <div class="title">4、示例</div>
           <pre>
-            const pathA = ${paths.A};
+            if(fileInfo.ext === '.mxf') {
+              result = transcodeTemplates.720p._id; //使用名为720p的转码模板
+            }
 
-            let storagePath = [
-              pathA.windowsStoragePath,
-              userInfo.name,
-              year,
-              month,
-              day
-            ].join('/');
-
-            result = storagePath;
+            result = ''; //不进行转码
           </pre>
         </li>
       </ul>
@@ -55,12 +49,9 @@
       return {
         display: false,
         tableData: [
-          { name: 'userInfo', description: '运行脚本的用户信息，如：userInfo.name' },
-          { name: 'bucketInfo', description: '当前存储区信息，如：bucketInfo.name' },
-          { name: 'paths', description: '可以全到当前存储区下所有的路径信息，如：${paths.路径ID}' },
-          { name: 'year', description: '脚本运行时的年份，如:2017' },
-          { name: 'month', description: '脚本运行时的月份，如:09' },
-          { name: 'day', description: '脚本运行时的日期，如:15' }
+          { name: 'downloadTemplate', description: '当前下载模板的信息' },
+          { name: 'transcodeTemplates', description: '当前转码模板信息，如：transcodeTemplates.转码模板ID.属性' },
+          { name: 'fileInfo', description: '文件信息，{ ext: "后缀", name: "文件名" }，如：fileInfo.ext' },
         ]
       };
     },
