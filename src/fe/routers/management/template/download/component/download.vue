@@ -13,10 +13,6 @@
       </div>
       <fj-button @click.stop.prevent="bucketBrowserVisible=true">修改</fj-button>
     </fj-form-item>
-    <fj-form-item label="脚本" prop="script">
-      <fj-input type="textarea" :rows="7" v-model="formData.script"></fj-input>
-      <p class="template-download-link" @click="scriptDialogVisible=true">* 查看脚本说明</p>
-    </fj-form-item>
     <fj-form-item label="转码模版">
       <transcode-template-list
         :data="formData.transcodeTemplates"
@@ -25,6 +21,10 @@
     </fj-form-item>
     <fj-form-item label="转码脚本">
       <fj-input type="textarea" :rows="7" v-model="formData.transcodeTemplateSelector"></fj-input>
+    </fj-form-item>
+    <fj-form-item label="下载脚本" prop="script">
+      <fj-input type="textarea" :rows="7" v-model="formData.script"></fj-input>
+      <p class="template-download-link" @click="scriptDialogVisible=true">* 查看脚本说明</p>
     </fj-form-item>
     <fj-form-item label="描述">
       <fj-input type="textarea" :rows="3" v-model="formData.description"></fj-input>
