@@ -72,6 +72,8 @@
         this.formData.bucketId = this.templateInfo.details.bucketId;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
+        this.formData.transcodeTemplates = this.templateInfo.transcodeTemplateDetail.transcodeTemplates;
+        this.formData.transcodeTemplateSelector = this.templateInfo.transcodeTemplateDetail.transcodeTemplateSelector;
       }
     },
     data() {
@@ -139,8 +141,10 @@
       },
       add() {
         const me = this;
+        const data = Object.assign({}, this.formData);
+        data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
 
-        api.createDownloadTemplate(this.formData, me).then((res) => {
+        api.createDownloadTemplate(data, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
           me.close();
@@ -152,8 +156,10 @@
       },
       update() {
         const me = this;
+        const data = Object.assign({}, this.formData);
+        data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
 
-        api.update(this.formData, me).then((res) => {
+        api.update(data, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
           me.close();
