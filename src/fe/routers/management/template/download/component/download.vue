@@ -72,8 +72,9 @@
         this.formData.bucketId = this.templateInfo.details.bucketId;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
-        this.formData.transcodeTemplates = this.templateInfo.transcodeTemplateDetail.transcodeTemplates;
-        this.formData.transcodeTemplateSelector = this.templateInfo.transcodeTemplateDetail.transcodeTemplateSelector;
+        const templateDetail = this.templateInfo.transcodeTemplateDetail;
+        this.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
+        this.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
       }
     },
     data() {
