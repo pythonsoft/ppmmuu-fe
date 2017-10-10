@@ -13,7 +13,17 @@
       </div>
       <fj-button @click.stop.prevent="bucketBrowserVisible=true">修改</fj-button>
     </fj-form-item>
-    <fj-form-item label="脚本" prop="script">
+    <fj-form-item label="转码模版">
+      <transcode-template-list
+        :data="formData.transcodeTemplates"
+        @add-template="addTemplate"
+        @delete-template="deleteTemplate"></transcode-template-list>
+    </fj-form-item>
+    <fj-form-item label="转码脚本">
+      <fj-input type="textarea" :rows="7" v-model="formData.transcodeTemplateSelector"></fj-input>
+      <p class="template-download-link" @click="transcodeScriptDialogVisible=true">* 查看脚本说明</p>
+    </fj-form-item>
+    <fj-form-item label="下载脚本" prop="script">
       <fj-input type="textarea" :rows="7" v-model="formData.script"></fj-input>
       <p class="template-download-link" @click="scriptDialogVisible=true">* 查看脚本说明</p>
     </fj-form-item>
@@ -35,12 +45,18 @@
     <script-dialog-view
       :visible.sync="scriptDialogVisible"
     ></script-dialog-view>
+
+    <transcode-script-dialog-view
+      :visible.sync="transcodeScriptDialogVisible"
+    ></transcode-script-dialog-view>
   </div>
 </template>
 <script>
   import '../index.css';
   import bucketBrowserView from '../../../bucket/component/browser';
   import scriptDialogView from './scriptDialog';
+  import transcodeScriptDialogView from './transcodeScriptDialog.vue';
+  import TranscodeTemplateList from './transcodeTemplateList';
 
   const api = require('../../../../../api/template');
 
@@ -52,7 +68,9 @@
     },
     components: {
       'bucket-browser-view': bucketBrowserView,
-      'script-dialog-view': scriptDialogView
+      'script-dialog-view': scriptDialogView,
+      'transcode-script-dialog-view': transcodeScriptDialogView,
+      TranscodeTemplateList
     },
     created() {
       if (this.type !== 'add') {
@@ -61,17 +79,23 @@
         this.formData.bucketId = this.templateInfo.details.bucketId;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
+        const templateDetail = this.templateInfo.transcodeTemplateDetail;
+        this.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
+        this.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
       }
     },
     data() {
       return {
         scriptDialogVisible: false,
+        transcodeScriptDialogVisible: false,
         bucketBrowserVisible: false,
         formData: {
           id: '',
           name: '',
           bucketId: '',
-          script: ''
+          script: '',
+          transcodeTemplateSelector: '',
+          transcodeTemplates: []
         },
         isBtnLoading: false,
         rules: {
@@ -88,6 +112,19 @@
       };
     },
     methods: {
+      addTemplate(rows) {
+        rows.forEach((item) => {
+          this.formData.transcodeTemplates.push(item);
+        });
+      },
+      deleteTemplate(rows) {
+        rows.forEach(item => {
+          const index = this.formData.transcodeTemplates.indexOf(item);
+          if (index > -1) {
+            this.formData.transcodeTemplates.splice(index, 1);
+          }
+        });
+      },
       initParam() {
         this.formData = {
           id: '',
@@ -113,8 +150,10 @@
       },
       add() {
         const me = this;
+        const data = Object.assign({}, this.formData);
+        data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
 
-        api.createDownloadTemplate(this.formData, me).then((res) => {
+        api.createDownloadTemplate(data, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
           me.close();
@@ -126,8 +165,10 @@
       },
       update() {
         const me = this;
+        const data = Object.assign({}, this.formData);
+        data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
 
-        api.update(this.formData, me).then((res) => {
+        api.update(data, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
           me.close();
