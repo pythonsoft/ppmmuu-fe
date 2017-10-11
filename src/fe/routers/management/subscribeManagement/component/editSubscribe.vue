@@ -20,7 +20,7 @@
       </fj-form-item>
       <fj-form-item label="下载时长" prop="downloadSeconds">
         <div class="group-input">
-          <fj-input v-model="formData.downloadSeconds" placeholder="小时"></fj-input>
+          <fj-input v-model="formData.downloadSeconds"></fj-input>
         </div>
         <div class="group-input-unit">小时</div>
       </fj-form-item>
