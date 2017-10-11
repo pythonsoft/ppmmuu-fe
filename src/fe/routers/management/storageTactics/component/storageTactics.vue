@@ -22,21 +22,15 @@
       </div>
     </template>
     <template slot="operation">
-        <span class="layout-btn-mini-margin">
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
-      </span>
-      <span class="layout-btn-margin">
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
-      </span>
+      </div>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>

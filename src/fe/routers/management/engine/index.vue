@@ -34,7 +34,7 @@
         v-if="viewRouter === 'serviceListView'"
         :title="engineInfo.name"
         :vueInstance="vueInstance"
-        :engineInfo="serviceListViewVisible && engineInfo"
+        :engineInfo="serviceListViewVisible ? engineInfo : {}"
         :visible.sync="serviceListViewVisible"
         @cancel="closeServiceListView"
         @select="processSelectFn"
@@ -47,7 +47,7 @@
     <engine-dialog-view
       :vueInstance="vueInstance"
       :selectedNodeInfo="selectedNodeInfo"
-      :engineInfo="visible && engineInfo"
+      :engineInfo="visible ? engineInfo : {}"
       :actionName.sync="actionName"
       :visible.sync="visible"
       :confirmFn="confirmFn"
@@ -55,7 +55,7 @@
 
     <engine-base-slide-dialog-view
       :vueInstance="vueInstance"
-      :engineInfo="slideDialogVisible && engineInfo"
+      :engineInfo="slideDialogVisible ? engineInfo : {}"
       :selectedNodeInfo="selectedNodeInfo"
       :visible.sync="slideDialogVisible"
       :type="slideDialogType"
@@ -64,14 +64,14 @@
 
     <setting-slide-dialog-view
       :vueInstance="vueInstance"
-      :engineInfo="settingDialogVisible && engineInfo"
+      :engineInfo="settingDialogVisible ? engineInfo : {}"
       :visible.sync="settingDialogVisible"
       @confirm="settingSlideDialogConfirmFn"
     ></setting-slide-dialog-view>
 
     <engine-process-slide-dialog-view
       :vueInstance="vueInstance"
-      :engineInfo="processSlideDialogVisible && engineInfo"
+      :engineInfo="processSlideDialogVisible ? engineInfo : {}"
       :processInfo="processInfo"
       :visible.sync="processSlideDialogVisible"
       @confirm="processSlideDialogConfirmFn"

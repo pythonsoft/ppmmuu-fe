@@ -3,17 +3,11 @@
     <template slot="search-left">编辑中</template>
     <template slot="operation">
       <div class="operation-btn-group">
-         <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" @click="handleClickSave">保存</fj-button>
-         </span>
-        <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" @click="handleClickSubmit">提交</fj-button>
-         </span>
+        <fj-button type="info" size="mini" @click="handleClickSave">保存</fj-button>
+        <fj-button type="info" size="mini" @click="handleClickSubmit">提交</fj-button>
       </div>
       <div class="operation-btn-group">
-         <span class="permission-btn-mini-margin">
-           <fj-button type="info" size="mini" @click="handleClickCancel">取消</fj-button>
-         </span>
+        <fj-button type="info" size="mini" @click="handleClickCancel">取消</fj-button>
       </div>
     </template>
     <template slot="table">

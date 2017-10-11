@@ -10,21 +10,11 @@
       </div>
     </template>
     <template slot="operation">
-     <span class="role-btn-mini-margin">
       <fj-button type="info" size="mini" v-bind:disabled="addBtnDisabled" @click="addBtnClick">增加</fj-button>
-     </span>
-     <span class="role-btn-mini-margin">
       <fj-button type="info" size="mini" v-bind:disabled="editBtnDisabled" @click="editBtnClick">编辑</fj-button>
-     </span>
-     <span class="role-btn-mini-margin">
       <fj-button type="info" size="mini" v-bind:disabled="configBtnDisabled" @click="configBtnClick">配置</fj-button>
-     </span>
-      <span class="role-btn-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="manageBtnDisabled" @click="manageBtnClick">管理账户及组织</fj-button>
-      </span>
-      <span class="role-btn-margin">
-        <fj-button type="danger" size="mini" v-bind:disabled="deleteBtnDisabled" @click="deleteBtnClick">删除</fj-button>
-      </span>
+      <fj-button type="info" size="mini" v-bind:disabled="manageBtnDisabled" @click="manageBtnClick">管理账户及组织</fj-button>
+      <fj-button type="danger" size="mini" v-bind:disabled="deleteBtnDisabled" @click="deleteBtnClick">删除</fj-button>
     </template>
     <template slot="table">
       <fj-table :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
