@@ -284,7 +284,7 @@
         this.viewType = t;
         this.fl = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify';
         if (t === 'list') {
-          this.fl += ',f_str_03,f_str_187,f_str_314'; //f_str_314 资源所属部门，f_str_187 houseNo
+          this.fl += ',f_str_03,f_str_187,f_str_314'; // f_str_314 资源所属部门，f_str_187 houseNo
         }
       },
       viewTypeSelect(type) {

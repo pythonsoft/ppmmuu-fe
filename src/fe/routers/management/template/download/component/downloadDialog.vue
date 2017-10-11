@@ -63,60 +63,46 @@
         dialogVisible: this.visible,
         permissionViewVisible: false,
         permissions: [],
-        actions: {
-          'MEDIA_EXPRESS': { _id: 'MEDIA_EXPRESS', name: '凤云快传下载', description: '更快更安全', click: () => {
-            this.permissionViewVisible = true;
-            this.getPermission();
-          }}
-        },
-        actionName: '',
-        mediaExpressDomain: 'https://console.cloudifeng.com/',
-        tips: '正在加载数据...'
+        tips: '正在加载数据...',
+        type: '',
+        ext: '_info',
       };
     },
     methods: {
       close() {
         this.permission = [];
         this.permissionViewVisible = false;
-        this.actionName = '';
+        this.type = '';
         this.$emit('update:visible', false);
       },
       handleCurrentChange(current) {
-        this.currentRow = current;
-
-        if(this.actions[this.currentRow._id]) {
-          this.actions[this.currentRow._id].click();
-          this.actionName = this.currentRow._id;
+        if(typeof current.type !== 'undefined') {
+          this.type = current.type;
         }
+
+        this.currentRow[this.type] = current;
+
+        if(this.type === config.getConfig('NODE_TEMPLATE', 'DOWNLOAD_MEDIAEXPRESS').value) {
+          this.permissionViewVisible = true;
+          this.getPermission();
+          this.type = this.type + this.ext;
+          this.currentRow[this.type] = current;
+        }
+
       },
       dialogConfirm() {
-        this.$emit('confirm', this.currentRow, this.actionName);
+        this.$emit('confirm', this.currentRow, this.type.replace(this.ext, ''));
         this.close();
       },
       getTargetType(v) {
         return config.getTextByValue(v + '', 'TARGET_TYPE');
       },
-      getImage(v) {
-        return this.mediaExpressDomain + v;
-      },
-      getMenu() {
-        const arr = [];
-        const keys = Object.keys(this.actions);
-
-        for(let i = 0, len = keys.length; i < len; i++) {
-          arr.push(this.actions[keys[i]]);
-        }
-
-        return arr;
-      },
       listTemplate() {
         const me = this;
-        const templateType = config.getConfig('NODE_TEMPLATE');
 
         const param = {
           page: 1,
           pageSize: 100,
-          type: templateType.DOWNLOAD.value
         };
 
         api.list({ params: param }, me).then((res) => {

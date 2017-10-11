@@ -95,7 +95,8 @@ config.FIELD_NAME = {
 };
 
 config.NODE_TEMPLATE = {
-  DOWNLOAD: { text: '下载模板', value: '1', key: 'DOWNLOAD' }
+  DOWNLOAD: { text: '下载', value: '1', key: 'DOWNLOAD' },
+  DOWNLOAD_MEDIAEXPRESS: { text: '凤云快传', value: '2', key: 'DOWNLOAD_MEDIAEXPRESS' },
 };
 
 config.TEMPLATE_TYPE = Object.assign({
