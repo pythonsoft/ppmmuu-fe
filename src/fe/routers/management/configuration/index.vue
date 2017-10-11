@@ -25,15 +25,9 @@
           </div>
         </template>
         <template slot="operation">
-          <span class="permission-btn-mini-margin">
-            <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
-          </span>
-          <span class="permission-btn-mini-margin">
-            <fj-button type="info" size="mini" v-bind:disabled="change" @click="handleClickChange">变更</fj-button>
-          </span>
-          <span class="permission-btn-mini-margin">
-            <fj-button type="info" size="mini" v-bind:disabled="deleted" @click="handleClickDeleted">删除</fj-button>
-          </span>
+          <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
+          <fj-button type="info" size="mini" v-bind:disabled="change" @click="handleClickChange">变更</fj-button>
+          <fj-button type="info" size="mini" v-bind:disabled="deleted" @click="handleClickDeleted">删除</fj-button>
         </template>
         <template slot="table">
           <fj-table :data="tableData" name="table1" ref="table" @current-change="handleSelectionChange" highlight-current-row>
@@ -444,15 +438,9 @@
     height: 100%;
     overflow: auto;
   }
-
   .permission-search-item {
     float: left;
     margin-left: 10px;
     line-height: 100%;
-  }
-
-  .permission-btn-mini-margin {
-    margin-left: 6px;
-    font-size: 12px;
   }
 </style>

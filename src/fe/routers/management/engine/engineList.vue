@@ -10,36 +10,24 @@
       </div>
     </template>
     <template slot="operation">
-      <span class="layout-engine-btn-mini-margin">
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
-      </span>
-      <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
-      </span>
-      <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
-      </span>
-      <span class="layout-engine-btn-margin">
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="installBtnClick">安装</fj-button>
-      </span>
-      <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="stopBtnClick">停止</fj-button>
-      </span>
-      <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="rebootBtnClick">重启</fj-button>
-      </span>
-      <span class="layout-engine-btn-margin">
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="configBtnClick">配置管理</fj-button>
-      </span>
-      <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="statusBtnClick">运行状态</fj-button>
-      </span>
-      <span class="layout-engine-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="monitorBtnClick">服务监控</fj-button>
-      </span>
-      <span class="layout-engine-btn-margin">
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" @click="refreshBtnClick">刷新</fj-button>
-      </span>
+      </div>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>

@@ -20,21 +20,15 @@
       <!--</div>-->
     </template>
     <template slot="operation">
-      <span class="layout-btn-mini-margin">
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
-      </span>
-      <span class="layout-btn-margin">
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
-      </span>
+      </div>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
