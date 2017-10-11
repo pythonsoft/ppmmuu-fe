@@ -18,11 +18,14 @@
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" width="260" label="标识"></fj-table-column>
-        <fj-table-column prop="name" width="400" label="名称"></fj-table-column>
-        <fj-table-column prop="description" label="描述"></fj-table-column>
-        <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
+        <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column width="100" label="类型">
+          <template scope="props">{{ getTextByValue(props.row.type, 'TYPE') }}</template>
+        </fj-table-column>
+        <fj-table-column prop="createTime" width="160" label="创建时间">
           <template scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
+        <fj-table-column prop="description" width="240" label="描述"></fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination">
@@ -60,7 +63,7 @@
   import utils from '../../../../common/utils';
 
   const templateAPI = require('../../../../api/template');
-  const config = require('../../task/config');
+  const config = require('./config');
 
   export default {
     components: {
@@ -82,8 +85,6 @@
           type: ''
         },
 
-        type: config.getConfig('TEMPLATE_TYPE'),
-
         tableData: [],
         /* bucket param */
         page: 1,
@@ -101,6 +102,9 @@
     destroyed() {
     },
     methods: {
+      getTextByValue(v, st) {
+        return config.getTextByValue(v, st)
+      },
       handleClickSearch() {
         this.listTemplate();
       },
@@ -128,9 +132,6 @@
         this.table.currentRowInfo = current;
         this.isDisabled = false;
       },
-      getStatus(v) {
-        return config.getConfig('STATUS', v);
-      },
       formatType(v) {
         return v;
       },
@@ -155,12 +156,9 @@
       /* api */
       listTemplate() {
         const me = this;
-        const templateType = config.getConfig('NODE_TEMPLATE');
-
         const param = {
           page: this.page,
           pageSize: this.pageSize,
-          type: templateType.DOWNLOAD.value
         };
 
         templateAPI.list({ params: param }, me).then((res) => {

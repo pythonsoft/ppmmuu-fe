@@ -13,6 +13,14 @@
       </div>
       <fj-button @click.stop.prevent="bucketBrowserVisible=true">修改</fj-button>
     </fj-form-item>
+    <fj-form-item label="传输方式" prop="type">
+      <div class="template-dialog-checkbox-item">
+        <fj-checkbox-group v-model="formData.type">
+          <fj-checkbox label="2" class="template-dialog-checkbox"></fj-checkbox>
+          <div class="template-dialog-checkbox-label">使用凤云快传</div>
+        </fj-checkbox-group>
+      </div>
+    </fj-form-item>
     <fj-form-item label="转码模版">
       <transcode-template-list
         :data="formData.transcodeTemplates"
@@ -57,7 +65,9 @@
   import scriptDialogView from './scriptDialog';
   import transcodeScriptDialogView from './transcodeScriptDialog.vue';
   import TranscodeTemplateList from './transcodeTemplateList';
+  import FjCheckboxGroup from "../../../../../component/fjUI/packages/checkboxGroup/src/checkboxGroup.vue";
 
+  const config = require('../config');
   const api = require('../../../../../api/template');
 
   export default {
@@ -67,6 +77,7 @@
       type: String
     },
     components: {
+      FjCheckboxGroup,
       'bucket-browser-view': bucketBrowserView,
       'script-dialog-view': scriptDialogView,
       'transcode-script-dialog-view': transcodeScriptDialogView,
@@ -79,6 +90,7 @@
         this.formData.bucketId = this.templateInfo.details.bucketId;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
+        this.formData.type = this.templateInfo.type !== '2' ? [] : [config.TYPE.DOWNLOAD_MEDIAEXPRESS.value];
         const templateDetail = this.templateInfo.transcodeTemplateDetail;
         this.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
         this.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
@@ -94,8 +106,9 @@
           name: '',
           bucketId: '',
           script: '',
+          type: [],
           transcodeTemplateSelector: '',
-          transcodeTemplates: []
+          transcodeTemplates: [],
         },
         isBtnLoading: false,
         rules: {
@@ -167,6 +180,10 @@
         const me = this;
         const data = Object.assign({}, this.formData);
         data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
+
+        if(data.type && data.type.length > 0) {
+          data.type = data.type[0];
+        }
 
         api.update(data, me).then((res) => {
           me.$message.success('保存成功');
