@@ -22,11 +22,11 @@
       </template>
       <template slot="operation">
         <div class="operation-btn-group">
-           <fj-button type="info" size="mini" v-bind:disabled="canEditRows.length !== 1" @click="handleClickEdit">编辑</fj-button>
-           <fj-button type="info" size="mini" v-bind:disabled="sendBackDisable" @click="handleClickSendBack">退回</fj-button>
+          <fj-button type="info" size="mini" v-bind:disabled="canEditRows.length !== 1" @click="handleClickEdit">编辑</fj-button>
+          <fj-button type="info" size="mini" v-bind:disabled="sendBackDisable" @click="handleClickSendBack">退回</fj-button>
         </div>
         <div class="operation-btn-group">
-           <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
+          <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
         </div>
       </template>
       <template slot="table">

@@ -154,11 +154,11 @@ const ORDER_OPTIONS = [
   { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'f_date_36' }
 ];
 
-//从哪个接口拿的数据
+// 从哪个接口拿的数据
 const FROM_WHERE = {
-  'program': 1,
-  'sequence': 2
-}
+  program: 1,
+  sequence: 2
+};
 
 
 const HHIGHLIGHT_FIELDS1 = 'name,program_name_cn,program_name_en,f_str_03,f_str_187,from_where';
