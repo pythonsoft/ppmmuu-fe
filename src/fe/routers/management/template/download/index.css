@@ -58,3 +58,18 @@
   color: #38B1EB;
   cursor: default;
 }
+
+.template-dialog-checkbox-item{
+  height: 36px;
+  position: relative;
+  padding-left: 22px;
+}
+.template-dialog-checkbox-item .template-dialog-checkbox {
+  position: absolute;
+  left: 0;
+  top: 8px;
+}
+.template-dialog-checkbox-item .template-dialog-checkbox-label{
+  line-height: 36px;
+}
+

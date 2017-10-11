@@ -120,7 +120,7 @@
   const shelfApi = require('../../api/shelves');
 
   const config = require('./config');
-
+  const taskConfig = require('../management/task/config');
 
   export default {
     name: 'right',
@@ -146,7 +146,6 @@
           INPOINT: 0,
           OUTPOINT: 0
         },
-        templateInfo: {},
         fileInfo: {},
         downloadDialogDisplay: false,
         shelfDialogVisible: false,
@@ -315,15 +314,9 @@
 
         return false;
       },
-      downloadListConfirm(templateInfo, actionName) {
-        this.templateInfo = templateInfo || {};
-
-        if (!isEmptyObject(templateInfo)) {
-          if(!actionName) {
-            this.download();
-          }else {
-            this.downloadAndTransfer(templateInfo, actionName);
-          }
+      downloadListConfirm(rs, type) {
+        if (!isEmptyObject(rs)) {
+          this.download(rs, type);
         }
       },
       getDefaultFileInfo() {
@@ -385,8 +378,12 @@
 
         this.downloadDialogDisplay = true;
       },
-      download() {
+      download(rs, type) {
         const me = this;
+        const templateInfo = rs[type];
+        const transferParams = rs[type + '_info'];
+
+        console.log('download -->', rs, type, transferParams);
 
         const param = {
           objectid: this.fileInfo.OBJECTID,
@@ -394,38 +391,15 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id
+          templateId: templateInfo._id
         };
 
-        jobAPI.download(param).then((res) => {
-          me.$message.success('正在下载文件，请到"任务"查看详细情况');
-        }).catch((error) => {
-          me.$message.error(error);
-        });
-
-        return false;
-      },
-      downloadAndTransfer(templateInfo, actionName) {
-        const me = this;
-
-        const downloadParams = {
-          objectid: this.fileInfo.OBJECTID,
-          inpoint: this.fileInfo.INPOINT,
-          outpoint: this.fileInfo.OUTPOINT,
-          filename: this.fileInfo.FILENAME,
-          filetypeid: this.fileInfo.FILETYPEID,
-          destination: '',
-          targetname: ''
-        };
-
-        const params = {
-          downloadParams: downloadParams,
-          receiverId: templateInfo.acceptor._id,
-          receiverType: templateInfo.acceptor.targetType,
-          templateId: actionName
+        if(transferParams) {
+          param.receiverId = transferParams.acceptor._id;
+          param.receiverType = transferParams.acceptor.targetType;
         }
 
-        jobAPI.downloadAndTransfer(params).then((res) => {
+        jobAPI.download(param).then((res) => {
           me.$message.success('正在下载文件，请到"任务"查看详细情况');
         }).catch((error) => {
           me.$message.error(error);
