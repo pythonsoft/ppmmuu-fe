@@ -35,7 +35,7 @@
           <fj-table-column prop="status" label="状态" width="90"><template scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
           <fj-table-column prop="name" label="节目名称"></fj-table-column>
           <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
-          <fj-table-column prop="assignee" label="派发人" width="90"><template scope="props">{{props.row.assignee.name}}</template></fj-table-column>
+          <fj-table-column prop="assignee" label="派发人" width="100"><template scope="props">{{props.row.assignee.name}}</template></fj-table-column>
           <fj-table-column prop="operationTime" label="操作时间" width="160"><template scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
         </fj-table>
       </template>
