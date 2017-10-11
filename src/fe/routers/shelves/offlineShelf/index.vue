@@ -43,6 +43,7 @@
     <shelf-detail
             btnText="再编辑"
             btnType="info"
+            :title="videoTitle"
             :programNO="programNO"
             :editorInfo="editorInfo"
             :objectId="objectId"
@@ -80,6 +81,7 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
+        videoTitle: '',
         programNO: '',
         objectId: '',
         formatTime: formatTime
@@ -120,6 +122,7 @@
         this.objectId = this.selectedObjectIds[0];
         this.editorInfo = this.selectedRows[0].editorInfo;
         this.programNO = this.selectedRows[0].programNO;
+        this.videoTitle = this.selectedRows[0].name;
         this.editId = this.selectedIds[0];
       },
       handleClickDelete() {

@@ -8,7 +8,7 @@
           </div>
           <div >
             <div class="media-video-title-wrap">
-              <div class="media-video-title" :title="streamInfo.FILENAME" v-html="streamInfo.FILENAME"></div>
+              <div class="media-video-title" :title="title" v-html="title"></div>
             </div>
           </div>
         </div>
@@ -94,6 +94,7 @@
         default: false
       },
       objectId: String,
+      title: '',
       programNO: String,
       editorInfo: {
         type: Object,
@@ -180,13 +181,16 @@
           cn: '封面',
           value: me.editorInfo['cover']
         };
-        me.programDetails['programNO'] = {
-          cn: '节目编号',
-          value: me.programNO
-        }
         api.getObject(formatQuery({ objectid: me.objectId }, true))
           .then((res)=>{
             const data = res.data.result.detail.program;
+            const programNOObj = {
+              'programNO': {
+                cn: '节目编号',
+                value: me.programNO
+              }
+            }
+            me.programDetails = Object.assign({}, programNOObj, data);
             const keys = Object.keys(data);
             for (let i = 0; i < keys.length; i++) {
               const info = data[keys[i]];

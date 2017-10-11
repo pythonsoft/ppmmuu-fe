@@ -154,14 +154,22 @@ const ORDER_OPTIONS = [
   { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'f_date_36' }
 ];
 
-const HHIGHLIGHT_FIELDS1 = 'name,program_name_cn,program_name_en,f_str_03,f_str_187';
-const HHIGHLIGHT_FIELDS2 = 'program_type,name,program_name_cn,program_name_en,f_str_03,f_str_187';
-const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03,f_str_187';
+// 从哪个接口拿的数据
+const FROM_WHERE = {
+  program: 1,
+  sequence: 2
+};
+
+
+const HHIGHLIGHT_FIELDS1 = 'name,program_name_cn,program_name_en,f_str_03,f_str_187,from_where';
+const HHIGHLIGHT_FIELDS2 = 'program_type,name,program_name_cn,program_name_en,f_str_03,f_str_187,from_where';
+const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03,f_str_187,from_where';
 
 method.ORDER_OPTIONS = ORDER_OPTIONS;
 method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;
 method.HHIGHLIGHT_FIELDS2 = HHIGHLIGHT_FIELDS2;
 method.FILETR_FIELDS = FILETR_FIELDS;
+method.FROM_WHERE = FROM_WHERE;
 
 method.getOrder = function getOrder(selectedValue) {
   const sort = [];

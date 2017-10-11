@@ -369,6 +369,25 @@ utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 
   return result;
 };
 
+utils.transformSecondsToHours = function transformSecondsToHours(time = 0, format = 'HH:mm:ss:ff', fps = 25) {
+  if (time < 0) time = 0;
+  const hours = Math.floor(time / (60 * 60));
+  time %= (60 * 60);
+  const minutes = Math.floor(time / 60);
+  time %= 60;
+  const seconds = Math.floor(time);
+
+  let rs = `${hours}小时`;
+  if (minutes) {
+    rs += `${minutes}分`;
+  }
+  if (seconds) {
+    rs += `${seconds}秒`;
+  }
+
+  return rs;
+};
+
 utils.formatSize = function formatSize(size) {
   let str = '';
   if (size < 1000) {

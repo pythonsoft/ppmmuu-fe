@@ -1,9 +1,19 @@
 <template>
   <four-row-layout-right-content>
-    <template slot="search-left">上架管理(待上架)</template>
+    <template slot="search-left">订阅管理</template>
     <template slot="search-right">
       <div class="permission-search-item">
-        <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
+        <fj-select placeholder="请选择" v-model="status" size="small">
+          <fj-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+          </fj-option>
+        </fj-select>
+      </div>
+      <div class="permission-search-item">
+        <fj-input placeholder="请输入公司名称" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
       </div>
       <div class="permission-search-item">
         <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
@@ -11,20 +21,29 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickEdit">查看详情</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickOnline">上架</fj-button>
+        <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改订阅信息</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length < 1" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">
       <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-        <fj-table-column prop="name" label="节目名称"></fj-table-column>
-        <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
-        <fj-table-column prop="dealer" label="编目人" width="100"><template scope="props">{{props.row.dealer.name}}</template></fj-table-column>
-        <fj-table-column prop="lastModifyTime" label="操作时间" width="160"><template scope="props">{{formatTime(props.row.lastModifyTime)}}</template></fj-table-column>
+        <fj-table-column prop="status" label="状态" width="90">
+          <template scope="props"><div  v-html="formatStatus[props.row.status]"></div></template>
+        </fj-table-column>
+        <fj-table-column prop="companyName" label="公司名称"></fj-table-column>
+        <fj-table-column prop="downloadSeconds" label="下载时长" width="120">
+          <template scope="props">{{transformSecondsToHours(props.row.downloadSeconds)}}</template>
+        </fj-table-column>
+        <fj-table-column prop="remainDownloadSeconds" label="剩余时长" width="120">
+          <template scope="props">{{transformSecondsToHours(props.row.remainDownloadSeconds)}}</template>
+        </fj-table-column>
+        <fj-table-column prop="startTime" label="使用期限" width="340">
+          <template scope="props">{{formatTime(props.row.startTime) + '-' + formatTime(props.row.expiredTime)}}</template>
+        </fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination">
@@ -43,55 +62,61 @@
       </div>
 
     </fj-dialog>
-    <shelf-detail
-            btnText="上架"
-            btnType="info"
-            :title="videoTitle"
-            :programNO="programNO"
-            :editorInfo="editorInfo"
-            :objectId="objectId"
-            :visible.sync="detailDialogVisible"
-            @operation-click="onlineShelf">
-    </shelf-detail>
+    <edit
+            :title="editTitle"
+            :type="type" :id="editId"
+            :isUsing="isUsing"
+            :visible.sync="editDialogVisible"
+            @updateList="handleClickSearch">
+    </edit>
   </four-row-layout-right-content>
 </template>
 <script>
-  import { formatQuery, formatTime} from '../../../common/utils';
+  import { formatQuery, formatTime, transformSecondsToHours} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
-  import ShelfDetail from '../component/shelfDetail';
-  import { STATUS } from '../config';
+  import { STATUS, STATUS_OPTIONS, formatStatus, formatRows } from './config';
+  import Edit from './component/editSubscribe';
 
-  const api = require('../../../api/shelves');
+  const api = require('../../../api/subscribeManagement');
 
   export default {
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'shelf-detail': ShelfDetail
+      'edit': Edit
     },
     data() {
       return {
         defaultRoute: '/',
         dialogVisible: false,
-        detailDialogVisible: false,
+        options: STATUS_OPTIONS,
         dialogMessage: '',
-        departmentId: '',
-        operation: '',
         keyword: '',
+        status: '',
         tableData: [],
+        searchOwner: [],
         currentPage: 1,
         total: 0,
         pageSize: 15,
+        editDialogVisible: false,
+        type: '',
+        editTitle: '',
+        editId: '',
+        isUsing: false,
         selectedIds: [],
-        videoTitle: '',
-        programNO: '',
-        editorInfo: {},
-        objectId: '',
+        selectedRows: [],
+        formatStatus: formatStatus,
         formatTime: formatTime
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.handleClickSearch();
+    },
+    watch: {
+      status(val) {
+        this.currentPage = 1;
+        this.handleClickSearch();
+      }
     },
     methods: {
       getActiveRoute(path, level) {
@@ -104,12 +129,13 @@
           page: me.currentPage,
           pageSize: me.pageSize,
           keyword: me.keyword,
-          status: STATUS.SUBMITTED
+          status: me.status
         };
-        api.listLineShelfTask(formatQuery(searchObj, true), me)
+        api.listSubscribeInfo(formatQuery(searchObj, true), me)
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
+            formatRows(me.tableData);
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
@@ -119,23 +145,24 @@
             me.showErrorInfo(error);
           });
       },
-      handleClickEdit() {
-        this.detailDialogVisible = true;
-        this.objectId = this.selectedObjectIds[0];
-        this.editorInfo = this.selectedRows[0].editorInfo;
-        this.editId = this.selectedIds[0];
-        this.videoTitle = this.selectedRows[0].name;
-        this.programNO = this.selectedRows[0].programNO;
+      handleClickAdd() {
+        this.type = 'add';
+        this.editTitle = '增加订阅信息';
+        this.isUsing = false;
+        this.editId = '';
+        this.editDialogVisible = true;
       },
-      handleClickOnline() {
-        this.dialogMessage = '您确定要上架这些节目吗?';
-        this.dialogVisible = true;
-        this.operation = 'online';
+      handleClickEdit() {
+        const currentRow = this.selectedRows[0];
+        this.type = 'edit';
+        this.editTitle = '订阅/修改信息';
+        this.isUsing = currentRow.status === STATUS.USING;
+        this.editId = currentRow._id;
+        this.editDialogVisible = true;
       },
       handleClickDelete() {
-        this.dialogMessage = '您确定要删除这些节目吗?';
+        this.dialogMessage = '您确定要删除这些订阅信息吗?';
         this.dialogVisible = true;
-        this.operation = 'delete';
       },
       resetDialog() {
         this.dialogMessage = '';
@@ -144,38 +171,24 @@
       cancelDialog() {
         this.resetDialog();
       },
+      handleShowBack() {
+        this.showEdit = false;
+      },
       confirmDialog() {
         const me = this;
         let postData = {};
         let message = '';
         let apiFunc = '';
-        if (this.operation === 'online') {
-          postData = {
-            _ids: this.selectedIds.join(','),
-          };
-          message = '上架';
-          apiFunc = api.onlineShelfTask;
-        } else if(this.operation === 'onlineOne') {
-          postData = {
-            _ids: this.editId,
-          };
-          message = '上架';
-          apiFunc = api.onlineShelfTask;
-        } else if (this.operation === 'delete') {
-          postData = {
-            _ids: this.selectedIds.join(','),
-          };
-          message = '删除';
-          apiFunc = api.deleteShelfTask;
-        } else {
-          this.resetDialog();
-          return;
-        }
+
+        postData = {
+          _ids: this.selectedIds.join(','),
+        };
+        message = '删除';
+        apiFunc = api.deleteSubscribeInfo;
 
         apiFunc(postData)
           .then((response) => {
             me.showSuccessInfo(`${message}成功!`);
-            me.detailDialogVisible = false;
             me.resetDialog();
             me.handleClickSearch();
           })
@@ -184,20 +197,13 @@
             me.resetDialog();
           });
       },
-      onlineShelf(){
-        this.operation = 'onlineOne';
-        this.dialogMessage = '您确定要上架这个节目吗?';
-        this.dialogVisible = true;
-      },
       handleSelectionChange(rows) {
         this.selectedIds = [];
-        this.selectedObjectIds = [];
         this.selectedRows = [];
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
-            this.selectedObjectIds.push(row.objectId);
             this.selectedRows.push(row);
           }
         }
@@ -213,7 +219,8 @@
       },
       showErrorInfo(message) {
         this.$message.error(message);
-      }
+      },
+      transformSecondsToHours
     }
   };
 </script>
@@ -230,6 +237,28 @@
     height: 28px;
     line-height: 28px;
     color: #4C637B;
+  }
+
+  .permission-status-span {
+    font-size: 12px;
+    color: #FFFFFF;
+    width: 48px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 2px;
+    text-align:center;
+    display: block;
+  }
+  .not-use {
+    background: #AAAAAA;
+  }
+
+  .using {
+    background: #C0C003;
+  }
+
+  .expired {
+    background: #FF3366;
   }
 
   .operation-btn-group {
