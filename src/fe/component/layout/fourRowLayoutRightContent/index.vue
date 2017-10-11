@@ -16,7 +16,7 @@
           <slot name="search-right"></slot>
       </div>
     </div>
-    <div class="layout-operation">
+    <div class="layout-operation clearfix">
       <slot name="operation"></slot>
     </div>
     <slot name="table"></slot>
@@ -90,9 +90,17 @@
     background: #F2F6FA;
     line-height: 46px;
     height: 46px;
+    padding: 11px 0 11px 20px;
     margin-top: 10px;
-    padding-left: 14px;
     overflow: hidden;
+  }
+  .layout-operation .operation-btn-group {
+    float: left;
+    margin-right: 18px;
+  }
+  .layout-operation button {
+    float: left;
+    margin-right: 6px;
   }
 
   .layout-table-pagination {

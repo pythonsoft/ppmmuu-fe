@@ -298,13 +298,6 @@
     margin-left: 10px;
     line-height: 100%;
   }
-  .operation-btn-group {
-    display: inline-block;
-    margin-right: 18px;
-  }
-  .operation-btn-group button {
-    margin-right: 6px;
-  }
   .status-danger,
   .status-success {
     text-align: center;

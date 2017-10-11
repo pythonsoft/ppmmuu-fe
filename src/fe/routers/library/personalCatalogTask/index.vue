@@ -11,16 +11,16 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button size="mini" type="primary" :disabled="isEditBtnDisabled" @click="showCatalog">编辑</fj-button><!--
-        --><fj-button :loading="isSubmitBtnLoading" size="mini" type="primary" :disabled="TASK_STATUS['SUBMITTED'].code === status || isBtnDisabled" @click="submitCatalogTask">提交</fj-button>
-      </div><!--
-      --><div class="operation-btn-group">
-        <fj-button size="mini" type="primary" :disabled="TASK_STATUS['DELETED'].code === status || isBtnDisabled" @click="showEditStatusDialog('deleteTask')">删除</fj-button><!--
-        --><fj-button size="mini" type="primary" :disabled="isBtnDisabled" @click="showEditStatusDialog('sendBackTask')">退回</fj-button>
-      </div><!--
-      --><div class="operation-btn-group">
-        <fj-button size="mini" type="primary" :disabled="isBtnDisabled" @click="detailDialogVisible=true">任务详情</fj-button><!--
-        --><fj-button size="mini" type="primary" @click="updateList">刷新</fj-button>
+        <fj-button size="mini" type="primary" :disabled="isEditBtnDisabled" @click="showCatalog">编辑</fj-button>
+        <fj-button :loading="isSubmitBtnLoading" size="mini" type="primary" :disabled="TASK_STATUS['SUBMITTED'].code === status || isBtnDisabled" @click="submitCatalogTask">提交</fj-button>
+      </div>
+      <div class="operation-btn-group">
+        <fj-button size="mini" type="primary" :disabled="TASK_STATUS['DELETED'].code === status || isBtnDisabled" @click="showEditStatusDialog('deleteTask')">删除</fj-button>
+        <fj-button size="mini" type="primary" :disabled="isBtnDisabled" @click="showEditStatusDialog('sendBackTask')">退回</fj-button>
+      </div>
+      <div class="operation-btn-group">
+        <fj-button size="mini" type="primary" :disabled="isBtnDisabled" @click="detailDialogVisible=true">任务详情</fj-button>
+        <fj-button size="mini" type="primary" @click="updateList">刷新</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -209,19 +209,11 @@
   };
 </script>
 <style>
-  .operation-btn-group {
-    display: inline-block;
-    margin-right: 18px;
-  }
-  .operation-btn-group button {
-    margin-right: 6px;
-  }
   .search-item {
     float: left;
     margin-left: 10px;
     line-height: 100%;
   }
-
   .task-status-base {
     font-size: 12px;
     color: #fff;
