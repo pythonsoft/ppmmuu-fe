@@ -16,7 +16,7 @@
         <fj-table-column prop="_id" width="260" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column width="100" label="类型">
-          <template scope="props">{{ getTextByValue(props.row.type, 'TYPE') }}</template>
+          <template scope="props">{{ getTextByValue(props.row.type, 'NODE_TEMPLATE') }}</template>
         </fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
           <template scope="props">{{ props.row.createdTime | formatTime }}</template>
@@ -59,7 +59,7 @@
   import utils from '../../../../common/utils';
 
   const templateAPI = require('../../../../api/template');
-  const config = require('./config');
+  const config = require('../../task/config');
 
   export default {
     components: {

@@ -67,7 +67,7 @@
   import TranscodeTemplateList from './transcodeTemplateList';
   import FjCheckboxGroup from "../../../../../component/fjUI/packages/checkboxGroup/src/checkboxGroup.vue";
 
-  const config = require('../config');
+  const config = require('../../../task/config');
   const api = require('../../../../../api/template');
 
   export default {
@@ -90,7 +90,7 @@
         this.formData.bucketId = this.templateInfo.details.bucketId;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
-        this.formData.type = this.templateInfo.type !== '2' ? [] : [config.TYPE.DOWNLOAD_MEDIAEXPRESS.value];
+        this.formData.type = this.templateInfo.type !== '2' ? [] : [config.getConfig('NODE_TEMPLATE', 'DOWNLOAD_MEDIAEXPRESS').value];
         const templateDetail = this.templateInfo.transcodeTemplateDetail;
         this.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
         this.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
@@ -183,6 +183,8 @@
 
         if(data.type && data.type.length > 0) {
           data.type = data.type[0];
+        }else {
+          delete data.type;
         }
 
         api.update(data, me).then((res) => {
