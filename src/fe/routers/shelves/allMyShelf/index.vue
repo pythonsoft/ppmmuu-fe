@@ -312,12 +312,4 @@
   .submitted {
     background: #2EC4B6;
   }
-
-  .operation-btn-group {
-    display: inline-block;
-    margin-right: 18px;
-  }
-  .operation-btn-group button {
-    margin-right: 6px;
-  }
 </style>
