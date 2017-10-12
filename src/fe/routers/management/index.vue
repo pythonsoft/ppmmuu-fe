@@ -52,6 +52,11 @@
         { text: '转码任务', index: 'transcode', route: 'transcode' },
         { text: '下载任务', index: 'download', route: 'download' },
       ] },
+    { title: '审核管理',
+      index: 'auditManager',
+      children: [
+        { text: '下载审核', index: 'auditDownload', route: 'auditDownload' },
+      ] },
     { title: '模板管理',
       index: 'templateManager',
       children: [

@@ -3,7 +3,7 @@
     <div class="left-tree">
       <tree-view
               title="分组结构"
-              addBtnText="添加组织"
+              addBtnText="添加分组"
               :vue-instance="vueInstance"
               :menus="dropMenus"
               menu-width="90px"

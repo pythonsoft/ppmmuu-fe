@@ -53,6 +53,8 @@ const PersonalCatalogTask = resolve => require.ensure([], () => resolve(require(
 
 const SubscribeManagement = resolve => require.ensure([], () => resolve(require('./management/subscribeManagement')), 'subscribeManagement');
 
+const auditDownload = resolve => require.ensure([], () => resolve(require('./management/audit/download')), 'auditManager');
+
 export default [{
   path: '/',
   component: Home,
@@ -79,7 +81,8 @@ export default [{
         { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' },
         { path: 'downloadTemplate', component: DownloadTemplate, meta: { title: '下载模板' }, name: 'downloadTemplate' },
         { path: 'transcodeTemplate', component: TranscodeTemplate, meta: { title: '转码模板' }, name: 'transcodeTemplate' },
-        { path: 'subscribeManagement', component: SubscribeManagement, meta: { title: '订阅管理' }, name: 'subscribeManagement' }
+        { path: 'subscribeManagement', component: SubscribeManagement, meta: { title: '订阅管理' }, name: 'subscribeManagement' },
+        { path: 'auditDownload', component: SubscribeManagement, meta: { title: '下载审核' }, name: 'auditDownload' },
       ]
     },
     {
