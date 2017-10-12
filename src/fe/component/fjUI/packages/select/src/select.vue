@@ -1,6 +1,22 @@
 <template>
   <div class="fj-select" :class="[theme ? `fj-select-${theme}` : '', size ? `fj-select-${size}` : '']" v-clickoutside="handleClose">
+    <div
+      v-if="multiple"
+      ref="multipleReference"
+      :class="[`fj-select-inner-${theme}`, visible ? `active` : '']"
+      @click="visible = true">
+      <i class="fj-input-icon iconfont" :class="iconClass" @click.stop="handleIconClick"></i>
+      <span v-if="selectedLabel.length === 0" class="fj-select-placeholder">{{ placeholder }}</span>
+      <fj-tag
+        v-else
+        v-for="label in selectedLabel"
+        :key="`fj-select-multiple-value-${label}`"
+        type="primary"
+        :closable="true"
+        @close="(e) => {handleCloseTag(e, label)}">{{ label }}</fj-tag>
+    </div>
     <fj-input
+      v-else
       v-model="selectedLabel"
       ref="reference"
       :readonly="!remote"
@@ -21,7 +37,7 @@
       @mouseleave.native="inputHovering = false"
       :icon="iconClass"
     ></fj-input>
-    <fj-select-dropdown ref="popper" v-show="visible" :min-width="inputWidth" :position="dropdownPosition">
+    <fj-select-dropdown ref="popper" v-show="visible" :min-width="inputWidth" :position="dropdownPosition" :multiple="multiple">
       <div v-if="remote && selectedLabel.length === 0" class="fj-select-dropdown-title-wrap clearfix">
         <h3 class="fj-select-dropdown-title">历史记录</h3>
         <span class="fj-select-dropdown-clear-btn" @click="clearHistoryMethod">清空<i class="iconfont icon-delete"></i></span>
@@ -33,6 +49,7 @@
 </template>
 <script>
   import FjInput from '../../input';
+  import FjTag from '../../tag';
   import FjSelectDropdown from './selectDropdown';
   import Clickoutside from '../../../utils/clickoutside';
   import { scrollIntoViewBottom } from '../../../utils/scrollIntoView';
@@ -53,12 +70,16 @@
         type: Function,
         default: () => {}
       },
+      multiple: Boolean,
       loading: Boolean,
       disabled: Boolean,
       clearable: Boolean,
       placeholder: String,
       size: String,
-      theme: String,
+      theme: {
+        type: String,
+        default: 'stroke'
+      },
       value: {
         require: true
       }
@@ -66,7 +87,7 @@
     data() {
       return {
         options: [],
-        selectedLabel: '',
+        selectedLabel: this.multiple ? [] : '',
         icon: 'icon-fill-bottom',
         visible: false,
         inputWidth: 0,
@@ -80,7 +101,8 @@
       this.$on('option-click', this.handleOptionClick);
     },
     mounted() {
-      if (this.$refs.reference && this.$refs.reference.$el) {
+      this.reference = this.multiple ? this.$refs.multipleReference : this.$refs.reference.$el;
+      if (this.reference) {
         this.resetInputWidth();
         window.addEventListener('resize', this.resetInputWidth);
         document.body.addEventListener('scroll', this.resetDropdownPosition);
@@ -138,13 +160,33 @@
         }
         this.visible = false;
       },
+      handleCloseTag(e, label) {
+        e.stopPropagation();
+        let tagValue = '';
+        for (let i = 0, len = this.options.length; i < len; i++) {
+          const option = this.options[i];
+          if (option.label === label) {
+            tagValue = option.value;
+            break;
+          }
+        }
+        const value = this.value.slice(0);
+        const index = value.indexOf(tagValue);
+        if (index > -1) {
+          value.splice(index, 1);
+        }
+        this.$emit('input', value);
+        if (this.$parent.$options.name === 'FjFormItem') {
+          this.$parent.$emit('form-change', value);
+        }
+      },
       resetInputWidth() {
         if (!this.visible) return;
-        this.inputWidth = this.$refs.reference.$el.getBoundingClientRect().width;
+        this.inputWidth = this.reference.getBoundingClientRect().width;
       },
       resetDropdownPosition() {
         if (!this.visible) return;
-        const referenceRect = this.$refs.reference.$el.getBoundingClientRect();
+        const referenceRect = this.reference.getBoundingClientRect();
         const bottom = window.innerHeight - referenceRect.top;
         if (referenceRect.top > bottom) {
           this.dropdownPosition = 'top';
@@ -162,15 +204,29 @@
         this.icon = 'icon-fill-bottom is-reverse';
       },
       handleOptionClick(option) {
-        this.$emit('input', option.value);
-        if (this.$parent.$options.name === 'FjFormItem') {
-          this.$parent.$emit('form-change', option.value);
-        }
-        this.visible = false;
-        // 如果为remote就触发搜索函数
-        if (this.remote) {
-          this.$emit('search', this.selectedLabel);
-          this.hoverIndex = -1;
+        if (this.multiple) {
+          const value = this.value.slice(0);
+          const index = value.indexOf(option.value);
+          if (index > -1) {
+            value.splice(index, 1);
+          } else {
+            value.push(option.value);
+          }
+          this.$emit('input', value);
+          if (this.$parent.$options.name === 'FjFormItem') {
+            this.$parent.$emit('form-change', value);
+          }
+        } else {
+          this.$emit('input', option.value);
+          if (this.$parent.$options.name === 'FjFormItem') {
+            this.$parent.$emit('form-change', option.value);
+          }
+          this.visible = false;
+          // 如果为remote就触发搜索函数
+          if (this.remote) {
+            this.$emit('search', this.selectedLabel);
+            this.hoverIndex = -1;
+          }
         }
       },
       navigateOptions(direction) {
@@ -194,13 +250,19 @@
         scrollIntoViewBottom(container, selected);
       },
       setSelected(inputVal = '') {
-        const option = this.getOption(this.value);
-        if (option) {
-          this.selected = option;
-          this.selectedLabel = option.label;
-        } else {
-          this.selectedLabel = this.remote ? inputVal : '';
-        }
+          const option = this.getOption(this.value);
+          if (this.multiple) {
+            this.selectedLabel = option.map(item => {
+              return item.label;
+            });
+          } else {
+            if (option) {
+              this.selected = option;
+              this.selectedLabel = option.label;
+            } else {
+              this.selectedLabel = this.remote ? inputVal : '';
+            }
+          }
       },
       selectOption() {
         if (this.options[this.hoverIndex]) {
@@ -216,18 +278,30 @@
       },
       resetHoverIndex() {
         setTimeout(() => {
-          this.hoverIndex = this.options.indexOf(this.selected);
+          this.hoverIndex = this.multiple ? -1 : this.options.indexOf(this.selected);
         }, 300);
       },
       getOption(value) {
         let option;
-        for (let i = this.options.length - 1; i >= 0; i--) {
-          const item = this.options[i];
-          if (item.value === value) {
-            option = item;
-            break;
+        if (this.multiple && (value instanceof Array)) {
+          option = [];
+          for (let i = this.options.length - 1; i >= 0; i--) {
+            const item = this.options[i];
+            const index = value.indexOf(item.value);
+            if (index > -1) {
+              option[index] = item;
+            }
+          }
+        } else {
+          for (let i = this.options.length - 1; i >= 0; i--) {
+            const item = this.options[i];
+            if (item.value === value) {
+              option = item;
+              break;
+            }
           }
         }
+
         return option;
       }
     },
@@ -235,7 +309,7 @@
       visible(val) {
         if (!val) {
           if (!this.remote) {
-            this.$refs.reference.$el.querySelector('input').blur();
+            if (this.reference.querySelector('input')) this.reference.querySelector('input').blur();
             this.handleIconHide();
             this.resetHoverIndex();
           }
@@ -274,7 +348,8 @@
     },
     components: {
       FjInput,
-      FjSelectDropdown
+      FjSelectDropdown,
+      FjTag
     },
     directives: { Clickoutside }
   };
