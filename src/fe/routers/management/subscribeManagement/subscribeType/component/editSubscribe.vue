@@ -4,6 +4,9 @@
           :visible.sync="dialogVisible"
           @close="close">
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="110px">
+      <fj-form-item label="标识" prop="_id">
+        <fj-input v-model="formData._id" :disabled="type==='edit'"></fj-input>
+      </fj-form-item>
       <fj-form-item label="名称" prop="name">
         <fj-input v-model="formData.name"></fj-input>
       </fj-form-item>
@@ -51,6 +54,9 @@
           description: ''
         },
         rules: {
+          _id: [
+            { required: true, message: '请输入标识' }
+          ],
           name: [
             { required: true, message: '请选择名字' }
           ],
@@ -127,7 +133,6 @@
       add() {
         this.isBtnLoading = true;
         const me = this;
-        delete this.formData._id;
         api.createSubscribeType(this.formData)
           .then((response) => {
             me.dialogVisible = false;

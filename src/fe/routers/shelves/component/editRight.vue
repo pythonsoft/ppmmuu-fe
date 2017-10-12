@@ -5,10 +5,10 @@
       <fj-form-item label="订阅类型" prop="subscribeType">
         <fj-select v-model="editorInfo.subscribeType">
           <fj-option
-                  v-for="(value, key) in subscribeType"
-                  :key="key"
-                  :value="key"
-                  :label="value"></fj-option>
+                  v-for="item in subscribeType"
+                  :key="item.key"
+                  :value="item.value"
+                  :label="item.label"></fj-option>
         </fj-select>
       </fj-form-item>
       <fj-form-item label="来源" prop="source">
@@ -28,12 +28,11 @@
 
 <script>
   import UploadImg from './uploadImg';
+  import { formatQuery } from '../../../common/utils';
+  import { getSubScribeTypeOptions } from '../../management/subscribeManagement/subscribeInfo/config';
 
-  const SUBSCRIBE_TYPE = {
-    '0': '政治',
-    '1': '体育',
-    '2': '娱乐'
-  }
+  const api = require('../../../api/shelves');
+
   export default {
     components: {
       'upload-img': UploadImg
@@ -43,7 +42,7 @@
     },
     data() {
       return {
-        subscribeType: SUBSCRIBE_TYPE,
+        subscribeType: [],
         rules: {
           subscribeType: [
             { required: true, message: '请选择订阅类型' },
@@ -61,11 +60,22 @@
       };
     },
     created() {
+      this.initSubScribeType();
     },
     methods: {
       imgChange(cover) {
         this.editorInfo.cover = cover;
-      }
+      },
+      initSubScribeType(){
+        const me = this;
+        api.listSubscribeType(formatQuery({}, true))
+          .then((res) => {
+            me.subscribeType = getSubScribeTypeOptions(res.data.docs);
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
     }
   }
 </script>
