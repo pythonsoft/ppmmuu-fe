@@ -37,7 +37,14 @@
           </template>
         </fj-table-column>
         <fj-table-column prop="code" width="100" label="编号"></fj-table-column>
-        <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="name" label="名称">
+          <template scope="props">
+            {{ props.row.name }}
+            <span v-if="props.row.installProgress && props.row.installProgress.percent !== 1" class="engine-install-status-tips">
+              ({{ props.row.installProgress.step }} {{ props.row.installProgress.percent * 100 }} %)
+            </span>
+          </template>
+        </fj-table-column>
         <fj-table-column prop="intranetIp" width="140" align="center" label="内网IP"></fj-table-column>
         <fj-table-column prop="isTest" width="90" align="center" label="测试机">
           <template scope="props">{{ getTextByValue(props.row.isTest, 'isTest') }}</template>
