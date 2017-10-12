@@ -1,6 +1,6 @@
 <template>
   <four-row-layout-right-content>
-    <template slot="search-left">订阅管理</template>
+    <template slot="search-left">订阅信息</template>
     <template slot="search-right">
       <div class="permission-search-item">
         <fj-select placeholder="请选择" v-model="status" size="small">
@@ -25,7 +25,7 @@
         <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length < 1" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="!canDelete" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -72,12 +72,12 @@
   </four-row-layout-right-content>
 </template>
 <script>
-  import { formatQuery, formatTime, transformSecondsToHours} from '../../../common/utils';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
+  import { formatQuery, formatTime, transformSecondsToHours} from '../../../../common/utils';
+  import FourRowLayoutRightContent from '../../../../component/layout/fourRowLayoutRightContent/index';
   import { STATUS, STATUS_OPTIONS, formatStatus, formatRows } from './config';
   import Edit from './component/editSubscribe';
 
-  const api = require('../../../api/subscribeManagement');
+  const api = require('../../../../api/subscribeManagement');
 
   export default {
     components: {
@@ -103,7 +103,9 @@
         editId: '',
         isUsing: false,
         selectedIds: [],
+        canDeleteIds: [],
         selectedRows: [],
+        canDelete: false,
         formatStatus: formatStatus,
         formatTime: formatTime
       };
@@ -181,7 +183,7 @@
         let apiFunc = '';
 
         postData = {
-          _ids: this.selectedIds.join(','),
+          _ids: this.canDeleteIds.join(','),
         };
         message = '删除';
         apiFunc = api.deleteSubscribeInfo;
@@ -200,12 +202,21 @@
       handleSelectionChange(rows) {
         this.selectedIds = [];
         this.selectedRows = [];
+        this.canDeleteIds = [];
+        this.canDelete = false;
         if (rows && rows.length) {
+          let flag = true;
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
             this.selectedRows.push(row);
+            if(row.status === STATUS.EXPIRED){
+              this.canDeleteIds.push(row._id);
+            }else{
+              flag = false;
+            }
           }
+          this.canDelete = flag;
         }
       },
       clearTableSelection() {

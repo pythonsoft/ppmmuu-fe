@@ -41,7 +41,7 @@
                 v-model="formData.startTime"
                 v-if="!isUsing"
         ></fj-date-picker>
-        <fj-input v-model="formData.startTime" :readonly="true" icon="icon-date" v-else></fj-input>
+        <fj-input :value="formatTime(formData.startTime)" :readonly="true" icon="icon-date" v-else></fj-input>
       </fj-form-item>
     </fj-form>
     <div slot="footer">
@@ -58,10 +58,10 @@
   </fj-slide-dialog>
 </template>
 <script>
-  import searchAddCompany from '../../role/searchAddUser';
-  import { formatQuery } from '../../../../common/utils';
+  import searchAddCompany from '../../../role/searchAddUser';
+  import { formatQuery, formatTime } from '../../../../../common/utils';
 
-  const api = require('../../../../api/subscribeManagement');
+  const api = require('../../../../../api/subscribeManagement');
   const config = require('../config');
 
   export default {
@@ -102,7 +102,12 @@
             { required: true, message: '请选择订阅类型' }
           ],
           downloadSeconds: [
-            { required: true, message: '请输入下载时长' }
+            { required: true, message: '请输入下载时长' },
+            { message: '下载时长格式有误,请重新输入数字', validator: (rule, value, callback) => {
+              value = value * 1;
+              if (isNaN(value)|| value.constructor.name.toLocaleLowerCase() !== 'number') return false;
+              return true;
+            } }
           ],
           periodOfUse: [
             { required: true, message: '请选择使用期限' }
@@ -124,6 +129,13 @@
           this.resetFormData();
         }
       },
+      id(val) {
+        if (this.type === 'edit' && this.dialogVisible === true) {
+          this.initEditUser();
+        } else {
+          this.resetFormData();
+        }
+      },
       visible(val) {
         if (val) {
           this.dialogVisible = true;
@@ -138,12 +150,14 @@
       }
     },
     created() {
-
     },
     methods: {
       initEditUser() {
         this.dialogVisible = true;
         const me = this;
+        this.rules['startTime'] = [
+          { required: true, message: '请选择开始时间' },
+        ];
         api.getSubscribeInfo({ params: { _id: this.id } })
           .then((res) => {
             me.formData = res.data;
@@ -163,6 +177,19 @@
           periodOfUse: '',
           startTime: ''
         };
+        if(this.type === 'add'){
+          this.rules['startTime'] = [
+            { required: true, message: '请选择开始时间' },
+            { message: '开始时间不得早于当前时间', validator: (rule, value, callback) => {
+              console.log(value);
+              if (new Date(value) < new Date()) return false;
+              return true;
+            } }];
+        }else{
+          this.rules['startTime'] = [
+            { required: true, message: '请选择开始时间' },
+          ]
+        }
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
@@ -234,7 +261,8 @@
       },
       handleTabClick() {
 
-      }
+      },
+      formatTime
     }
   };
 </script>

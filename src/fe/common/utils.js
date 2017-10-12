@@ -497,7 +497,7 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
       if (dateString.length === 1) {
         dateString = dateString[0].replace(/\\/g, '\/');
       }
-      let url = `${config.defaults.streamURL + dateString}/${fileName}`;
+      const url = `${config.defaults.streamURL + dateString}/${fileName}`;
       // if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
       //   if (t % 2 === 0) {
       //     url = '/static/video/test.mp4';
