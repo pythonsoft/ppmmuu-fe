@@ -54,6 +54,9 @@ const PersonalCatalogTask = resolve => require.ensure([], () => resolve(require(
 const SubscribeInfo = resolve => require.ensure([], () => resolve(require('./management/subscribeManagement/subscribeInfo')), 'SubscribeInfo');
 const SubscribeType = resolve => require.ensure([], () => resolve(require('./management/subscribeManagement/subscribeType')), 'SubscribeType');
 
+const AuditDownload = resolve => require.ensure([], () => resolve(require('./management/audit/download')), 'auditManager');
+const AuditEmpower = resolve => require.ensure([], () => resolve(require('./management/audit/empower')), 'auditEmpower');
+
 export default [{
   path: '/',
   component: Home,
@@ -81,7 +84,10 @@ export default [{
         { path: 'downloadTemplate', component: DownloadTemplate, meta: { title: '下载模板' }, name: 'downloadTemplate' },
         { path: 'transcodeTemplate', component: TranscodeTemplate, meta: { title: '转码模板' }, name: 'transcodeTemplate' },
         { path: 'subscribeInfo', component: SubscribeInfo, meta: { title: '订阅信息' }, name: 'subscribeInfo' },
-        { path: 'subscribeType', component: SubscribeType, meta: { title: '类型管理' }, name: 'subscribeType' }
+        { path: 'subscribeType', component: SubscribeType, meta: { title: '类型管理' }, name: 'subscribeType' },
+        { path: 'subscribeManagement', component: SubscribeManagement, meta: { title: '订阅管理' }, name: 'subscribeManagement' },
+        { path: 'auditDownload', component: AuditDownload, meta: { title: '下载审核' }, name: 'auditDownload' },
+        { path: 'auditEmpower', component: AuditEmpower, meta: { title: '下载审核' }, name: 'auditEmpower' },
       ]
     },
     {

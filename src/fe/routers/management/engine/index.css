@@ -47,3 +47,10 @@
 .engine-status-complete {
   background: #2EC4B6;
 }
+
+.engine-install-status-tips{
+  padding: 2px 8px;
+  background: #23a3f4;
+  color: #fff;
+  border-radius: 2px;
+}
