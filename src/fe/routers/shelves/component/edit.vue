@@ -76,17 +76,13 @@
           _id: me.shelfInfo._id,
           editorInfo: me.shelfInfo.editorInfo
         }
-        this.$refs.editRight.$refs.editorInfoForm.validate((valid) => {
-          if (valid) {
-            api.saveShelf(postData)
-              .then((res)=>{
-                me.showSuccessInfo('已保存');
-              })
-              .catch((error)=>{
-                me.showErrorInfo(error);
-              });
-          }
-        });
+        api.saveShelf(postData)
+          .then((res)=>{
+            me.showSuccessInfo('已保存');
+          })
+          .catch((error)=>{
+            me.showErrorInfo(error);
+          });
       },
       handleClickSubmit() {
         const me =this;
