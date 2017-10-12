@@ -69,6 +69,7 @@
     },
     methods: {
       close() {
+        this.keyword = '';
         this.$emit('update:visible', false);
       },
       searchOwnerClick() {
@@ -82,6 +83,7 @@
         this.searchOwnerCurrentRow = row;
       },
       addOwnerConfirm() {
+        this.keyword = '';
         this.$emit('add-owner', this.searchOwnerCurrentRow);
       },
       showErrorInfo(message) {

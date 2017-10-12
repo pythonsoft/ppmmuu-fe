@@ -1,9 +1,9 @@
 <template>
   <four-row-layout-right-content>
-    <template slot="search-left">订阅管理</template>
+    <template slot="search-left">订阅信息</template>
     <template slot="search-right">
       <div class="permission-search-item">
-        <fj-select placeholder="请选择" v-model="status" size="small">
+        <fj-select placeholder="请选择" v-model="status" size="small" multi>
           <fj-option
                   v-for="item in options"
                   :key="item.value"
@@ -22,10 +22,10 @@
     <template slot="operation">
       <div class="operation-btn-group">
         <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改订阅信息</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length < 1" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="selectedIds < 1" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -65,19 +65,19 @@
     <edit
             :title="editTitle"
             :type="type" :id="editId"
-            :isUsing="isUsing"
+            :status="currentStatus"
             :visible.sync="editDialogVisible"
             @updateList="handleClickSearch">
     </edit>
   </four-row-layout-right-content>
 </template>
 <script>
-  import { formatQuery, formatTime, transformSecondsToHours} from '../../../common/utils';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
+  import { formatQuery, formatTime, transformSecondsToHours} from '../../../../common/utils';
+  import FourRowLayoutRightContent from '../../../../component/layout/fourRowLayoutRightContent/index';
   import { STATUS, STATUS_OPTIONS, formatStatus, formatRows } from './config';
   import Edit from './component/editSubscribe';
 
-  const api = require('../../../api/subscribeManagement');
+  const api = require('../../../../api/subscribeManagement');
 
   export default {
     components: {
@@ -101,9 +101,10 @@
         type: '',
         editTitle: '',
         editId: '',
-        isUsing: false,
+        currentStatus: '',
         selectedIds: [],
         selectedRows: [],
+        canDelete: false,
         formatStatus: formatStatus,
         formatTime: formatTime
       };
@@ -148,20 +149,20 @@
       handleClickAdd() {
         this.type = 'add';
         this.editTitle = '增加订阅信息';
-        this.isUsing = false;
+        this.currentStatus = '';
         this.editId = '';
         this.editDialogVisible = true;
       },
       handleClickEdit() {
         const currentRow = this.selectedRows[0];
         this.type = 'edit';
-        this.editTitle = '订阅/修改信息';
-        this.isUsing = currentRow.status === STATUS.USING;
+        this.editTitle = '修改订阅信息';
+        this.currentStatus = currentRow.status;
         this.editId = currentRow._id;
         this.editDialogVisible = true;
       },
       handleClickDelete() {
-        this.dialogMessage = '您确定要删除这些订阅信息吗?';
+        this.dialogMessage = '删除订阅信息后账号将不能使用，您确定要删除吗?';
         this.dialogVisible = true;
       },
       resetDialog() {
@@ -201,6 +202,7 @@
         this.selectedIds = [];
         this.selectedRows = [];
         if (rows && rows.length) {
+          let flag = true;
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
