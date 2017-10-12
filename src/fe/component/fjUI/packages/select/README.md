@@ -3,6 +3,7 @@
 ### attributes
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
+| multiple | 是否多选(value为数组，暂不支持键盘事件) | boolean | — | false | ✅ |
 | size | 尺寸 | string | large,small,mini | - | (同input) |
 | placeholder | 输入框占位 | string | — | - | ✅ |
 | disabled | 禁用 | boolean | — | false | ✅ |
