@@ -383,8 +383,6 @@
         const templateInfo = rs[type];
         const transferParams = rs[type + '_info'];
 
-        console.log('download -->', rs, type, transferParams);
-
         const param = {
           objectid: this.fileInfo.OBJECTID,
           inpoint: this.fileInfo.INPOINT,
