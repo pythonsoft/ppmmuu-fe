@@ -43,7 +43,7 @@
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
-        <fj-table-column prop="fileName" label="名称"></fj-table-column>
+        <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>

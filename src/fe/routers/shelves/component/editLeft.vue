@@ -230,7 +230,7 @@
     color: #2A3E52;
     width: 100%;
     height: 600px;
-    overflow: scroll;
+    overflow: auto;
     position: relative;
     box-sizing: border-box;
   }
