@@ -85,7 +85,6 @@ export default [{
         { path: 'transcodeTemplate', component: TranscodeTemplate, meta: { title: '转码模板' }, name: 'transcodeTemplate' },
         { path: 'subscribeInfo', component: SubscribeInfo, meta: { title: '订阅信息' }, name: 'subscribeInfo' },
         { path: 'subscribeType', component: SubscribeType, meta: { title: '类型管理' }, name: 'subscribeType' },
-        { path: 'subscribeManagement', component: SubscribeManagement, meta: { title: '订阅管理' }, name: 'subscribeManagement' },
         { path: 'auditDownload', component: AuditDownload, meta: { title: '下载审核' }, name: 'auditDownload' },
         { path: 'auditEmpower', component: AuditEmpower, meta: { title: '下载审核' }, name: 'auditEmpower' },
       ]

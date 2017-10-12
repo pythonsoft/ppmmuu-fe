@@ -90,10 +90,10 @@
       }
     },
     created() {
-      this.$refs.editForm.clearErrors();
     },
     methods: {
       initEditUser() {
+        this.$refs.editForm.clearErrors();
         this.dialogVisible = true;
         const me = this;
         api.getSubscribeType({ params: { _id: this.id } })
@@ -105,6 +105,7 @@
           });
       },
       resetFormData() {
+        this.$refs.editForm.clearErrors();
         this.formData = {
           _id: '',
           name: '',

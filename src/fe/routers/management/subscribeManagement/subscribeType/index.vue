@@ -114,7 +114,6 @@
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
-            formatRows(me.tableData);
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;

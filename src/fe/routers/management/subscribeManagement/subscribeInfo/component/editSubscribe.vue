@@ -14,10 +14,10 @@
                   v-for="item in SUBSCRIBE_TYPE"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
+                  :value="item.key">
           </fj-option>
         </fj-select>
-        <div class="subscribe-type-tag" v-else><fj-tag v-for="tag in formData.subscribeType">{{getLabelByValue(tag, SUBSCRIBE_TYPE)}}</fj-tag></div>
+        <div class="subscribe-type-tag" v-else><fj-tag v-for="tag in formData.subscribeType" :key="tag">{{getLabelByValue(tag, SUBSCRIBE_TYPE)}}</fj-tag></div>
       </fj-form-item>
       <fj-form-item label="下载时长" prop="downloadSeconds">
         <div class="group-input">
