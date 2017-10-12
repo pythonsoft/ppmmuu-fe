@@ -9,7 +9,7 @@
       </template>
     </div>
     <input id="img-input" accept="image/gif,image/png,image/jpeg,image/bmp" class="upload-img-input" @change='chooseImg' type="file">
-    <label for="img-input" class="upload-img-content-change">修改头像</label>
+    <label for="img-input" class="upload-img-content-change">{{changeTitle}}</label>
   </div>
 </template>
 <script>
@@ -25,6 +25,10 @@
       maxSize: {
         type: Number,
         default: 5
+      },
+      changeTitle: {
+        type: String,
+        default: '修改头像'
       }
     },
     data() {

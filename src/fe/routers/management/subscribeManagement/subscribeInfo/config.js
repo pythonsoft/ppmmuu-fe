@@ -39,6 +39,15 @@ const PERIOD_OF_USE = [
   { value: 120, label: '10年' }
 ];
 
+config.getLabelByValue = function getLabelByValue(val, options) {
+  for (let i = 0, len = options.length; i < len; i++) {
+    if (val === options[i].value) {
+      return options[i].label;
+    }
+  }
+  return '';
+};
+
 config.formatRows = function formatRows(rows) {
   for (let i = 0, len = rows.length; i < len; i++) {
     const row = rows[i];
@@ -51,6 +60,15 @@ config.formatRows = function formatRows(rows) {
       row.status = '1';
     }
   }
+};
+
+config.getSubScribeTypeOptions = function getSubScribeTypeOptions(rows) {
+  const options = [];
+  rows.forEach((item) => {
+    const option = { value: item.name, label: item.name, key: item._id };
+    options.push(option);
+  });
+  return options;
 };
 
 config.STATUS = STATUS;
