@@ -90,7 +90,7 @@
       }
     },
     created() {
-
+      this.$refs.editForm.clearErrors();
     },
     methods: {
       initEditUser() {

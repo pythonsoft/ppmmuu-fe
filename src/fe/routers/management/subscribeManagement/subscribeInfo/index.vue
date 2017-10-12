@@ -3,7 +3,7 @@
     <template slot="search-left">订阅信息</template>
     <template slot="search-right">
       <div class="permission-search-item">
-        <fj-select placeholder="请选择" v-model="status" size="small">
+        <fj-select placeholder="请选择" v-model="status" size="small" multi>
           <fj-option
                   v-for="item in options"
                   :key="item.value"
@@ -25,7 +25,7 @@
         <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="!canDelete" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="selectedIds < 1" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -65,7 +65,7 @@
     <edit
             :title="editTitle"
             :type="type" :id="editId"
-            :isUsing="isUsing"
+            :status="currentStatus"
             :visible.sync="editDialogVisible"
             @updateList="handleClickSearch">
     </edit>
@@ -101,9 +101,8 @@
         type: '',
         editTitle: '',
         editId: '',
-        isUsing: false,
+        currentStatus: '',
         selectedIds: [],
-        canDeleteIds: [],
         selectedRows: [],
         canDelete: false,
         formatStatus: formatStatus,
@@ -150,7 +149,7 @@
       handleClickAdd() {
         this.type = 'add';
         this.editTitle = '增加订阅信息';
-        this.isUsing = false;
+        this.currentStatus = '';
         this.editId = '';
         this.editDialogVisible = true;
       },
@@ -158,12 +157,12 @@
         const currentRow = this.selectedRows[0];
         this.type = 'edit';
         this.editTitle = '修改订阅信息';
-        this.isUsing = currentRow.status === STATUS.USING;
+        this.currentStatus = currentRow.status;
         this.editId = currentRow._id;
         this.editDialogVisible = true;
       },
       handleClickDelete() {
-        this.dialogMessage = '您确定要删除这些订阅信息吗?';
+        this.dialogMessage = '删除订阅信息后账号将不能使用，您确定要删除吗?';
         this.dialogVisible = true;
       },
       resetDialog() {
@@ -183,7 +182,7 @@
         let apiFunc = '';
 
         postData = {
-          _ids: this.canDeleteIds.join(','),
+          _ids: this.selectedIds.join(','),
         };
         message = '删除';
         apiFunc = api.deleteSubscribeInfo;
@@ -202,21 +201,13 @@
       handleSelectionChange(rows) {
         this.selectedIds = [];
         this.selectedRows = [];
-        this.canDeleteIds = [];
-        this.canDelete = false;
         if (rows && rows.length) {
           let flag = true;
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
             this.selectedRows.push(row);
-            if(row.status === STATUS.EXPIRED){
-              this.canDeleteIds.push(row._id);
-            }else{
-              flag = false;
-            }
           }
-          this.canDelete = flag;
         }
       },
       clearTableSelection() {

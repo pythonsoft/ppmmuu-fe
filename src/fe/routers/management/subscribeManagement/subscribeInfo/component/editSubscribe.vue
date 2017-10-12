@@ -5,11 +5,11 @@
           @close="close">
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="110px">
       <fj-form-item label="公司名称" prop="companyName">
-        <fj-input v-model="formData.companyName" :readonly="true" icon="icon-gongsi" @focus="addCompanyDialogVisible=true" @on-icon-click="addCompanyDialogVisible=true" v-if="type === 'add'"></fj-input>
-        <fj-input v-model="formData.companyName" :readonly="true" icon="icon-gongsi" v-else></fj-input>
+        <fj-input v-model="formData.companyName" icon="icon-gongsi" @focus="addCompanyDialogVisible=true" @on-icon-click="addCompanyDialogVisible=true" v-if="type === 'add'"></fj-input>
+        <fj-input v-model="formData.companyName" :disabled="true" icon="icon-gongsi" v-else></fj-input>
       </fj-form-item>
       <fj-form-item label="订阅类型" prop="subscribeType">
-        <fj-select placeholder="请选择" v-model="formData.subscribeType">
+        <fj-select placeholder="请选择" v-model="formData.subscribeType" multiple v-if="status !== STATUS.EXPIRED">
           <fj-option
                   v-for="item in SUBSCRIBE_TYPE"
                   :key="item.value"
@@ -17,15 +17,16 @@
                   :value="item.value">
           </fj-option>
         </fj-select>
+        <div class="subscribe-type-tag" v-else><fj-tag v-for="tag in formData.subscribeType">{{getLabelByValue(tag, SUBSCRIBE_TYPE)}}</fj-tag></div>
       </fj-form-item>
       <fj-form-item label="下载时长" prop="downloadSeconds">
         <div class="group-input">
-          <fj-input v-model="formData.downloadSeconds"></fj-input>
+          <fj-input v-model="formData.downloadSeconds" :disabled="status === STATUS.EXPIRED"></fj-input>
         </div>
         <div class="group-input-unit">小时</div>
       </fj-form-item>
       <fj-form-item label="使用期限" prop="periodOfUse">
-        <fj-select placeholder="请选择" v-model="formData.periodOfUse">
+        <fj-select placeholder="请选择" v-model="formData.periodOfUse" :disabled="status === STATUS.EXPIRED">
           <fj-option
                   v-for="item in PERIOD_OF_USE"
                   :key="item.value"
@@ -36,17 +37,17 @@
       </fj-form-item>
       <fj-form-item label="开始时间" prop="startTime">
         <fj-date-picker
-                type="date"
+                type="datetime"
                 placeholder="请选择开始时间"
                 v-model="formData.startTime"
-                v-if="!isUsing"
+                v-if="this.status == STATUS.UNUSED || this.type === 'add'"
         ></fj-date-picker>
-        <fj-input :value="formatTime(formData.startTime)" :readonly="true" icon="icon-date" v-else></fj-input>
+        <fj-input :value="formatTime(formData.startTime)" :disabled="true" icon="icon-date" v-else></fj-input>
       </fj-form-item>
     </fj-form>
     <div slot="footer">
       <fj-button @click="close">取消</fj-button>
-      <fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
+      <fj-button type="primary" :loading="isBtnLoading" @click="submitForm" v-if="status !== STATUS.EXPIRED">保存</fj-button>
     </div>
     <search-add-company
             :visible.sync="addCompanyDialogVisible"
@@ -60,6 +61,7 @@
 <script>
   import searchAddCompany from '../../../role/searchAddUser';
   import { formatQuery, formatTime } from '../../../../../common/utils';
+  import { getLabelByValue, getSubScribeTypeOptions } from '../config';
 
   const api = require('../../../../../api/subscribeManagement');
   const config = require('../config');
@@ -69,9 +71,8 @@
       type: String,
       title: String,
       id: String,
-      isUsing: {
-        type: Boolean,
-        default: false
+      status: {
+        type: String
       },
       visible: {
         type: Boolean,
@@ -84,12 +85,14 @@
     data() {
       return {
         isBtnLoading: false,
-        SUBSCRIBE_TYPE: config.SUBSCRIBE_TYPE,
+        SUBSCRIBE_TYPE: [],
         PERIOD_OF_USE: config.PERIOD_OF_USE,
+        STATUS: config.STATUS,
+        oldExpiredTime: '',
         formData: {
           _id: '',
           companyName: '',
-          subscribeType: '',
+          subscribeType: [],
           downloadSeconds: '',
           periodOfUse: '',
           startTime: ''
@@ -99,7 +102,11 @@
             { required: true, message: '请选择公司' }
           ],
           subscribeType: [
-            { required: true, message: '请选择订阅类型' }
+            { required: true, message: '请选择订阅类型' },
+            { message: '请选择订阅类型', validator: (rule, value, callback) => {
+              if (!value || value.length === 0) return false;
+              return true;
+            } }
           ],
           downloadSeconds: [
             { required: true, message: '请输入下载时长' },
@@ -150,46 +157,63 @@
       }
     },
     created() {
+      this.initSubScribeType();
     },
     methods: {
       initEditUser() {
+        this.$refs.editForm.clearErrors();
         this.dialogVisible = true;
         const me = this;
-        this.rules['startTime'] = [
-          { required: true, message: '请选择开始时间' },
-        ];
-        api.getSubscribeInfo({ params: { _id: this.id } })
+        if(this.status === this.STATUS.USING || this.status === this.STATUS.EXPIRED) {
+          this.rules['startTime'] = [
+            {required: true, message: '请选择开始时间'},
+          ];
+        }else{
+          this.rules['startTime'] = [
+            { required: true, message: '请选择开始时间' },
+            { message: '开始时间不得早于当前时间', validator: (rule, value, callback) => {
+              if (new Date(value) < new Date()) return false;
+              return true;
+            } }];
+        }
+        api.getSubscribeInfo(formatQuery({ _id: this.id }, true))
           .then((res) => {
             me.formData = res.data;
-            me.formData.subscribeType = me.formData.subscribeType.join(',');
             me.formData.downloadSeconds = me.formData.downloadSeconds/(60*60);
+            me.oldStartTime = res.data.startTime;
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      initSubScribeType(){
+        const query = { pageSize: 999 };
+        const me = this;
+        api.listSubscribeType(formatQuery(query, true))
+          .then((res) => {
+            me.SUBSCRIBE_TYPE = getSubScribeTypeOptions(res.data.docs);
           })
           .catch((error) => {
             this.$message.error(error);
           });
       },
       resetFormData() {
+        this.$refs.editForm.clearErrors();
         this.formData = {
           _id: '',
           companyName: '',
-          subscribeType: '',
+          subscribeType: [],
           downloadSeconds: '',
           periodOfUse: '',
           startTime: ''
         };
-        if(this.type === 'add'){
-          this.rules['startTime'] = [
-            { required: true, message: '请选择开始时间' },
-            { message: '开始时间不得早于当前时间', validator: (rule, value, callback) => {
-              console.log(value);
-              if (new Date(value) < new Date()) return false;
-              return true;
-            } }];
-        }else{
-          this.rules['startTime'] = [
-            { required: true, message: '请选择开始时间' },
-          ]
-        }
+        this.rules['startTime'] = [
+          { required: true, message: '请选择开始时间' },
+          { message: '开始时间不得早于当前时间', validator: (rule, value, callback) => {
+            console.log(value);
+            if (new Date(value) < new Date()) return false;
+            return true;
+          } }];
       },
       submitForm() {
         this.$refs.editForm.validate((valid) => {
@@ -205,8 +229,6 @@
       add() {
         this.isBtnLoading = true;
         const me = this;
-        this.formData.subscribeType = this.formData.subscribeType.split(',');
-
         api.createSubscribeInfo(this.formData)
           .then((response) => {
             me.dialogVisible = false;
@@ -224,7 +246,6 @@
       edit() {
         this.isBtnLoading = true;
         const me = this;
-        this.formData.subscribeType = this.formData.subscribeType.split(',');
         api.updateSubscribeInfo(this.formData)
           .then((response) => {
             me.dialogVisible  = false;
@@ -262,7 +283,8 @@
       handleTabClick() {
 
       },
-      formatTime
+      formatTime,
+      getLabelByValue
     }
   };
 </script>
@@ -278,6 +300,14 @@
     text-align: center;
     border: 1px solid #CED9E5;
     border-radius: 4px;
+  }
+
+  .subscribe-type-tag {
+    padding-top: 5px;
+  }
+
+  .subscribe-type-tag .fj-tag {
+    background-color: #F4F4F4;
   }
 </style>
 
