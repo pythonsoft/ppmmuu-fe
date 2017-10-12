@@ -42,7 +42,7 @@
       </div>
 
     </fj-dialog>
-    <add-user :visible.sync="assignDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick" title="添加用户"></add-user>
+    <add-user :visible.sync="assignDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick" title="选择用户"></add-user>
   </four-row-layout-right-content>
 </template>
 <script>

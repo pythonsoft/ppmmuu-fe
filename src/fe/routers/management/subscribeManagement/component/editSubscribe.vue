@@ -5,7 +5,7 @@
           @close="close">
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="110px">
       <fj-form-item label="公司名称" prop="companyName">
-        <fj-input v-model="formData.companyName" :readonly="true" icon="icon-gongsi" @on-icon-click="addCompanyDialogVisible=true" v-if="type === 'add'"></fj-input>
+        <fj-input v-model="formData.companyName" :readonly="true" icon="icon-gongsi" @focus="addCompanyDialogVisible=true" @on-icon-click="addCompanyDialogVisible=true" v-if="type === 'add'"></fj-input>
         <fj-input v-model="formData.companyName" :readonly="true" icon="icon-gongsi" v-else></fj-input>
       </fj-form-item>
       <fj-form-item label="订阅类型" prop="subscribeType">
@@ -53,7 +53,7 @@
             @add-owner="addOwner"
             :searchOwner="searchOwner"
             @search-user-api="searchOwnerClick"
-            title="添加用户">
+            title="添加公司">
     </search-add-company>
   </fj-slide-dialog>
 </template>

@@ -80,7 +80,7 @@
           if (valid) {
             api.saveShelf(postData)
               .then((res)=>{
-                me.showSuccessInfo('保存成功');
+                me.showSuccessInfo('已保存');
               })
               .catch((error)=>{
                 me.showErrorInfo(error);

@@ -22,7 +22,7 @@
     <template slot="operation">
       <div class="operation-btn-group">
         <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改订阅信息</fj-button>
+        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改</fj-button>
       </div>
       <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length < 1" @click="handleClickDelete">删除</fj-button>
@@ -155,7 +155,7 @@
       handleClickEdit() {
         const currentRow = this.selectedRows[0];
         this.type = 'edit';
-        this.editTitle = '订阅/修改信息';
+        this.editTitle = '修改订阅信息';
         this.isUsing = currentRow.status === STATUS.USING;
         this.editId = currentRow._id;
         this.editDialogVisible = true;
