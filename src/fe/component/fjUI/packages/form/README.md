@@ -13,6 +13,7 @@
 | 事件名称 | 说明 | 参数 | 实现 |
 |---------|--------|---------|-------- |
 | validate | 对表单进行校验的方法 | Function(callback:Function(boolean)) | ✅ |
+| clearErrors | 清除表单错误提示 | Function() | ✅ |
 
 ## form-item
 

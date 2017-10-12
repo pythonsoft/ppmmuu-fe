@@ -93,6 +93,9 @@
     methods: {
       inputValueChange(val) {
         this.$emit('input', val);
+        if (this.$parent.$options.name === 'FjFormItem') {
+          this.$parent.$emit('form-change', val);
+        }
         if (val.length > 0) {
           // this.remoteMethod(val);
           this.visible = false;
@@ -130,6 +133,9 @@
       deleteSelected(e) {
         e.stopPropagation();
         this.$emit('input', '');
+        if (this.$parent.$options.name === 'FjFormItem') {
+          this.$parent.$emit('form-change', '');
+        }
         this.visible = false;
       },
       resetInputWidth() {
@@ -157,6 +163,9 @@
       },
       handleOptionClick(option) {
         this.$emit('input', option.value);
+        if (this.$parent.$options.name === 'FjFormItem') {
+          this.$parent.$emit('form-change', option.value);
+        }
         this.visible = false;
         // 如果为remote就触发搜索函数
         if (this.remote) {
@@ -242,9 +251,6 @@
       },
       value(val) {
         this.setSelected(val);
-        if (this.$parent.$options.name === 'FjFormItem') {
-          this.$parent.$emit('form-change', val);
-        }
       },
       options(val) {
         this.setSelected();

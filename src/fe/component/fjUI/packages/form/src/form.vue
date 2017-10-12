@@ -36,6 +36,12 @@
           });
         });
         callback && callback(valid);
+      },
+      clearErrors() {
+        if (this.fields.length === 0) return;
+        this.fields.forEach((field, index) => {
+          field.clearErrors();
+        });
       }
     },
     created() {

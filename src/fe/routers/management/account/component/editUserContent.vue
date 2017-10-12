@@ -137,6 +137,7 @@
         } else {
           this.initEditUser();
         }
+        this.$refs.editUserForm.clearErrors();
       },
       visible(val) {
         if (val && this.type === 'edit') {
