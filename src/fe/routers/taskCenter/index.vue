@@ -29,7 +29,9 @@
 </template>
 <script>
   const menu = [
-    { text: '下载任务', index: 'taskDownload', route: 'taskDownload' }
+    { text: '全部', index: 'task_download_all', route: 'task_download_all' },
+    { text: '已完成', index: 'task_download_complete', route: 'task_download_complete' },
+    { text: '错误', index: 'task_download_error', route: 'task_download_error' }
   ];
   export default {
     data() {

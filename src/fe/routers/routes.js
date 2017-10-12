@@ -161,12 +161,14 @@ export default [{
     },
     {
       path: 'taskCenter',
-      redirect: 'taskCenter/taskDownload',
+      redirect: 'taskCenter/task_download_all',
       component: TaskCenter,
       name: 'taskCenter',
       meta: { title: '任务' },
       children: [
-        { path: 'taskDownload', component: TaskDownload, meta: { title: '下载任务' }, name: 'taskDownload' }
+        { path: 'task_download_all', component: TaskDownload, meta: { title: '全部' }, name: 'task_download_all' },
+        { path: 'task_download_complete', component: TaskDownload, meta: { title: '已完成' }, name: 'task_download_complete' },
+        { path: 'task_download_error', component: TaskDownload, meta: { title: '错误' }, name: 'task_download_error' }
       ]
     }
   ]
