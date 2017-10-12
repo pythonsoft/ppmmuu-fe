@@ -56,6 +56,7 @@
       index: 'auditManager',
       children: [
         { text: '下载审核', index: 'auditDownload', route: 'auditDownload' },
+        { text: '审核授权', index: 'auditEmpower', route: 'auditEmpower' },
       ] },
     { title: '模板管理',
       index: 'templateManager',
