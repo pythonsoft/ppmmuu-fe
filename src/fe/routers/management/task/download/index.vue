@@ -20,21 +20,15 @@
       <!--</div>-->
     </template>
     <template slot="operation">
-      <span class="layout-btn-mini-margin">
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
-      </span>
-      <span class="layout-btn-margin">
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
-      </span>
-      <span class="layout-btn-mini-margin">
         <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
-      </span>
+      </div>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
@@ -43,7 +37,7 @@
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
-        <fj-table-column prop="fileName" label="名称"></fj-table-column>
+        <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="userName" width="140" label="用户名">
           <template scope="props">{{ props.row.userName || '-' }}</template>
         </fj-table-column>

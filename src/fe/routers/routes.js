@@ -51,6 +51,8 @@ const Library = resolve => require.ensure([], () => resolve(require('./library/i
 const DepartmentCatalogTask = resolve => require.ensure([], () => resolve(require('./library/departmentCatalogTask')), 'library');
 const PersonalCatalogTask = resolve => require.ensure([], () => resolve(require('./library/personalCatalogTask')), 'library');
 
+const SubscribeManagement = resolve => require.ensure([], () => resolve(require('./management/subscribeManagement')), 'subscribeManagement');
+
 export default [{
   path: '/',
   component: Home,
@@ -76,7 +78,8 @@ export default [{
         { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
         { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' },
         { path: 'downloadTemplate', component: DownloadTemplate, meta: { title: '下载模板' }, name: 'downloadTemplate' },
-        { path: 'transcodeTemplate', component: TranscodeTemplate, meta: { title: '转码模板' }, name: 'transcodeTemplate' }
+        { path: 'transcodeTemplate', component: TranscodeTemplate, meta: { title: '转码模板' }, name: 'transcodeTemplate' },
+        { path: 'subscribeManagement', component: SubscribeManagement, meta: { title: '订阅管理' }, name: 'subscribeManagement' }
       ]
     },
     {
@@ -153,12 +156,14 @@ export default [{
     },
     {
       path: 'taskCenter',
-      redirect: 'taskCenter/taskDownload',
+      redirect: 'taskCenter/task_download_all',
       component: TaskCenter,
       name: 'taskCenter',
       meta: { title: '任务' },
       children: [
-        { path: 'taskDownload', component: TaskDownload, meta: { title: '下载任务' }, name: 'taskDownload' }
+        { path: 'task_download_all', component: TaskDownload, meta: { title: '全部' }, name: 'task_download_all' },
+        { path: 'task_download_complete', component: TaskDownload, meta: { title: '已完成' }, name: 'task_download_complete' },
+        { path: 'task_download_error', component: TaskDownload, meta: { title: '错误' }, name: 'task_download_error' }
       ]
     }
   ]

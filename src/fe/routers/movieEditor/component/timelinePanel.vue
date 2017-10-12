@@ -92,7 +92,6 @@
         currentSequenceIndex: 0,
         dpr: 1,
         downloadDialogDisplay: false,
-        templateInfo: {}
       };
     },
     computed: {
@@ -113,28 +112,38 @@
       this.dpr = window.devicePixelRatio;
     },
     methods: {
-      downloadListConfirm(templateInfo) {
-        this.templateInfo = templateInfo || {};
-        if (!isEmptyObject(templateInfo)) {
-          this.download();
+      downloadListConfirm(rs, type) {
+        if (!isEmptyObject(rs)) {
+          this.download(rs, type);
         }
       },
-      download() {
+      download(rs, type) {
         if (this.sequences.length === 0 || this.currentSequenceIndex < 0) return;
         const item = this.sequences[this.currentSequenceIndex];
+        const templateInfo = rs[type];
+        const transferParams = rs[type + '_info'];
+
         const param = {
           objectid: item.objectId,
           inpoint: Math.floor(item.range[0] * 25),
           outpoint: Math.floor(item.range[1] * 25),
           filename: item.title,
           filetypeid: item.filetypeid,
-          templateId: this.templateInfo._id
+          templateId: templateInfo._id
         };
+
+        if(transferParams) {
+          param.receiverId = transferParams.acceptor._id;
+          param.receiverType = transferParams.acceptor.targetType;
+        }
+
         jobAPI.download(param).then((res) => {
           this.$message.success('正在下载文件，请到"任务"查看详细情况');
         }).catch((error) => {
           this.$message.error(error);
         });
+
+        return false;
       },
       resize(parentSize) {
         const width = this.size.width - TIMELINE_CONFIG.marginLeft;

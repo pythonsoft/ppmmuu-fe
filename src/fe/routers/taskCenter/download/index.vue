@@ -1,8 +1,8 @@
 <template>
   <layout-four-row>
-    <template slot="search-left">下载任务</template>
+    <template slot="search-left">下载任务({{ title }})</template>
     <template slot="search-right">
-      <div class="layout-four-row-search-item" :style="{ width: '88px' }">
+      <div v-if="isShowSelect" class="layout-four-row-search-item" :style="{ width: '88px' }">
         <fj-select size="small" placeholder="请选择" v-model="formData.status">
           <fj-option
             v-for="item in status"
@@ -43,7 +43,7 @@
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
-        <fj-table-column prop="fileName" label="名称"></fj-table-column>
+        <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
@@ -100,6 +100,8 @@
         isDisabled: true,
         stopDisable: true,
         restartDisable: true,
+        title: '',
+        isShowSelect: true,
 
         status: config.getConfig('DOWNLOAD_STATUS'),
         formData: {
@@ -128,14 +130,38 @@
       };
     },
     created() {
-      this.listTask();
+      this.updateStatus();
+      // this.listTask();
       this.runTimer = true;
       this.autoRefreshList();
+    },
+    watch: {
+      '$route.path'(val) {
+        this.updateStatus();
+      },
     },
     destroyed() {
       this.runTimer = false;
     },
     methods: {
+      updateStatus() {
+        const keys = Object.keys(this.status);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (this.$route.name.indexOf(key.toLowerCase()) > -1) {
+            if (key === 'all') {
+              this.isShowSelect = true;
+            } else {
+              this.isShowSelect = false;
+            }
+            this.formData.status = this.status[key].value;
+            this.title = this.status[key].text;
+            this.page = 1;
+            this.listTask();
+            break;
+          }
+        }
+      },
       handleClickSearch() {
         this.listTask();
       },

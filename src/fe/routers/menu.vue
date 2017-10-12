@@ -43,6 +43,7 @@
   import Vue from 'vue';
   import ProfilePopover from './profilePopover';
   import Clickoutside from '../component/fjUI/utils/clickoutside';
+  import { getItemFromLocalStorage } from '../common/utils';
 
   const config = require('../config');
   const api = require('../api/user');
@@ -79,7 +80,7 @@
       };
     },
     created() {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      this.userInfo = getItemFromLocalStorage('userInfo');
       this.getMenu();
       this.defaultRoute = this.getActiveRoute(this.$route.path, 1);
     },

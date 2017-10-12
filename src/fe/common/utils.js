@@ -369,6 +369,25 @@ utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 
   return result;
 };
 
+utils.transformSecondsToHours = function transformSecondsToHours(time = 0, format = 'HH:mm:ss:ff', fps = 25) {
+  if (time < 0) time = 0;
+  const hours = Math.floor(time / (60 * 60));
+  time %= (60 * 60);
+  const minutes = Math.floor(time / 60);
+  time %= 60;
+  const seconds = Math.floor(time);
+
+  let rs = `${hours}小时`;
+  if (minutes) {
+    rs += `${minutes}分`;
+  }
+  if (seconds) {
+    rs += `${seconds}秒`;
+  }
+
+  return rs;
+};
+
 utils.formatSize = function formatSize(size) {
   let str = '';
   if (size < 1000) {
@@ -466,7 +485,7 @@ utils.getSRT = function (objectId, cb, scope, fps = 25) {
   });
 };
 
-let t = 0;
+// let t = 0;
 
 utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
   mediaAPI.getStream({ params: { objectid: objectId } }, scope).then((res) => {
@@ -479,15 +498,15 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
         dateString = dateString[0].replace(/\\/g, '\/');
       }
       let url = `${config.defaults.streamURL + dateString}/${fileName}`;
-      if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
-        if (t % 2 === 0) {
-          url = '/static/video/test.mp4';
-        } else {
-          url = '/static/video/test_1.mp4';
-        }
-
-        t++;
-      }
+      // if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
+      //   if (t % 2 === 0) {
+      //     url = '/static/video/test.mp4';
+      //   } else {
+      //     url = '/static/video/test_1.mp4';
+      //   }
+      //
+      //   t++;
+      // }
       cb && cb(null, url, res);
     }
   }).catch((error) => {
