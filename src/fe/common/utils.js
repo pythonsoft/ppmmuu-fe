@@ -517,10 +517,12 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
 utils.getItemFromLocalStorage = function getItemFromLocalStorage(key, scope) {
   try {
     const item = JSON.parse(localStorage.getItem(key));
+    if(!item && scope){
+      window.location.href = '/login';
+    }
     return item;
   } catch (e) {
     if (scope) {
-      scope.$message.error('请重新登录');
       window.location.href = '/login';
     }
   }
