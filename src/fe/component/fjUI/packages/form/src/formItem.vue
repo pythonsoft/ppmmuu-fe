@@ -65,6 +65,10 @@
       onFieldBlur() {
         this.validate('blur');
       },
+      clearErrors() {
+        this.validateMessage = '';
+        this.showMessage = false;
+      },
       validate(trigger, callback = function () {}) {
         const rules = this.getFilteredRule(trigger);
         if (!rules || rules.length === 0) {
