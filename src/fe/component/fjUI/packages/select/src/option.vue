@@ -28,6 +28,9 @@
       },
       itemSelected() {
         const value = this.parent.value || '';
+        if (value instanceof Array) {
+          return value.indexOf(this.value) > -1;
+        }
         return value === this.value;
       },
       itemHovering() {

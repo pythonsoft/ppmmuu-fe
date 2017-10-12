@@ -2,7 +2,7 @@
   <transition :name="transitionName">
     <div
       ref="dropdown"
-      class="fj-select-dropdown"
+      :class="['fj-select-dropdown clearfix', {'multiple': multiple}]"
       :style="{
         'minWidth': minWidth + 'px',
         'top': top + 'px'
@@ -20,7 +20,8 @@
       },
       position: {
         default: 'bottom'
-      }
+      },
+      multiple: Boolean
     },
     data() {
       return {
