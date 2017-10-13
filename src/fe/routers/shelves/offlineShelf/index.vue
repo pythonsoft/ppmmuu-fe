@@ -45,7 +45,7 @@
             btnType="info"
             :title="videoTitle"
             :programNO="programNO"
-            :editorInfo="editorInfo"
+            :id="editId"
             :objectId="objectId"
             :visible.sync="detailDialogVisible"
             @operation-click="editShelfAgain">
@@ -70,7 +70,6 @@
         defaultRoute: '/',
         dialogVisible: false,
         detailDialogVisible: false,
-        editorInfo: {},
         dialogMessage: '',
         departmentId: '',
         operation: '',
@@ -83,6 +82,7 @@
         selectedIds: [],
         videoTitle: '',
         programNO: '',
+        editId: '',
         objectId: '',
         formatTime: formatTime
       };
@@ -120,7 +120,6 @@
       handleClickEdit() {
         this.detailDialogVisible = true;
         this.objectId = this.selectedObjectIds[0];
-        this.editorInfo = this.selectedRows[0].editorInfo;
         this.programNO = this.selectedRows[0].programNO;
         this.videoTitle = this.selectedRows[0].name;
         this.editId = this.selectedIds[0];
