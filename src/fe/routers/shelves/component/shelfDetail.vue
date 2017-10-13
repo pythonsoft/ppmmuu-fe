@@ -79,6 +79,7 @@
 
   const api = require('../../../api/media');
   const libraryAPI = require('../../../api/library');
+  const shelfAPI = require('../../../api/shelves');
   const FILE_TYPE_MAP = {
     0: { text: '源文件' },
     1: { text: '低码流' },
@@ -96,10 +97,7 @@
       objectId: String,
       title: '',
       programNO: String,
-      editorInfo: {
-        type: Object,
-        default: {}
-      },
+      id: String,
       btnText: String,
       btnType: String,
       btnShow: {
@@ -123,8 +121,16 @@
       };
     },
     watch: {
+      id(val) {
+        if (this.visible) {
+          this.getShelfDetail();
+          this.getDetail();
+          this.getStream();
+        }
+      },
       objectId(val) {
         if (this.visible) {
+          this.getShelfDetail();
           this.getDetail();
           this.getStream();
         }
@@ -132,6 +138,7 @@
       visible(val) {
         if (!val) return;
         if (this.objectId) {
+          this.getShelfDetail();
           this.getDetail();
           this.getStream();
         }
@@ -163,24 +170,34 @@
           this.url = url;
         }, this);
       },
+      getShelfDetail(){
+        const me = this;
+        shelfAPI.getShelfDetail(formatQuery({_id: me.id }, true))
+          .then((res)=>{
+            const editorInfo = res.data.editorInfo || {};
+            me.editorDetails['subscribeType'] = {
+              cn: '订阅类型',
+              value: editorInfo['subscribeType']
+            };
+            me.editorDetails['source'] = {
+              cn: '来源',
+              value: editorInfo['source']
+            };
+            me.editorDetails['limit'] = {
+              cn: '限制',
+              value: editorInfo['limit']
+            };
+            me.editorDetails['cover'] = {
+              cn: '封面',
+              value: editorInfo['cover']
+            };
+          })
+          .catch((error)=>{
+            me.showErrorInfo(error);
+          })
+      },
       getDetail() {
         const me = this;
-        me.editorDetails['subscribeType'] = {
-          cn: '订阅类型',
-          value: SUBSCRIBE_TYPE[me.editorInfo['subscribeType']]
-        };
-        me.editorDetails['source'] = {
-          cn: '来源',
-          value: me.editorInfo['source']
-        };
-        me.editorDetails['limit'] = {
-          cn: '限制',
-          value: me.editorInfo['limit']
-        };
-        me.editorDetails['cover'] = {
-          cn: '封面',
-          value: me.editorInfo['cover']
-        };
         api.getObject(formatQuery({ objectid: me.objectId }, true))
           .then((res)=>{
             const data = res.data.result.detail.program;

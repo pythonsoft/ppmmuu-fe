@@ -48,7 +48,7 @@
             btnType="info"
             :title="videoTitle"
             :programNO="programNO"
-            :editorInfo="editorInfo"
+            :id="editId"
             :objectId="objectId"
             :visible.sync="detailDialogVisible"
             @operation-click="onlineShelf">
@@ -84,7 +84,7 @@
         selectedIds: [],
         videoTitle: '',
         programNO: '',
-        editorInfo: {},
+        editId: '',
         objectId: '',
         formatTime: formatTime
       };
@@ -122,7 +122,6 @@
       handleClickEdit() {
         this.detailDialogVisible = true;
         this.objectId = this.selectedObjectIds[0];
-        this.editorInfo = this.selectedRows[0].editorInfo;
         this.editId = this.selectedIds[0];
         this.videoTitle = this.selectedRows[0].name;
         this.programNO = this.selectedRows[0].programNO;
