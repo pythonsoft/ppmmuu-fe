@@ -104,8 +104,8 @@
   import TreeNodeContent from './treeNodeContent';
   import addGroup from './component/addGroupDialog';
   import editGroup from './component/editGroup';
-  import { MENU_CONFIG } from './config';
 
+  const MENU_CONFIG = require('./config');
   const api = require('../../../api/role');
   const apiConfig = require('../../../api/configuration');
 
@@ -194,6 +194,13 @@
       },
       treeNodeCurrentChange(treeNode) {
         this.currentNode = treeNode;
+        this.currentPage = 1;
+        const searchObj = {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          groupId: treeNode.id
+        };
+        this.getListConfig(searchObj);
       },
 
       handleOpenDeleteDialog(_id) {
