@@ -74,7 +74,11 @@
     name: 'templateDownloadForm',
     props: {
       templateInfo: Object,
-      type: String
+      type: String,
+      groupId: {
+        type: String,
+        default: ''
+      }
     },
     components: {
       FjCheckboxGroup,
@@ -164,6 +168,8 @@
       add() {
         const me = this;
         const data = Object.assign({}, this.formData);
+        data.type = data.type ? (data.type.length !== 0 ? data.type[0] : '') : '';
+        data.groupId = this.groupId;
         data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
 
         api.createDownloadTemplate(data, me).then((res) => {
