@@ -4,6 +4,7 @@
       v-for="(item, index) in data"
       :node="item"
       :node-key="nodeKey"
+      :default-expanded-key="defaultExpandedKey"
       :node-style="nodeStyle"
       :node-level="1"
       :indent="indent"
@@ -25,6 +26,7 @@
         type: String,
         default: '_id'
       },
+      defaultExpandedKey: String,
       nodeStyle: Object,
       indent: {
         type: String,

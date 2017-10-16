@@ -1,13 +1,15 @@
 <template>
-  <div class="movie-editor">
+  <div :class="['movie-editor', {'dark': theme === 'dark'}]">
     <div class="movie-editor-wrap">
       <div class="movie-editor-top">
         <div class="movie-editor-title">
           <span class="iconfont icon-phoenixtv"></span>
           视频编辑器
         </div>
-        <ul class="movie-editor-top-bar">
-          <li @click="back">
+        <ul class="movie-editor-top-bar clearfix">
+          <li :class="['theme-btn', { 'active': theme !== 'dark' }]" @click="theme = ''">浅色主题</li>
+          <li :class="['theme-btn', { 'active': theme === 'dark' }]" @click="theme = 'dark'">深色主题</li>
+          <li @click="back" class="close-btn">
             <span class="iconfont icon-small-close"></span>
           </li>
         </ul>
@@ -53,11 +55,13 @@
             >
               <template slot="0" scope="props">
                 <media-browser
+                  :theme="theme"
                   :activePanel.sync="activePanel"
                   @updateCurrentSource="updateCurrentSource"></media-browser>
               </template>
               <template slot="1" scope="props">
                 <workspace-panel
+                  :theme="theme"
                   :activePanel.sync="activePanel"
                   :size="{ width: props.width, height: props.height }"
                   :importSourceInfo="importSourceInfo"
@@ -95,6 +99,7 @@
     },
     data() {
       return {
+        theme: 'dark',
         importSourceInfo: null,
         sourceTitle: '',
         sourceVideoId: '',

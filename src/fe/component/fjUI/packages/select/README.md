@@ -13,4 +13,4 @@
 | history-method | 获取历史记录的方法 | function | — | - | ✅ |
 | clear-history-method | 清空历史记录的方法 | function | — | - | ✅ |
 | loading | 是否正在从远程获取数据 | boolean | — | false | ✅ |
-| theme | 输入框主题样式 | string | stroke, fill, drak | stroke | ✅ |
+| theme | 输入框主题样式 | string | stroke, fill, dark | stroke | ✅ |

@@ -76,7 +76,13 @@
 .theme-dark .fj-tree-item-expandable {
   color: #9FB3CA;
 }
+
+.theme-dark .fj-tree-item:hover,
+.theme-dark .fj-tree-item-expandable:hover {
+  background: #353535;
+}
 .theme-dark .fj-tree-current-item {
-  background-color: transparent;
+  background: #2A3E52;
+  /*background-color: transparent;*/
   color: #CED9E5;
 }
