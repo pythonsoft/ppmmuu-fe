@@ -137,6 +137,7 @@
       return {
         title: '',
         program: {},
+        basic: {},
         files: [], // 所有的文件信息
         poster: '',
         activeTabName: 'tab1',
@@ -194,6 +195,7 @@
         const me = this;
         api.getObject({ params: { objectid: this.item.id } }).then((res) => {
           me.program = res.data.result.detail.program;
+          me.basic = res.data.result.basic;
           me.files = res.data.result.files;
           delete me.program.OBJECTID;
         }).catch((error) => {
@@ -349,8 +351,15 @@
         const postData = {
           objectId: me.videoId,
           name: me.shelfName,
-          force: force
+          force: force,
+          details: {}
         };
+        for(let key in me.basic){
+          postData.details[key] = me.basic[key];
+        }
+        for(let key in me.program){
+          postData.details[key] = me.program[key].value;
+        }
         shelfApi.createShelfTask(postData).then((res) => {
           me.shelfDialogBtnLoading = false;
           me.shelfDialogVisible = false;
