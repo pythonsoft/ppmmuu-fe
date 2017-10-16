@@ -4,7 +4,7 @@
     @click="()=>{this.$emit('update:activePanel', 'sourcePanel')}">
     <div class="video-source-title">{{ `源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
-      <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
+      <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }" crossorigin="anonymous"></video>
       <div v-show="currentVideoSRT" class="video-srt">
         <span class="video-srt-text">{{ currentVideoSRT }}</span>
       </div>
@@ -195,7 +195,6 @@
         this.controllerList = this.getControllerList(val);
       },
       inTime(val) {
-        this.inTimeScreenshot = this.createImage();
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         // console.log('watch inTime this.video.duration', this.video.duration, progressBarWidth);
@@ -206,6 +205,7 @@
             this.clipDuration = this.outTime - val;
           }
         }
+        this.inTimeScreenshot = this.createImage();
       },
       outTime(val) {
         const progressBar = this.getProgressBarStyle();
@@ -663,6 +663,7 @@
         canvas.height = size.height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(this.video, 0, 0, canvas.width, canvas.height);
+        // console.log(this.video);
         const imageURL = canvas.toDataURL('image/png');
         return imageURL;
       },

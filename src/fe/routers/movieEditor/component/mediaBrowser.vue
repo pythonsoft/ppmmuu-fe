@@ -21,8 +21,10 @@
     </div>
     <div class="media-browser-content">
       <tree-view
+        :theme="theme"
         :autoExpand="false"
         :showUpper="false"
+        :default-expanded-key="defaultExpandedKey"
         :vue-instance="vueInstance"
         :list-group="listGroup"
         :renderContent="renderContent"
@@ -59,7 +61,8 @@
 
   export default {
     props: {
-      activePanel: String
+      activePanel: String,
+      theme: String
     },
     data() {
       return {
@@ -67,7 +70,8 @@
         currentNodeId: '',
         currentNodeInfo: {},
         deleteNodeDialogVisible: false,
-        isDeleteBtnLoading: false
+        isDeleteBtnLoading: false,
+        defaultExpandedKey: ''
       };
     },
     methods: {
@@ -79,7 +83,10 @@
             const data = res.data;
             this._id = data._id;
             if (this._id) {
-              this.listSourceItem(this._id, cb);
+              this.listSourceItem(this._id, (data) => {
+                if (data.length > 0) this.defaultExpandedKey = data[0]._id;
+                cb(data);
+              });
             }
           }).catch((error) => {
             this.$message.error(error);

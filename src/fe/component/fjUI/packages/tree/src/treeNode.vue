@@ -31,6 +31,7 @@
         v-for="(item, index) in node.children"
         v-if="item.name"
         :node-key="nodeKey"
+        :default-expanded-key="defaultExpandedKey"
         :node-style="nodeStyle"
         :node="item"
         :node-level="nodeLevel + 1"
@@ -50,6 +51,7 @@
     props: {
       node: Object,
       nodeKey: String,
+      defaultExpandedKey: String,
       nodeStyle: Object,
       indent: {},
       nodeLevel: Number,
@@ -86,6 +88,13 @@
           this.nodeStyle,
           { paddingLeft: `${this.indent * this.nodeLevel}px`, position: 'relative' }
         );
+      }
+    },
+    watch: {
+      defaultExpandedKey(val) {
+        if (this.node[this.nodeKey] === this.defaultExpandedKey) {
+          this.handleExpandIconClick();
+        }
       }
     },
     methods: {
@@ -151,6 +160,9 @@
         this.tree = parent;
       } else {
         this.tree = parent.tree;
+      }
+      if (this.node[this.nodeKey] === this.defaultExpandedKey) {
+        this.handleExpandIconClick();
       }
     },
     components: {
