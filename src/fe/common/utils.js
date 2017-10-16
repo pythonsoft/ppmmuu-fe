@@ -517,7 +517,7 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
 utils.getItemFromLocalStorage = function getItemFromLocalStorage(key, scope) {
   try {
     const item = JSON.parse(localStorage.getItem(key));
-    if(!item && scope){
+    if (!item && scope) {
       window.location.href = '/login';
     }
     return item;
