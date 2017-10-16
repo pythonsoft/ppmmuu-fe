@@ -34,7 +34,7 @@
   color: var(--base-color);
   background-color: var(--input-background-color-fill);
 }
-.fj-input-inner-drak {
+.fj-input-inner-dark {
   width: 100%;
   height: var(--input-height);
   line-height: 1;
@@ -79,7 +79,7 @@
 .fj-textarea-inner-fill:hover {
   background-color: var(--input-hover-background-color-fill);
 }
-.fj-input-inner-drak:hover {
+.fj-input-inner-dark:hover {
   background-color: #2A3E52;
 }
 .fj-input-inner-fill:focus,
@@ -89,8 +89,8 @@
   border-color: var(--input-focus-border-color);
   background-color: var(--input-focus-background-color-fill);
 }
-.fj-input-inner-drak:focus,
-.fj-input-inner-drak:active {
+.fj-input-inner-dark:focus,
+.fj-input-inner-dark:active {
   background-color: #555555;
   border-color: #38B1EB;
 }
@@ -105,7 +105,7 @@
 
 .fj-input-small .fj-input-inner-stroke,
 .fj-input-small .fj-input-inner-fill,
-.fj-input-small .fj-input-inner-drak {
+.fj-input-small .fj-input-inner-dark {
   height: var(--input-height-small);
   line-height: 1;
   padding: 9px 7px;

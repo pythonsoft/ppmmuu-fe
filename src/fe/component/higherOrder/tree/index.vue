@@ -2,6 +2,7 @@
   <fj-tree
     lazy
     :load="loadChildren"
+    :default-expanded-key="defaultExpandedKey"
     v-if="!showUpper"
     :theme="theme"
     :data="treeData"
@@ -24,6 +25,7 @@
       <fj-tree
         lazy
         :load="loadChildren"
+        :default-expanded-key="defaultExpandedKey"
         :data="treeData"
         :autoExpand="autoExpand"
         :node-key="nodeKey"
@@ -292,7 +294,8 @@
       renderContent: { type: Function },
       rootKey: { type: String, default: '' },
       theme: String,
-      autoExpand: { type: Boolean, default: true }
+      autoExpand: { type: Boolean, default: true },
+      defaultExpandedKey: String
     },
     created() {
       const me = this;
@@ -319,6 +322,7 @@
     },
     destroyed() {
       const me = this;
+      me.bubble.$off('tree.autoExpandFirstChild');
       me.bubble.$off('tree.listGroup');
       me.bubble.$off('tree.removeNode');
       me.bubble.$off('tree.insertNode');

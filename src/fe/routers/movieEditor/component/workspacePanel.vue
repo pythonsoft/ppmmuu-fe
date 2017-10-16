@@ -7,10 +7,10 @@
       custom-class="workspace-wrap"
       custom-header-class="workspace-header">
       <fj-tab-pane label="我的素材" name="timeline">
-        <timeline-panel :importSourceInfo="importSourceInfo" :size="size" :projectBus="projectBus"></timeline-panel>
+        <timeline-panel :importSourceInfo="importSourceInfo" :size="size" :projectBus="projectBus" :theme="theme"></timeline-panel>
       </fj-tab-pane>
       <fj-tab-pane label="任务列表" name="taskList">
-        <task-list-panel :visible="activeTabName==='taskList'"></task-list-panel>
+        <task-list-panel :size="size" :visible="activeTabName==='taskList'" :theme="theme"></task-list-panel>
       </fj-tab-pane>
     </fj-tabs>
   </div>
@@ -29,7 +29,8 @@
         }
       },
       importSourceInfo: {},
-      activePanel: String
+      activePanel: String,
+      theme: String
     },
     data() {
       return {

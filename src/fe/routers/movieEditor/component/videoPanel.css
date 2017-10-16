@@ -23,6 +23,9 @@
   color: #2A3E52;
   line-height: 24px;
 }
+.dark .media-browser-title {
+  color: #CED9E5;
+}
 .media-browser-controller-wrap {
   float: right;
 }
@@ -73,6 +76,9 @@
   font-size: 14px;
   color: #4C637B;
 }
+.dark .player-time-box {
+  color: #CED9E5;
+}
 .player-progress-bar-box {
   position: relative;
   width: 100%;
@@ -82,6 +88,9 @@
   width: 100%;
   height: 14px;
   background: #E3EAF3;
+}
+.dark .player-progress-bar {
+  background: #353535;
 }
 .player-controls {
   position: relative;
@@ -97,6 +106,10 @@
   background: rgba(255, 255, 255, .7);
   z-index: 1;
 }
+.dark .player-mask {
+  background: #292929;
+  opacity: 0.4;
+}
 .player-control-item-wrap {
   position: relative;
   display: inline-block;
@@ -111,14 +124,26 @@
   color: #4C637B;
   text-align: center;
 }
+.dark .player-control-item {
+  color: #CED9E5;
+}
 .player-control-item:hover {
   background: #E3EAF3;
+}
+.dark .player-control-item:hover {
+  background: #353535;
 }
 .player-control-item:active {
   color: #38B1EB;
 }
+.dark .player-control-item:active {
+  color: #353535;
+}
 .disabled-control-item {
   color: #CED9E5;
+}
+.dark .disabled-control-item {
+  color: #555;
 }
 .player-control-item i {
   font-size: 14px;
@@ -137,6 +162,10 @@
   line-height: 22px;
   white-space: nowrap;
   z-index: 11;
+}
+.dark .player-control-tooltip {
+  background: #555;
+  color: #CED9E5;
 }
 .player-control-item:hover+.player-control-tooltip {
   display: block;
@@ -163,6 +192,12 @@
   height: 14px;
   background: #CED9E5;
 }
+.dark .clip-range {
+  position: absolute;
+  top: 0px;
+  height: 14px;
+  background: #555;
+}
 .player-tooltip {
   position: absolute;
   top: -28px;
@@ -176,6 +211,10 @@
   padding: 0 6px;
   line-height: 22px;
   white-space: nowrap;
+}
+.dark .player-tooltip-text {
+  background: #555;
+  color: #CED9E5;
 }
 .screenshot-wrap:hover .screenshot-download-icon {
   display: block;

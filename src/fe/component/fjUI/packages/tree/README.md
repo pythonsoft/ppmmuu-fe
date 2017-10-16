@@ -4,7 +4,8 @@
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
 | data | 展示数据 | array | - | - | ✅ |
-| node-key | 每个树节点的唯一标识属性 | string | - | id | ✅ |
+| node-key | 每个树节点的唯一标识属性 | string | - | _id | ✅ |
+| default-expanded-key | 默认展开的节点key值 | string | - | - | ✅ |
 | indent | 缩进值 | string | - | 10 | ✅ |
 | node-style | 节点样式 | object | - | - | ✅ |
 | render-content | 树节点内容的渲染函数 | function(h, {node}) | - | - | ✅ |

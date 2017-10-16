@@ -1,96 +1,98 @@
 <template>
-  <layout-three-column :leftWidth="201" :rightWidth="448">
+  <layout-three-column :leftWidth="217" :rightWidth="448">
     <template slot="left">
       <div class="media-left" ref="mediaLeft">
-        <div class="media-search">
-          <!-- <fj-input
-            placeholder="请输入检索关键词"
-            size="small"
-            theme="fill"
-            v-model="keyword"
-            icon="icon-search input-search-icon"
-            @on-icon-click="searchClick"
-            @keydown.native.enter.prevent="searchClick"
-          ></fj-input> -->
-          <fj-select
-            remote
-            :clear-history-method="clearHistory"
-            :history-method="getSearchHistory"
-            :remote-method="remoteMethod"
-            :loading="loading"
-            @search="searchClick"
-            v-model="keyword"
-            placeholder="请输入检索关键词"
-            size="small"
-            theme="fill">
-            <fj-option
-              v-for="item in keywordOptions"
-              :key="item._id"
-              :label="item.label"
-              :value="item.value">
-            </fj-option>
-          </fj-select>
-        </div>
-        <div class="media-category">
-          <h4>HOUSENO</h4>
-          <fj-input
-                  placeholder="请输入HOUSENO"
-                  size="small"
-                  theme="fill"
-                  v-model="houseNo"
-                  icon="icon-search input-search-icon"
-                  @on-icon-click="searchHouseNoClick"
-                  @keydown.native.enter.prevent="searchHouseNoClick"
-          ></fj-input>
-        </div>
-        <template v-for="config in searchSelectConfigs">
-          <div class="media-category">
-            <h4>{{config.label}}</h4>
-            <fj-select placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
+        <div :style="{ width: '165px' }">
+          <div class="media-search">
+            <!-- <fj-input
+              placeholder="请输入检索关键词"
+              size="small"
+              theme="fill"
+              v-model="keyword"
+              icon="icon-search input-search-icon"
+              @on-icon-click="searchClick"
+              @keydown.native.enter.prevent="searchClick"
+            ></fj-input> -->
+            <fj-select
+              remote
+              :clear-history-method="clearHistory"
+              :history-method="getSearchHistory"
+              :remote-method="remoteMethod"
+              :loading="loading"
+              @search="searchClick"
+              v-model="keyword"
+              placeholder="请输入检索关键词"
+              size="small"
+              theme="fill">
               <fj-option
-                      v-for="item in config.items"
-                      :key="item.key"
-                      :label="item.label"
-                      :value="item.value">
+                v-for="item in keywordOptions"
+                :key="item._id"
+                :label="item.label"
+                :value="item.value">
               </fj-option>
             </fj-select>
           </div>
-        </template>
-
-        <template v-for="config in searchRadioboxConfigs">
-          <div class="media-category clearfix">
-            <h4>{{config.label}}</h4>
-            <fj-radio-group v-model="config.selected">
-              <template v-for="item in config.items">
-                <div class="category-checkbox">
-                  <fj-radio :label="item.value">{{item.label}}</fj-radio>
-                </div>
-              </template>
-            </fj-radio-group>
+          <div class="media-category">
+            <h4>HOUSENO</h4>
+            <fj-input
+                    placeholder="请输入HOUSENO"
+                    size="small"
+                    theme="fill"
+                    v-model="houseNo"
+                    icon="icon-search input-search-icon"
+                    @on-icon-click="searchHouseNoClick"
+                    @keydown.native.enter.prevent="searchHouseNoClick"
+            ></fj-input>
           </div>
-        </template>
+          <template v-for="config in searchSelectConfigs">
+            <div class="media-category">
+              <h4>{{config.label}}</h4>
+              <fj-select placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
+                <fj-option
+                        v-for="item in config.items"
+                        :key="item.key"
+                        :label="item.label"
+                        :value="item.value">
+                </fj-option>
+              </fj-select>
+            </div>
+          </template>
 
-        <div class="media-category">
-          <h4>新聞日期</h4>
-          <div id="media-category-date">
-            <fj-date-picker
-              :parentEl="(()=>{return this.$refs.mediaLeft})()"
-              type="datetimerange"
-              placeholder="请选择日期范围"
-              v-model="datetimerange1"
-            ></fj-date-picker>
+          <template v-for="config in searchRadioboxConfigs">
+            <div class="media-category clearfix">
+              <h4>{{config.label}}</h4>
+              <fj-radio-group v-model="config.selected">
+                <template v-for="item in config.items">
+                  <div class="category-checkbox">
+                    <fj-radio :label="item.value">{{item.label}}</fj-radio>
+                  </div>
+                </template>
+              </fj-radio-group>
+            </div>
+          </template>
+
+          <div class="media-category">
+            <h4>新聞日期</h4>
+            <div id="media-category-date">
+              <fj-date-picker
+                :parentEl="(()=>{return this.$refs.mediaLeft})()"
+                type="datetimerange"
+                placeholder="请选择日期范围"
+                v-model="datetimerange1"
+              ></fj-date-picker>
+            </div>
           </div>
-        </div>
 
-        <div class="media-category">
-          <h4>首播日期</h4>
-          <div id="media-category-date">
-            <fj-date-picker
-              :parentEl="(()=>{return this.$refs.mediaLeft})()"
-              type="datetimerange"
-              placeholder="请选择日期范围"
-              v-model="datetimerange2"
-            ></fj-date-picker>
+          <div class="media-category">
+            <h4>首播日期</h4>
+            <div id="media-category-date">
+              <fj-date-picker
+                :parentEl="(()=>{return this.$refs.mediaLeft})()"
+                type="datetimerange"
+                placeholder="请选择日期范围"
+                v-model="datetimerange2"
+              ></fj-date-picker>
+            </div>
           </div>
         </div>
       </div>
