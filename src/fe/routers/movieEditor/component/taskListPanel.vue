@@ -2,7 +2,7 @@
   <div>
     <div class="task-list-controller-wrap">
       <div class="player-control-item-wrap select-wrap">
-        <fj-select size="small" v-model="taskListType">
+        <fj-select size="small" v-model="taskListType" :theme="theme">
           <fj-option
             v-for="item in status"
             :key="item.value"
@@ -31,7 +31,7 @@
     </div>
     <div class="task-list">
       <div :style="taskListStyle">
-        <fj-table :data="taskList" @current-change="handleCurrentChange" highlightKey="id">
+        <fj-table :data="taskList" @current-change="handleCurrentChange" highlightKey="id" :theme="theme">
           <fj-table-column prop="status" width="90" label="状态">
             <template scope="props">
               <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
@@ -51,6 +51,7 @@
       </div>
       <div class="task-list-pagination">
         <fj-pagination
+          :theme="theme"
           :page-size="pageSize"
           :total="total"
           :current-page.sync="page"
@@ -83,7 +84,8 @@
         default() {
           return { width: 0, height: 0 };
         }
-      }
+      },
+      theme: String
     },
     data() {
       return {

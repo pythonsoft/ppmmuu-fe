@@ -43,6 +43,20 @@
     sequenceImageHeight: 68,
     sequenceTitleColor: '#2A3E52'
   };
+  const TIMELINE_CONFIG_DARK = {
+    sequenceHeight: 91,
+    marginTop: 64,
+    marginLeft: 4,
+    font: '12px sans-serif',
+    fontColor: '#CED9E5',
+    sequenceColor: '#CED9E5',
+    currentSequenceColor: '#CAEBFA',
+    currentSequenceBorderColor: '#FFF',
+    currentSequenceBorderWidth: 2,
+    sequenceImageWidth: 120,
+    sequenceImageHeight: 68,
+    sequenceTitleColor: '#2A3E52'
+  };
 
   export default {
     components: {
@@ -69,7 +83,8 @@
             screenshot: ''
           };
         }
-      }
+      },
+      theme: String
     },
     watch: {
       importSourceInfo(val) {
@@ -84,6 +99,9 @@
       },
       currentSequenceIndex(val) {
         this.updateProgram();
+      },
+      theme(val) {
+        this.TIMELINE_CONFIG = val === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
       }
     },
     data() {
@@ -106,6 +124,7 @@
       }
     },
     mounted() {
+      this.TIMELINE_CONFIG = this.theme === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
       this.timeline = this.$refs.timeline;
       this.ctx = this.timeline.getContext('2d');
       this.resize(this.size);
@@ -146,8 +165,8 @@
         return false;
       },
       resize(parentSize) {
-        const width = this.size.width - TIMELINE_CONFIG.marginLeft;
-        const height = this.size.height - TIMELINE_CONFIG.marginTop;
+        const width = this.size.width - this.TIMELINE_CONFIG.marginLeft;
+        const height = this.size.height - this.TIMELINE_CONFIG.marginTop;
         this.timeline.style.width = `${width}px`;
         this.timeline.style.height = `${height}px`;
         this.timeline.width = width * this.dpr;
@@ -156,8 +175,8 @@
       },
       draw() {
         const ctx = this.ctx;
-        ctx.font = TIMELINE_CONFIG.font.replace(/(\d*)/, (match, p1) => p1 * this.dpr);
-        ctx.fillStyle = TIMELINE_CONFIG.fontColor;
+        ctx.font = this.TIMELINE_CONFIG.font.replace(/(\d*)/, (match, p1) => p1 * this.dpr);
+        ctx.fillStyle = this.TIMELINE_CONFIG.fontColor;
         ctx.clearRect(0, 0, this.timeline.width, this.timeline.height);
         if (this.sequences.length === 0) {
           const middle = this.getTimelineMiddle();
@@ -192,14 +211,14 @@
       },
       renderSequences() {
         const ctx = this.ctx;
-        const rectH = TIMELINE_CONFIG.sequenceHeight * this.dpr;
+        const rectH = this.TIMELINE_CONFIG.sequenceHeight * this.dpr;
         const middleY = this.getTimelineMiddle().y;
         const sequenceStartY = middleY - rectH;
 
         const unitLength = this.getUnitLength();
         let sequenceStartX = 0;
         this.sequences.forEach((item, index) => {
-          ctx.fillStyle = TIMELINE_CONFIG.sequenceColor;
+          ctx.fillStyle = this.TIMELINE_CONFIG.sequenceColor;
 
           const rect = {
             startX: sequenceStartX,
@@ -211,9 +230,9 @@
           sequenceStartX += rect.w;
           ctx.clearRect(rect.startX, rect.startY, rect.w, rect.h);
           if (index === this.currentSequenceIndex) {
-            ctx.fillStyle = TIMELINE_CONFIG.currentSequenceColor;
-            ctx.lineWidth = TIMELINE_CONFIG.currentSequenceBorderWidth;
-            ctx.strokeStyle = TIMELINE_CONFIG.currentSequenceBorderColor;
+            ctx.fillStyle = this.TIMELINE_CONFIG.currentSequenceColor;
+            ctx.lineWidth = this.TIMELINE_CONFIG.currentSequenceBorderWidth;
+            ctx.strokeStyle = this.TIMELINE_CONFIG.currentSequenceBorderColor;
             this.drawRect('fill', rect, ctx);
             const strokeRect = {
               startX: rect.startX + 2,
@@ -226,11 +245,11 @@
             this.drawRect('fill', rect, ctx);
           }
 
-          let imgWidth = TIMELINE_CONFIG.sequenceImageWidth * this.dpr;
-          let imgHeight = TIMELINE_CONFIG.sequenceImageHeight * this.dpr;
+          let imgWidth = this.TIMELINE_CONFIG.sequenceImageWidth * this.dpr;
+          let imgHeight = this.TIMELINE_CONFIG.sequenceImageHeight * this.dpr;
           if (rect.w <= imgWidth + 8 * (2 * this.dpr)) {
             imgWidth = (rect.w - 8 * (2 * this.dpr)) > 0 ? rect.w - 8 * (2 * this.dpr) : 0;
-            imgHeight = TIMELINE_CONFIG.sequenceImageHeight / TIMELINE_CONFIG.sequenceImageWidth
+            imgHeight = this.TIMELINE_CONFIG.sequenceImageHeight / this.TIMELINE_CONFIG.sequenceImageWidth
             * imgWidth;
           }
           const image = new Image();
@@ -241,14 +260,14 @@
             ctx.drawImage(image, x, y, imgWidth, imgHeight);
           };
 
-          ctx.fillStyle = TIMELINE_CONFIG.sequenceTitleColor;
+          ctx.fillStyle = this.TIMELINE_CONFIG.sequenceTitleColor;
           ctx.textBaseline = 'top';
           const titleStartX = rect.startX + (8 * this.dpr) + imgWidth + (12 * this.dpr);
           const titleStartY = rect.startY + (11 * this.dpr);
           ctx.fillText(item.title, titleStartX, titleStartY);
 
           const duration = transformSecondsToStr(item.duration);
-          const fontSize = parseInt(TIMELINE_CONFIG.font.match(/(\d*)/)[0], 10);
+          const fontSize = parseInt(this.TIMELINE_CONFIG.font.match(/(\d*)/)[0], 10);
           ctx.fillText(duration, titleStartX, titleStartY + ((fontSize + 10) * this.dpr));
         });
       },

@@ -4,7 +4,7 @@
     @click="()=>{this.$emit('update:activePanel', 'sourcePanel')}">
     <div class="video-source-title">{{ `源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
-      <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
+      <video :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }" crossorigin="anonymous"></video>
       <div v-show="currentVideoSRT" class="video-srt">
         <span class="video-srt-text">{{ currentVideoSRT }}</span>
       </div>

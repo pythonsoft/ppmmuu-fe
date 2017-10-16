@@ -21,6 +21,7 @@
     </div>
     <div class="media-browser-content">
       <tree-view
+        :theme="theme"
         :autoExpand="false"
         :showUpper="false"
         :default-expanded-key="defaultExpandedKey"
@@ -60,7 +61,8 @@
 
   export default {
     props: {
-      activePanel: String
+      activePanel: String,
+      theme: String
     },
     data() {
       return {
