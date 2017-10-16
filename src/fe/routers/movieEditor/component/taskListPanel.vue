@@ -30,20 +30,25 @@
       </div>
     </div>
     <div class="task-list">
-      <fj-table :data="taskList" @current-change="handleCurrentChange" highlightKey="id">
-        <fj-table-column prop="status" width="90" label="状态">
-          <template scope="props">
-            <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
-          </template>
-        </fj-table-column>
-        <fj-table-column prop="fileName" label="名称"></fj-table-column>
-        <fj-table-column prop="currentStep" label="进度">
-          <template scope="props">{{ `${props.row.currentStep}(${props.row.tasklist[props.row.currentStep].position}%)` }}</template>
-        </fj-table-column>
-        <fj-table-column prop="createTime" width="160" label="创建时间">
-          <template scope="props">{{ props.row.createTime | formatTime }}</template>
-        </fj-table-column>
-      </fj-table>
+      <div :style="taskListStyle">
+        <fj-table :data="taskList" @current-change="handleCurrentChange" highlightKey="id">
+          <fj-table-column prop="status" width="90" label="状态">
+            <template scope="props">
+              <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
+            </template>
+          </fj-table-column>
+          <fj-table-column prop="fileName" label="名称"></fj-table-column>
+          <fj-table-column prop="currentStep" label="进度">
+            <template scope="props">
+              {{ props.row.currentStep }}
+              {{ props.row.tasklist[props.row.currentStep] ? '(' + props.row.tasklist[props.row.currentStep].position + '%)' : '--' }}
+            </template>
+          </fj-table-column>
+          <fj-table-column prop="createTime" width="160" label="创建时间">
+            <template scope="props">{{ props.row.createTime | formatTime }}</template>
+          </fj-table-column>
+        </fj-table>
+      </div>
       <div class="task-list-pagination">
         <fj-pagination
           :page-size="pageSize"
@@ -72,7 +77,13 @@
 
   export default {
     props: {
-      visible: Boolean
+      visible: Boolean,
+      size: {
+        type: Object,
+        default() {
+          return { width: 0, height: 0 };
+        }
+      }
     },
     data() {
       return {
@@ -86,6 +97,11 @@
         total: 0,
         page: 1
       };
+    },
+    computed: {
+      taskListStyle() {
+        return { height: `${this.size.height - 90}px`, overflow: 'auto' };
+      }
     },
     methods: {
       showDeleteDialog() {
