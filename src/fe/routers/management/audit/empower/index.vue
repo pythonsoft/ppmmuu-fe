@@ -51,7 +51,7 @@
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
   import utils from '../../../../common/utils';
 
-  const templateAPI = require('../../../../api/template');
+  const api = require('../../../../api/audit');
   const config = require('../../task/config');
 
   export default {
@@ -133,7 +133,7 @@
       confirmDialog() {
         const me = this;
 
-        templateAPI.remove({ id: this.table.currentRowInfo._id }, me).then((res) => {
+        api.removeAuditRule({ id: this.table.currentRowInfo._id }, me).then((res) => {
           me.$message.success('删除成功');
           me.listTemplate();
           me.confirmDialogDisplay = false;
@@ -149,7 +149,7 @@
           pageSize: this.pageSize,
         };
 
-        templateAPI.list({ params: param }, me).then((res) => {
+        api.listAuditRule({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
