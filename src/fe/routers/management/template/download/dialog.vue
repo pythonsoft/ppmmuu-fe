@@ -9,6 +9,7 @@
        v-if="currentType"
        :templateInfo="templateInfo"
        :type="type"
+       :groupId="groupId"
        @close="close"
        @listTemplate="listTemplate"
      ></download-template-view>
@@ -30,6 +31,10 @@
       visible: {
         type: Boolean,
         default: false
+      },
+      groupId: {
+        type: String,
+        default: ''
       }
     },
     data() {
