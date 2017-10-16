@@ -10,7 +10,7 @@
 | readonly | 是否只读 | boolean | — | false | ✅ |
 | rows | 输入框行数 | number | — | 2 | ✅ |
 | icon | 输入框尾部图标 | string | — | - | ✅ |
-| theme | 输入框主题样式 | string | stroke, fill, drak | stroke | ✅ |
+| theme | 输入框主题样式 | string | stroke, fill, dark | stroke | ✅ |
 
 ...原生属性
 
