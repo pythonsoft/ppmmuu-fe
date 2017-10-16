@@ -394,8 +394,11 @@
 
         const param = {
           objectid: this.fileInfo.OBJECTID,
-          inpoint: this.fileInfo.INPOINT,
-          outpoint: this.fileInfo.OUTPOINT,
+//          如果不是打点下载，将inpoint，outpoint设置为'0'
+//          inpoint: this.fileInfo.INPOINT,
+//          outpoint: this.fileInfo.OUTPOINT,
+          inpoint: 0,
+          outpoint: 0,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: templateInfo._id
