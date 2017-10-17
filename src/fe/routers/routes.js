@@ -48,6 +48,7 @@ const OnlineShelf = resolve => require.ensure([], () => resolve(require('./shelv
 const OfflineShelf = resolve => require.ensure([], () => resolve(require('./shelves/offlineShelf/index')), 'OfflineShelf');
 
 const Library = resolve => require.ensure([], () => resolve(require('./library/index')), 'library');
+const Subscriptions = resolve => require.ensure([], () => resolve(require('./subscriptions/index')), 'subscriptions');
 const DepartmentCatalogTask = resolve => require.ensure([], () => resolve(require('./library/departmentCatalogTask')), 'library');
 const PersonalCatalogTask = resolve => require.ensure([], () => resolve(require('./library/personalCatalogTask')), 'library');
 
@@ -108,6 +109,13 @@ export default [{
         { path: 'searchHistory', component: SearchHistory, meta: { title: '检索历史' }, name: 'searchHistory' },
         { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
       ]
+    },
+    {
+      path: 'subscriptions',
+      component: Subscriptions,
+      meta: { title: '订阅' },
+      children: [],
+      name: 'subscriptions'
     },
     {
       path: 'shelf',
