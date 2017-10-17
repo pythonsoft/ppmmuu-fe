@@ -5,8 +5,8 @@
           @close="close">
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="110px">
       <fj-form-item label="公司名称" prop="companyName">
-        <fj-input v-model="formData.companyName" icon="icon-gongsi" @focus="addCompanyDialogVisible=true" @on-icon-click="addCompanyDialogVisible=true" v-if="type === 'add'"></fj-input>
-        <fj-input v-model="formData.companyName" :disabled="true" icon="icon-gongsi" v-else></fj-input>
+        <fj-input v-model="formData.companyName" icon="icon-company" @focus="addCompanyDialogVisible=true" @on-icon-click="addCompanyDialogVisible=true" v-if="type === 'add'"></fj-input>
+        <fj-input v-model="formData.companyName" :disabled="true" icon="icon-company" v-else></fj-input>
       </fj-form-item>
       <fj-form-item label="订阅类型" prop="subscribeType">
         <fj-select placeholder="请选择" v-model="formData.subscribeType" multiple v-if="status !== STATUS.EXPIRED">

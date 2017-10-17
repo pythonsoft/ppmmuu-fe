@@ -2,6 +2,9 @@
   <div>
     <h1 class="shelf-edit-title">填写内容</h1>
     <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="90px">
+      <fj-form-item label="节目名称" prop="name">
+        <fj-input v-model="editorInfo.name"></fj-input>
+      </fj-form-item>
       <fj-form-item label="订阅类型" prop="subscribeType">
         <fj-select v-model="editorInfo.subscribeType">
           <fj-option
@@ -38,12 +41,15 @@
       'upload-img': UploadImg
     },
     props: {
-      editorInfo: {type: Object, default: {}}
+      editorInfo: { type: Object, default: function(){ return {} } }
     },
     data() {
       return {
         subscribeType: [],
         rules: {
+          name: [
+            { required: true, message: '请输入节目名称' }
+          ],
           subscribeType: [
             { required: true, message: '请选择订阅类型' },
           ],

@@ -78,6 +78,7 @@
         }
         api.saveShelf(postData)
           .then((res)=>{
+            me.shelfInfo.name = me.shelfInfo.editorInfo.name;
             me.showSuccessInfo('已保存');
           })
           .catch((error)=>{
