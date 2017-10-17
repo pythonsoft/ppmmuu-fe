@@ -271,7 +271,7 @@
             me.handleSelectionChange();
           })
           .catch((error) => {
-            me.showErrorInfo(error);
+            // me.showErrorInfo(error);
           });
       },
       getTextByValue(v, st) {
