@@ -31,7 +31,7 @@
             <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.f_str_314 }}</span>
           </li>
           <li>
-            <span title="新闻日期">{{ (item.f_date_162 || item.last_modify) | formatTime }}</span>
+            <span title="新闻日期">{{ formatTime(item.f_date_162) || '无新聞日期' }}</span>
           </li>
         </ul>
       </div>
@@ -52,7 +52,7 @@
           <span v-html="item.program_type || '无分类'"></span>
         </div>
         <p class="media-item-category media-item-time">
-          {{ (item.f_date_162 || item.last_modify) | formatTime }}
+          {{ formatTime(item.f_date_162) || '无新聞日期' }}
         </p>
       </li>
     </ul>
@@ -70,7 +70,7 @@
     getTitle,
     getDescription
   } from './common';
-  import { isEmptyObject, deepClone, formatSize, getStringLength } from '../../common/utils';
+  import { isEmptyObject, deepClone, formatSize, getStringLength, formatTime } from '../../common/utils';
 
   Vue.use(VueLazyload, {
     preLoad: 1.3,
@@ -120,7 +120,8 @@
         return getStringLength(content) > limit ? `${content.slice(0, limit)}...` : content;
       },
       formatSize,
-      deepClone
+      deepClone,
+      formatTime
     }
   };
 </script>

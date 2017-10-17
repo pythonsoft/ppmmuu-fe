@@ -278,7 +278,6 @@
         return config.getTextByValue(v, st)
       },
       handleClickSearch() {
-        this.currentNode = treeNode;
         const param = {
           page: this.page,
           pageSize: this.pageSize,
