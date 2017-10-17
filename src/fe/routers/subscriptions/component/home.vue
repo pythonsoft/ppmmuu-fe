@@ -3,57 +3,20 @@
     <div v-for="categoryItem in defaultList" :style="{ width: `${sectionListWidth}px` }" class="subscribe-section-list-wrap">
       <div class="clearfix">
         <h3 class="subscribe-section-title">{{ categoryItem.key }}</h3>
-        <span class="subscribe-section-count" @click="linkToChannel(categoryItem._id)">
+        <span class="subscribe-section-count" @click="linkToChannel(categoryItem._id, categoryItem.key)">
           共{{ categoryItem.total }}个
           <span class="iconfont icon-arrow-right arrow-right-btn"></span>
         </span>
       </div>
-      <ul class="subscribe-grid">
-        <li v-for="item in categoryItem.docs" v-if="item" :key="item.objectId" @click="">
-          <div class="iconfont icon-phoenixtv subscribe-grid-image">
-            <img class="subscribe-thumb" v-lazy="getThumb(item)" >
-            <div class="subscribe-list-item-overlay">
-              <span class="iconfont icon-play play-btn"></span>
-              {{getDuration(item)}}
-            </div>
-          </div>
-          <div class="subscribe-item-name" :title="getReplaceName(item)">
-            <span v-html="getTitle(item)"></span>
-            <span class="iconfont icon-download download-btn"></span>
-          </div>
-          <div class="subscribe-item-detail">
-            来源：<span v-html="item.source || '无分类'"></span>
-          </div>
-          <p class="subscribe-item-detail">
-            限制：{{ item.limit }}
-          </p>
-          <p class="subscribe-item-detail">
-            入库时间：{{ item.storageTime | formatTime }}
-          </p>
-        </li>
+      <ul class="subscribe-grid subscribe-section-list">
+        <SubscribeListItem v-for="item in categoryItem.docs" :item="item" :key="item.objectId"></SubscribeListItem>
       </ul>
     </div>
   </div>
 </template>
 <script>
-  import Vue from 'vue';
-  import VueLazyload from 'vue-lazyload';
-  import {
-    getDuration,
-    getThumb,
-    getMediaFormat,
-    getMediaFormatStyle,
-    getReplaceName,
-    getTitle,
-    getDescription
-  } from '../../mediaCenter/common';
+  import SubscribeListItem from './subscribeListItem';
   const subscribeAPI = require('../../../api/subscribe');
-
-  Vue.use(VueLazyload, {
-    preLoad: 1.3,
-    error: '/img/photoBreak.png',
-    attempt: 1
-  });
 
   const LIST_WRAP_PADDING = 120;
   const LIST_ITEM_WIDTH = 192;
@@ -79,13 +42,6 @@
       window.removeEventListener('resize', this.resetListWidth);
     },
     methods: {
-      getDuration,
-      getThumb,
-      getMediaFormat,
-      getMediaFormatStyle,
-      getReplaceName,
-      getTitle,
-      getDescription,
       resetListWidth() {
         const maxWidth = MAX_LIST_ITEM_COUNT * LIST_ITEM_WIDTH + (MAX_LIST_ITEM_COUNT - 1) * LIST_ITEM_MARGIN;
         const listWrapWidth = this.$refs.listWrap.getBoundingClientRect().width;
@@ -112,11 +68,12 @@
           .catch((error) => {
           });
       },
-      linkToChannel(channelId) {
-        this.$router.push({ name: 'subscriptions', query: { channel: channelId } });
+      linkToChannel(channelId, channelName) {
+        this.$router.push({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
       }
     },
     components: {
+      SubscribeListItem
     }
   };
 </script>
