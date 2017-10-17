@@ -1,7 +1,7 @@
 <template>
   <div class="playerWrap" :class="{'playerBigMode': isFullscreen || mode === 'big'}" ref="playerWrap" :style="isFullscreen ? {} : { height: `${height}px`, width: `${width}px` }">
     <div class="videoBox">
-      <video :style="{display: 'block', width: '100%', height: '100%'}" ref="video" :src="url"></video>
+      <video :style="{display: 'block', width: '100%', height: '100%'}" ref="video" :src="url" crossorigin="anonymous"></video>
       <div v-show="currentVideoSRT" class="video-srt">
         <span class="video-srt-text">{{ currentVideoSRT }}</span>
       </div>

@@ -175,6 +175,10 @@
         shelfAPI.getShelfDetail(formatQuery({_id: me.id }, true))
           .then((res)=>{
             const editorInfo = res.data.editorInfo || {};
+            me.editorDetails['subscribeName'] = {
+              cn: '节目名称',
+              value: editorInfo['name'] || ''
+            };
             me.editorDetails['subscribeType'] = {
               cn: '订阅类型',
               value: editorInfo['subscribeType']

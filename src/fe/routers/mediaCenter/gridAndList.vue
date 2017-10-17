@@ -31,7 +31,7 @@
             <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.f_str_314 }}</span>
           </li>
           <li>
-            <span title="入库时间">{{ item.last_modify | formatTime }}</span>
+            <span title="入库时间">{{ (item.f_date_162 || item.last_modify) | formatTime }}</span>
           </li>
         </ul>
       </div>
@@ -52,7 +52,7 @@
           <span v-html="item.program_type || '无分类'"></span>
         </div>
         <p class="media-item-category media-item-time">
-          {{ item.last_modify | formatTime }}
+          {{ (item.f_date_162 || item.last_modify) | formatTime }}
         </p>
       </li>
     </ul>

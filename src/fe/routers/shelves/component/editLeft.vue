@@ -6,7 +6,7 @@
           <player :videoId="videoId" :height="526" :url="url" :streamInfo="streamInfo" ref="player"></player>
         </div>
         <div class="media-video-title-wrap">
-          <div class="media-video-title" v-html="title"></div>
+          <div class="media-video-title" v-html="shelfInfo.name"></div>
           <ul class="media-video-title-bar">
             <li>
               <span title="截图" class="iconfont icon-camera" @click.stop="screenshot"></span>
@@ -81,7 +81,6 @@
     },
     data() {
       return {
-        title: '',
         programDetails: {},
         editorInfo: {},
         detailWidth: '',
@@ -120,7 +119,6 @@
         //this.videoId = this.shelfInfo.objectId;
         this.videoId = this.shelfInfo.objectId;
         this.editorInfo = this.shelfInfo.editorInfo;
-        this.title = this.shelfInfo.name;
         this.poster = this.getThumb({id: this.videoId});
         this.getStream();
         this.getObject();
@@ -147,7 +145,7 @@
             }
           })
           .catch((error)=>{
-            me.showErrorInfo(error);
+            me.$message.error(error);
           })
       },
       getStream() {
@@ -166,7 +164,7 @@
       },
       screenshot() {
         this.screenshotURL = this.createImage();
-        this.screenshotTitle = this.title + transformSecondsToStr(this.currentTime);
+        this.screenshotTitle = this.shelfInfo.name + transformSecondsToStr(this.currentTime);
         this.imageDialogVisible = true;
       },
       createImage() {
@@ -191,6 +189,12 @@
         }
 
         return rs;
+      },
+      showSuccessInfo(message) {
+        this.$message.success(message);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
       }
     }
   };
