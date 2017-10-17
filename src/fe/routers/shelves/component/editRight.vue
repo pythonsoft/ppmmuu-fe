@@ -48,7 +48,7 @@
         subscribeType: [],
         rules: {
           name: [
-            { required: true, message: '请输入来源' }
+            { required: true, message: '请输入节目名称' }
           ],
           subscribeType: [
             { required: true, message: '请选择订阅类型' },
