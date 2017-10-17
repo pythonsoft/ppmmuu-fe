@@ -17,8 +17,12 @@
         <fj-table-column prop="permissionType" width="100" label="权限">
           <template scope="props">{{ getTextByValue(props.row.permissionType, 'AUDIT_RULE_PERMISSTION_TYPE') }}</template>
         </fj-table-column>
-        <fj-table-column prop="name" width="200" label="审核部门"></fj-table-column>
-        <fj-table-column prop="name" width="120" label="创建人"></fj-table-column>
+        <fj-table-column prop="auditDepartment" width="200" label="审核部门">
+          <template scope="props">{{ props.row.auditDepartment.name || '-' }}</template>
+        </fj-table-column>
+        <fj-table-column prop="creator" width="120" label="创建人">
+          <template scope="props">{{ props.row.creator.name || '-' }}</template>
+        </fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
           <template scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
@@ -44,19 +48,27 @@
       </div>
     </fj-dialog>
 
+    <dialog-view
+      :auditRuleInfo="auditRuleInfo"
+      :type="table.type"
+      :visible="dialogDisplay"
+    ></dialog-view>
+
   </layout-four-row>
 </template>
 <script>
   import './index.css';
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
   import utils from '../../../../common/utils';
+  import dialogView from './component/dialog';
 
   const api = require('../../../../api/audit');
-  const config = require('../../task/config');
+  const config = require('../config');
 
   export default {
     components: {
       'layout-four-row': fourRowLayout,
+      'dialog-view': dialogView,
     },
     data() {
       return {
@@ -67,7 +79,7 @@
           type: 'add'
         },
 
-        templateInfo: null,
+        auditRuleInfo: null,
 
         formData: {
           type: ''
@@ -85,32 +97,32 @@
       };
     },
     created() {
-      this.listTemplate();
+      this.listRuleInfo();
     },
     destroyed() {
     },
     methods: {
       getTextByValue(v, st) {
-        return config.getTextByValue(v, st);
+        return config.config.getTextByValue(v, st);
       },
       handleClickSearch() {
-        this.listTemplate();
+        this.listRuleInfo();
       },
       addClick() {
         this.table.type = 'add';
         this.dialogDisplay = true;
-        this.templateInfo = null;
+        this.auditRuleInfo = null;
       },
       updateClick() {
         this.table.type = 'update';
         this.dialogDisplay = true;
-        this.templateInfo = this.table.currentRowInfo;
+        this.auditRuleInfo = this.table.currentRowInfo;
       },
       deleteClick() {
         this.confirmDialogDisplay = true;
       },
       refreshClick() {
-        this.listTemplate();
+        this.listRuleInfo();
         this.isDisabled = true;
         this.table.currentRowInfo = {};
         this.dialogDisplay = false;
@@ -128,21 +140,21 @@
       },
       pageChange(val) {
         this.page = val;
-        this.listTemplate();
+        this.listRuleInfo();
       },
       confirmDialog() {
         const me = this;
 
         api.removeAuditRule({ id: this.table.currentRowInfo._id }, me).then((res) => {
           me.$message.success('删除成功');
-          me.listTemplate();
+          me.listRuleInfo();
           me.confirmDialogDisplay = false;
         }).catch((error) => {
           me.$message.error(error);
         });
       },
       /* api */
-      listTemplate() {
+      listRuleInfo() {
         const me = this;
         const param = {
           page: this.page,
