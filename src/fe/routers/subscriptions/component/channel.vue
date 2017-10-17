@@ -1,12 +1,136 @@
 <template>
-  <div></div>
+  <div class="channel-wrap" ref="channelWrap">
+    <div class="channel-header clearfix">
+      <h3 class="channel-name">{{ this.query.channel_name }}</h3>
+      <span class="channel-count">共{{ total }}个</span>
+      <div class="media-center-view-bar">
+        <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
+        --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
+        --><div class="order-select">
+          <fj-select v-model="orderVal" size="small">
+            <fj-option
+              v-for="item in ORDER_OPTIONS"
+              :key="JSON.stringify(item.value)"
+              :value="JSON.stringify(item.value)"
+              :label="item.label"></fj-option>
+          </fj-select>
+        </div>
+      </div>
+    </div>
+    <grid-list-view
+      :type="viewType"
+      :width="listWidth"
+      :items="items"
+      @currentItemChange="()=>{}"
+    ></grid-list-view>
+
+    <div class="media-pagination" v-if="items.length">
+      <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="updateList"></pagination>
+    </div>
+  </div>
 </template>
 <script>
+  import GridListView from './gridAndList';
+  import Pagination from '../../mediaCenter/components/pagination';
+
+  const subscribeAPI = require('../../../api/subscribe');
+
   export default {
+    props: {
+      query: {}
+    },
+    created() {
+      this.getSubscribeSearchConfig();
+      this.updateList();
+      if (this.query.viewType) this.viewType = this.query.viewType;
+    },
+    mounted() {
+      this.resetListWidth();
+      window.addEventListener('resize', this.resetListWidth);
+    },
+    beforDestroy() {
+      window.removeEventListener('resize', this.resetListWidth);
+    },
+    watch: {
+      query(val) {
+        this.getSubscribeSearchConfig();
+        this.updateList();
+        if (val.viewType) this.viewType = val.viewType;
+      },
+      orderVal(val) {
+        this.updateList();
+      }
+    },
     data() {
       return {
-
+        total: 0,
+        orderVal: '',
+        viewType: 'grid',
+        ORDER_OPTIONS: [],
+        items: [],
+        pageSize: 20,
+        currentPage: 1,
+        listWidth: 1080
       };
     },
+    methods: {
+      getSubscribeSearchConfig() {
+        subscribeAPI.getSubscribeSearchConfig().then((res) => {
+          const data = res.data;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].key === 'sort') {
+              this.ORDER_OPTIONS = data[i].items;
+              this.orderVal = JSON.stringify(this.ORDER_OPTIONS[0].value);
+            }
+          }
+        }).catch((error) => {
+          this.$message.error(error);
+        });
+      },
+      resetListWidth() {
+        this.listWidth = this.$refs.channelWrap.getBoundingClientRect().width;
+      },
+      setViewType(t) {
+        this.viewType = t;
+        // this.$router.push({ name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
+      },
+      viewTypeSelect(type) {
+        let className = 'iconfont';
+
+        if (type === 'grid') {
+          className += ' icon-view-grid media-center-view-grid';
+          if (this.viewType === 'grid') {
+            className += ' media-center-view-selected';
+          }
+        } else if (type === 'list') {
+          className += ' icon-view-list media-center-view-list';
+
+          if (this.viewType === 'list') {
+            className += ' media-center-view-selected';
+          }
+        }
+
+        return className;
+      },
+      updateList() {
+        const options = {};
+        options.subscribeType = [this.query.channel];
+        if (this.orderVal) {
+          options.sort = JSON.parse(this.orderVal);
+        }
+        options.start = (this.currentPage - 1) * this.pageSize;
+        options.pageSize = this.pageSize;
+        subscribeAPI.esSearch(options, this).then((res) => {
+          this.total = res.data.total;
+          this.items = res.data.docs;
+        }).catch((error) => {
+          this.$message.error(error);
+        });
+      }
+    },
+    components: {
+      GridListView,
+      Pagination
+    }
   };
 </script>

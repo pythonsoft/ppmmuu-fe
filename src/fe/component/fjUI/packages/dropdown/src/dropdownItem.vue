@@ -9,7 +9,7 @@
     },
     methods: {
       handleClick(e) {
-        const dropdownNode = this.$parent.$parent;
+        const dropdownNode = this.$parent.$parent || this.$parent;
         dropdownNode.$emit('item-click', this, this.command);
       }
     }
