@@ -4,12 +4,12 @@
       <div :class="$style.leftMenu">
         <h3 :class="$style.leftMenuTitle">共订阅{{ total }}个节目</h3>
         <ul>
-          <li :class="$style.menuItem">
+          <li :class="$style.menuItem" @click="linkToHome">
             <span class="iconfont icon-company" :style="{ color: '#9FB3CA' }"></span>
             <span :class="$style.menuItemText">首页</span>
             <span></span>
           </li>
-          <li :class="$style.menuItem" v-for="item in subscriptionMenu">
+          <li :class="$style.menuItem" v-for="item in subscriptionMenu" @click="linkToChannel(item._id, item.name)">
             <span :class="$style.menuItemImgBox">
               <img :class="$style.menuItemImg" :src="item.photo" width="18" height="18" />
             </span>
@@ -51,7 +51,7 @@
             </div>
           </div>
           <home v-if="contentType === 'default'"></home>
-          <channel v-else-if="contentType === 'channel'"></channel>
+          <channel v-else-if="contentType === 'channel'" :query="routeQuery"></channel>
         </div>
       </div>
     </template>
@@ -76,7 +76,10 @@
         remainTime: 0,
         totalTime: 0,
         contentType: 'default',
-        loading: false
+        loading: false,
+        routeQuery: {},
+        history: [],
+        route: {}
       };
     },
     created() {
@@ -85,7 +88,7 @@
       this.updateContentType();
     },
     watch: {
-      '$route'(val) {
+      'route'(val) {
         console.log('route', val);
         this.updateContentType();
       }
@@ -93,7 +96,8 @@
     methods: {
       transformSecondsToHours,
       updateContentType() {
-        if (this.$route.query.channel) {
+        this.routeQuery = this.route.query;
+        if (this.routeQuery && this.routeQuery.channel) {
           this.contentType = 'channel';
         } else {
           this.contentType = 'default';
@@ -119,6 +123,18 @@
           .catch((error) => {
             this.$message.error(error);
           });
+      },
+      linkToChannel(channelId, channelName) {
+        this.updateRouter({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
+        // this.$router.push({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
+      },
+      linkToHome() {
+        this.updateRouter({ name: 'subscriptions' });
+        // this.$router.push({ name: 'subscriptions' });
+      },
+      updateRouter(route) {
+        this.history.push(route);
+        this.route = route;
       }
     },
     components: {
