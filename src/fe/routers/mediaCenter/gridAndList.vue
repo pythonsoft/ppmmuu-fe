@@ -31,7 +31,7 @@
             <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.f_str_314 }}</span>
           </li>
           <li>
-            <span title="入库时间">{{ (item.f_date_162 || item.last_modify) | formatTime }}</span>
+            <span title="新闻日期">{{ (item.f_date_162 || item.last_modify) | formatTime }}</span>
           </li>
         </ul>
       </div>
