@@ -67,6 +67,17 @@
   width: 192px;
   height: 108px;
 }
+.subscribe-list-item:hover .subscribe-list-item-thumb-wrap:after {
+  content: '';
+  position: absolute;
+  overflow: hidden;
+  width: 192px;
+  height: 108px;
+  left: 0;
+  top: 0;
+  background: #fff;
+  opacity: .3;
+}
 
 .subscribe-list-color-span {
   width: 40px;
@@ -107,7 +118,9 @@
   color: #2A3E52;
   margin-bottom: 10px;
 }
-
+.subscribe-list-item:hover .subscribe-list-title {
+  color: #38B1EB;
+}
 .subscribe-list-description {
   margin: 12px 0 8px;
   font-size: 12px;
@@ -159,10 +172,11 @@
   margin-top: 16px;
   box-sizing: border-box;
   cursor: default;
+  margin-right: 6px;
 }
-.subscribe-grid li+li {
+/*.subscribe-grid li+li {
   margin-left: 6px;
-}
+}*/
 
 .subscribe-grid-image {
   height: 108px;
@@ -306,6 +320,8 @@
   left: 0;
   bottom: 0;
   width: 100%;
+  z-index: 100;
+  background: #F8FAFB;
 }
 
 .rightBox {
