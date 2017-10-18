@@ -75,7 +75,8 @@
           this.updateList();
         }
       },
-      orderVal(val) {
+      orderVal(val, oldVal) {
+        if (!oldVal) return;
         this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { order: val }) });
         // this.updateList();
       }

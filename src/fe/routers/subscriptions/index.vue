@@ -24,8 +24,8 @@
         <div :style="{ minWidth: '1080px' }">
           <div :class="[$style.topBar, 'clearfix']">
             <div :class="$style.btnGroup">
-              <span :class="['iconfont icon-arrow-left', $style.btnBack]"></span>
-              <span :class="['iconfont icon-arrow-right', $style.btnForward]"></span>
+              <span :class="['iconfont icon-arrow-left', 'btnBack', {'disabled': routeIndex <= 0}]" @click="back"></span>
+              <span :class="['iconfont icon-arrow-right', 'btnForward', {'disabled': history.length > 0 && routeIndex === history.length - 1}]" @click="forward"></span>
             </div>
             <div :style="{ width: '676px', float: 'left' }">
               <fj-select
@@ -52,7 +52,7 @@
           </div>
           <home v-if="contentType === 'default'" @update-router="updateRouter"></home>
           <channel v-else-if="contentType === 'channel'" :query="routeQuery" @update-router="updateRouter"></channel>
-          <watch v-if="isShowWatch" :query="routeQuery"></watch>
+          <watch v-if="isShowWatch" :query="routeQuery" @update-router="updateRouter"></watch>
         </div>
       </div>
     </template>
@@ -81,19 +81,20 @@
         loading: false,
         routeQuery: {},
         history: [],
+        routeIndex: 0,
         route: {},
         isShowWatch: false
       };
     },
     created() {
       this.route = this.$route;
+      this.history.push(this.route);
       this.getSubscribeInfo();
       this.getSubscribeTypeSummary();
       this.updateContentType();
     },
     watch: {
       '$route'(val) {
-        console.log('route', val);
         this.route = val;
         this.updateContentType();
       }
@@ -136,19 +137,30 @@
       },
       linkToChannel(channelId, channelName) {
         this.updateRouter({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
-        // this.$router.push({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
       },
       linkToHome() {
         this.updateRouter({ name: 'subscriptions' });
-        // this.$router.push({ name: 'subscriptions' });
       },
       linkToWatch(objectId) {
         this.updateRouter({ name: 'subscriptions', query: { objectId: objectId } });
       },
       updateRouter(route) {
+        console.log('updateRouter', route);
+        this.history.splice(this.routeIndex + 1, this.history.length - 1 - this.routeIndex, route);
+        this.routeIndex = this.history.length - 1;
         this.$router.push(route);
-        this.history.push(route);
-        // this.route = route;
+      },
+      back() {
+        if (this.routeIndex <= 0) return;
+        this.routeIndex -= 1;
+        const route = { name: this.history[this.routeIndex].name, query: this.history[this.routeIndex].query };
+        this.$router.push(route);
+      },
+      forward() {
+        if (this.history.length > 0 && this.routeIndex === this.history.length - 1) return;
+        this.routeIndex += 1;
+        const route = { name: this.history[this.routeIndex].name, query: this.history[this.routeIndex].query };
+        this.$router.push(route);
       }
     },
     components: {
@@ -182,7 +194,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #F8FAFB;
+    background: rgba(248, 250, 251, .5);
   }
   .topBar {
     position: absolute;
@@ -196,31 +208,7 @@
     float: left;
     margin-right: 10px;
   }
-  .btnBack,
-  .btnForward {
-    float: left;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    background: #F2F6FA;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 12px;
-    color: #9FB3CA;
-  }
-  .btnBack:hover,
-  .btnForward:hover {
-    background: #E3EAF3;
-  }
-  .btnBack {
-    margin-right: 1px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btnForward {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+
   .topBar .time {
     float: right;
     font-size: 12px;

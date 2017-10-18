@@ -11,7 +11,7 @@
         :parentEl="parentEl"></SubscribeListItem>
     </div>
 
-    <ul v-else class="subscribe-grid clearfix" :style="{ width: !width ? '100%' : width + 'px' }">
+    <ul v-else class="subscribe-grid grid-list clearfix" :style="{ width: !width ? '100%' : width + 'px' }">
       <SubscribeListItem
         v-for="item in items"
         :item="item"
