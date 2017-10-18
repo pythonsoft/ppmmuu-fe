@@ -53,9 +53,9 @@
     </div>
 
     <bucket-browser-view
-      :visible.sync="bucketBrowserVisible"
-      @confirm="bucketConfirm"
-    ></bucket-browser-view>
+    :visible.sync="bucketBrowserVisible"
+    @confirm="bucketConfirm"
+  ></bucket-browser-view>
 
     <script-dialog-view
       :visible.sync="scriptDialogVisible"

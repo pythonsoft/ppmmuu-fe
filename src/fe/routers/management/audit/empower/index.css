@@ -12,3 +12,16 @@
   margin-left: 18px;
   font-size: 12px;
 }
+.audit-radio-item{
+  padding: 4px 0;
+}
+
+.audit-group-input {
+  float: left;
+  width: 215px;
+  margin-right: 10px;
+}
+
+.audit-dialog-footer{
+  text-align: right;
+}

@@ -2,14 +2,14 @@
   <div class="clearfix" style="height: 100%;">
     <div class="left-tree">
       <tree-view
-              title="分组结构"
-              addBtnText="添加分组"
-              :vue-instance="vueInstance"
-              menu-width="90px"
-              :exec-command="execCommand"
-              :list-group="handleTreeNodeClick"
-              :btn-click="btnClick"
-              :tree-node-current-change="treeNodeCurrentChange"
+        title="分组结构"
+        addBtnText="添加分组"
+        :vue-instance="vueInstance"
+        menu-width="90px"
+        :exec-command="execCommand"
+        :list-group="handleTreeNodeClick"
+        :btn-click="btnClick"
+        :tree-node-current-change="treeNodeCurrentChange"
       ></tree-view>
     </div>
     <div class="right-list">
@@ -38,6 +38,7 @@
             <fj-table-column prop="description" width="240" label="描述"></fj-table-column>
           </fj-table>
         </template>
+
         <template slot="pagination">
           <fj-pagination
             :page-size="pageSize"
@@ -65,30 +66,25 @@
           </div>
         </fj-dialog>
 
-        <fj-dialog
-                title="删除提示"
-                :visible.sync="deleteDialogVisible">
-
+        <fj-dialog title="删除提示" :visible.sync="deleteDialogVisible">
           <p>删除组后，组下面的下载模板将全部删除，您确定要删除吗？</p>
-
           <div slot="footer" class="dialog-footer">
             <fj-button @click.stop="deleteDialogVisible=false">取消</fj-button><!--
         --><fj-button type="primary" :loading="isDeleteBtnLoading" @click.stop="handleDeleteClick">确定</fj-button>
           </div>
-
         </fj-dialog>
+
         <add-group
-                :parentId="addGroupDialogParentId"
-                :dialogVisible.sync="isShowAddGroupDialog"
-                @added="vueInstance.$emit('tree.listGroup')">
+          :parentId="addGroupDialogParentId"
+          :dialogVisible.sync="isShowAddGroupDialog"
+          @added="vueInstance.$emit('tree.listGroup')"
+        ></add-group>
 
-        </add-group>
         <edit-group
-                :info="nodeInfo"
-                :dialogVisible.sync="isShowEditGroupDialog"
-                @edited="vueInstance.$emit('tree.listGroup')">
-
-        </edit-group>
+          :info="nodeInfo"
+          :dialogVisible.sync="isShowEditGroupDialog"
+          @edited="vueInstance.$emit('tree.listGroup')"
+        ></edit-group>
 
       </layout-four-row>
     </div>
