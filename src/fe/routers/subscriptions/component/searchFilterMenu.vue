@@ -49,13 +49,21 @@
         if (menu.multiple) {
           if (filterList[menu.key]) {
             const tempArr = filterList[menu.key].split(' ');
-            tempArr.push(value);
+            if (tempArr.indexOf(value) > -1) {
+              tempArr.splice(tempArr.indexOf(value), 1);
+            } else {
+              tempArr.push(value);
+            }
             filterList[menu.key] = tempArr.join(' ');
           } else {
             filterList[menu.key] = value;
           }
         } else {
-          filterList[menu.key] = value;
+          if (filterList[menu.key] === value) {
+            filterList[menu.key] = '';
+          } else {
+            filterList[menu.key] = value;
+          }
         }
         this.$emit('update-filter-list', filterList);
       }
