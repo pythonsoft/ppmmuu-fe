@@ -5,7 +5,7 @@
   export default {
     name: 'FjDropdownItem',
     props: {
-      command: ''
+      command: {}
     },
     methods: {
       handleClick(e) {
