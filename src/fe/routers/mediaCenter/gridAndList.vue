@@ -68,7 +68,6 @@
     getMediaFormatStyle,
     getReplaceName,
     getTitle,
-    getDescription
   } from './common';
   import { isEmptyObject, deepClone, formatSize, getStringLength } from '../../common/utils';
 
@@ -115,7 +114,7 @@
       getReplaceName,
       getTitle,
       getDescription(item) {
-        const content = getDescription(item);
+        const content = item.full_text;
         const limit = 172;
         return getStringLength(content) > limit ? `${content.slice(0, limit)}...` : content;
       },
