@@ -4,6 +4,7 @@
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
 | type | 显示类型 | string | date/datetime/daterange/datetimerange | datetime | ✅(datetime) |
+| direction | 输入框方向（仅在type为datetimerange时生效 | string | vertical/horizontal | vertical | ✅ |
 | size | 输入框尺寸 | string | large, small, mimi | - | ✅ |
 | placeholder | 占位内容 | string | - | - | ✅ |
 | theme | 输入框主题样式 | string | stroke, fill | fill | ✅ |

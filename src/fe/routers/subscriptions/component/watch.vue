@@ -1,11 +1,5 @@
 <template>
   <div class="watchContent">
-    <div class="topBar">
-      <span class="returnBtn" @click="back">
-        <i class="iconfont icon-arrow-left"></i>
-        返回
-      </span>
-    </div>
     <div class="mainBox">
       <div class="leftBox" ref="leftBox" :style="{ right: rightboxWidth }">
         <div class="leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
@@ -16,18 +10,16 @@
               <li>
                 <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
               </li>
-              <li>
-                <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
-              </li>
             </ul>
           </div>
           <div class="leftBoxFooter">
-            <h3 class="footerTitle">观看历史</h3>
+            <h3 class="footerTitle">更多节目</h3>
             <grid-list-view
-              type="grid"
               :width="playerWidth"
               :items="items"
-              @currentItemChange="currentItemChange"
+              :downloadFn="showDownloadList"
+              :link-to-watch-fn="currentItemChange"
+              :parentEl="parentEl"
             ></grid-list-view>
           </div>
         </div>
@@ -48,37 +40,6 @@
               </table>
             </div>
           </fj-tab-pane>
-          <fj-tab-pane label="文件信息" name="tab2">
-            <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in files">
-              <table class="media-center-table">
-                <tr>
-                  <td class="item-info-key" width="80">文件名: </td>
-                  <td class="item-info-value" width="303">
-                    <div class="media-center-file-name">
-                      {{ file.FILENAME || '无文件名' }}
-                      <span class="media-center-file-type">
-                        {{ file.SANAME || '无信息' }}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="item-info-key">文件大小: </td>
-                  <td class="item-info-value" >{{ formatSize(file.FILESIZE) }}</td>
-                </tr>
-                <tr>
-                  <td class="item-info-key">时长: </td>
-                  <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
-                </tr>
-              </table>
-              <more-view
-                :info="file"
-              ></more-view>
-              <div class="media-center-operation-bar">
-                <fj-button type="info" size="mini" @click.stop="prepareDownload(file)">下载</fj-button>
-              </div>
-            </div>
-          </fj-tab-pane>
         </fj-tabs>
       </div>
     </div>
@@ -90,7 +51,6 @@
   </div>
 </template>
 <script>
-  import './index.css';
   import {
     formatSize,
     formatDuration,
@@ -100,7 +60,7 @@
     formatQuery,
     formatTime,
   } from '../../../common/utils';
-  import GridListView from '../../mediaCenter/gridAndList';
+  import GridListView from './gridAndList';
   import MoreView from '../../mediaCenter/moreView';
   import Player from '../../mediaCenter/components/player';
   import { getTitle, getThumb } from '../../mediaCenter/common';
@@ -111,13 +71,16 @@
   const mediaAPI = require('../../../api/media');
   const ivideoAPI = require('../../../api/ivideo');
   const userAPI = require('../../../api/user');
+  const subscribeAPI = require('../../../api/subscribe');
 
-  const playerMinWidth = 792;
+  const playerMinWidth = 594;
   const playerMaxWidth = 1188;
-  const playerMinHeight = 506;
+  const playerMinHeight = 387;
   const playerMaxHeight = 731;
-
   export default {
+    props: {
+      query: {}
+    },
     data() {
       return {
         rightBoxStatus: 'expand',
@@ -139,7 +102,8 @@
         rightboxWidth: '452px',
         templateInfo: {},
         fileInfo: {},
-        downloadDialogDisplay: false
+        downloadDialogDisplay: false,
+        parentEl: null
       };
     },
     watch: {
@@ -152,32 +116,40 @@
           }
         }, 400);
       },
-      '$route.params.objectId'(val) {
-        if (val) {
+      'query'(val) {
+        if (val.objectId) {
           this.refresh();
         }
       }
     },
     mounted() {
-      if (this.$route.params.objectId) {
+      this.parentEl = this.$refs.leftBox;
+      if (this.query.objectId) {
         this.refresh();
       }
       this.updatePlayerWidth();
       window.addEventListener('resize', this.updatePlayerWidth);
+    },
+    beforDestroy() {
+      window.removeEventListener('resize', this.updatePlayerWidth);
     },
     methods: {
       formatSize,
       formatDuration,
       formatContent,
       refresh() {
-        this.objectId = this.$route.params.objectId;
+        this.objectId = this.query.objectId;
         this.getDetail();
         this.getStream(this.objectId);
         this.poster = getThumb({ id: this.objectId });
-        this.updateHistoryList();
+        this.updateList();
       },
-      currentItemChange(item) {
-        this.$router.push({ name: 'historyWatch', params: { objectId: item.id } });
+      showDownloadList(fileInfo) {
+        this.fileInfo = fileInfo;
+        this.downloadDialogDisplay = true;
+      },
+      currentItemChange(objectId) {
+        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
       },
       foldedOrExpandRightBox() {
         if (this.rightBoxStatus === 'expand') {
@@ -191,6 +163,7 @@
         }
       },
       updatePlayerWidth() {
+        if (!this.$refs.leftBox) return;
         const leftBoxWidth = this.$refs.leftBox.getBoundingClientRect().width;
         if (leftBoxWidth < playerMaxWidth + 100) {
           this.playerWidth = playerMinWidth;
@@ -200,22 +173,31 @@
           this.playerHeight = playerMaxHeight;
         }
       },
-      updateHistoryList() {
-        const data = {
-          page: 1,
-          pageSize: 12
-        };
-        userAPI.getWatchHistory(formatQuery(data, true))
-          .then((response) => {
-            const responseData = response.data;
-            const tempList = responseData.docs.map(
-              item => Object.assign(item.videoContent, { _id: item._id })
-            );
-            this.items = tempList;
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          });
+      updateList() {
+        // const data = {
+        //   page: 1,
+        //   pageSize: 12
+        // };
+        // userAPI.getWatchHistory(formatQuery(data, true))
+        //   .then((response) => {
+        //     const responseData = response.data;
+        //     const tempList = responseData.docs.map(
+        //       item => Object.assign(item.videoContent, { _id: item._id })
+        //     );
+        //     this.items = tempList;
+        //   })
+        //   .catch((error) => {
+        //     this.$message.error(error);
+        //   });
+        const options = {};
+        options.keyword = this.streamInfo.FILENAME;
+        options.start = 0;
+        options.pageSize = 12;
+        subscribeAPI.esSearch(options, this).then((res) => {
+          this.items = res.data.docs;
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       },
       getDetail() {
         mediaAPI.getObject({ params: { objectid: this.objectId } }).then((res) => {
@@ -237,26 +219,6 @@
           this.url = url;
         }, this);
       },
-      // download(info) {
-      //   const param = {
-      //     objectid: this.objectId,
-      //     inpoint: this.streamInfo.INPOINT,
-      //     outpoint: this.streamInfo.OUTPOINT,
-      //     fileName: this.streamInfo.FILENAME
-      //   };
-      //   if (info && !isEmptyObject(info)) {
-      //     param.objectid = info.OBJECTID;
-      //     param.fileName = info.FILENAME;
-      //     param.inpoint = info.INPOINT;
-      //     param.outpoint = info.OUTPOINT;
-      //   }
-
-      //   jobAPI.download(param).then((res) => {
-      //     this.$message.success('正在下载文件，请到"任务"查看详细情况');
-      //   }).catch((error) => {
-      //     this.$message.error(error);
-      //   });
-      // },
       downloadListConfirm(templateInfo) {
         this.templateInfo = templateInfo || {};
         if (!isEmptyObject(templateInfo)) {

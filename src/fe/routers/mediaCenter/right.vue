@@ -25,7 +25,9 @@
           </div>
         </div>
       </div>
-      <div v-else class="iconfont icon-phoenixtv media-video-wrap-bg"></div>
+      <div v-else class="iconfont icon-phoenixtv media-video-wrap-bg">
+        <span class="media-video-wrap-message">{{videoMessage}}</span>
+      </div>
     </div>
     <div class="media-video-panel">
       <fj-tabs v-if="!isEmptyObject(item)" v-model="activeTabName" @tab-click="handleTabClick" class="media-video-panel-wrap">
@@ -142,6 +144,7 @@
         activeTabName: 'tab1',
         item: {},
         url: '',
+        videoMessage: '',
         streamInfo: {
           INPOINT: 0,
           OUTPOINT: 0
@@ -317,8 +320,19 @@
             me.$message.error(err);
             return;
           }
+          const index = rs.result.FILENAME.lastIndexOf('.');
+          const ext = rs.result.FILENAME.slice(index);
+
           me.streamInfo = rs.result;
-          me.url = url;
+
+          if(ext !== '.mp4') {
+            me.url = '';
+            me.videoMessage = '暂不支持 ' + ext + '格式的视频播放';
+          }else {
+            me.url = url;
+            me.videoMessage = '';
+          }
+
         }, me);
 
         return false;

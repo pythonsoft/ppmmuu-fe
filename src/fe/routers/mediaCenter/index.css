@@ -378,7 +378,6 @@
   color: #4C637B;
 }
 
-
 .media-center-title-selected{
   color: #38B1EB;
 }
@@ -459,4 +458,10 @@
 
 .media-center-category-list{
   border-bottom: 1px solid #EBF3FB;
+}
+
+.media-video-wrap-message{
+  font-size: 16px;
+  padding-left: 6px;
+  color: #fff;
 }

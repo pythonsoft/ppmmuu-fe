@@ -24,34 +24,37 @@
         <div :style="{ minWidth: '1080px' }">
           <div :class="[$style.topBar, 'clearfix']">
             <div :class="$style.btnGroup">
-              <span :class="['iconfont icon-arrow-left', $style.btnBack]"></span>
-              <span :class="['iconfont icon-arrow-right', $style.btnForward]"></span>
+              <span :class="['iconfont icon-arrow-left', 'btnBack', {'disabled': routeIndex <= 0}]" @click="back"></span>
+              <span :class="['iconfont icon-arrow-right', 'btnForward', {'disabled': history.length > 0 && routeIndex === history.length - 1}]" @click="forward"></span>
             </div>
             <div :style="{ width: '676px', float: 'left' }">
               <fj-select
                 remote
-                :clear-history-method="() => {}"
-                :history-method="() => {}"
+                :clear-history-method="clearHistory"
+                :history-method="getSearchHistory"
                 :remote-method="() => {}"
                 :loading="loading"
+                @search="searchClick"
                 v-model="query"
                 placeholder="请输入检索关键词"
                 theme="fill">
                 <fj-option
-                  v-for="item in queryOptions"
+                  v-for="item in keywordOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
                 </fj-option>
               </fj-select>
             </div>
-            <div :class="$style.time" title="剩余时间">
+            <div :class="$style.time" title="剩余时间／总时间">
               <span class="iconfont icon-clock" :class="$style.iconClock"></span>
               {{ transformSecondsToHours(remainTime) + ' / ' + transformSecondsToHours(totalTime) }}
             </div>
           </div>
-          <home v-if="contentType === 'default'"></home>
-          <channel v-else-if="contentType === 'channel'" :query="routeQuery"></channel>
+          <home v-if="contentType === 'default'" @update-router="updateRouter"></home>
+          <channel v-else-if="contentType === 'channel'" :query="routeQuery" @update-router="updateRouter"></channel>
+          <search v-else :query="routeQuery" @update-router="updateRouter"></search>
+          <watch v-if="isShowWatch" :query="routeQuery" @update-router="updateRouter"></watch>
         </div>
       </div>
     </template>
@@ -62,15 +65,19 @@
   import { transformSecondsToHours } from '../../common/utils';
   import Home from './component/home';
   import Channel from './component/channel';
+  import Watch from './component/watch';
+  import Search from './component/search';
   import './index.css';
 
   const subscribeAPI = require('../../api/subscribe');
+  const userAPI = require('../../api/user');
+  const mediaAPI = require('../../api/media');
 
   export default {
     data() {
       return {
         query: '',
-        queryOptions: [],
+        keywordOptions: [],
         total: 0,
         subscriptionMenu: [],
         remainTime: 0,
@@ -79,28 +86,69 @@
         loading: false,
         routeQuery: {},
         history: [],
-        route: {}
+        routeIndex: 0,
+        route: {},
+        isShowWatch: false
       };
     },
     created() {
+      this.route = this.$route;
+      this.history.push(this.route);
+      if (this.$route.query.query) {
+        this.query = this.$route.query.query;
+      }
       this.getSubscribeInfo();
       this.getSubscribeTypeSummary();
       this.updateContentType();
     },
     watch: {
-      'route'(val) {
-        console.log('route', val);
+      '$route'(val) {
+        this.route = val;
         this.updateContentType();
       }
     },
     methods: {
       transformSecondsToHours,
+      clearHistory() {
+        userAPI.clearSearchHistory()
+          .then((response) => {
+            this.getSearchHistory();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getSearchHistory() {
+        this.loading = true;
+        mediaAPI.getSearchHistory().then((res) => {
+          this.loading = false;
+          const data = res.data;
+          this.keywordOptions = res.data.map((item) => {
+            item.value = item.keyword;
+            item.label = item.keyword;
+            return item;
+          });
+        }).catch((error) => {
+          this.loading = false;
+          this.$message.error(error);
+        });
+      },
+      searchClick() {
+        this.updateRouter({ name: 'subscriptions', query: { query: this.query } });
+      },
       updateContentType() {
         this.routeQuery = this.route.query;
         if (this.routeQuery && this.routeQuery.channel) {
           this.contentType = 'channel';
+        } else if (this.routeQuery && this.routeQuery.query) {
+          this.contentType = 'search';
         } else {
           this.contentType = 'default';
+        }
+        if (this.routeQuery && this.routeQuery.objectId) {
+          this.isShowWatch = true;
+        } else {
+          this.isShowWatch = false;
         }
       },
       getSubscribeInfo() {
@@ -126,21 +174,38 @@
       },
       linkToChannel(channelId, channelName) {
         this.updateRouter({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
-        // this.$router.push({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
       },
       linkToHome() {
         this.updateRouter({ name: 'subscriptions' });
-        // this.$router.push({ name: 'subscriptions' });
+      },
+      linkToWatch(objectId) {
+        this.updateRouter({ name: 'subscriptions', query: { objectId: objectId } });
       },
       updateRouter(route) {
-        this.history.push(route);
-        this.route = route;
+        console.log('updateRouter', route);
+        this.history.splice(this.routeIndex + 1, this.history.length - 1 - this.routeIndex, route);
+        this.routeIndex = this.history.length - 1;
+        this.$router.push(route);
+      },
+      back() {
+        if (this.routeIndex <= 0) return;
+        this.routeIndex -= 1;
+        const route = { name: this.history[this.routeIndex].name, query: this.history[this.routeIndex].query };
+        this.$router.push(route);
+      },
+      forward() {
+        if (this.history.length > 0 && this.routeIndex === this.history.length - 1) return;
+        this.routeIndex += 1;
+        const route = { name: this.history[this.routeIndex].name, query: this.history[this.routeIndex].query };
+        this.$router.push(route);
       }
     },
     components: {
       LayoutThreeColumn,
       Home,
-      Channel
+      Channel,
+      Watch,
+      Search
     }
   };
 </script>
@@ -166,10 +231,14 @@
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background: #F8FAFB;
+    overflow: hidden;
+    background: rgba(248, 250, 251, .5);
   }
   .topBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     padding: 28px 60px 24px;
     background: #fff;
   }
@@ -177,31 +246,7 @@
     float: left;
     margin-right: 10px;
   }
-  .btnBack,
-  .btnForward {
-    float: left;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    background: #F2F6FA;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 12px;
-    color: #9FB3CA;
-  }
-  .btnBack:hover,
-  .btnForward:hover {
-    background: #E3EAF3;
-  }
-  .btnBack {
-    margin-right: 1px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btnForward {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+
   .topBar .time {
     float: right;
     font-size: 12px;
@@ -248,9 +293,9 @@
   }
 
   .menuItemImg {
-    /*position: absolute;
+    position: absolute;
     top: 0;
     width: 18px;
-    height: 18px;*/
+    height: 18px;
   }
 </style>

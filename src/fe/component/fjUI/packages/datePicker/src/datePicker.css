@@ -291,11 +291,33 @@
 .date-range-picker-wrap.focus {
   border-color: #38B1EB;
 }
+
+.date-range-picker-wrap-horizontal {
+  height: 30px;
+  width: 100%;
+  background-color: #F2F6FA;
+  border: 1px solid #F2F6FA;
+}
+.date-range-picker-wrap-horizontal:hover {
+  background-color: #E3EAF3;
+}
+.date-range-picker-wrap-horizontal.focus {
+  border-color: #38B1EB;
+}
+
 .date-range-value-item {
   display: block;
   line-height: 30px;
 }
 .date-range-value-item.placeholder {
+  color: #9FB3CA;
+}
+.date-range-value-item-horizontal {
+  display: inline-block;
+  line-height: 30px;
+  width: 45%;
+}
+.date-range-value-item-horizontal.placeholder {
   color: #9FB3CA;
 }
 
@@ -338,4 +360,24 @@
 .date-range-value-wrap {
   float: left;
   padding-left: 10px;
+}
+.date-range-value-wrap-horizontal {
+  /*float: left;*/
+  /*width: 50%;*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  overflow: hidden;
+  right: 30px;
+  padding-left: 10px;
+}
+.date-range-icon-wrap-horizontal {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
 }

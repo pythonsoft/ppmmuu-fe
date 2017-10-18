@@ -68,7 +68,6 @@
     getMediaFormatStyle,
     getReplaceName,
     getTitle,
-    getDescription
   } from './common';
   import { isEmptyObject, deepClone, formatSize, getStringLength, formatTime } from '../../common/utils';
 
@@ -115,7 +114,7 @@
       getReplaceName,
       getTitle,
       getDescription(item) {
-        const content = getDescription(item);
+        const content = item.full_text;
         const limit = 172;
         return getStringLength(content) > limit ? `${content.slice(0, limit)}...` : content;
       },
@@ -133,7 +132,7 @@
   font-size: 12px;
   margin-bottom: 16px;
   min-height: 108px;
-  cursor: default;
+  cursor: pointer;
 }
 
 .media-center-list-item-thumb-wrap{
@@ -205,6 +204,10 @@
   font-weight: bold;
   font-size: 14px;
   color: #2A3E52;
+}
+
+.media-center-title-selected{
+  color: #38B1EB;
 }
 
 .media-center-list-description {

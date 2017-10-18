@@ -1,5 +1,5 @@
 <template>
-  <li v-if="item && listType === 'grid'" @click="">
+  <li v-if="item && listType === 'grid'" @click="linkToWatchFn(item.objectId)">
     <div class="iconfont icon-phoenixtv subscribe-grid-image">
       <img class="subscribe-thumb" v-lazy="getThumb(item)" >
       <div class="subscribe-list-item-overlay">
@@ -9,7 +9,7 @@
     </div>
     <div class="subscribe-item-name" :title="getReplaceName(item)">
       <span v-html="getTitle(item)"></span>
-      <span class="iconfont icon-download download-btn" ref="downloadBtn" @click="(e)=>{mountDropdownMenu(e, item.files)}" v-clickoutside="handleCloseMenu"></span>
+      <span class="iconfont icon-download download-btn" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, item.files)}" v-clickoutside="handleCloseMenu"></span>
     </div>
     <div class="subscribe-item-detail">
       来源：{{ item.source }}
@@ -21,7 +21,7 @@
       入库时间：{{ item.storageTime | formatTime }}
     </p>
   </li>
-  <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="">
+  <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="linkToWatchFn(item.objectId)">
     <div class="subscribe-list-item-thumb">
       <div class="iconfont icon-phoenixtv subscribe-list-item-thumb-wrap">
         <img class="subscribe-list-thumb" v-lazy="getThumb(item)" >
@@ -50,7 +50,7 @@
 <script>
   import Vue from 'vue';
   import VueLazyload from 'vue-lazyload';
-  import DropdownMenu from './DropdownMenu';
+  import DropdownMenu from './dropdownMenu';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import { getPosition } from '../../../component/fjUI/utils/position';
   import {
@@ -72,14 +72,18 @@
 
   export default {
     props: {
+      parentEl: {},
       item: {},
       listType: {
         type: String,
         default: 'grid'
-      }
+      },
+      downloadFn: Function,
+      linkToWatchFn: Function
     },
     data() {
-      return {};
+      return {
+      };
     },
     methods: {
       setThumbClass(id, className) {
@@ -107,16 +111,17 @@
       mountDropdownMenu(e, files) {
         this.dropdownMenu = new Vue(DropdownMenu).$mount();
         document.body.appendChild(this.dropdownMenu.$el);
-        const position = this.getDropdownMenu(e);
-        this.dropdownMenu.menuStyle = { top: `${position.top + 30}px`, left: `${position.left - 144}px`, minWidth: '166px' };
+        const parentEl = this.parentEl || document.body;
+        parentEl.addEventListener('scroll', this.updateMenuPosition);
+        this.updateMenuPosition();
         const menus = files.map(file => {
-          return { command: file.FILETYPEID, key: file.FILETYPEID, name: file.FILETYPENAME };
+          return { command: file, key: file.FILETYPEID, name: file.FILETYPENAME };
         });
         this.dropdownMenu.menus = menus;
         this.dropdownMenu.$on('item-click', this.handleItemClick);
       },
       handleItemClick(item, command) {
-        console.log(item, command);
+        this.downloadFn(command);
         this.unmountDropdownMenu();
       },
       handleCloseMenu(target) {
@@ -126,12 +131,22 @@
       unmountDropdownMenu() {
         if (this.dropdownMenu) {
           document.body.removeChild(this.dropdownMenu.$el);
+          const parentEl = this.parentEl || document.body;
+          parentEl.removeEventListener('scroll', this.updateMenuPosition);
           this.dropdownMenu = null;
         }
       },
-      getDropdownMenu(e) {
-        const downloadBtnPosition = getPosition(e.target);
+      updateMenuPosition() {
+        if (this.dropdownMenu) {
+          const position = this.getDropdownMenu();
+          this.dropdownMenu.menuStyle = { top: `${position.top + 30}px`, left: `${position.left - 144}px`, minWidth: '166px' };
+        }
+      },
+      getDropdownMenu() {
+        const downloadBtnPosition = getPosition(this.$refs.downloadBtn);
         const position = { top: downloadBtnPosition.y, left: downloadBtnPosition.x };
+        const parentElScrollTop = this.parentEl ? this.parentEl.scrollTop : 0;
+        position.top = position.top - parentElScrollTop;
         return position;
       },
     },
