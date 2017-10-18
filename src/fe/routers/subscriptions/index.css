@@ -285,3 +285,9 @@
   padding-top: 30px;
   padding-bottom: 100px;
 }
+
+.subscribe-search-body {
+  padding: 28px 60px;
+  max-width: 1380px;
+  margin: 0 auto;
+}

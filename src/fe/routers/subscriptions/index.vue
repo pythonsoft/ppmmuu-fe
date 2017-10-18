@@ -35,6 +35,7 @@
                 :remote-method="() => {}"
                 :loading="loading"
                 v-model="query"
+                @search="searchClick"
                 placeholder="请输入检索关键词"
                 theme="fill">
                 <fj-option
@@ -52,6 +53,7 @@
           </div>
           <home v-if="contentType === 'default'"></home>
           <channel v-else-if="contentType === 'channel'" :query="routeQuery"></channel>
+          <subscriptions-search v-else-if="contentType === 'search'" :query="routeQuery"></subscriptions-search>
         </div>
       </div>
     </template>
@@ -63,6 +65,7 @@
   import Home from './component/home';
   import Channel from './component/channel';
   import './index.css';
+  import SubscriptionsSearch from "./component/search.vue";
 
   const subscribeAPI = require('../../api/subscribe');
 
@@ -86,6 +89,8 @@
       this.getSubscribeInfo();
       this.getSubscribeTypeSummary();
       this.updateContentType();
+      //todo
+      this.contentType = 'search';
     },
     watch: {
       'route'(val) {
@@ -135,9 +140,14 @@
       updateRouter(route) {
         this.history.push(route);
         this.route = route;
+      },
+      searchClick() {
+        this.contentType = 'search'
+        console.log(this.query);
       }
     },
     components: {
+      SubscriptionsSearch,
       LayoutThreeColumn,
       Home,
       Channel
