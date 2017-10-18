@@ -64,7 +64,7 @@
   font-size: 12px;
   margin-bottom: 16px;
   min-height: 108px;
-  cursor: default;
+  cursor: pointer;
 }
 
 .subscribe-list-item-thumb-wrap{
@@ -127,7 +127,7 @@
 .subscribe-list-bar li {
   margin-right: 6px;
   margin-bottom: 4px;
-  cursor: default;
+  cursor: pointer;
 }
 
 .subscribe-list-bar-color-span {
@@ -201,7 +201,7 @@
   float: left;
   margin-top: 16px;
   box-sizing: border-box;
-  cursor: default;
+  cursor: pointer;
 }
 .subscribe-section-list li+li {
   margin-left: 6px;
