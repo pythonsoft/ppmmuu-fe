@@ -50,7 +50,7 @@
               {{ transformSecondsToHours(remainTime) + ' / ' + transformSecondsToHours(totalTime) }}
             </div>
           </div>
-          <home v-if="contentType === 'default'"></home>
+          <home v-if="contentType === 'default'" @update-router="updateRouter"></home>
           <channel v-else-if="contentType === 'channel'" :query="routeQuery"></channel>
         </div>
       </div>
