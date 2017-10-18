@@ -131,7 +131,7 @@
   font-size: 12px;
   margin-bottom: 16px;
   min-height: 108px;
-  cursor: default;
+  cursor: pointer;
 }
 
 .media-center-list-item-thumb-wrap{
@@ -203,6 +203,10 @@
   font-weight: bold;
   font-size: 14px;
   color: #2A3E52;
+}
+
+.media-center-title-selected{
+  color: #38B1EB;
 }
 
 .media-center-list-description {
