@@ -116,8 +116,8 @@
           }
         }, 400);
       },
-      'query.objectId'(val) {
-        if (val) {
+      'query'(val) {
+        if (val.objectId) {
           this.refresh();
         }
       }

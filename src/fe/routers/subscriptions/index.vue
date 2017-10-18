@@ -52,7 +52,7 @@
           </div>
           <home v-if="contentType === 'default'" @update-router="updateRouter"></home>
           <channel v-else-if="contentType === 'channel'" :query="routeQuery" @update-router="updateRouter"></channel>
-          <watch v-else-if="contentType === 'watch'" :query="routeQuery"></watch>
+          <watch v-if="isShowWatch" :query="routeQuery"></watch>
         </div>
       </div>
     </template>
@@ -81,17 +81,20 @@
         loading: false,
         routeQuery: {},
         history: [],
-        route: {}
+        route: {},
+        isShowWatch: false
       };
     },
     created() {
+      this.route = this.$route;
       this.getSubscribeInfo();
       this.getSubscribeTypeSummary();
       this.updateContentType();
     },
     watch: {
-      'route'(val) {
+      '$route'(val) {
         console.log('route', val);
+        this.route = val;
         this.updateContentType();
       }
     },
@@ -101,10 +104,13 @@
         this.routeQuery = this.route.query;
         if (this.routeQuery && this.routeQuery.channel) {
           this.contentType = 'channel';
-        } else if (this.routeQuery && this.routeQuery.objectId) {
-          this.contentType = 'watch';
         } else {
           this.contentType = 'default';
+        }
+        if (this.routeQuery && this.routeQuery.objectId) {
+          this.isShowWatch = true;
+        } else {
+          this.isShowWatch = false;
         }
       },
       getSubscribeInfo() {
@@ -140,8 +146,9 @@
         this.updateRouter({ name: 'subscriptions', query: { objectId: objectId } });
       },
       updateRouter(route) {
+        this.$router.push(route);
         this.history.push(route);
-        this.route = route;
+        // this.route = route;
       }
     },
     components: {
