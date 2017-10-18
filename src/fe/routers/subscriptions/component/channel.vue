@@ -28,7 +28,7 @@
     ></grid-list-view>
 
     <div class="media-pagination" v-if="items.length">
-      <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="updateList"></pagination>
+      <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="currentPageChange"></pagination>
     </div>
     <download-list-view
       :visible.sync="downloadDialogDisplay"
@@ -54,8 +54,10 @@
     },
     created() {
       this.getSubscribeSearchConfig();
-      this.updateList();
       if (this.query.viewType) this.viewType = this.query.viewType;
+      if (this.query.page) this.currentPage = Number(this.query.page);
+      if (this.query.order) this.orderVal = this.query.order;
+      this.updateList();
     },
     mounted() {
       this.resetListWidth();
@@ -67,12 +69,15 @@
     },
     watch: {
       query(val) {
-        this.getSubscribeSearchConfig();
-        this.updateList();
-        if (val.viewType) this.viewType = val.viewType;
+        if (val.viewType && this.viewType !== val.viewType) {
+          this.viewType = val.viewType;
+        } else {
+          this.updateList();
+        }
       },
       orderVal(val) {
-        this.updateList();
+        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { order: val }) });
+        // this.updateList();
       }
     },
     data() {
@@ -131,7 +136,7 @@
           for (let i = 0; i < data.length; i++) {
             if (data[i].key === 'sort') {
               this.ORDER_OPTIONS = data[i].items;
-              this.orderVal = JSON.stringify(this.ORDER_OPTIONS[0].value);
+              if (!this.orderVal) this.orderVal = JSON.stringify(this.ORDER_OPTIONS[0].value);
             }
           }
         }).catch((error) => {
@@ -143,8 +148,11 @@
         this.listWidth = this.$refs.channelWrap.getBoundingClientRect().width;
       },
       setViewType(t) {
-        this.viewType = t;
-        // this.$router.push({ name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
+        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
+        // this.viewType = t;
+      },
+      currentPageChange() {
+        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });
       },
       viewTypeSelect(type) {
         let className = 'iconfont';

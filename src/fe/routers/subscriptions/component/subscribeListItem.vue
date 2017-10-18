@@ -21,7 +21,7 @@
       入库时间：{{ item.storageTime | formatTime }}
     </p>
   </li>
-  <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="">
+  <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="linkToWatchFn(item.objectId)">
     <div class="subscribe-list-item-thumb">
       <div class="iconfont icon-phoenixtv subscribe-list-item-thumb-wrap">
         <img class="subscribe-list-thumb" v-lazy="getThumb(item)" >
@@ -50,7 +50,7 @@
 <script>
   import Vue from 'vue';
   import VueLazyload from 'vue-lazyload';
-  import DropdownMenu from './DropdownMenu';
+  import DropdownMenu from './dropdownMenu';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import { getPosition } from '../../../component/fjUI/utils/position';
   import {
