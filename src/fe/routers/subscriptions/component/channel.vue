@@ -22,17 +22,30 @@
       :width="listWidth"
       :items="items"
       @currentItemChange="()=>{}"
+      :downloadFn="showDownloadList"
+      :link-to-watch-fn="linkToWatch"
+      :parentEl="parentEl"
     ></grid-list-view>
 
     <div class="media-pagination" v-if="items.length">
       <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="updateList"></pagination>
     </div>
+    <download-list-view
+      :visible.sync="downloadDialogDisplay"
+      @confirm="downloadListConfirm"
+    ></download-list-view>
   </div>
 </template>
 <script>
   import GridListView from './gridAndList';
   import Pagination from '../../mediaCenter/components/pagination';
+  import DownloadListView from '../../management/template/download/component/downloadDialog';
+  import {
+    isEmptyObject,
+    formatQuery
+  } from '../../../common/utils';
 
+  const jobAPI = require('../../../api/job');
   const subscribeAPI = require('../../../api/subscribe');
 
   export default {
@@ -47,6 +60,7 @@
     mounted() {
       this.resetListWidth();
       window.addEventListener('resize', this.resetListWidth);
+      this.parentEl = this.$refs.channelWrap;
     },
     beforDestroy() {
       window.removeEventListener('resize', this.resetListWidth);
@@ -70,10 +84,47 @@
         items: [],
         pageSize: 20,
         currentPage: 1,
-        listWidth: 1080
+        listWidth: 1080,
+        downloadDialogDisplay: false,
+        fileInfo: {},
+        templateInfo: {},
+        parentEl: null
       };
     },
     methods: {
+      linkToWatch(objectId) {
+        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
+      },
+      showDownloadList(fileInfo) {
+        this.fileInfo = fileInfo;
+        this.downloadDialogDisplay = true;
+      },
+      downloadListConfirm(templateInfo) {
+        this.templateInfo = templateInfo || {};
+        if (!isEmptyObject(templateInfo)) {
+          this.download();
+        }
+      },
+      download() {
+        const me = this;
+
+        const param = {
+          objectid: this.fileInfo.OBJECTID,
+          inpoint: this.fileInfo.INPOINT,
+          outpoint: this.fileInfo.OUTPOINT,
+          filename: this.fileInfo.FILENAME,
+          filetypeid: this.fileInfo.FILETYPEID,
+          templateId: this.templateInfo._id
+        };
+
+        jobAPI.download(param).then((res) => {
+          me.$message.success('正在下载文件，请到"任务"查看详细情况');
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
+      },
       getSubscribeSearchConfig() {
         subscribeAPI.getSubscribeSearchConfig().then((res) => {
           const data = res.data;
@@ -88,6 +139,7 @@
         });
       },
       resetListWidth() {
+        if (!this.$refs.channelWrap) return;
         this.listWidth = this.$refs.channelWrap.getBoundingClientRect().width;
       },
       setViewType(t) {
@@ -130,7 +182,8 @@
     },
     components: {
       GridListView,
-      Pagination
+      Pagination,
+      DownloadListView
     }
   };
 </script>
