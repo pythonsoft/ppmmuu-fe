@@ -51,7 +51,8 @@
             </div>
           </div>
           <home v-if="contentType === 'default'" @update-router="updateRouter"></home>
-          <channel v-else-if="contentType === 'channel'" :query="routeQuery"></channel>
+          <channel v-else-if="contentType === 'channel'" :query="routeQuery" @update-router="updateRouter"></channel>
+          <watch v-else-if="contentType === 'watch'" :query="routeQuery"></watch>
         </div>
       </div>
     </template>
@@ -62,6 +63,7 @@
   import { transformSecondsToHours } from '../../common/utils';
   import Home from './component/home';
   import Channel from './component/channel';
+  import Watch from './component/watch';
   import './index.css';
 
   const subscribeAPI = require('../../api/subscribe');
@@ -99,6 +101,8 @@
         this.routeQuery = this.route.query;
         if (this.routeQuery && this.routeQuery.channel) {
           this.contentType = 'channel';
+        } else if (this.routeQuery && this.routeQuery.objectId) {
+          this.contentType = 'watch';
         } else {
           this.contentType = 'default';
         }
@@ -132,6 +136,9 @@
         this.updateRouter({ name: 'subscriptions' });
         // this.$router.push({ name: 'subscriptions' });
       },
+      linkToWatch(objectId) {
+        this.updateRouter({ name: 'subscriptions', query: { objectId: objectId } });
+      },
       updateRouter(route) {
         this.history.push(route);
         this.route = route;
@@ -140,7 +147,8 @@
     components: {
       LayoutThreeColumn,
       Home,
-      Channel
+      Channel,
+      Watch
     }
   };
 </script>
@@ -166,10 +174,14 @@
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
     background: #F8FAFB;
   }
   .topBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     padding: 28px 60px 24px;
     background: #fff;
   }

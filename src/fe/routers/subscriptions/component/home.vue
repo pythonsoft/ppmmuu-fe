@@ -9,14 +9,30 @@
         </span>
       </div>
       <ul class="subscribe-grid subscribe-section-list">
-        <SubscribeListItem v-for="item in categoryItem.docs" :item="item" :key="item.objectId"></SubscribeListItem>
+        <SubscribeListItem
+          v-for="item in categoryItem.docs"
+          :item="item"
+          :key="item.objectId"
+          :download-fn="showDownloadList"
+          :link-to-watch-fn="linkToWatch"
+          :parentEl="parentEl"></SubscribeListItem>
       </ul>
     </div>
+    <download-list-view
+      :visible.sync="downloadDialogDisplay"
+      @confirm="downloadListConfirm"
+    ></download-list-view>
   </div>
 </template>
 <script>
   import SubscribeListItem from './subscribeListItem';
+  import DownloadListView from '../../management/template/download/component/downloadDialog';
+  import {
+    isEmptyObject,
+    formatQuery
+  } from '../../../common/utils';
   const subscribeAPI = require('../../../api/subscribe');
+  const jobAPI = require('../../../api/job');
 
   const LIST_WRAP_PADDING = 120;
   const LIST_ITEM_WIDTH = 192;
@@ -28,7 +44,11 @@
     data() {
       return {
         defaultList: [],
-        sectionListWidth: 0
+        sectionListWidth: 0,
+        downloadDialogDisplay: false,
+        fileInfo: {},
+        templateInfo: {},
+        parentEl: null
       };
     },
     created() {
@@ -37,12 +57,44 @@
     mounted() {
       this.resetListWidth();
       window.addEventListener('resize', this.resetListWidth);
+      this.parentEl = this.$refs.listWrap;
     },
     beforDestroy() {
       window.removeEventListener('resize', this.resetListWidth);
     },
     methods: {
+      showDownloadList(fileInfo) {
+        this.fileInfo = fileInfo;
+        this.downloadDialogDisplay = true;
+      },
+      downloadListConfirm(templateInfo) {
+        this.templateInfo = templateInfo || {};
+        if (!isEmptyObject(templateInfo)) {
+          this.download();
+        }
+      },
+      download() {
+        const me = this;
+
+        const param = {
+          objectid: this.fileInfo.OBJECTID,
+          inpoint: this.fileInfo.INPOINT,
+          outpoint: this.fileInfo.OUTPOINT,
+          filename: this.fileInfo.FILENAME,
+          filetypeid: this.fileInfo.FILETYPEID,
+          templateId: this.templateInfo._id
+        };
+
+        jobAPI.download(param).then((res) => {
+          me.$message.success('正在下载文件，请到"任务"查看详细情况');
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
+      },
       resetListWidth() {
+        if (!this.$refs.listWrap) return;
         const maxWidth = MAX_LIST_ITEM_COUNT * LIST_ITEM_WIDTH + (MAX_LIST_ITEM_COUNT - 1) * LIST_ITEM_MARGIN;
         const listWrapWidth = this.$refs.listWrap.getBoundingClientRect().width;
         if (listWrapWidth > maxWidth + LIST_WRAP_PADDING) {
@@ -71,10 +123,14 @@
       linkToChannel(channelId, channelName) {
         this.$emit('update-router', { name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
         // this.$router.push({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
+      },
+      linkToWatch(objectId) {
+        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
       }
     },
     components: {
-      SubscribeListItem
+      SubscribeListItem,
+      DownloadListView
     }
   };
 </script>
