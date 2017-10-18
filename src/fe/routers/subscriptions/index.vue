@@ -293,9 +293,9 @@
   }
 
   .menuItemImg {
-    /*position: absolute;
+    position: absolute;
     top: 0;
     width: 18px;
-    height: 18px;*/
+    height: 18px;
   }
 </style>

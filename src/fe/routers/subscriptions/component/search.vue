@@ -6,7 +6,8 @@
         <span
           class="iconfont icon-filter media-center-view-list media-center-view-selected"
           ref="filterBtn"
-          @click.stop="mountDropdownMenu" v-clickoutside="handleCloseMenu"></span><!--
+          @click.stop="handleFilterBtnClick"
+          v-clickoutside="handleCloseMenu"></span><!--
         --><span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
         --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
       </div>
@@ -91,7 +92,7 @@
       const keys = Object.keys(this.query);
       for (let i = 0, len = keys.length; i < len; i++) {
         const key = keys[i];
-        if (key === 'viewType' || key === 'query' || key === 'page') break;
+        if (key === 'viewType' || key === 'query' || key === 'page') continue;
         this.filterList[key] = this.query[key];
       }
       this.updateList();
@@ -102,10 +103,18 @@
       this.parentEl = this.$refs.searchWrap;
     },
     beforDestroy() {
+      if (this.dropdownMenu) {
+        this.unmountDropdownMenu();
+      }
       window.removeEventListener('resize', this.resetListWidth);
     },
     methods: {
+      handleFilterBtnClick() {
+        if (this.dropdownMenu) return;
+        this.mountDropdownMenu();
+      },
       mountDropdownMenu() {
+        console.log('mountDropdownMenu');
         this.dropdownMenu = new Vue(DropdownMenu).$mount();
         document.body.appendChild(this.dropdownMenu.$el);
         const parentEl = this.parentEl || document.body;
@@ -113,11 +122,14 @@
         this.updateMenuPosition();
         this.dropdownMenu.menus = this.menus;
         this.dropdownMenu.filterList = this.filterList;
+        this.dropdownMenu.defaultDatetimerange = { FIELD162: this.filterList.FIELD162, FIELD36: this.filterList.FIELD36 };
         this.dropdownMenu.$on('update-filter-list', this.updateFilterList);
       },
       updateFilterList(filterList) {
         // console.log(filterList);
         this.filterList = filterList;
+        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, this.filterList) });
+        this.unmountDropdownMenu();
       },
       updateMenuPosition() {
         if (this.dropdownMenu) {
@@ -134,6 +146,8 @@
       },
       unmountDropdownMenu() {
         if (this.dropdownMenu) {
+          console.log('unmountDropdownMenu');
+          this.dropdownMenu.$destroy();
           document.body.removeChild(this.dropdownMenu.$el);
           const parentEl = this.parentEl || document.body;
           parentEl.removeEventListener('scroll', this.updateMenuPosition);
@@ -141,9 +155,9 @@
         }
       },
       handleCloseMenu(target) {
-        if (this.dropdownMenu && this.dropdownMenu.$el.contains(target)) return;
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, this.filterList) });
-        this.unmountDropdownMenu();
+        // if (this.dropdownMenu && this.dropdownMenu.$el.contains(target)) return;
+        // this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, this.filterList) });
+        // this.unmountDropdownMenu();
       },
       currentPageChange() {
         this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });

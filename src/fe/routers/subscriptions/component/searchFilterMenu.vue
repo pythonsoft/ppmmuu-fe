@@ -10,6 +10,16 @@
           {{ item.label }}
         </span>
       </div>
+      <div v-else-if="menu.type === 'daterange'" class="value-box">
+        <div class="datetimerange-box">
+        <fj-date-picker
+          type="datetimerange"
+          direction="horizontal"
+          placeholder="请选择日期范围"
+          v-model="datetimerange[menu.key]"
+        ></fj-date-picker>
+        </div>
+      </div>
     </li>
   </div>
 </template>
@@ -18,11 +28,42 @@
     props: {
       menuStyle: {},
       filterList: {},
-      menus: []
+      menus: [],
+      defaultDatetimerange: {}
     },
     data() {
       return {
+        datetimerange: {
+          FIELD162: [],
+          FIELD36: []
+        }
       };
+    },
+    watch: {
+      defaultDatetimerange(val) {
+        if (val && val.FIELD162) {
+          this.datetimerange.FIELD162 = val.FIELD162.split(',');
+        }
+        if (val && val.FIELD36) {
+          this.datetimerange.FIELD36 = val.FIELD36.split(',');
+        }
+      },
+      'datetimerange.FIELD36'(val) {
+        if (val.length > 0) {
+          const time = new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString();
+          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD36: time}));
+        } else {
+          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD36: ''}));
+        }
+      },
+      'datetimerange.FIELD162'(val) {
+        if (val.length > 0) {
+          const time = new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString();
+          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD162: time}));
+        } else {
+          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD162: ''}));
+        }
+      }
     },
     methods: {
       getItemClass(menu, value) {
@@ -125,5 +166,8 @@
   .search-filter-menu li .value-item.active {
     background: #38B1EB;
     color: #fff;
+  }
+  .datetimerange-box {
+    margin: 10px;
   }
 </style>

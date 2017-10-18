@@ -14,7 +14,7 @@
       @mouseleave.native="inputHovering = false" />
     <div
       :class="['date-range-picker-wrap clearfix', { 'focus': isShowPanel }]"
-      v-if="type==='datetimerange'"
+      v-if="type==='datetimerange' && direction === 'vertical'"
       @mouseenter="inputHovering = true"
       @mouseleave="inputHovering = false"
       @click="handleFocus">
@@ -24,6 +24,20 @@
       </div>
       <div class="date-range-icon-wrap">
         <i :class="iconClass" class="iconfont date-range-date-icon" @click.stop="handleIconClick"></i>
+      </div>
+    </div>
+    <div
+      :class="['date-range-picker-wrap-horizontal clearfix', { 'focus': isShowPanel }]"
+      v-if="type==='datetimerange' && direction === 'horizontal'"
+      @mouseenter="inputHovering = true"
+      @mouseleave="inputHovering = false"
+      @click="handleFocus">
+      <div class="date-range-value-wrap-horizontal">
+        <span class="date-range-value-item-horizontal" :class="{'placeholder':!displayValue[0]}">{{ displayValue[0] || '开始时间' }}</span>
+        <span class="date-range-value-item-horizontal" :class="{'placeholder':!displayValue[1]}">{{ displayValue[1] || '结束时间' }}</span>
+      </div>
+      <div class="date-range-icon-wrap-horizontal">
+        <i :class="iconClass" class="iconfont date-range-date-icon-horizontal" @click.stop="handleIconClick"></i>
       </div>
     </div>
     <!-- <date-panel
@@ -66,6 +80,10 @@
       type: {
         type: String,
         default: 'datetime'
+      },
+      direction: {
+        type: String,
+        default: 'vertical'
       },
       format: {
         type: String,
