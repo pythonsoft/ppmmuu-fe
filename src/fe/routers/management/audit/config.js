@@ -17,7 +17,7 @@ config.AUDIT_RULE_PERMISSTION_TYPE = {
 };
 
 method.getTextByValue = function (v, st) {
-  return utils.getTextByValue(status, v, st);
+  return utils.getTextByValue(config, v, st);
 };
 
 module.exports = { config, method };
