@@ -360,7 +360,8 @@
           name: me.shelfName,
           force: force,
           details: {},
-          files: me.files
+          files: me.files,
+          ownerName: me.program['FIELD314']
         };
         for(let key in me.basic){
           postData.details[key] = me.basic[key];

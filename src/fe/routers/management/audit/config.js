@@ -17,7 +17,19 @@ config.AUDIT_RULE_PERMISSTION_TYPE = {
 };
 
 method.getTextByValue = function (v, st) {
-  return utils.getTextByValue(status, v, st);
+  return utils.getTextByValue(config, v, st);
+};
+
+config.formatStatus = {
+  1: '<span class="permission-status-span doing">待审核</span>',
+  2: '<span class="permission-status-span submitted">审核通过</span>',
+  3: '<span class="permission-status-span deleted">拒绝</span>'
+};
+
+config.STATUS = {
+  DOING: '1', // 待审核
+  SUBMITTED: '2', // 审核通过(待上架)
+  DELETE: '3' // 拒绝
 };
 
 module.exports = { config, method };

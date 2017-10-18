@@ -28,6 +28,14 @@
         </fj-checkbox-group>
       </div>
     </fj-form-item>
+    <fj-form-item label="下载审核">
+      <div class="template-subtitle">
+        <fj-radio-group v-model="formData.downloadAudit">
+          <fj-radio class="template-subtitle-checkbox"  :label="false">否</fj-radio>
+          <fj-radio class="template-subtitle-checkbox"  :label="true">是</fj-radio>
+        </fj-radio-group>
+      </div>
+    </fj-form-item>
     <fj-form-item label="转码模版">
       <transcode-template-list
         :data="formData.transcodeTemplates"
@@ -108,6 +116,7 @@
         this.formData.description = this.templateInfo.description;
         this.formData.type = this.templateInfo.type !== '2' ? [] : [config.getConfig('NODE_TEMPLATE', 'DOWNLOAD_MEDIAEXPRESS').value];
         this.formData.subtitleType = this.templateInfo.subtitleType || [];
+        this.formData.downloadAudit = this.templateInfo.downloadAudit || false;
         const templateDetail = this.templateInfo.transcodeTemplateDetail;
         this.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
         this.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
@@ -126,6 +135,7 @@
           script: '',
           type: [],
           subtitleType: [],
+          downloadAudit: false,
           transcodeTemplateSelector: '',
           transcodeTemplates: [],
         },

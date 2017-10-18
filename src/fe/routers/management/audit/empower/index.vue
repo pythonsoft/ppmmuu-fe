@@ -103,7 +103,7 @@
     },
     methods: {
       getTextByValue(v, st) {
-        return config.config.getTextByValue(v, st);
+        return config.method.getTextByValue(v, st);
       },
       handleClickSearch() {
         this.listRuleInfo();

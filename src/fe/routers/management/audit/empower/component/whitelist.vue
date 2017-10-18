@@ -1,8 +1,8 @@
 <template>
   <div>
     <div :style="{ lineHeight: '36px' }">
-      <fj-button type="info" size="mini" @click.stop.prevent="dialogVisible = true">添加部门</fj-button>
-      <fj-button type="danger" size="mini" @click.stop.prevent="deleteTemplate" :disabled="!deletable">删除</fj-button>
+      <fj-button type="info" size="mini" @click.stop.prevent="addDepartmentClick">添加部门</fj-button>
+      <fj-button type="danger" size="mini" @click.stop.prevent="deleteDepartmentClick" :disabled="selectedTableSelectedRows.length<1">删除</fj-button>
     </div>
     <div :style="{ borderTop: '1px solid #EBF3FB', marginTop: '20px' }">
       <fj-table :data="data" @selection-change="selectedTableSelectionChange">
@@ -10,25 +10,11 @@
         <fj-table-column prop="name" label="名称"></fj-table-column>
       </fj-table>
     </div>
-    <fj-dialog
-      title="转码模版"
-      :visible.sync="dialogVisible"
-      @close="closeDialog">
-      <div :style="{ maxHeight: '300px', overflow: 'auto', border: '1px solid #CED9E5' }">
-        <fj-table :data="tableData" @selection-change="handleSelectionChange">
-          <fj-table-column type="selection" width="20"></fj-table-column>
-          <fj-table-column prop="name" label="名称"></fj-table-column>
-        </fj-table>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <fj-button @click.stop.prevent="closeDialog">取消</fj-button><!--
-        --><fj-button type="info" @click.stop.prevent="addTemplate">添加</fj-button>
-      </div>
-    </fj-dialog>
+    <add-group :visible.sync="dialogVisible"  @add-owner="addOwner" title="添加部门"></add-group>
   </div>
 </template>
 <script>
-  const templateAPI = require('../../../../../api/job');
+  import AddGroup from '../../../role/searchAddGroup';
 
   export default {
     props: {
@@ -39,41 +25,48 @@
         dialogVisible: false,
         deletable: false,
         tableData: [],
-        selectedRows: [],
         selectedTableSelectedRows: []
       };
     },
-    watch: {
-      dialogVisible(val) {
-        if (val) {
-          this.listTemplate();
-          this.selectedRows = [];
-        }
-      }
+    components: {
+      'add-group': AddGroup
     },
     methods: {
-      listTemplate() {
-        const param = {
-          page: 1,
-          pageSize: 999,
+      addOwner(row) {
+        row = row.info ? row.info : row;
+        const type = row.type || '3';
+        const postData = {
+          type: type,
+          _id: row._id,
+          name: row.name,
         };
-        templateAPI.listTemplate({ params: param }, this).then((res) => {
-          this.tableData = res.data.docs.map(item => {
-            return { _id: item.id, name: item.templateName };
-          });
-        }).catch((error) => {
-          this.$message.error(error);
-        });
-      },
-      addTemplate() {
-        this.$emit('add-template', this.selectedRows);
+        const data = this.data;
+        let flag = true;
+        for(let i = 0, len1 = data.length; i < len1; i++){
+          if(data[i]._id === postData._id){
+            flag = false;
+          }
+        }
+        if(flag){
+          data.push(postData);
+        }
         this.dialogVisible = false;
       },
-      deleteTemplate() {
-        this.$emit('delete-template', this.selectedTableSelectedRows);
+      addDepartmentClick() {
+        this.dialogVisible = true;
       },
-      handleSelectionChange(rows) {
-        this.selectedRows = rows;
+      deleteDepartmentClick() {
+        const me = this;
+        const users = this.data;
+        const updateUsers = [];
+        for(let j = 0, len1 = this.selectedTableSelectedRows.length; j < len1; j++) {
+          let flag = false;
+          for (let i = 0; i < users.length; i++) {
+            if(users[i]._id === this.selectedTableSelectedRows[j]._id){
+              users.splice(i, 1);
+            }
+          }
+        }
       },
       selectedTableSelectionChange(rows) {
         if (rows.length) {

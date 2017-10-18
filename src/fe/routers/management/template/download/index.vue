@@ -5,6 +5,7 @@
         title="分组结构"
         addBtnText="添加分组"
         :vue-instance="vueInstance"
+        :menus="dropMenus"
         menu-width="90px"
         :exec-command="execCommand"
         :list-group="handleTreeNodeClick"
@@ -13,7 +14,12 @@
       ></tree-view>
     </div>
     <div class="right-list">
-      <layout-four-row>
+      <permission-panel
+              v-show="mainContent === 'permissionPanel'"
+              :id="permissionPanelId"
+              :name="permissionPanelName"
+              @cancel="mainContent = 'default'"></permission-panel>
+      <layout-four-row v-show="mainContent === 'default'">
         <template slot="search-left">下载模板管理</template>
         <template slot="operation">
           <div class="operation-btn-group">
@@ -100,8 +106,9 @@
   import { formatQuery } from '../../../../common/utils';
   import addGroup from './component/addGroupDialog';
   import editGroup from './component/editGroup';
+  import permissionPanel from './component/permissionPanel';
 
-  const MENU_CONFIG = require('../../configuration/config');
+  const MENU_CONFIG = require('./config');
   const api = require('../../../../api/template');
   const config = require('../../task/config');
 
@@ -111,7 +118,8 @@
       'dialog-view': dialog,
       'add-group': addGroup,
       'edit-group': editGroup,
-      'tree-view': TreeView
+      'tree-view': TreeView,
+      'permission-panel': permissionPanel
     },
     data() {
       return {
@@ -134,7 +142,9 @@
         page: 1,
         pageSize: 20,
         total: 0,
-
+        mainContent: 'default',
+        permissionPanelId: '',
+        permissionPanelName: '',
         /* child task */
         dialogDisplay: false,
         confirmDialogDisplay: false,
@@ -166,7 +176,7 @@
         if (node === undefined) {
           query.parentId = '';
         } else {
-          query.parentId = node.info ? node.info.id : '';
+          query.parentId = node.info ? node.info._id : '';
         }
         me.groupId = query.parentId;
         me.clickNodeSearch = true;
@@ -192,13 +202,16 @@
         const title = '组织';
         switch (command) {
           case 'delete':
-            this.handleOpenDeleteDialog(node.info.id);
+            this.handleOpenDeleteDialog(node.info._id);
             break;
           case 'new':
-            this.handleOpenAddDialog(node.info.id);
+            this.handleOpenAddDialog(node.info._id);
             break;
           case 'edit':
             this.handleShowEditDialog(node.info);
+            break;
+          case 'permission':
+            this.handleShowPermissionPanel(node.info);
             break;
           default:
             break;
@@ -208,6 +221,7 @@
         this.handleOpenAddDialog('');
       },
       treeNodeCurrentChange(treeNode) {
+        this.mainContent = 'default';
         this.currentNode = treeNode;
         const me = this;
         const searchObj = {
@@ -226,7 +240,11 @@
         this.isShowEditGroupDialog = true;
         this.nodeInfo = info;
       },
-
+      handleShowPermissionPanel(node) {
+        this.mainContent = 'permissionPanel';
+        this.permissionPanelId = node._id;
+        this.permissionPanelName = node.name;
+      },
       handleOpenDeleteDialog(_id) {
         this.deleteDialogVisible = true;
         this.dialogTitle = '组';
@@ -234,7 +252,7 @@
       },
       handleDeleteClick() {
         const me = this;
-        const func = api.removeGroup;
+        const func = api.removeTemplateGroup;
         const _id = this.dialogTitle === '组'
           ? this.deleteDialogId
           : this.currentConfig._id;
