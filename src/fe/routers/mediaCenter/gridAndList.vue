@@ -115,29 +115,7 @@
       getTitle,
       getDescription(item) {
         const content = item.full_text;
-        const flagLen = '<em></em>'.length;
-        const matchContent = content.match(/<em[^>]*>(\n?.*)*<\/em>/g);
         const limit = 172;
-        const len = matchContent.length;
-        let eachWords = 0;
-        let contentLength = 0;
-
-        for(let i = 0; i < len; i++) {
-          if(contentLength + matchContent[i].length - flagLen < limit) {
-            contentLength += matchContent[i].length - flagLen;
-          }
-        }
-
-        eachWords = (limit - contentLength) / matchContent.length;
-
-        let el = null;
-        let index = 0;
-
-        for(let i = 0; i < len; i++) {
-          el = matchContent.pop();
-          index = content.indexOf(el);
-        }
-
         return getStringLength(content) > limit ? `${content.slice(0, limit)}...` : content;
       },
       formatSize,
