@@ -97,7 +97,7 @@
       };
     },
     created() {
-      this.setSelected();
+      this.setSelected(this.value);
       this.$on('option-click', this.handleOptionClick);
     },
     mounted() {
@@ -265,15 +265,15 @@
           }
       },
       selectOption() {
-        if (this.options[this.hoverIndex]) {
-          this.handleOptionClick(this.options[this.hoverIndex]);
-        }
-
         // 如果为remote就触发搜索函数
         if (this.remote) {
           this.$emit('search', this.selectedLabel);
           this.visible = false;
           this.hoverIndex = -1;
+          return;
+        }
+        if (this.options[this.hoverIndex]) {
+          this.handleOptionClick(this.options[this.hoverIndex]);
         }
       },
       resetHoverIndex() {

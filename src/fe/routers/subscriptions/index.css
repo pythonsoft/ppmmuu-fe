@@ -279,6 +279,15 @@
 .subscribe-item-detail {
   color: #4C637B;
 }
+.search-wrap {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+  margin: 0 60px;
+}
 .channel-wrap {
   position: absolute;
   top: 90px;
@@ -555,4 +564,15 @@
 
 .media-center-operation-bar {
   padding: 10px 24px;
+}
+
+.search-sub-menu {
+  margin: 16px 0;
+}
+.result-count {
+  font-size: 12px;
+  color: #4C637B;
+}
+.search-sub-menu .button-group {
+  float: right;
 }

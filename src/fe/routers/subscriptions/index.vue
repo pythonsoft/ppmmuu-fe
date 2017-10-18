@@ -30,28 +30,30 @@
             <div :style="{ width: '676px', float: 'left' }">
               <fj-select
                 remote
-                :clear-history-method="() => {}"
-                :history-method="() => {}"
+                :clear-history-method="clearHistory"
+                :history-method="getSearchHistory"
                 :remote-method="() => {}"
                 :loading="loading"
+                @search="searchClick"
                 v-model="query"
                 placeholder="请输入检索关键词"
                 theme="fill">
                 <fj-option
-                  v-for="item in queryOptions"
+                  v-for="item in keywordOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
                 </fj-option>
               </fj-select>
             </div>
-            <div :class="$style.time" title="剩余时间">
+            <div :class="$style.time" title="剩余时间／总时间">
               <span class="iconfont icon-clock" :class="$style.iconClock"></span>
               {{ transformSecondsToHours(remainTime) + ' / ' + transformSecondsToHours(totalTime) }}
             </div>
           </div>
           <home v-if="contentType === 'default'" @update-router="updateRouter"></home>
           <channel v-else-if="contentType === 'channel'" :query="routeQuery" @update-router="updateRouter"></channel>
+          <search v-else :query="routeQuery" @update-router="updateRouter"></search>
           <watch v-if="isShowWatch" :query="routeQuery" @update-router="updateRouter"></watch>
         </div>
       </div>
@@ -64,15 +66,18 @@
   import Home from './component/home';
   import Channel from './component/channel';
   import Watch from './component/watch';
+  import Search from './component/search';
   import './index.css';
 
   const subscribeAPI = require('../../api/subscribe');
+  const userAPI = require('../../api/user');
+  const mediaAPI = require('../../api/media');
 
   export default {
     data() {
       return {
         query: '',
-        queryOptions: [],
+        keywordOptions: [],
         total: 0,
         subscriptionMenu: [],
         remainTime: 0,
@@ -89,6 +94,9 @@
     created() {
       this.route = this.$route;
       this.history.push(this.route);
+      if (this.$route.query.query) {
+        this.query = this.$route.query.query;
+      }
       this.getSubscribeInfo();
       this.getSubscribeTypeSummary();
       this.updateContentType();
@@ -101,10 +109,39 @@
     },
     methods: {
       transformSecondsToHours,
+      clearHistory() {
+        userAPI.clearSearchHistory()
+          .then((response) => {
+            this.getSearchHistory();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getSearchHistory() {
+        this.loading = true;
+        mediaAPI.getSearchHistory().then((res) => {
+          this.loading = false;
+          const data = res.data;
+          this.keywordOptions = res.data.map((item) => {
+            item.value = item.keyword;
+            item.label = item.keyword;
+            return item;
+          });
+        }).catch((error) => {
+          this.loading = false;
+          this.$message.error(error);
+        });
+      },
+      searchClick() {
+        this.updateRouter({ name: 'subscriptions', query: { query: this.query } });
+      },
       updateContentType() {
         this.routeQuery = this.route.query;
         if (this.routeQuery && this.routeQuery.channel) {
           this.contentType = 'channel';
+        } else if (this.routeQuery && this.routeQuery.query) {
+          this.contentType = 'search';
         } else {
           this.contentType = 'default';
         }
@@ -167,7 +204,8 @@
       LayoutThreeColumn,
       Home,
       Channel,
-      Watch
+      Watch,
+      Search
     }
   };
 </script>
