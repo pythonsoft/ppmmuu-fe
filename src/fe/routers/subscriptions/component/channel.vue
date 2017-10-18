@@ -10,8 +10,8 @@
           <fj-select v-model="orderVal" size="small">
             <fj-option
               v-for="item in ORDER_OPTIONS"
-              :key="JSON.stringify(item.value)"
-              :value="JSON.stringify(item.value)"
+              :key="item.value"
+              :value="item.value"
               :label="item.label"></fj-option>
           </fj-select>
         </div>
@@ -137,7 +137,7 @@
           for (let i = 0; i < data.length; i++) {
             if (data[i].key === 'sort') {
               this.ORDER_OPTIONS = data[i].items;
-              if (!this.orderVal) this.orderVal = JSON.stringify(this.ORDER_OPTIONS[0].value);
+              if (!this.orderVal) this.orderVal = this.ORDER_OPTIONS[0].value;
             }
           }
         }).catch((error) => {
@@ -175,9 +175,9 @@
       },
       updateList() {
         const options = {};
-        options.subscribeType = [this.query.channel];
+        options.subscribeType = this.query.channel;
         if (this.orderVal) {
-          options.sort = JSON.parse(this.orderVal);
+          options.sort = this.orderVal;
         }
         options.start = (this.currentPage - 1) * this.pageSize;
         options.pageSize = this.pageSize;
