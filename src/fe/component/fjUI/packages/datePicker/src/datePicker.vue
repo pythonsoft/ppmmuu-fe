@@ -34,6 +34,7 @@
       @click="handleFocus">
       <div class="date-range-value-wrap-horizontal">
         <span class="date-range-value-item-horizontal" :class="{'placeholder':!displayValue[0]}">{{ displayValue[0] || '开始时间' }}</span>
+        -
         <span class="date-range-value-item-horizontal" :class="{'placeholder':!displayValue[1]}">{{ displayValue[1] || '结束时间' }}</span>
       </div>
       <div class="date-range-icon-wrap-horizontal">
