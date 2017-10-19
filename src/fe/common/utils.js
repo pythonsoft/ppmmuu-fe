@@ -525,6 +525,7 @@ utils.getItemFromLocalStorage = function getItemFromLocalStorage(key, scope) {
     if (scope) {
       window.location.href = '/login';
     }
+    return null;
   }
 };
 

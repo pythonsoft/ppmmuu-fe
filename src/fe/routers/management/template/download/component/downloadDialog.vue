@@ -105,10 +105,11 @@
           pageSize: 100,
         };
 
-        api.list({ params: param }, me).then((res) => {
+        userAPI.listUsableTemplate({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
         }).catch((error) => {
           me.$message.error(error);
+          this.$emit('update:visible', false);
         });
       },
       getPermission() {
