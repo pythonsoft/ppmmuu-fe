@@ -21,9 +21,9 @@ method.getTextByValue = function (v, st) {
 };
 
 config.formatStatus = {
-  1: '<span class="permission-status-span doing">待审核</span>',
-  2: '<span class="permission-status-span submitted">审核通过</span>',
-  3: '<span class="permission-status-span deleted">拒绝</span>'
+  1: '<span class="audit-download-status-span doing">待审核</span>',
+  2: '<span class="audit-download-status-span submitted">已通过</span>',
+  3: '<span class="audit-download-status-span deleted">已拒绝</span>'
 };
 
 config.STATUS = {

@@ -2,7 +2,7 @@
     <layout-four-row>
       <template slot="search-left">存储区</template>
       <template slot="search-right">
-        <div class="layout-four-row-search-item" :style="{ width: '78px' }">
+        <div class="layout-four-row-search-item" :style="{ width: '100px' }">
           <fj-select placeholder="请选择" v-model="formData.status" size="small">
             <fj-option
               v-for="item in status"
