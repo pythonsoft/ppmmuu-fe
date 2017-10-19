@@ -127,7 +127,8 @@
       if (this.query.objectId) {
         this.refresh();
       }
-      this.updatePlayerWidth();
+      // this.updatePlayerWidth();
+      this.initRightBoxStatus();
       window.addEventListener('resize', this.updatePlayerWidth);
     },
     beforDestroy() {
@@ -172,22 +173,20 @@
           this.playerHeight = playerMaxHeight;
         }
       },
+      initRightBoxStatus() {
+        const leftBoxWidth = this.$refs.leftBox.getBoundingClientRect().width;
+
+        if (leftBoxWidth < playerMinWidth + 100) {
+          this.rightboxWidth = '4px';
+          this.rightBoxStatus = 'folded';
+          setTimeout(this.updatePlayerWidth, 400);
+        } else {
+          this.rightboxWidth = '452px';
+          this.rightBoxStatus = 'expand';
+          setTimeout(this.updatePlayerWidth, 400);
+        }
+      },
       updateList() {
-        // const data = {
-        //   page: 1,
-        //   pageSize: 12
-        // };
-        // userAPI.getWatchHistory(formatQuery(data, true))
-        //   .then((response) => {
-        //     const responseData = response.data;
-        //     const tempList = responseData.docs.map(
-        //       item => Object.assign(item.videoContent, { _id: item._id })
-        //     );
-        //     this.items = tempList;
-        //   })
-        //   .catch((error) => {
-        //     this.$message.error(error);
-        //   });
         const options = {};
         options.keyword = this.streamInfo.FILENAME;
         options.start = 0;

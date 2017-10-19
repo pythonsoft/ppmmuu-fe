@@ -6,8 +6,7 @@
         <span
           class="iconfont icon-filter media-center-view-list media-center-view-selected"
           ref="filterBtn"
-          @click.stop="handleFilterBtnClick"
-          v-clickoutside="handleCloseMenu"></span><!--
+          @click.stop="handleFilterBtnClick"></span><!--
         --><span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
         --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
       </div>
@@ -83,11 +82,6 @@
         if (this.dropdownMenu) {
           this.dropdownMenu.menuStyle.width = `${val}px`;
         }
-      },
-      filterList(val) {
-        // if (this.dropdownMenu) {
-        //   this.dropdownMenu.filterList = val;
-        // }
       }
     },
     created() {
@@ -126,8 +120,6 @@
         this.dropdownMenu.$on('unmount', this.unmountDropdownMenu);
       },
       updateFilterList(filterList) {
-        console.log(filterList);
-        // this.filterList = filterList;
         this.unmountDropdownMenu(() => {
           this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, filterList) });
         });
@@ -155,11 +147,6 @@
           this.dropdownMenu = null;
           cb && cb();
         }
-      },
-      handleCloseMenu(target) {
-        // if (this.dropdownMenu && this.dropdownMenu.$el.contains(target)) return;
-        // this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, this.filterList) });
-        // this.unmountDropdownMenu();
       },
       currentPageChange() {
         this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });
@@ -242,10 +229,6 @@
       updateList() {
         const options = Object.assign({}, this.filterList);
         options.keyword = this.query.query;
-        // options.subscribeType = [this.query.channel];
-        // if (this.orderVal) {
-        //   options.sort = JSON.parse(this.orderVal);
-        // }
         options.start = (this.currentPage - 1) * this.pageSize;
         options.pageSize = this.pageSize;
         subscribeAPI.esSearch(options, this).then((res) => {

@@ -1,3 +1,10 @@
+.search-box {
+  position: absolute;
+  left: 140px;
+  right: 200px;
+  max-width: 676px;
+}
+
 .btnBack,
 .btnForward {
   float: left;
