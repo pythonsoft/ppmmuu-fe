@@ -192,6 +192,7 @@
         options.start = 0;
         options.pageSize = 13;
         subscribeAPI.esSearch(options, this).then((res) => {
+          this.items = [];
           res.data.docs.forEach(item => {
             if (item.objectId !== this.objectId) {
               this.items.push(item);
@@ -249,7 +250,7 @@
       prepareDownload(fileInfo) {
         if(fileInfo) {
           this.fileInfo = fileInfo;
-          console.log(this.fileInfo);
+          // console.log(this.fileInfo);
         }else {
           this.fileInfo = this.getDefaultFileInfo();
         }
@@ -312,7 +313,7 @@
           rs = formatTime(str);
         }
 
-        console.log(str, rs);
+        // console.log(str, rs);
 
         return rs;
       }
