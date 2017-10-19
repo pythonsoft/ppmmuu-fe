@@ -223,7 +223,7 @@
     }
   };
 </script>
-<style>
+<style scope>
   .permission-search-item{
     float: left;
     margin-left: 10px;
@@ -241,7 +241,7 @@
   .permission-status-span {
     font-size: 12px;
     color: #FFFFFF;
-    width: 48px;
+    width: 60px;
     height: 20px;
     line-height: 20px;
     border-radius: 2px;

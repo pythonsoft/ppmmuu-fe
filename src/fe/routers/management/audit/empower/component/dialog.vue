@@ -58,7 +58,6 @@
 </template>
 <script>
   import '../index.css';
-  import whitelistView from './whitelist';
   import AddGroup from '../../../role/searchAddGroup';
 
   const config = require('../../config');
@@ -83,6 +82,8 @@
         if (val) {
           this.dialogVisible = true;
           if (this.type !== 'add') {
+            this.formData = JSON.parse(JSON.stringify(this.auditRuleInfo));
+            this.formData.id = this.formData._id
             this.title = '变更审核授权信息';
           } else {
             this.title = '添加审核授权信息';
@@ -118,17 +119,6 @@
       };
     },
     created() {
-      if (this.type !== 'add') {
-//        this.formData.id = this.auditRuleInfo._id;
-//        this.formData.name = this.auditRuleInfo.name;
-//        this.formData.bucketId = this.auditRuleInfo.details.bucketId;
-//        this.formData.script = this.auditRuleInfo.details.script;
-//        this.formData.description = this.auditRuleInfo.description;
-//        this.formData.type = this.auditRuleInfo.type !== '2' ? [] : [config.getConfig('NODE_TEMPLATE', 'DOWNLOAD_MEDIAEXPRESS').value];
-//        const templateDetail = this.auditRuleInfo.transcodeTemplateDetail;
-//        this.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
-//        this.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
-      }
     },
     methods: {
       getConfig() {

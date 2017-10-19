@@ -374,8 +374,7 @@
           name: me.shelfName,
           force: force,
           details: {},
-          files: me.files,
-          ownerName: me.program['FIELD314']
+          files: me.files
         };
         for(let key in me.basic){
           postData.details[key] = me.basic[key];
@@ -417,6 +416,7 @@
         const me = this;
         const templateInfo = rs[type];
         const transferParams = rs[type + '_info'];
+        const ownerName =  me.program['FIELD314'] ? me.program['FIELD314'].value : '';
 
         const param = {
           objectid: this.fileInfo.OBJECTID,
@@ -427,7 +427,8 @@
           outpoint: 0,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: templateInfo._id
+          templateId: templateInfo._id,
+          ownerName: ownerName
         };
 
         if(transferParams) {

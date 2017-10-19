@@ -217,7 +217,6 @@
         }else {
           delete data.type;
         }
-
         api.update(data, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');

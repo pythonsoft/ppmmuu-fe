@@ -51,7 +51,8 @@
     <dialog-view
       :auditRuleInfo="auditRuleInfo"
       :type="table.type"
-      :visible="dialogDisplay"
+      :visible.sync="dialogDisplay"
+      @listTemplate="listRuleInfo"
     ></dialog-view>
 
   </layout-four-row>
