@@ -1,7 +1,7 @@
 <template>
   <li v-if="item && listType === 'grid'" @click="linkToWatchFn(item.objectId)">
     <div class="iconfont icon-phoenixtv subscribe-grid-image">
-      <img class="subscribe-thumb" v-lazy="getThumb(item)" >
+      <img class="subscribe-thumb" v-lazy="item.poster" >
       <div class="subscribe-list-item-overlay">
         <span class="iconfont icon-play play-btn"></span>
         {{getDuration(item)}}
@@ -24,7 +24,7 @@
   <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="linkToWatchFn(item.objectId)">
     <div class="subscribe-list-item-thumb">
       <div class="iconfont icon-phoenixtv subscribe-list-item-thumb-wrap">
-        <img class="subscribe-list-thumb" v-lazy="getThumb(item)" >
+        <img class="subscribe-list-thumb" v-lazy="item.poster" >
         <div class="subscribe-list-item-overlay">
           <span class="iconfont icon-play play-btn"></span>
           {{getDuration(item)}}
