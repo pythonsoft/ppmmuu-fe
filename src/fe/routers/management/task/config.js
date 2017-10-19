@@ -17,6 +17,7 @@ config.CURRENT_STEP = {
 // 转码任务状态
 config.STATUS = {
   all: { text: '全部', value: '', key: 'all' },
+  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' },
   created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
   dealing: { text: '处理中', value: 'dealing', key: 'dealing', css: 'task-status-base task-status-dealing' },
   stopping: { text: '停止中', value: 'stopping', key: 'stopping', css: 'task-status-base task-status-dealing' },
@@ -42,6 +43,7 @@ config.TASK_STATUS = {
 // 下载任务状态
 config.DOWNLOAD_STATUS = {
   all: { text: '全部', value: '', key: 'all' },
+  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' },
   created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
   dealing: { text: '处理中', value: 'dealing', key: 'dealing', css: 'task-status-base task-status-dealing' },
   stopping: { text: '停止中', value: 'stopping', key: 'stopping', css: 'task-status-base task-status-dealing' },

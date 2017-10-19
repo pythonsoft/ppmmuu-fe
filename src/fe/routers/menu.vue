@@ -1,5 +1,5 @@
 <template>
-  <fj-menu :default-active="defaultRoute" router>
+  <fj-menu :default-active="defaultRoute" router @select="menuSelect">
     <div class="iconfont icon-phoenixtv logo-wrap"></div>
     <fj-menu-item
       v-for="item in menu"
@@ -44,14 +44,15 @@
   import ProfilePopover from './profilePopover';
   import Clickoutside from '../component/fjUI/utils/clickoutside';
   import { getItemFromLocalStorage } from '../common/utils';
+  import bubble from '../component/higherOrder/bubble/index'
 
   const config = require('../config');
   const api = require('../api/user');
 
   const menu = [
     { text: '媒体库', index: 'mediaCenter', route: '/mediaCenter', icon: 'icon-media-library' },
-    { text: '上架', index: 'shelf', route: '/shelf', icon: 'icon-shangjia' },
     { text: '入库', index: 'library', route: '/library', icon: 'icon-library' },
+    { text: '上架', index: 'shelf', route: '/shelf', icon: 'icon-shangjia' },
     { text: '订阅', index: 'subscriptions', route: '/subscriptions', icon: 'icon-subscription' },
     { text: '任务', index: 'taskCenter', route: '/taskCenter', icon: 'icon-menu' },
     { text: '个人中心', index: 'personalCenter', route: '/personalCenter', icon: 'icon-person' },
@@ -89,6 +90,13 @@
       }
     },
     methods: {
+      menuSelect(index, route) {
+        if(index === 'mediaCenter' && this.$route.path === route) {
+          bubble.emit('mediaCenterDefaultViewType', 'default');
+        }else {
+          bubble.off('mediaCenterDefaultViewType');
+        }
+      },
       closeProfilePopover(target) {
         if (this.popover && this.popover.$el.contains(target)) return;
         if (this.popover) this.unmountMenu();

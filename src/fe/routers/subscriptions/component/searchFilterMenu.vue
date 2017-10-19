@@ -21,6 +21,10 @@
         </div>
       </div>
     </li>
+    <div class="search-filter-menu-footer">
+      <fj-button size="mini" @click="handleCancel">取消</fj-button><!--
+      --><fj-button size="mini" type="primary" @click="handleClick">搜索</fj-button>
+    </div>
   </div>
 </template>
 <script>
@@ -36,7 +40,8 @@
         datetimerange: {
           FIELD162: [],
           FIELD36: []
-        }
+        },
+        selfFilterList: {}
       };
     },
     watch: {
@@ -50,43 +55,48 @@
       },
       'datetimerange.FIELD36'(val) {
         if (val.length > 0) {
-          const time = new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString();
-          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD36: time}));
-        } else {
-          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD36: ''}));
+          const time = val[0] ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString() : '';
+          this.selfFilterList.FIELD36 = time;
         }
       },
       'datetimerange.FIELD162'(val) {
         if (val.length > 0) {
-          const time = new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString();
-          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD162: time}));
-        } else {
-          this.$emit('update-filter-list', Object.assign({}, this.filterList, {FIELD162: ''}));
+          const time = val[0] ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString(): '';
+          this.selfFilterList.FIELD162 = time;
         }
       }
     },
     methods: {
+      handleClick() {
+        this.$emit('update-filter-list', this.selfFilterList);
+      },
+      handleCancel() {
+        this.$emit('unmount');
+      },
       getItemClass(menu, value) {
-        // if (!menu.multiple) {
-        //   console.log(this.filterList[menu.key], value);
-        // }
         const className = ['value-item'];
-        if (this.filterList[menu.key]) {
+
+        if (this.selfFilterList[menu.key]) {
           if (menu.multiple) {
-            const tempArr = this.filterList[menu.key].split(' ');
+            const tempArr = this.selfFilterList[menu.key].split(' ');
             if (tempArr.indexOf(value) > -1) {
               className.push('active');
             }
           } else {
-            if (this.filterList[menu.key] === value) {
+            if (this.selfFilterList[menu.key] === value) {
               className.push('active');
             }
+          }
+        } else {
+          if (menu.defaultValue && menu.defaultValue === value) {
+            className.push('active');
+            return className;
           }
         }
         return className;
       },
       selectValue(menu, value) {
-        const filterList = Object.assign({}, this.filterList);
+        const filterList = Object.assign({}, this.selfFilterList);
         if (menu.multiple) {
           if (filterList[menu.key]) {
             const tempArr = filterList[menu.key].split(' ');
@@ -101,12 +111,14 @@
           }
         } else {
           if (filterList[menu.key] === value) {
-            filterList[menu.key] = '';
+            if (!menu.defaultValue) {
+              filterList[menu.key] = '';
+            }
           } else {
             filterList[menu.key] = value;
           }
         }
-        this.$emit('update-filter-list', filterList);
+        this.selfFilterList = filterList;
       }
     }
   };
@@ -140,8 +152,8 @@
   .search-filter-menu li {
     padding: 0 23px;
   }
-  .search-filter-menu li+li {
-    border-top: 1px solid #EBF3FB;
+  .search-filter-menu li {
+    border-bottom: 1px solid #EBF3FB;
   }
   .search-filter-menu li .label {
     float: left;
@@ -169,5 +181,14 @@
   }
   .datetimerange-box {
     margin: 10px;
+    width: 300px;
+  }
+  .search-filter-menu-footer {
+    text-align: right;
+    margin: 10px;
+    margin-right: 40px;
+  }
+  .search-filter-menu-footer button + button {
+    margin-left: 10px;
   }
 </style>
