@@ -1,204 +1,342 @@
 <template>
-  <div>
-    <four-row-layout-right-content>
-      <template slot="search-left">下载审核</template>
-      <template slot="search-right">
-        <div class="audit-download-search-item" :style="{ width: '100px' }">
-          <fj-select placeholder="请选择" v-model="status" size="small">
-            <fj-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.text"
-              :value="item.value">
-            </fj-option>
-          </fj-select>
-        </div>
-        <div class="audit-download-search-item">
-          <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
-        </div>
-        <div class="audit-download-search-item">
-          <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
-        </div>
-      </template>
-      <template slot="table">
-        <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
-          <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-          <fj-table-column prop="status" label="状态" width="90"><template scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
-          <fj-table-column prop="name" label="名称"></fj-table-column>
-          <fj-table-column prop="createTime" label="创建时间" width="160"><template scope="props">{{formatTime(props.row.createTime)}}</template></fj-table-column>
-        </fj-table>
-      </template>
-      <template slot="pagination">
-        <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
-      </template>
-      <fj-dialog title="提示" :visible.sync="dialogVisible" @close="cancelDialog">
-        <span>{{dialogMessage}}</span>
-        <div slot="footer" class="dialog-footer">
-          <fj-button @click="cancelDialog">取消</fj-button><!--
-          --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
-        </div>
-      </fj-dialog>
-    </four-row-layout-right-content>
-  </div>
+  <layout-four-row>
+    <template slot="search-left">下载任务({{ title }})</template>
+    <template slot="search-right">
+      <div v-if="isShowSelect" class="layout-four-row-search-item" :style="{ width: '88px' }">
+        <fj-select size="small" placeholder="请选择" v-model="formData.status">
+          <fj-option
+            v-for="item in status"
+            :key="item.value"
+            :label="item.text"
+            :value="item.value"
+          ></fj-option>
+        </fj-select>
+      </div>
+      <!--<div class="layout-four-row-search-item" :style="{ width: '190px' }">-->
+        <!--<fj-input size="small" :rows="1" placeholder="请输入任务名称" v-model="formData.keyword"></fj-input>-->
+      <!--</div>-->
+      <!--<div class="layout-four-row-search-item">-->
+        <!--<fj-button type="primary" size="small" @click="handleClickSearch">查询</fj-button>-->
+      <!--</div>-->
+    </template>
+    <template slot="operation">
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
+      </span>
+      <span class="layout-btn-margin">
+        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+      </span>
+      <span class="layout-btn-mini-margin">
+        <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
+      </span>
+    </template>
+    <template slot="table">
+      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+        <fj-table-column prop="status" width="90" align="center" label="状态">
+          <template scope="props">
+            <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
+          </template>
+        </fj-table-column>
+        <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
+          <template scope="props">{{ props.row.createTime | formatTime }}</template>
+        </fj-table-column>
+        <fj-table-column prop="lastModify" width="160" align="center" label="修改时间">
+          <template scope="props">{{ props.row.lastModify | formatTime }}</template>
+        </fj-table-column>
+      </fj-table>
+    </template>
+    <template slot="pagination">
+      <fj-pagination
+        :page-size="pageSize"
+        :total="total"
+        :current-page.sync="page"
+        @current-change="pageChange">
+      </fj-pagination>
+    </template>
+
+    <child-task-slide-dialog-view
+      :parentInfo="table.currentRowInfo"
+      :visible.sync="childTaskDialogVisible"
+    ></child-task-slide-dialog-view>
+
+    <fj-dialog
+      title="提示"
+      :visible.sync="dialog.visible"
+      @close="dialog.visible=false"
+    >
+      <span>确定要删除此任务 {{ table.currentRowInfo.fileName }} 吗?</span>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click="dialog.visible=false">取消</fj-button><!--
+        --><fj-button type="primary" @click="dialogConfirm">确定</fj-button>
+      </div>
+    </fj-dialog>
+
+  </layout-four-row>
 </template>
 <script>
-  import '../../management/audit/download/index.css';
-  import { formatQuery, formatTime} from '../../../common/utils';
-  import ThreeRowLayoutRightContent from '../../../component/layout/threeRowLayoutRightContent/index';
-  import { config } from '../../management/audit/config';
+  import './index.css';
+  import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
+  import childTaskDialogView from './childTaskDialog';
+  import utils from '../../../common/utils';
 
   const api = require('../../../api/user');
+  const config = require('../../management/task/config');
+  const common = require('../../management/task/common');
 
   export default {
     components: {
-      'four-row-layout-right-content': ThreeRowLayoutRightContent,
+      'layout-four-row': fourRowLayout,
+      'child-task-slide-dialog-view': childTaskDialogView
     },
     data() {
       return {
-        defaultRoute: '/',
-        dialogVisible: false,
-        options: config.AUDIT_STATUS,
-        dialogMessage: '',
-        departmentId: '',
-        sendBackOrDelete: '',
-        keyword: '',
-        status: '',
+        isDisabled: true,
+        stopDisable: true,
+        restartDisable: true,
+        title: '',
+        isShowSelect: true,
+
+        status: config.getConfig('DOWNLOAD_STATUS'),
+        formData: {
+          keyword: '',
+          status: '',
+          currentStep: ''
+        },
+
+        dialog: {
+          visible: false
+        },
+
+        table: {
+          currentRowInfo: {}
+        },
         tableData: [],
-        searchOwner: [],
-        currentPage: 1,
+        /* bucket param */
+        page: 1,
+        pageSize: 20,
         total: 0,
-        pageSize: 15,
-        sendBackDisable: true,
-        deleteDisable: true,
-        selectedIds: [],
-        canEditRows: [],
-        canRejectIds: [],
-        canPassIds: [],
-        selectedRows: [],
-        editRow: {},
-        formatStatus: config.formatStatus,
-        formatTime: formatTime
+
+        /* child task */
+        childTaskDialogVisible: false,
+
+        runTimer: false
       };
     },
     created() {
-      this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
-      this.handleClickSearch();
+      this.updateStatus();
+      // this.listTask();
+      this.runTimer = true;
+      this.autoRefreshList();
     },
     watch: {
-      status(val) {
-        this.currentPage = 1;
-        this.handleClickSearch();
-      }
+      '$route.path'(val) {
+        this.updateStatus();
+      },
+    },
+    destroyed() {
+      this.runTimer = false;
     },
     methods: {
-      getActiveRoute(path, level) {
-        const pathArr = path.split('/');
-        return pathArr[level] || '';
-      },
-      handleClickSearch() {
-        const me = this;
-        const searchObj = {
-          page: me.currentPage,
-          pageSize: me.pageSize,
-          keyword: me.keyword,
-          status: me.status
-        };
-        api.listAuditJob(formatQuery(searchObj, true), me)
-            .then((res) => {
-              const data = res.data;
-              me.tableData = data ? data.docs : [];
-              me.currentPage = data.page;
-              me.total = data.total;
-              me.pageSize = data.pageSize;
-              me.handleSelectionChange();
-            })
-            .catch((error) => {
-              me.showErrorInfo(error);
-            });
-      },
-      handleClickPass(){
-        this.dialogMessage = '您确定要审核通过这些任务吗';
-        this.dialogVisible = true;
-        this.sendBackOrDelete = 'pass';
-      },
-      handleClickReject(){
-        this.dialogMessage = '您确定要拒绝这些任务吗';
-        this.dialogVisible = true;
-        this.sendBackOrDelete = 'reject';
-      },
-      resetDialog() {
-        this.dialogMessage = '';
-        this.dialogVisible = false;
-      },
-      cancelDialog() {
-        this.resetDialog();
-      },
-      handleShowBack() {
-        this.showEdit = false;
-      },
-      confirmDialog() {
-        const me = this;
-        let postData = {};
-        let message = '';
-        let apiFunc = '';
-        if (this.sendBackOrDelete === 'pass') {
-          postData = {
-            ids: this.canPassIds.join(','),
-            status: '2'
-          };
-          message = '审核通过';
-          apiFunc = api.auditPass;
-        } else if (this.sendBackOrDelete === 'reject') {
-          postData = {
-            ids: this.canRejectIds.join(','),
-            status: '3'
-          };
-          message = '拒绝';
-          apiFunc = api.auditPass;
-        } else {
-          this.resetDialog();
-          return;
-        }
-
-        apiFunc(postData)
-            .then((response) => {
-              me.showSuccessInfo(`${message}成功!`);
-              me.resetDialog();
-              me.handleClickSearch();
-            })
-            .catch((error) => {
-              me.showErrorInfo(error);
-              me.resetDialog();
-            });
-      },
-      handleSelectionChange(rows) {
-        this.selectedIds = [];
-        this.canPassIds = [];
-        this.canRejectIds = [];
-        if (rows && rows.length) {
-          let flag1 = true;
-          let flag2 = true;
-          for (let i = 0, len = rows.length; i < len; i++) {
-            const row = rows[i];
-            this.selectedIds.push(row._id);
-            if(row.status === '1'){
-              this.canPassIds.push(row._id);
-              this.canRejectIds.push(row._id);
+      updateStatus() {
+        const keys = Object.keys(this.status);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (this.$route.name.indexOf(key.toLowerCase()) > -1) {
+            if (key === 'all') {
+              this.isShowSelect = true;
+            } else {
+              this.isShowSelect = false;
             }
+            this.formData.status = this.status[key].value;
+            this.title = this.status[key].text;
+            this.page = 1;
+            this.listTask();
+            break;
           }
         }
       },
-      clearTableSelection() {
-        this.$refs.table.clearSelection();
+      handleClickSearch() {
+        this.listTask();
       },
-      handleCurrentPageChange(val) {
-        this.handleClickSearch();
+      stopClick() {
+        this.stop();
       },
-      showSuccessInfo(message) {
-        this.$message.success(message);
+      restartClick() {
+        this.restart();
       },
-      showErrorInfo(message) {
-        this.$message.error(message);
+      childTaskClick() {
+        this.childTaskDialogVisible = true;
+      },
+      refreshClick() {
+        this.listTask();
+        this.isDisabled = true;
+        this.table.currentRowInfo = {};
+        this.childTaskDialogVisible = false;
+      },
+      /* table */
+      handleCurrentChange(current) {
+        this.table.currentRowInfo = current;
+        this.isDisabled = false;
+        this.stopDisable = !common.isTaskCanStop(current.status);
+        this.restartDisable = !common.isTaskCanRestart(current.status);
+      },
+      getStatus(v) {
+        return config.getConfig('DOWNLOAD_STATUS', v);
+      },
+      formatType(v) {
+        return v;
+      },
+      formatPermission(v) {
+        return v;
+      },
+      pageChange(val) {
+        this.page = val;
+        this.listTask();
+      },
+      autoRefreshList() {
+        const me = this;
+        if (!me.runTimer) {
+          return false;
+        }
+        setTimeout(() => {
+          me.listTask(true, () => {
+            me.autoRefreshList();
+          });
+        }, 5000);
+
+        return false;
+      },
+      deleteClick() {
+        this.dialog.visible = true;
+      },
+      dialogConfirm() {
+        this.deleteJob();
+      },
+      /* api */
+      listTask(notNeedProcess, completeFn) {
+        const me = this;
+
+        const param = {
+          page: this.page,
+          pageSize: this.pageSize
+        };
+
+        if (this.formData.status) {
+          param.status = this.formData.status;
+        }
+
+        if (this.formData.currentStep) {
+          param.currentStep = this.formData.currentStep;
+        }
+
+        /**
+        const mock = {
+          "status":"0",
+          "data":{
+            "docs":[
+              {
+                "id":"b850529d-43fa-47e8-9502-97fad80ad775",
+                "tasklist":[
+                  {
+                    "taskName":"下载",
+                    "taskType":"media_download",
+                    "taskId":"59ae6ef758b26b017acc2eb2",
+                    "status":"dealing",
+                    "position":0,
+                    "createParams":"{
+                      \"objectid\":\"5A73A94C-BA88-5995-4459-4B2F551B5962\",
+                      \"inpoint\":0,
+                      \"outpoint\":412435,
+                      \"fileName\":\"testA.mp4\"
+                    }",
+                    "queryParams":"jobid\u003d59ae6ef758b26b017acc2eb2",
+                    "serialNO":0,
+                    "errMsg":"can not stop,task not support",
+                    "filePath":"/root/media/2017/09/05/172545447testA.mp4",
+                    "fileName":"172545447testA.mp4"}],
+                "status":"dealing",
+                "currentStep":0,
+                "filePath":"/root/media/2017/09/05/172545447testA.mp4",
+                "fileName":"172545447testA.mp4",
+                "createTime":"2017-09-05T09:25:43.607Z",
+                "lastModify":"2017-09-07T08:09:33.727Z"}],
+            "page":1,
+            "pageCount":1,
+            "pageSize":20,
+            "total":1
+          },
+          "statusInfo":{}
+        };
+         **/
+
+        api.listJob({ params: param }, notNeedProcess ? '' : me).then((res) => {
+          me.tableData = res.data.docs;
+          me.page = res.data.page;
+          me.total = res.data.total;
+          completeFn && completeFn();
+        }).catch((error) => {
+          if (!notNeedProcess) {
+            me.$message.error(error);
+          }
+          completeFn && completeFn();
+        });
+      },
+      stop() {
+        const me = this;
+
+        const param = {
+          jobId: this.table.currentRowInfo.id
+        };
+
+        api.stopJob({ params: param }).then((res) => {
+          me.$message.success('任务已成功停止');
+          me.listTask();
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
+      },
+
+      deleteJob() {
+        const me = this;
+
+        const param = {
+          jobId: this.table.currentRowInfo.id
+        };
+
+        api.deleteJob({ params: param }).then((res) => {
+          me.$message.success('任务已成功停止');
+          me.listTask();
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
+      },
+
+      restart() {
+        const me = this;
+
+        const param = {
+          jobId: this.table.currentRowInfo.id
+        };
+
+        api.restartJob({ params: param }).then((res) => {
+          me.$message.success('任务已成功重启');
+          me.listTask();
+        }).catch((error) => {
+          me.$message.error(error);
+        });
+
+        return false;
       }
     }
   };

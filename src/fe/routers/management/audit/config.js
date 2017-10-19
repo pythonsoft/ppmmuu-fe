@@ -5,7 +5,7 @@ const method = {};
 
 config.AUDIT_STATUS = {
   All: { text: '全部', value: '-1', key: 'ALL' },
-  WAITING: { text: '审核中', value: '1', key: 'WAITING' },
+  WAITING: { text: '待审核', value: '1', key: 'WAITING' },
   PASS: { text: '通过', value: '2', key: 'PASS' },
   REJECT: { text: '拒绝', value: '3', key: 'REJECT' }
 };
