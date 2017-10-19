@@ -44,6 +44,7 @@
   import ProfilePopover from './profilePopover';
   import Clickoutside from '../component/fjUI/utils/clickoutside';
   import { getItemFromLocalStorage } from '../common/utils';
+  import bubble from '../component/higherOrder/bubble/index'
 
   const config = require('../config');
   const api = require('../api/user');
@@ -91,7 +92,9 @@
     methods: {
       menuSelect(index, route) {
         if(index === 'mediaCenter' && this.$route.path === route) {
-          this.$emit('mediaCenterDefaultViewType', 'default');
+          bubble.emit('mediaCenterDefaultViewType', 'default');
+        }else {
+          bubble.off('mediaCenterDefaultViewType');
         }
       },
       closeProfilePopover(target) {

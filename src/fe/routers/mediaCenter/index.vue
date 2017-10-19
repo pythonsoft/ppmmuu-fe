@@ -184,6 +184,7 @@
     FILETR_FIELDS
   } from './config';
   import Pagination from './components/pagination';
+  import bubble from '../../component/higherOrder/bubble/index'
 
   import threeColumn from '../../component/layout/threeColumn';
   import gridAndList from './gridAndList';
@@ -236,12 +237,13 @@
       };
     },
     created() {
+      const me = this;
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.getSeachConfigs();
       this.getDefaultMedia();
-      this.$on('mediaCenterDefaultViewType', function(v) {
-        console.log('feefef -->', v);
-      })
+      bubble.on('mediaCenterDefaultViewType', function(v) {
+        me.listType = v;
+      });
     },
     watch: {
       orderVal(val) {
