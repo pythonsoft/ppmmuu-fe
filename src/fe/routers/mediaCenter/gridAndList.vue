@@ -150,6 +150,7 @@
 
 .media-center-list-item-thumb{
   height: 108px;
+  line-height: 108px;
   width: 192px;
   overflow: hidden;
   position: absolute;
