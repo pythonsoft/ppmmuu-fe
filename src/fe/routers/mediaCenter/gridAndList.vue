@@ -32,7 +32,7 @@
           </li>
           <li>
             <span title="新闻日期">{{ formatTime(item.f_date_162) || '无新聞日期' }}</span>
-          </li>h
+          </li>
         </ul>
       </div>
     </div>
