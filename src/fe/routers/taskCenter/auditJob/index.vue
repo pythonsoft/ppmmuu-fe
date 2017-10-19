@@ -1,205 +1,46 @@
 <template>
-  <div>
-    <four-row-layout-right-content>
-      <template slot="search-left">下载审核</template>
-      <template slot="search-right">
-        <div class="audit-download-search-item" :style="{ width: '100px' }">
-          <fj-select placeholder="请选择" v-model="status" size="small">
-            <fj-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.text"
-              :value="item.value">
-            </fj-option>
-          </fj-select>
-        </div>
-        <div class="audit-download-search-item">
-          <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
-        </div>
-        <div class="audit-download-search-item">
-          <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
-        </div>
-      </template>
-      <template slot="table">
-        <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
-          <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-          <fj-table-column prop="status" label="状态" width="90"><template scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
-          <fj-table-column prop="name" label="名称"></fj-table-column>
-          <fj-table-column prop="createTime" label="创建时间" width="160"><template scope="props">{{formatTime(props.row.createTime)}}</template></fj-table-column>
-        </fj-table>
-      </template>
-      <template slot="pagination">
-        <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
-      </template>
-      <fj-dialog title="提示" :visible.sync="dialogVisible" @close="cancelDialog">
-        <span>{{dialogMessage}}</span>
-        <div slot="footer" class="dialog-footer">
-          <fj-button @click="cancelDialog">取消</fj-button><!--
-          --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
-        </div>
-      </fj-dialog>
-    </four-row-layout-right-content>
-  </div>
+  <div>111</div>
 </template>
 <script>
-  import '../../management/audit/download/index.css';
-  import { formatQuery, formatTime} from '../../../common/utils';
-  import ThreeRowLayoutRightContent from '../../../component/layout/threeRowLayoutRightContent/index';
-  import { config } from '../../management/audit/config';
-
-  const api = require('../../../api/user');
-
   export default {
     components: {
-      'four-row-layout-right-content': ThreeRowLayoutRightContent,
     },
     data() {
       return {
-        defaultRoute: '/',
-        dialogVisible: false,
-        options: config.AUDIT_STATUS,
-        dialogMessage: '',
-        departmentId: '',
-        sendBackOrDelete: '',
-        keyword: '',
-        status: '',
+        isDisabled: true,
+        stopDisable: true,
+        restartDisable: true,
+        title: '',
+        isShowSelect: true,
+
+        formData: {
+          keyword: '',
+          status: '',
+          currentStep: ''
+        },
+
+        dialog: {
+          visible: false
+        },
+
+        table: {
+          currentRowInfo: {}
+        },
         tableData: [],
-        searchOwner: [],
-        currentPage: 1,
+        /* bucket param */
+        page: 1,
+        pageSize: 20,
         total: 0,
-        pageSize: 15,
-        sendBackDisable: true,
-        deleteDisable: true,
-        selectedIds: [],
-        canEditRows: [],
-        canRejectIds: [],
-        canPassIds: [],
-        selectedRows: [],
-        editRow: {},
-        formatStatus: config.formatStatus,
-        formatTime: formatTime
+
+        /* child task */
+        childTaskDialogVisible: false,
+
+        runTimer: false
       };
     },
     created() {
-      this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
-      this.handleClickSearch();
     },
-    watch: {
-      status(val) {
-        this.currentPage = 1;
-        this.handleClickSearch();
-      }
+    destroyed() {
     },
-    methods: {
-      getActiveRoute(path, level) {
-        const pathArr = path.split('/');
-        return pathArr[level] || '';
-      },
-      handleClickSearch() {
-        const me = this;
-        const searchObj = {
-          page: me.currentPage,
-          pageSize: me.pageSize,
-          keyword: me.keyword,
-          status: me.status
-        };
-        api.listAuditJob(formatQuery(searchObj, true), me)
-            .then((res) => {
-              const data = res.data;
-              me.tableData = data ? data.docs : [];
-              me.currentPage = data.page;
-              me.total = data.total;
-              me.pageSize = data.pageSize;
-              me.handleSelectionChange();
-            })
-            .catch((error) => {
-              me.showErrorInfo(error);
-            });
-      },
-      handleClickPass(){
-        this.dialogMessage = '您确定要审核通过这些任务吗';
-        this.dialogVisible = true;
-        this.sendBackOrDelete = 'pass';
-      },
-      handleClickReject(){
-        this.dialogMessage = '您确定要拒绝这些任务吗';
-        this.dialogVisible = true;
-        this.sendBackOrDelete = 'reject';
-      },
-      resetDialog() {
-        this.dialogMessage = '';
-        this.dialogVisible = false;
-      },
-      cancelDialog() {
-        this.resetDialog();
-      },
-      handleShowBack() {
-        this.showEdit = false;
-      },
-      confirmDialog() {
-        const me = this;
-        let postData = {};
-        let message = '';
-        let apiFunc = '';
-        if (this.sendBackOrDelete === 'pass') {
-          postData = {
-            ids: this.canPassIds.join(','),
-            status: '2'
-          };
-          message = '审核通过';
-          apiFunc = api.auditPass;
-        } else if (this.sendBackOrDelete === 'reject') {
-          postData = {
-            ids: this.canRejectIds.join(','),
-            status: '3'
-          };
-          message = '拒绝';
-          apiFunc = api.auditPass;
-        } else {
-          this.resetDialog();
-          return;
-        }
-
-        apiFunc(postData)
-            .then((response) => {
-              me.showSuccessInfo(`${message}成功!`);
-              me.resetDialog();
-              me.handleClickSearch();
-            })
-            .catch((error) => {
-              me.showErrorInfo(error);
-              me.resetDialog();
-            });
-      },
-      handleSelectionChange(rows) {
-        this.selectedIds = [];
-        this.canPassIds = [];
-        this.canRejectIds = [];
-        if (rows && rows.length) {
-          let flag1 = true;
-          let flag2 = true;
-          for (let i = 0, len = rows.length; i < len; i++) {
-            const row = rows[i];
-            this.selectedIds.push(row._id);
-            if(row.status === '1'){
-              this.canPassIds.push(row._id);
-              this.canRejectIds.push(row._id);
-            }
-          }
-        }
-      },
-      clearTableSelection() {
-        this.$refs.table.clearSelection();
-      },
-      handleCurrentPageChange(val) {
-        this.handleClickSearch();
-      },
-      showSuccessInfo(message) {
-        this.$message.success(message);
-      },
-      showErrorInfo(message) {
-        this.$message.error(message);
-      }
-    }
   };
 </script>
