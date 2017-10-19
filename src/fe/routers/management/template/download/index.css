@@ -85,3 +85,12 @@
   height: 100%;
   overflow: auto;
 }
+
+.template-subtitle-checkbox {
+  margin-right: 10px;
+}
+
+.template-subtitle {
+  margin-left: -22px;
+  padding-top: 7px;
+}

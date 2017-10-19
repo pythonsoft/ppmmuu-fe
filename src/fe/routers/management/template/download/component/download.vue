@@ -21,6 +21,21 @@
         </fj-checkbox-group>
       </div>
     </fj-form-item>
+    <fj-form-item label="字幕合成" prop="subtitleType">
+      <div class="template-subtitle">
+        <fj-checkbox-group v-model="formData.subtitleType">
+          <fj-checkbox class="template-subtitle-checkbox" v-for="item in subtitleType" :label="item.value" :key="item.value">{{item.label}}</fj-checkbox>
+        </fj-checkbox-group>
+      </div>
+    </fj-form-item>
+    <fj-form-item label="下载审核">
+      <div class="template-subtitle">
+        <fj-radio-group v-model="formData.downloadAudit">
+          <fj-radio class="template-subtitle-checkbox"  :label="false">否</fj-radio>
+          <fj-radio class="template-subtitle-checkbox"  :label="true">是</fj-radio>
+        </fj-radio-group>
+      </div>
+    </fj-form-item>
     <fj-form-item label="转码模版">
       <transcode-template-list
         :data="formData.transcodeTemplates"
@@ -69,6 +84,11 @@
 
   const config = require('../../../task/config');
   const api = require('../../../../../api/template');
+  const subtitleType = [
+    {label: '外挂字幕', value: '0'},
+    {label: '流式字幕', value: '1'},
+    {label: '内嵌字幕', value: '2'}
+  ];
 
   export default {
     name: 'templateDownloadForm',
@@ -95,6 +115,8 @@
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
         this.formData.type = this.templateInfo.type !== '2' ? [] : [config.getConfig('NODE_TEMPLATE', 'DOWNLOAD_MEDIAEXPRESS').value];
+        this.formData.subtitleType = this.templateInfo.subtitleType || [];
+        this.formData.downloadAudit = this.templateInfo.downloadAudit || false;
         const templateDetail = this.templateInfo.transcodeTemplateDetail;
         this.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
         this.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
@@ -105,12 +127,15 @@
         scriptDialogVisible: false,
         transcodeScriptDialogVisible: false,
         bucketBrowserVisible: false,
+        subtitleType: subtitleType,
         formData: {
           id: '',
           name: '',
           bucketId: '',
           script: '',
           type: [],
+          subtitleType: [],
+          downloadAudit: false,
           transcodeTemplateSelector: '',
           transcodeTemplates: [],
         },

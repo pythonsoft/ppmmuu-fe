@@ -55,7 +55,7 @@
             const me = this;
             const postData = {};
             postData.name = this.formData.name;
-            postData._id = this.info.id;
+            postData.groupId = this.info._id;
             this.isBtnLoading = true;
             groupAPI.updateTemplateGroup(postData)
               .then((response) => {
