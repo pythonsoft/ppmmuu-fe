@@ -3,7 +3,7 @@
     <four-row-layout-right-content>
       <template slot="search-left">下载审核任务</template>
       <template slot="search-right">
-        <div class="permission-search-item">
+        <div class="`">
           <fj-select placeholder="请选择" v-model="status" size="small">
             <fj-option
                     v-for="item in options"
@@ -50,6 +50,7 @@
   </div>
 </template>
 <script>
+  import '../../management/audit/download/index.css';
   import { formatQuery, formatTime} from '../../../common/utils';
   import ThreeRowLayoutRightContent from '../../../component/layout/threeRowLayoutRightContent/index';
   import { config } from '../../management/audit/config';

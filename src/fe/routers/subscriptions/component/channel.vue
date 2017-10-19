@@ -126,7 +126,11 @@
         };
 
         jobAPI.download(param).then((res) => {
-          me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          if(res.data === 'audit'){
+            me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
+          }else {
+            me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          }
         }).catch((error) => {
           me.$message.error(error);
         });
