@@ -66,7 +66,6 @@
   export default {
     name: 'auditRuleDialog',
     components: {
-      'whitelist-view': whitelistView,
       'add-group': AddGroup
     },
     props: {
