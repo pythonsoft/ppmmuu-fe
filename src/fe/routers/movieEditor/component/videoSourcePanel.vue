@@ -249,6 +249,11 @@
         window.removeEventListener('keydown', this.keydown);
       }
     },
+    beforeDestroy() {
+      if (this.isPlaying) {
+        this.video.pause();
+      }
+    },
     methods: {
       contextMenuStop() {
         return false;

@@ -74,6 +74,9 @@
         } else {
           this.updateList();
         }
+        if (!val.viewType) {
+          this.viewType = 'grid';
+        }
       },
       orderVal(val, oldVal) {
         if (!oldVal) return;
