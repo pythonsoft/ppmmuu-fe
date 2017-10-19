@@ -71,6 +71,11 @@
         if (val.viewType && this.viewType !== val.viewType) {
           this.viewType = val.viewType;
         } else {
+          const keys = Object.keys(this.filterList);
+          for (let i = 0, len = keys.length; i < len; i++) {
+            const key = keys[i];
+            this.filterList[key] = val[key] || '';
+          }
           this.updateList();
         }
       },
@@ -80,21 +85,15 @@
         }
       },
       filterList(val) {
-        if (this.dropdownMenu) {
-          this.dropdownMenu.filterList = val;
-        }
+        // if (this.dropdownMenu) {
+        //   this.dropdownMenu.filterList = val;
+        // }
       }
     },
     created() {
       this.getSubscribeSearchConfig();
       if (this.query.page) this.currentPage = Number(this.query.page);
       if (this.query.viewType) this.viewType = this.query.viewType;
-      const keys = Object.keys(this.query);
-      for (let i = 0, len = keys.length; i < len; i++) {
-        const key = keys[i];
-        if (key === 'viewType' || key === 'query' || key === 'page') continue;
-        this.filterList[key] = this.query[key];
-      }
       this.updateList();
     },
     mounted() {
@@ -114,22 +113,24 @@
         this.mountDropdownMenu();
       },
       mountDropdownMenu() {
-        console.log('mountDropdownMenu');
+        console.log('mountDropdownMenu', this.filterList);
         this.dropdownMenu = new Vue(DropdownMenu).$mount();
         document.body.appendChild(this.dropdownMenu.$el);
         const parentEl = this.parentEl || document.body;
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
         this.dropdownMenu.menus = this.menus;
-        this.dropdownMenu.filterList = this.filterList;
-        this.dropdownMenu.defaultDatetimerange = { FIELD162: this.filterList.FIELD162, FIELD36: this.filterList.FIELD36 };
+        this.dropdownMenu.selfFilterList = Object.assign({}, this.filterList);
+        this.dropdownMenu.defaultDatetimerange = { FIELD162: this.filterList.FIELD162 || '', FIELD36: this.filterList.FIELD36 || '' };
         this.dropdownMenu.$on('update-filter-list', this.updateFilterList);
+        this.dropdownMenu.$on('unmount', this.unmountDropdownMenu);
       },
       updateFilterList(filterList) {
-        // console.log(filterList);
-        this.filterList = filterList;
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, this.filterList) });
-        this.unmountDropdownMenu();
+        console.log(filterList);
+        // this.filterList = filterList;
+        this.unmountDropdownMenu(() => {
+          this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, filterList) });
+        });
       },
       updateMenuPosition() {
         if (this.dropdownMenu) {
@@ -144,7 +145,7 @@
         position.top = position.top - parentElScrollTop;
         return position;
       },
-      unmountDropdownMenu() {
+      unmountDropdownMenu(cb) {
         if (this.dropdownMenu) {
           console.log('unmountDropdownMenu');
           this.dropdownMenu.$destroy();
@@ -152,6 +153,7 @@
           const parentEl = this.parentEl || document.body;
           parentEl.removeEventListener('scroll', this.updateMenuPosition);
           this.dropdownMenu = null;
+          cb && cb();
         }
       },
       handleCloseMenu(target) {
@@ -225,10 +227,14 @@
           const data = res.data;
           this.menus = data;
           data.forEach(menu => {
-            if (menu.type === 'daterange') {
-              this.filterList[menu.key] = '';
-            }
+            this.filterList[menu.key] = '';
           });
+          const keys = Object.keys(this.query);
+          for (let i = 0, len = keys.length; i < len; i++) {
+            const key = keys[i];
+            if (key === 'viewType' || key === 'query' || key === 'page') continue;
+            this.filterList[key] = this.query[key];
+          }
         }).catch((error) => {
           this.$message.error(error);
         });

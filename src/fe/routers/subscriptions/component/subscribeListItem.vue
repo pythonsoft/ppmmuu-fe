@@ -150,6 +150,11 @@
         return position;
       },
     },
+    beforDestroy() {
+      if (this.dropdownMenu) {
+        this.unmountDropdownMenu();
+      }
+    },
     directives: { Clickoutside }
   }
 </script>
