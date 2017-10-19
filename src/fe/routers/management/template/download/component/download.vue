@@ -114,7 +114,7 @@
         this.formData.bucketId = this.templateInfo.details.bucketId;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
-        this.formData.type = this.templateInfo.type !== '2' ? [] : [config.getConfig('NODE_TEMPLATE', 'DOWNLOAD_MEDIAEXPRESS').value];
+        this.formData.type = this.templateInfo.type === '2' ? [this.templateInfo.type] : [];
         this.formData.subtitleType = this.templateInfo.subtitleType || [];
         this.formData.downloadAudit = this.templateInfo.downloadAudit || false;
         const templateDetail = this.templateInfo.transcodeTemplateDetail;
@@ -196,7 +196,6 @@
         data.type = data.type ? (data.type.length !== 0 ? data.type[0] : '') : '';
         data.groupId = this.groupId;
         data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
-
         api.createDownloadTemplate(data, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
