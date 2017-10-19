@@ -31,6 +31,7 @@ const Catalog = resolve => require.ensure([], () => resolve(require('./library/c
 
 const TaskCenter = resolve => require.ensure([], () => resolve(require('./taskCenter/index')), 'taskCenter');
 const TaskDownload = resolve => require.ensure([], () => resolve(require('./taskCenter/download/index')), 'taskDownload');
+const TaskDownloadAudit = resolve => require.ensure([], () => resolve(require('./taskCenter/auditJob/index')), 'TaskDownloadAudit');
 
 const DownloadTemplate = resolve => require.ensure([], () => resolve(require('./management/template/download/index')), 'DownloadTemplate');
 const TranscodeTemplate = resolve => require.ensure([], () => resolve(require('./management/template/transcode/index')), 'TranscodeTemplate');
@@ -178,7 +179,8 @@ export default [{
       children: [
         { path: 'task_download_all', component: TaskDownload, meta: { title: '全部' }, name: 'task_download_all' },
         { path: 'task_download_complete', component: TaskDownload, meta: { title: '已完成' }, name: 'task_download_complete' },
-        { path: 'task_download_error', component: TaskDownload, meta: { title: '错误' }, name: 'task_download_error' }
+        { path: 'task_download_error', component: TaskDownload, meta: { title: '错误' }, name: 'task_download_error' },
+        { path: 'task_download_audit', component: TaskDownloadAudit, meta: { title: '审核任务' }, name: 'task_download_audit' }
       ]
     }
   ]

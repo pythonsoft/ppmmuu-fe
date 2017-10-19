@@ -196,7 +196,7 @@
     }
   };
 </script>
-<style>
+<style scope>
     .permission-search-item{
       float: left;
       margin-left: 10px;

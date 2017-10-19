@@ -562,24 +562,24 @@ utils.isVideoType = function (filePath) {
  * @param intervals [[1, 8], [6, 13], [16, 18], [19, 20]];
  * @returns {*} [[1, 13], [16, 18], [19, 20]]
  */
-utils.mergeRangeArray = function(intervals) {
+utils.mergeRangeArray = function (intervals) {
   if (intervals.length === 0) return intervals;
-  intervals.sort(function(a, b) {
+  intervals.sort((a, b) => {
     if (a.start === b.start) return a.end - b.end;
-    return a.start - b.start
+    return a.start - b.start;
   });
 
   const result = [intervals[0]];
   for (let i = 0, len = intervals.length; i < len; i++) {
-    let resultLastIndex = result.length - 1;
+    const resultLastIndex = result.length - 1;
     if (result[resultLastIndex].end >= intervals[i].start) {
-      result[resultLastIndex].end = Math.max(result[resultLastIndex].end, intervals[i].end)
+      result[resultLastIndex].end = Math.max(result[resultLastIndex].end, intervals[i].end);
     } else {
-      result.push(intervals[i])
+      result.push(intervals[i]);
     }
   }
 
-  return result
+  return result;
 };
 
 module.exports = utils;

@@ -216,4 +216,41 @@
     }
   };
 </script>
+<style scope>
+  .permission-search-item{
+    float: left;
+    margin-left: 10px;
+    line-height: 100%;
+  }
+
+  .permission-table-pagination {
+    margin-top: 30px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    color: #4C637B;
+  }
+
+  .permission-status-span {
+    font-size: 12px;
+    color: #FFFFFF;
+    width: 60px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 2px;
+    text-align:center;
+    display: block;
+  }
+  .deleted {
+    background: #AAAAAA;
+  }
+
+  .prepare {
+    background: #38B1EB;
+  }
+
+  .doing {
+    background: #C0C003;
+  }
+</style>
 

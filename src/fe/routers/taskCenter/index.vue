@@ -34,6 +34,7 @@
       index: 'downloadTask',
       children: [
         { text: '全部', index: 'task_download_all', route: 'task_download_all' },
+        { text: '待审核', index: 'task_download_audit', route: 'task_download_audit' },
         { text: '已完成', index: 'task_download_complete', route: 'task_download_complete' },
         { text: '错误', index: 'task_download_error', route: 'task_download_error' }
       ]
