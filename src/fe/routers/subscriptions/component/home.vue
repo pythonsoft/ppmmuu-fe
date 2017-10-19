@@ -122,7 +122,6 @@
       },
       linkToChannel(channelId, channelName) {
         this.$emit('update-router', { name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
-        // this.$router.push({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
       },
       linkToWatch(objectId) {
         this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });

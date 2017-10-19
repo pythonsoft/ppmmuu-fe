@@ -78,7 +78,6 @@
       orderVal(val, oldVal) {
         if (!oldVal) return;
         this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { order: val }) });
-        // this.updateList();
       }
     },
     data() {
@@ -150,7 +149,6 @@
       },
       setViewType(t) {
         this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
-        // this.viewType = t;
       },
       currentPageChange() {
         this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });

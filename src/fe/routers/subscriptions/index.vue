@@ -27,7 +27,7 @@
               <span :class="['iconfont icon-arrow-left', 'btnBack', {'disabled': routeIndex <= 0}]" @click="back"></span>
               <span :class="['iconfont icon-arrow-right', 'btnForward', {'disabled': history.length > 0 && routeIndex === history.length - 1}]" @click="forward"></span>
             </div>
-            <div :style="{ width: '676px', float: 'left' }">
+            <div class="search-box">
               <fj-select
                 remote
                 :clear-history-method="clearHistory"
