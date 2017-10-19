@@ -1,22 +1,22 @@
 <template>
   <div>
     <four-row-layout-right-content>
-      <template slot="search-left">下载审核</template>
+      <template slot="search-left">下载审核任务</template>
       <template slot="search-right">
-        <div class="audit-download-search-item" :style="{ width: '100px' }">
+        <div class="permission-search-item">
           <fj-select placeholder="请选择" v-model="status" size="small">
             <fj-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.text"
-              :value="item.value">
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
             </fj-option>
           </fj-select>
         </div>
-        <div class="audit-download-search-item">
+        <div class="permission-search-item">
           <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
         </div>
-        <div class="audit-download-search-item">
+        <div class="permission-search-item">
           <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
         </div>
       </template>
@@ -25,29 +25,42 @@
           <fj-table-column type="selection" width="20" align="center"></fj-table-column>
           <fj-table-column prop="status" label="状态" width="90"><template scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
           <fj-table-column prop="name" label="名称"></fj-table-column>
+          <fj-table-column prop="applicant" label="申请人"><template scope="props">{{props.row.applicant.companyName + '-' + props.row.applicant.name}}</template></fj-table-column>
+          <fj-table-column prop="verifier" label="审核人"><template scope="props">{{props.row.verifier.companyName + '-' + props.row.verifier.name}}</template></fj-table-column>
           <fj-table-column prop="createTime" label="创建时间" width="160"><template scope="props">{{formatTime(props.row.createTime)}}</template></fj-table-column>
         </fj-table>
       </template>
       <template slot="pagination">
         <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
       </template>
-      <fj-dialog title="提示" :visible.sync="dialogVisible" @close="cancelDialog">
+      <fj-dialog
+              title="提示"
+              :visible.sync="dialogVisible"
+              @close="cancelDialog">
+
         <span>{{dialogMessage}}</span>
+
         <div slot="footer" class="dialog-footer">
           <fj-button @click="cancelDialog">取消</fj-button><!--
           --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
         </div>
+
       </fj-dialog>
     </four-row-layout-right-content>
   </div>
 </template>
 <script>
-  import '../../management/audit/download/index.css';
   import { formatQuery, formatTime} from '../../../common/utils';
   import ThreeRowLayoutRightContent from '../../../component/layout/threeRowLayoutRightContent/index';
   import { config } from '../../management/audit/config';
 
   const api = require('../../../api/user');
+  const OPTIONS = [
+    {value: '', label: '全部'},
+    {value: '1', label: '待审核'},
+    {value: '2', label: '审核通过'},
+    {value: '3', label: '拒绝'}
+  ];
 
   export default {
     components: {
@@ -57,7 +70,7 @@
       return {
         defaultRoute: '/',
         dialogVisible: false,
-        options: config.AUDIT_STATUS,
+        options: OPTIONS,
         dialogMessage: '',
         departmentId: '',
         sendBackOrDelete: '',
@@ -103,7 +116,7 @@
           keyword: me.keyword,
           status: me.status
         };
-        api.listAuditJob(formatQuery(searchObj, true), me)
+        api.listMyAuditJob(formatQuery(searchObj, true), me)
             .then((res) => {
               const data = res.data;
               me.tableData = data ? data.docs : [];
@@ -203,3 +216,44 @@
     }
   };
 </script>
+<style>
+  .permission-search-item{
+    float: left;
+    margin-left: 10px;
+    line-height: 100%;
+  }
+
+  .permission-table-pagination {
+    margin-top: 30px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    color: #4C637B;
+  }
+
+  .permission-status-span {
+    font-size: 12px;
+    color: #FFFFFF;
+    width: 60px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 2px;
+    text-align:center;
+    display: block;
+  }
+  .deleted {
+    background: #AAAAAA;
+  }
+
+  .prepare {
+    background: #38B1EB;
+  }
+
+  .doing {
+    background: #C0C003;
+  }
+
+  .submitted {
+    background: #2EC4B6;
+  }
+</style>

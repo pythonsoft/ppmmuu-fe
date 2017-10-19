@@ -53,7 +53,7 @@
           </div>
           <home v-if="contentType === 'default'" @update-router="updateRouter"></home>
           <channel v-else-if="contentType === 'channel'" :query="routeQuery" @update-router="updateRouter"></channel>
-          <search v-else :query="routeQuery" @update-router="updateRouter"></search>
+          <search v-else ref="search" :query="routeQuery" @update-router="updateRouter"></search>
           <watch v-if="isShowWatch" :query="routeQuery" @update-router="updateRouter"></watch>
         </div>
       </div>
@@ -137,6 +137,9 @@
         this.updateRouter({ name: 'subscriptions', query: { query: this.query } });
       },
       updateContentType() {
+        if (this.$refs.search) {
+          this.$refs.search.unmountDropdownMenu();
+        }
         this.routeQuery = this.route.query;
         if (this.routeQuery && this.routeQuery.channel) {
           this.contentType = 'channel';
