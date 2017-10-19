@@ -239,6 +239,9 @@
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.getSeachConfigs();
       this.getDefaultMedia();
+      this.$on('mediaCenterDefaultViewType', function(v) {
+        console.log('feefef -->', v);
+      })
     },
     watch: {
       orderVal(val) {

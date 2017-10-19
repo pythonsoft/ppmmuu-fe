@@ -31,7 +31,7 @@
     </div>
     <div class="task-list">
       <div :style="taskListStyle">
-        <fj-table :data="taskList" @current-change="handleCurrentChange" highlightKey="id" :theme="theme">
+        <fj-table :data="taskList" @current-change="handleCurrentChange" highlightKey="id" :theme="theme" style="width:99%">
           <fj-table-column prop="status" width="90" label="状态">
             <template scope="props">
               <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>

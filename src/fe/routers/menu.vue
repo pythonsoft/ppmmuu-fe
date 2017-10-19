@@ -1,5 +1,5 @@
 <template>
-  <fj-menu :default-active="defaultRoute" router>
+  <fj-menu :default-active="defaultRoute" router @select="menuSelect">
     <div class="iconfont icon-phoenixtv logo-wrap"></div>
     <fj-menu-item
       v-for="item in menu"
@@ -89,6 +89,11 @@
       }
     },
     methods: {
+      menuSelect(index, route) {
+        if(index === 'mediaCenter' && this.$route.path === route) {
+          this.$emit('mediaCenterDefaultViewType', 'default');
+        }
+      },
       closeProfilePopover(target) {
         if (this.popover && this.popover.$el.contains(target)) return;
         if (this.popover) this.unmountMenu();
