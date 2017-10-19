@@ -142,7 +142,6 @@
         this.getDetail();
         this.getStream(this.objectId);
         this.poster = getThumb({ id: this.objectId });
-        this.updateList();
       },
       showDownloadList(fileInfo) {
         this.fileInfo = fileInfo;
@@ -192,9 +191,13 @@
         const options = {};
         options.keyword = this.streamInfo.FILENAME;
         options.start = 0;
-        options.pageSize = 12;
+        options.pageSize = 13;
         subscribeAPI.esSearch(options, this).then((res) => {
-          this.items = res.data.docs;
+          res.data.docs.forEach(item => {
+            if (item.objectId !== this.objectId) {
+              this.items.push(item);
+            }
+          });
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -217,6 +220,7 @@
           this.streamInfo = rs.result;
           document.title = rs.result.FILENAME;
           this.url = url;
+          this.updateList();
         }, this);
       },
       downloadListConfirm(templateInfo) {
