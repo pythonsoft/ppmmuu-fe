@@ -31,7 +31,7 @@
             <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.f_str_314 }}</span>
           </li>
           <li>
-            <span title="新闻日期">{{ formatTime(item.f_date_162 || item.publish_time) || '无新聞日期' }}</span>
+            <span title="发布时间">{{ formatTime(item.f_date_162 || item.publish_time) || '无发布时间' }}</span>
           </li>
         </ul>
       </div>
@@ -51,8 +51,8 @@
         <div class="media-item-category">
           <span v-html="item.program_type || '无分类'"></span>
         </div>
-        <p class="media-item-category media-item-time">
-          {{ formatTime(item.f_date_162 || item.publish_time) || '无新聞日期' }}
+        <p class="media-item-category media-item-time" title="发布时间">
+          {{ formatTime(item.f_date_162 || item.publish_time) || '无发布时间' }}
         </p>
       </li>
     </ul>
