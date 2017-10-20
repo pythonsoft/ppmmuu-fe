@@ -162,6 +162,7 @@
         this.title = this.getTitle(val);
         this.shelfName = this.title.replace('<em>','');
         this.shelfName = this.shelfName.replace('</em>','');
+        this.shelfName = this.shelfName.split('.')[0];
         this.program = {};
         this.poster = this.getThumb(val);
         this.item = val;
