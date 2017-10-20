@@ -10,7 +10,7 @@ export function getStatusByCode(code) {
   const keys = Object.keys(TASK_STATUS);
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
-    if (TASK_STATUS[key].code == code) {
+    if (TASK_STATUS[key].code === code) {
       return TASK_STATUS[key];
     }
   }

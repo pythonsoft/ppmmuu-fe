@@ -117,7 +117,10 @@
     methods: {
       showCatalog() {
         if (!this.selectedItem._id) return;
-        this.$router.push({ name: 'catalog', params: { objectId: this.selectedItem.objectId, taskId: this.selectedItem._id } });
+        this.$router.push({
+          name: 'catalog',
+          params: { objectId: this.selectedItem.objectId, taskId: this.selectedItem._id }
+        });
       },
       showEditStatusDialog(type) {
         this.editStatusDialogVisible = true;

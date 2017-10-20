@@ -107,7 +107,7 @@
         this.mountDropdownMenu();
       },
       mountDropdownMenu() {
-        console.log('mountDropdownMenu', this.filterList);
+        // console.log('mountDropdownMenu', this.filterList);
         this.dropdownMenu = new Vue(DropdownMenu).$mount();
         document.body.appendChild(this.dropdownMenu.$el);
         const parentEl = this.parentEl || document.body;
@@ -115,19 +115,29 @@
         this.updateMenuPosition();
         this.dropdownMenu.menus = this.menus;
         this.dropdownMenu.selfFilterList = Object.assign({}, this.filterList);
-        this.dropdownMenu.defaultDatetimerange = { FIELD162: this.filterList.FIELD162 || '', FIELD36: this.filterList.FIELD36 || '' };
+        this.dropdownMenu.defaultDatetimerange = {
+          FIELD162: this.filterList.FIELD162 || '',
+          FIELD36: this.filterList.FIELD36 || ''
+        };
         this.dropdownMenu.$on('update-filter-list', this.updateFilterList);
         this.dropdownMenu.$on('unmount', this.unmountDropdownMenu);
       },
       updateFilterList(filterList) {
         this.unmountDropdownMenu(() => {
-          this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, filterList) });
+          this.$emit('update-router', {
+            name: 'subscriptions',
+            query: Object.assign({}, this.query, filterList)
+          });
         });
       },
       updateMenuPosition() {
         if (this.dropdownMenu) {
           const position = this.getDropdownMenu();
-          this.dropdownMenu.menuStyle = { top: `${position.top + 30}px`, left: `${position.left - this.listWidth + 108}px`, width: `${this.listWidth}px` };
+          this.dropdownMenu.menuStyle = {
+            top: `${position.top + 30}px`,
+            left: `${position.left - this.listWidth + 108}px`,
+            width: `${this.listWidth}px`
+          };
         }
       },
       getDropdownMenu() {
@@ -139,7 +149,7 @@
       },
       unmountDropdownMenu(cb) {
         if (this.dropdownMenu) {
-          console.log('unmountDropdownMenu');
+          // console.log('unmountDropdownMenu');
           this.dropdownMenu.$destroy();
           document.body.removeChild(this.dropdownMenu.$el);
           const parentEl = this.parentEl || document.body;
@@ -149,10 +159,16 @@
         }
       },
       currentPageChange() {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { page: this.currentPage })
+        });
       },
       linkToWatch(objectId) {
-        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: { objectId: objectId }
+        });
       },
       showDownloadList(fileInfo) {
         this.fileInfo = fileInfo;
@@ -207,7 +223,10 @@
         return className;
       },
       setViewType(t) {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { viewType: t })
+        });
       },
       getSubscribeSearchConfig() {
         subscribeAPI.getSubscribeSearchConfig().then((res) => {
