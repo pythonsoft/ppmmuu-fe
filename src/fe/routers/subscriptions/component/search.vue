@@ -164,10 +164,10 @@
           query: Object.assign({}, this.query, { page: this.currentPage })
         });
       },
-      linkToWatch(objectId) {
+      linkToWatch(_id) {
         this.$emit('update-router', {
           name: 'subscriptions',
-          query: { objectId: objectId }
+          query: { _id: _id }
         });
       },
       showDownloadList(fileInfo) {
