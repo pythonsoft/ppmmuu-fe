@@ -37,7 +37,7 @@
       @mouseleave.native="inputHovering = false"
       :icon="iconClass"
     ></fj-input>
-    <fj-select-dropdown ref="popper" v-show="visible" :min-width="inputWidth" :position="dropdownPosition" :multiple="multiple">
+    <fj-select-dropdown ref="popper" v-show="visible" :multiple="multiple">
       <div v-if="remote && selectedLabel.length === 0" class="fj-select-dropdown-title-wrap clearfix">
         <h3 class="fj-select-dropdown-title">历史记录</h3>
         <span class="fj-select-dropdown-clear-btn" @click="clearHistoryMethod">清空<i class="iconfont icon-delete"></i></span>
@@ -82,7 +82,8 @@
       },
       value: {
         require: true
-      }
+      },
+      parentEl: {}
     },
     data() {
       return {
@@ -90,8 +91,6 @@
         selectedLabel: this.multiple ? [] : '',
         icon: 'icon-fill-bottom',
         visible: false,
-        inputWidth: 0,
-        dropdownPosition: 'bottom',
         inputHovering: false,
         hoverIndex: -1
       };
@@ -102,15 +101,8 @@
     },
     mounted() {
       this.reference = this.multiple ? this.$refs.multipleReference : this.$refs.reference.$el;
-      if (this.reference) {
-        this.resetInputWidth();
-        window.addEventListener('resize', this.resetInputWidth);
-        document.body.addEventListener('scroll', this.resetDropdownPosition);
-      }
     },
-    beforDestroy() {
-      window.removeEventListener('resize', this.resetInputWidth);
-      document.body.removeEventListener('scroll', this.resetDropdownPosition);
+    beforeDestroy() {
     },
     methods: {
       inputValueChange(val) {
@@ -178,20 +170,6 @@
         this.$emit('input', value);
         if (this.$parent.$options.name === 'FjFormItem') {
           this.$parent.$emit('form-change', value);
-        }
-      },
-      resetInputWidth() {
-        if (!this.visible) return;
-        this.inputWidth = this.reference.getBoundingClientRect().width;
-      },
-      resetDropdownPosition() {
-        if (!this.visible) return;
-        const referenceRect = this.reference.getBoundingClientRect();
-        const bottom = window.innerHeight - referenceRect.top;
-        if (referenceRect.top > bottom) {
-          this.dropdownPosition = 'top';
-        } else {
-          this.dropdownPosition = 'bottom';
         }
       },
       handleClose() {
@@ -265,15 +243,15 @@
           }
       },
       selectOption() {
+        if (this.visible && this.options[this.hoverIndex]) {
+          this.handleOptionClick(this.options[this.hoverIndex]);
+        }
         // 如果为remote就触发搜索函数
         if (this.remote) {
           this.$emit('search', this.selectedLabel);
           this.visible = false;
           this.hoverIndex = -1;
           return;
-        }
-        if (this.options[this.hoverIndex]) {
-          this.handleOptionClick(this.options[this.hoverIndex]);
         }
       },
       resetHoverIndex() {
@@ -319,8 +297,6 @@
             this.historyMethod();
           }
           this.handleIconShow();
-          this.resetInputWidth();
-          this.resetDropdownPosition();
         }
       },
       value(val) {
