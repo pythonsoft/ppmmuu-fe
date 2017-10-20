@@ -5,6 +5,7 @@
       <div v-if="menu.items" class="value-box">
         <span
           v-for="item in menu.items"
+          :key="item.value"
           @click="selectValue(menu, item.value)"
           :class="getItemClass(menu, item.value)">
           {{ item.label }}

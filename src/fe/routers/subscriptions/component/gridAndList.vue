@@ -5,7 +5,7 @@
         listType="list"
         v-for="item in items"
         :item="item"
-        :key="item.objectId"
+        :key="item._id"
         :download-fn="downloadFn"
         :link-to-watch-fn="linkToWatchFn"
         :parentEl="parentEl"></SubscribeListItem>
@@ -15,7 +15,7 @@
       <SubscribeListItem
         v-for="item in items"
         :item="item"
-        :key="item.objectId"
+        :key="item._id"
         :download-fn="downloadFn"
         :link-to-watch-fn="linkToWatchFn"
         :parentEl="parentEl"></SubscribeListItem>
