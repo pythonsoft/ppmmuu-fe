@@ -28,7 +28,9 @@
   </div>
 </template>
 <script>
-  const menu = {
+  import { getChildMenuByIndex } from '../../common/utils';
+
+  const MENU = {
     downloadTask: {
       title: '下载任务',
       index: 'downloadTask',
@@ -51,17 +53,30 @@
   export default {
     data() {
       return {
-        menu: menu,
+        menu: [],
         defaultRoute: '/'
       };
     },
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.menu = this.getMenu();
     },
     methods: {
       getActiveRoute(path, level) {
         const pathArr = path.split('/');
         return pathArr[level] || '';
+      },
+      getMenu(){
+        const menu = [];
+        const me = this;
+        const firstMenu = getChildMenuByIndex('taskCenter', false, me);
+        menu.push(MENU['downloadTask'])
+        for(let i = 0, len = firstMenu.length; i < len; i++){
+          if(MENU[firstMenu[i]] && firstMenu[i] !== 'downloadTask') {
+            menu.push(MENU[firstMenu[i]]);
+          }
+        }
+        return menu;
       }
     }
   };
