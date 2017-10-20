@@ -33,6 +33,7 @@
 
 .about-item .about-system-item-title {
   padding-bottom: 8px;
+  height: 30px;
   color: #4C637B;
 }
 
@@ -47,4 +48,10 @@
   color: #4C637B;
   padding-bottom: 8px;
 }
+
+.about-system-update-bar{
+  float: right;
+}
+
+
 

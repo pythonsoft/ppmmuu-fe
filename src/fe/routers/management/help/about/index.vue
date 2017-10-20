@@ -26,7 +26,10 @@
         <div class="about-system-item">
           <div class="subtitle">ump系统</div>
           <div class="about-system-item-title">
-            当前版本1.5.0.0（已是最新版本）
+            当前版本1.5.0.0
+            <div class="about-system-update-bar">
+              <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="upload">上传安装包</fj-button>
+            </div>
           </div>
           <div class="detail">
             <div class="detail-title">版本更新</div>
@@ -63,13 +66,16 @@
   import './index.css';
   import utils from '../../../../common/utils';
   import LayoutTwoRowTitle from '../../../../component/layout/twoRowTitle/index';
-
-//  const api = require('../../../../api/transcode');
+  import FjInput from "../../../../component/fjUI/packages/input/src/input.vue";
 
   export default {
-    components: { LayoutTwoRowTitle },
+    components: {
+      FjInput,
+      LayoutTwoRowTitle
+    },
     data() {
       return {
+        isBtnLoading: false,
       };
     },
     created() {
@@ -78,7 +84,9 @@
     destroyed() {
     },
     methods: {
+      upload() {
 
+      },
     }
   };
 </script>
