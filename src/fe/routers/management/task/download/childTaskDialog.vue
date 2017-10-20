@@ -23,11 +23,7 @@
     </div>
 
     <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
-      <fj-table-column prop="_type" width="100" align="center" label="类型">
-        <template scope="props">
-          {{ getTaskType(props.row._type).text }}
-        </template>
-      </fj-table-column>
+      <fj-table-column prop="taskName" width="100" align="center" label="类型"></fj-table-column>
       <fj-table-column prop="status" width="50" align="center" label="状态">
         <template scope="props">
           <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>

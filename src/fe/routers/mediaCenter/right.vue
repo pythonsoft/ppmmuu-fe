@@ -9,17 +9,17 @@
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
-              <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
+              <li @click.stop="prepareDownload()">
+                <span title="下载" class="iconfont icon-video-download"></span>
               </li>
-              <li>
-                <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
+              <li @click.stop="gotoEditer">
+                <span title="剪辑" class="iconfont icon-cut"></span>
               </li>
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="添加" class="iconfont icon-addto"></span>
               </li>
-              <li>
-                <span title="上架" class="iconfont icon-shangjialine" @click.stop="createShelf"></span>
+              <li @click.stop="createShelf">
+                <span title="上架" class="iconfont icon-shangjialine"></span>
               </li>
             </ul>
           </div>

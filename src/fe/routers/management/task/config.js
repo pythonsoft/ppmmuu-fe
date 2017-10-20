@@ -79,7 +79,8 @@ config.DELETE_DENY = {
 config.TASK_TYPE = {
   media_download: { text: '下载', value: '0', key: 'media_download' },
   transcoding: { text: '转码', value: '1', key: 'transcoding' },
-  fmft_transfer: { text: '传输', value: '2', key: 'fmft_transfer' }
+  fmft_transfer: { text: '传输', value: '2', key: 'fmft_transfer' },
+  file_cut: { text: '文件截取', value: '3', key: 'file_cut' },
 };
 
 config.FIELD_NAME = {
