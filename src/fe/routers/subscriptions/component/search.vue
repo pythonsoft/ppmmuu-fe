@@ -95,7 +95,7 @@
       window.addEventListener('resize', this.resetListWidth);
       this.parentEl = this.$refs.searchWrap;
     },
-    beforDestroy() {
+    beforeDestroy() {
       if (this.dropdownMenu) {
         this.unmountDropdownMenu();
       }
