@@ -249,8 +249,9 @@
           let imgHeight = this.TIMELINE_CONFIG.sequenceImageHeight * this.dpr;
           if (rect.w <= imgWidth + 8 * (2 * this.dpr)) {
             imgWidth = (rect.w - 8 * (2 * this.dpr)) > 0 ? rect.w - 8 * (2 * this.dpr) : 0;
-            imgHeight = this.TIMELINE_CONFIG.sequenceImageHeight / this.TIMELINE_CONFIG.sequenceImageWidth
-            * imgWidth;
+            imgHeight = this.TIMELINE_CONFIG.sequenceImageHeight
+              / this.TIMELINE_CONFIG.sequenceImageWidth
+              * imgWidth;
           }
           const image = new Image();
           image.src = item.screenshot;

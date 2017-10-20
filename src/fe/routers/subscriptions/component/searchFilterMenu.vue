@@ -55,13 +55,17 @@
       },
       'datetimerange.FIELD36'(val) {
         if (val.length > 0) {
-          const time = val[0] ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString() : '';
+          const time = val[0]
+            ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString()
+            : '';
           this.selfFilterList.FIELD36 = time;
         }
       },
       'datetimerange.FIELD162'(val) {
         if (val.length > 0) {
-          const time = val[0] ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString(): '';
+          const time = val[0]
+            ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString()
+            : '';
           this.selfFilterList.FIELD162 = time;
         }
       }

@@ -5,7 +5,7 @@
         <div class="leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
           <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
           <div class="media-video-title-wrap">
-            <div class="media-video-title" v-html="streamInfo.FILENAME"></div>
+            <div class="media-video-title" v-html="name"></div>
             <ul class="media-video-title-bar">
               <li>
                 <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
@@ -26,11 +26,11 @@
       </div>
       <div class="rightBox" :style="{ width: rightboxWidth }">
         <i class="iconfont rightBoxToggle" :class="rightBoxToggle" @click="foldedOrExpandRightBox"></i>
-        <fj-tabs v-if="objectId" v-model="activeTabName" class="media-video-panel-wrap">
+        <fj-tabs v-model="activeTabName" class="media-video-panel-wrap">
           <fj-tab-pane label="条目信息" name="tab1">
             <div class="media-center-file-item">
               <table class="media-center-table">
-                <tr v-for="info in program" v-if="info.value" >
+                <tr v-for="info in program" v-if="info.cn && info.value" >
                   <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                   <td class="item-info-value">
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
@@ -87,7 +87,9 @@
         rightBoxToggle: 'icon-toggle-right',
         activeTabName: 'tab1',
         files: [],
+        _id: '',
         objectId: '',
+        name: '',
         poster: '',
         playerWidth: playerMinWidth,
         playerHeight: playerMinHeight,
@@ -117,14 +119,14 @@
         }, 400);
       },
       'query'(val) {
-        if (val.objectId) {
+        if (val._id) {
           this.refresh();
         }
       }
     },
     mounted() {
       this.parentEl = this.$refs.leftBox;
-      if (this.query.objectId) {
+      if (this.query._id) {
         this.refresh();
       }
       // this.updatePlayerWidth();
@@ -139,17 +141,17 @@
       formatDuration,
       formatContent,
       refresh() {
-        this.objectId = this.query.objectId;
+        this._id = this.query._id;
         this.getDetail();
-        this.getStream(this.objectId);
-        this.poster = getThumb({ id: this.objectId });
+        // this.getStream(this.objectId);
+        // this.poster = getThumb({ id: this.objectId });
       },
       showDownloadList(fileInfo) {
         this.fileInfo = fileInfo;
         this.downloadDialogDisplay = true;
       },
-      currentItemChange(objectId) {
-        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
+      currentItemChange(_id) {
+        this.$emit('update-router', { name: 'subscriptions', query: { _id: _id } });
       },
       foldedOrExpandRightBox() {
         if (this.rightBoxStatus === 'expand') {
@@ -188,13 +190,13 @@
       },
       updateList() {
         const options = {};
-        options.keyword = this.streamInfo.FILENAME;
+        options.keyword = this.name;
         options.start = 0;
         options.pageSize = 13;
         subscribeAPI.esSearch(options, this).then((res) => {
           this.items = [];
           res.data.docs.forEach(item => {
-            if (item.objectId !== this.objectId) {
+            if (item._id !== this._id) {
               this.items.push(item);
             }
           });
@@ -203,10 +205,21 @@
         });
       },
       getDetail() {
-        mediaAPI.getObject({ params: { objectid: this.objectId } }).then((res) => {
-          this.program = res.data.result.detail.program;
-          this.files = res.data.result.files;
-          delete this.program.OBJECTID;
+        // mediaAPI.getObject({ params: { objectid: this.objectId } }).then((res) => {
+        //   this.program = res.data.result.detail.program;
+        //   this.files = res.data.result.files;
+        //   delete this.program.OBJECTID;
+        // }).catch((error) => {
+        //   this.$message.error(error);
+        // });
+        subscribeAPI.getVideoInfo({ params: { _id: this._id } }).then((res) => {
+          const data = res.data;
+          this.objectId = data.objectId;
+          this.name = data.name;
+          this.getStream(this.objectId);
+          this.updateList();
+          this.program = data.details;
+
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -220,7 +233,6 @@
           this.streamInfo = rs.result;
           document.title = rs.result.FILENAME;
           this.url = url;
-          this.updateList();
         }, this);
       },
       downloadListConfirm(templateInfo) {
@@ -284,24 +296,6 @@
         });
 
         return false;
-      },
-      gotoEditer() {
-        const reqData = { parentId: '' };
-        reqData.name = this.streamInfo.FILENAME;
-        reqData.snippet = {
-          objectId: this.objectId,
-          thumb: this.poster,
-          input: this.streamInfo.INPOINT,
-          output: this.streamInfo.OUTPOINT,
-          duration: this.streamInfo.OUTPOINT - this.streamInfo.INPOINT
-        };
-        ivideoAPI.createItem(reqData)
-          .then((response) => {
-            this.$router.push({ name: 'movieEditor', params: { objectId: this.objectId } });
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          });
       },
       back() {
         this.$router.push({ name: 'history' });

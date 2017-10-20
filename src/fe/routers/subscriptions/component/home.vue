@@ -95,12 +95,14 @@
       },
       resetListWidth() {
         if (!this.$refs.listWrap) return;
-        const maxWidth = MAX_LIST_ITEM_COUNT * LIST_ITEM_WIDTH + (MAX_LIST_ITEM_COUNT - 1) * LIST_ITEM_MARGIN;
+        const maxWidth = MAX_LIST_ITEM_COUNT * LIST_ITEM_WIDTH
+          + (MAX_LIST_ITEM_COUNT - 1) * LIST_ITEM_MARGIN;
         const listWrapWidth = this.$refs.listWrap.getBoundingClientRect().width;
         if (listWrapWidth > maxWidth + LIST_WRAP_PADDING) {
           this.sectionListWidth = maxWidth;
         } else {
-          let width = MIN_LIST_ITEM_COUNT * LIST_ITEM_WIDTH + (MIN_LIST_ITEM_COUNT - 1) * LIST_ITEM_MARGIN;
+          let width = MIN_LIST_ITEM_COUNT * LIST_ITEM_WIDTH
+            + (MIN_LIST_ITEM_COUNT - 1) * LIST_ITEM_MARGIN;
           for (let i = MIN_LIST_ITEM_COUNT + 1; i <= MAX_LIST_ITEM_COUNT; i++) {
             const tempWidth = i * LIST_ITEM_WIDTH + (i - 1) * LIST_ITEM_MARGIN;
             if (listWrapWidth >= tempWidth + LIST_WRAP_PADDING) {
@@ -121,10 +123,13 @@
           });
       },
       linkToChannel(channelId, channelName) {
-        this.$emit('update-router', { name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: { channel: channelId, channel_name: channelName }
+        });
       },
-      linkToWatch(objectId) {
-        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
+      linkToWatch(_id) {
+        this.$emit('update-router', { name: 'subscriptions', query: { _id: _id } });
       }
     },
     components: {

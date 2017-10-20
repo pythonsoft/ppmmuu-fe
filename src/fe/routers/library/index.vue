@@ -35,8 +35,15 @@
       title: '部门任务',
       index: 'departmentTask',
       children: [
-        {text: '待认领', index: 'department_catalog_task_unassigned', route: 'department_catalog_task_unassigned'},
-        {text: '全部', index: 'department_catalog_task_all', route: 'department_catalog_task_all'}
+        {
+          text: '待认领',
+          index: 'department_catalog_task_unassigned',
+          route: 'department_catalog_task_unassigned'
+        }, {
+          text: '全部',
+          index: 'department_catalog_task_all',
+          route: 'department_catalog_task_all'
+        }
       ]
     },
     personalTask: {
