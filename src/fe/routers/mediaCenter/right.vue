@@ -418,13 +418,20 @@
         const transferParams = rs[type + '_info'];
         const ownerName =  me.program['FIELD314'] ? me.program['FIELD314'].value : '';
 
+        let inpoint = 0;
+        let outpoint = 0;
+
+        //说明是片断子类，这个是需要打点下载的
+        if(me.basic['OBJECTID'] !== me.basic['ROOTID']) {
+          inpoint = this.fileInfo.INPOINT;
+          outpoint = this.fileInfo.INPOINT;
+        }
+
+        //如果不是打点下载，将inpoint，outpoint设置为'0'
         const param = {
           objectid: this.fileInfo.OBJECTID,
-//          如果不是打点下载，将inpoint，outpoint设置为'0'
-//          inpoint: this.fileInfo.INPOINT,
-//          outpoint: this.fileInfo.OUTPOINT,
-          inpoint: 0,
-          outpoint: 0,
+          inpoint: inpoint,
+          outpoint: outpoint,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: templateInfo._id,
