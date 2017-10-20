@@ -318,7 +318,10 @@
             const key = originalKeys[i];
             const parentId = tempObj[key].parentId;
             if (parentId && tempObj[parentId]) {
-              const child = Object.assign({ children: [] }, tempObj[key], { name: tempObj[key].chineseName });
+              const child = Object.assign(
+                { children: [] },
+                tempObj[key],
+                { name: tempObj[key].chineseName });
               if (tempObj[parentId].children) {
                 tempObj[parentId].children.push(child);
               } else {

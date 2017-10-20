@@ -1,5 +1,5 @@
 <template>
-  <li v-if="item && listType === 'grid'" @click="linkToWatchFn(item.objectId)">
+  <li v-if="item && listType === 'grid'" @click="linkToWatchFn(item._id)">
     <div class="iconfont icon-phoenixtv subscribe-grid-image">
       <img class="subscribe-thumb" v-lazy="item.poster" >
       <div class="subscribe-list-item-overlay">
@@ -21,7 +21,7 @@
       入库时间：{{ item.storageTime | formatTime }}
     </p>
   </li>
-  <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="linkToWatchFn(item.objectId)">
+  <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="linkToWatchFn(item._id)">
     <div class="subscribe-list-item-thumb">
       <div class="iconfont icon-phoenixtv subscribe-list-item-thumb-wrap">
         <img class="subscribe-list-thumb" v-lazy="item.poster" >
@@ -139,7 +139,11 @@
       updateMenuPosition() {
         if (this.dropdownMenu) {
           const position = this.getDropdownMenu();
-          this.dropdownMenu.menuStyle = { top: `${position.top + 30}px`, left: `${position.left - 144}px`, minWidth: '166px' };
+          this.dropdownMenu.menuStyle = {
+            top: `${position.top + 30}px`,
+            left: `${position.left - 144}px`,
+            minWidth: '166px'
+          };
         }
       },
       getDropdownMenu() {

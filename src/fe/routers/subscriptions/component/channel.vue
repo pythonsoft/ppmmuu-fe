@@ -80,7 +80,10 @@
       },
       orderVal(val, oldVal) {
         if (!oldVal) return;
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { order: val }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { order: val })
+        });
       }
     },
     data() {
@@ -100,8 +103,8 @@
       };
     },
     methods: {
-      linkToWatch(objectId) {
-        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
+      linkToWatch(_id) {
+        this.$emit('update-router', { name: 'subscriptions', query: { _id: _id } });
       },
       showDownloadList(fileInfo) {
         this.fileInfo = fileInfo;
@@ -155,10 +158,16 @@
         this.listWidth = this.$refs.channelWrap.getBoundingClientRect().width;
       },
       setViewType(t) {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { viewType: t })
+        });
       },
       currentPageChange() {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { page: this.currentPage })
+        });
       },
       viewTypeSelect(type) {
         let className = 'iconfont';
