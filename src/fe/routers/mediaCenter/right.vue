@@ -374,18 +374,7 @@
           objectId: me.videoId,
           name: me.shelfName,
           force: force,
-          details: {},
-          files: me.files
         };
-        for(let key in me.basic){
-          postData.details[key] = me.basic[key];
-        }
-        if(postData.details['OUTPOINT']){
-          postData.details['duration'] = postData.details['OUTPOINT'] - postData.details['INPOINT'];
-        }
-        for(let key in me.program){
-          postData.details[key] = me.program[key].value;
-        }
         shelfApi.createShelfTask(postData).then((res) => {
           me.shelfDialogBtnLoading = false;
           me.shelfDialogVisible = false;
