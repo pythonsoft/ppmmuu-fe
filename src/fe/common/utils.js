@@ -515,12 +515,12 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
       const day = dateArray[3] * 1;
       let playPath = '/u';
 
-      //2012/9/18
+      // 2012/9/18
 
-      if(year < 2012) {
+      if (year < 2012) {
         playPath = '/y';
         fileName = formatFileExtToMp4(fileName);
-      }else if(year === 2012 || (year === 2013 && month <= 2 && day <= 28)) {
+      } else if (year === 2012 || (year === 2013 && month <= 2 && day <= 28)) {
         playPath = '/w';
         fileName = formatFileExtToMp4(fileName);
       }
