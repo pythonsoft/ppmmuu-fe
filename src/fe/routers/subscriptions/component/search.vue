@@ -1,10 +1,10 @@
 <template>
   <div class="search-wrap" ref="searchWrap">
-    <div class="search-sub-menu clearfix" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px' }">
+    <div class="search-sub-menu clearfix">
       <span class="result-count">大约{{ total }}条结果</span>
       <div class="button-group clearfix">
         <span
-          class="iconfont icon-filter subscriptions-view-list media-center-view-selected"
+          class="iconfont icon-filter media-center-view-list media-center-view-selected"
           ref="filterBtn"
           @click.stop="handleFilterBtnClick"></span><!--
         --><span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
@@ -55,7 +55,6 @@
         currentPage: 1,
         total: 0,
         items: [],
-        itemSize: { width: 198, height: 180 },
         menus: [],
         viewType: 'list',
         parentEl: null,
@@ -96,7 +95,7 @@
       window.addEventListener('resize', this.resetListWidth);
       this.parentEl = this.$refs.searchWrap;
     },
-    beforeDestroy() {
+    beforDestroy() {
       if (this.dropdownMenu) {
         this.unmountDropdownMenu();
       }
@@ -203,19 +202,18 @@
       },
       resetListWidth() {
         if (!this.$refs.searchWrap) return;
-        const wrapWidth = this.$refs.searchWrap.getBoundingClientRect().width;
-        this.listWidth = Math.floor(wrapWidth / this.itemSize.width) * this.itemSize.width;
+        this.listWidth = this.$refs.searchWrap.getBoundingClientRect().width;
       },
       viewTypeSelect(type) {
         let className = 'iconfont';
 
         if (type === 'grid') {
-          className += ' icon-view-grid subscriptions-view-grid';
+          className += ' icon-view-grid media-center-view-grid';
           if (this.viewType === 'grid') {
             className += ' media-center-view-selected';
           }
         } else if (type === 'list') {
-          className += ' icon-view-list subscriptions-view-list';
+          className += ' icon-view-list media-center-view-list';
 
           if (this.viewType === 'list') {
             className += ' media-center-view-selected';

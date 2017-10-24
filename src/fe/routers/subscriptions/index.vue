@@ -105,9 +105,6 @@
       '$route'(val) {
         this.route = val;
         this.updateContentType();
-        if (val.query.query) {
-          this.query = val.query.query;
-        }
       }
     },
     methods: {
