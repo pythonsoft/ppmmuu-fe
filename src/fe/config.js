@@ -9,7 +9,7 @@ axios.defaults.baseURL = 'http://localhost:8080';
 // axios.defaults.baseURL = 'http://10.0.16.125:8080';
 
 // axios.defaults.streamURL = 'http://localhost:8080';
-axios.defaults.streamURL = 'http://ump-live.phoenixtv.com/u';
+axios.defaults.streamURL = 'http://ump-live.phoenixtv.com';
 
 if (window.location.hostname.indexOf('phoenixtv.com') !== -1) {
   axios.defaults.baseURL = 'http://ump-api.phoenixtv.com';
