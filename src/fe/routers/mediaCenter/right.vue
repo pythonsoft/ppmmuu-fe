@@ -79,6 +79,23 @@
             </div>
           </div>
         </fj-tab-pane>
+        <fj-tab-pane label="视频片段" name="tab3" v-if="false">
+          <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in fragments">
+            <table class="media-center-table">
+              <tr>
+                <td class="item-info-key" width="80">文件名: </td>
+                <td class="item-info-value" width="303">
+                  <div class="media-center-file-name">
+                    {{ file.name || '无文件名' }}
+                    <span class="media-center-file-type">
+                      {{ file.SANAME || '无信息' }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </fj-tab-pane>
       </fj-tabs>
     </div>
     <fj-dialog
@@ -132,7 +149,7 @@
       Player
     },
     props: {
-      videoInfo: { type: Object, default: {} }
+      videoInfo: { type: Object, default: {} },
     },
     data() {
       return {
@@ -149,6 +166,8 @@
           INPOINT: 0,
           OUTPOINT: 0
         },
+        rootid: '',
+        fragments: [],
         fileInfo: {},
         downloadDialogDisplay: false,
         shelfDialogVisible: false,
@@ -167,8 +186,10 @@
         this.poster = this.getThumb(val);
         this.item = val;
         this.videoId = val.id;
+        this.rootid = val.rootid;
         this.getDetail();
         this.getStream();
+        this.getVideoFragments();
       },
       program(val) {
         const keys = Object.keys(val);
@@ -204,6 +225,32 @@
         }).catch((error) => {
           me.$message.error(error);
         });
+      },
+      getVideoFragments() {
+        const me = this;
+        const options = {
+          source: config.FILETR_FIELDS,
+          match: [{key: 'rootid', value: me.rootid}],
+          should: [],
+          range: [],
+          sort: {},
+          start: 0,
+          pageSize: 999
+        };
+        const fragments = [];
+        api.esSearch(options)
+          .then((res)=>{
+            const docs = res.data.docs;
+            for(let i = 0, len = docs.length; i < len; i++){
+              if(docs[i].id !== me.rootid){
+                fragments.push(docs[i]);
+              }
+            }
+            me.fragments = fragments;
+          })
+          .catch((error)=>{
+            me.$message.error(error);
+          })
       },
       getThumb,
       getTitle,

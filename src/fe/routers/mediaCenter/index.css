@@ -162,6 +162,7 @@
 
 .media-video-title {
   height: 42px;
+  width: 320px;
   line-height: 42px;
   white-space: nowrap;
   text-overflow: ellipsis;

@@ -6,7 +6,7 @@
           <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="name"></div>
-            <ul class="video-title-bar">
+            <ul class="media-video-title-bar">
               <li>
                 <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
               </li>
@@ -27,7 +27,7 @@
       <div class="rightBox" :style="{ width: rightboxWidth }">
         <i class="iconfont rightBoxToggle" :class="rightBoxToggle" @click="foldedOrExpandRightBox"></i>
         <fj-tabs v-model="activeTabName" class="media-video-panel-wrap">
-          <fj-tab-pane label="条目信息" name="tab1">
+          <fj-tab-pane label="节目简介" name="tab1">
             <div class="media-center-file-item">
               <table class="media-center-table">
                 <tr v-for="info in program" v-if="info.cn && info.value" >
