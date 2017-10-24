@@ -410,7 +410,7 @@
         } else {
           if (!options.sort.length) {
             options.sort = [{
-              key: 'last_modify',
+              key: 'publish_time',
               value: 'desc'
             }];
           }
