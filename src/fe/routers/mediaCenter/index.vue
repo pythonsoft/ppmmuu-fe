@@ -15,6 +15,7 @@
             ></fj-input> -->
             <fj-select
               remote
+              :parentEl="selectParentEl"
               :clear-history-method="clearHistory"
               :history-method="getSearchHistory"
               :remote-method="remoteMethod"
@@ -47,7 +48,7 @@
           <template v-for="config in searchSelectConfigs">
             <div class="media-category">
               <h4>{{config.label}}</h4>
-              <fj-select placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
+              <fj-select :parentEl="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
                 <fj-option
                         v-for="item in config.items"
                         :key="item.key"
@@ -122,7 +123,7 @@
                 <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
                 --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
                 --><div class="order-select">
-                  <fj-select v-model="orderVal" size="small">
+                  <fj-select :parentEl="selectParentEl" v-model="orderVal" size="small">
                     <fj-option
                       v-for="item in ORDER_OPTIONS"
                       :key="item.value"
@@ -233,7 +234,8 @@
         listType: 'default',
         defaultList: [],
         loading: false,
-        keywordOptions: []
+        keywordOptions: [],
+        selectParentEl: null
       };
     },
     created() {
@@ -244,6 +246,9 @@
       bubble.on('mediaCenterDefaultViewType', function(v) {
         me.listType = v;
       });
+    },
+    mounted() {
+      this.selectParentEl = this.$refs.mediaLeft;
     },
     watch: {
       orderVal(val) {
@@ -289,7 +294,7 @@
       },
       setViewType(t) {
         this.viewType = t;
-        this.fl = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify';
+        this.fl = FILETR_FIELDS;
         if (t === 'list') {
           this.fl += ',f_str_03,f_str_187,f_str_314'; // f_str_314 资源所属部门，f_str_187 houseNo
         }
@@ -405,7 +410,7 @@
         } else {
           if (!options.sort.length) {
             options.sort = [{
-              key: 'last_modify',
+              key: 'publish_time',
               value: 'desc'
             }];
           }

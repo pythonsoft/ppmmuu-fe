@@ -26,25 +26,18 @@
         <div class="about-system-item">
           <div class="subtitle">ump系统</div>
           <div class="about-system-item-title">
-            当前版本1.4.0.0（已是最新版本）
+            当前版本1.5.1.0
+            <div class="about-system-update-bar">
+              <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="upload">上传安装包</fj-button>
+            </div>
           </div>
           <div class="detail">
             <div class="detail-title">版本更新</div>
             <ul>
-              <li>1.引擎管理--安装客户端时显示安装进度</li>
-              <li>2.引擎管理--安装过后的机器一直显示宕机状态。</li>
-              <li>3.下载任务--修改时间有些为空。</li>
-              <li>4.下载任务列表需要按时间倒序排列。</li>
-              <li>5.转码模板不能更新</li>
-              <li>6.下载任务fileName为空。</li>
-              <li>7.不同的用户下载路径不正确。</li>
-              <li>8.下载模板关联转码模板。</li>
-              <li>9.帐户同步接口--允许批量提交数据。</li>
-              <li>10.帐户同步接口--开放帐户类型。</li>
-              <li>11.添加上架模块。</li>
-              <li>12.引擎安装时需要输入目录机器帐户及密码。</li>
-              <li>13.添加订阅管理模块。</li>
-              <li>14.添加下载审核接口。</li>
+              <li>*.视频播放路径变更</li>
+              <li>*.媒体库－从其他页面跳转到媒体库页面时没有上架按钮，需要重新刷新页面才出现上架按钮 。</li>
+              <li>*.订阅－视频详情页条目信息改为“节目简介”，字段信息顺序调整。</li>
+              <li>*.媒体库--首页及检索结果页默认使用发布时间排倒序。</li>
             </ul>
           </div>
         </div>
@@ -56,13 +49,16 @@
   import './index.css';
   import utils from '../../../../common/utils';
   import LayoutTwoRowTitle from '../../../../component/layout/twoRowTitle/index';
-
-//  const api = require('../../../../api/transcode');
+  import FjInput from "../../../../component/fjUI/packages/input/src/input.vue";
 
   export default {
-    components: { LayoutTwoRowTitle },
+    components: {
+      FjInput,
+      LayoutTwoRowTitle
+    },
     data() {
       return {
+        isBtnLoading: false,
       };
     },
     created() {
@@ -71,7 +67,9 @@
     destroyed() {
     },
     methods: {
+      upload() {
 
+      },
     }
   };
 </script>

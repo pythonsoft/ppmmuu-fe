@@ -48,6 +48,11 @@ module.exports = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../src/fe/static'),
         to: path.resolve(__dirname, '../dist/public/static'),
         ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, '../src/fe/public'),
+        to: path.resolve(__dirname, '../dist/public'),
+        ignore: ['.*']
       }
     ])
   ]

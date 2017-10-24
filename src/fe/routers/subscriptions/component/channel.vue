@@ -1,6 +1,6 @@
 <template>
   <div class="channel-wrap" ref="channelWrap">
-    <div class="channel-header clearfix">
+    <div class="channel-header clearfix" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px' }">
       <h3 class="channel-name">{{ this.query.channel_name }}</h3>
       <span class="channel-count">共{{ total }}个</span>
       <div class="media-center-view-bar">
@@ -80,7 +80,10 @@
       },
       orderVal(val, oldVal) {
         if (!oldVal) return;
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { order: val }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { order: val })
+        });
       }
     },
     data() {
@@ -90,6 +93,7 @@
         viewType: 'grid',
         ORDER_OPTIONS: [],
         items: [],
+        itemSize: { width: 198, height: 180 },
         pageSize: 20,
         currentPage: 1,
         listWidth: 1080,
@@ -100,8 +104,8 @@
       };
     },
     methods: {
-      linkToWatch(objectId) {
-        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
+      linkToWatch(_id) {
+        this.$emit('update-router', { name: 'subscriptions', query: { _id: _id } });
       },
       showDownloadList(fileInfo) {
         this.fileInfo = fileInfo;
@@ -126,7 +130,11 @@
         };
 
         jobAPI.download(param).then((res) => {
-          me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          if(res.data === 'audit'){
+            me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
+          }else {
+            me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          }
         }).catch((error) => {
           me.$message.error(error);
         });
@@ -148,13 +156,20 @@
       },
       resetListWidth() {
         if (!this.$refs.channelWrap) return;
-        this.listWidth = this.$refs.channelWrap.getBoundingClientRect().width;
+        const wrapWidth = this.$refs.channelWrap.getBoundingClientRect().width;
+        this.listWidth = Math.floor(wrapWidth / this.itemSize.width) * this.itemSize.width;
       },
       setViewType(t) {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { viewType: t })
+        });
       },
       currentPageChange() {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { page: this.currentPage })
+        });
       },
       viewTypeSelect(type) {
         let className = 'iconfont';

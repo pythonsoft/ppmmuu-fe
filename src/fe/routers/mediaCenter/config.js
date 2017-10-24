@@ -163,7 +163,7 @@ const FROM_WHERE = {
 
 const HHIGHLIGHT_FIELDS1 = 'name,program_name_cn,program_name_en,f_str_03,f_str_187,from_where,full_text';
 const HHIGHLIGHT_FIELDS2 = 'program_type,name,program_name_cn,program_name_en,f_str_03,f_str_187,from_where';
-const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03,f_str_187,f_date_162,f_str_01,from_where,full_text';
+const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03,f_str_187,f_date_162,f_str_01,from_where,full_text,publish_time,rootid';
 
 method.ORDER_OPTIONS = ORDER_OPTIONS;
 method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;

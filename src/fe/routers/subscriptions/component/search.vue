@@ -1,10 +1,10 @@
 <template>
   <div class="search-wrap" ref="searchWrap">
-    <div class="search-sub-menu clearfix">
+    <div class="search-sub-menu clearfix" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px' }">
       <span class="result-count">大约{{ total }}条结果</span>
       <div class="button-group clearfix">
         <span
-          class="iconfont icon-filter media-center-view-list media-center-view-selected"
+          class="iconfont icon-filter subscriptions-view-list media-center-view-selected"
           ref="filterBtn"
           @click.stop="handleFilterBtnClick"></span><!--
         --><span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
@@ -55,6 +55,7 @@
         currentPage: 1,
         total: 0,
         items: [],
+        itemSize: { width: 198, height: 180 },
         menus: [],
         viewType: 'list',
         parentEl: null,
@@ -95,7 +96,7 @@
       window.addEventListener('resize', this.resetListWidth);
       this.parentEl = this.$refs.searchWrap;
     },
-    beforDestroy() {
+    beforeDestroy() {
       if (this.dropdownMenu) {
         this.unmountDropdownMenu();
       }
@@ -107,7 +108,7 @@
         this.mountDropdownMenu();
       },
       mountDropdownMenu() {
-        console.log('mountDropdownMenu', this.filterList);
+        // console.log('mountDropdownMenu', this.filterList);
         this.dropdownMenu = new Vue(DropdownMenu).$mount();
         document.body.appendChild(this.dropdownMenu.$el);
         const parentEl = this.parentEl || document.body;
@@ -115,19 +116,29 @@
         this.updateMenuPosition();
         this.dropdownMenu.menus = this.menus;
         this.dropdownMenu.selfFilterList = Object.assign({}, this.filterList);
-        this.dropdownMenu.defaultDatetimerange = { FIELD162: this.filterList.FIELD162 || '', FIELD36: this.filterList.FIELD36 || '' };
+        this.dropdownMenu.defaultDatetimerange = {
+          FIELD162: this.filterList.FIELD162 || '',
+          FIELD36: this.filterList.FIELD36 || ''
+        };
         this.dropdownMenu.$on('update-filter-list', this.updateFilterList);
         this.dropdownMenu.$on('unmount', this.unmountDropdownMenu);
       },
       updateFilterList(filterList) {
         this.unmountDropdownMenu(() => {
-          this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, filterList) });
+          this.$emit('update-router', {
+            name: 'subscriptions',
+            query: Object.assign({}, this.query, filterList)
+          });
         });
       },
       updateMenuPosition() {
         if (this.dropdownMenu) {
           const position = this.getDropdownMenu();
-          this.dropdownMenu.menuStyle = { top: `${position.top + 30}px`, left: `${position.left - this.listWidth + 108}px`, width: `${this.listWidth}px` };
+          this.dropdownMenu.menuStyle = {
+            top: `${position.top + 30}px`,
+            left: `${position.left - this.listWidth + 108}px`,
+            width: `${this.listWidth}px`
+          };
         }
       },
       getDropdownMenu() {
@@ -139,7 +150,7 @@
       },
       unmountDropdownMenu(cb) {
         if (this.dropdownMenu) {
-          console.log('unmountDropdownMenu');
+          // console.log('unmountDropdownMenu');
           this.dropdownMenu.$destroy();
           document.body.removeChild(this.dropdownMenu.$el);
           const parentEl = this.parentEl || document.body;
@@ -149,10 +160,16 @@
         }
       },
       currentPageChange() {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { page: this.currentPage }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { page: this.currentPage })
+        });
       },
-      linkToWatch(objectId) {
-        this.$emit('update-router', { name: 'subscriptions', query: { objectId: objectId } });
+      linkToWatch(_id) {
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: { _id: _id }
+        });
       },
       showDownloadList(fileInfo) {
         this.fileInfo = fileInfo;
@@ -186,18 +203,19 @@
       },
       resetListWidth() {
         if (!this.$refs.searchWrap) return;
-        this.listWidth = this.$refs.searchWrap.getBoundingClientRect().width;
+        const wrapWidth = this.$refs.searchWrap.getBoundingClientRect().width;
+        this.listWidth = Math.floor(wrapWidth / this.itemSize.width) * this.itemSize.width;
       },
       viewTypeSelect(type) {
         let className = 'iconfont';
 
         if (type === 'grid') {
-          className += ' icon-view-grid media-center-view-grid';
+          className += ' icon-view-grid subscriptions-view-grid';
           if (this.viewType === 'grid') {
             className += ' media-center-view-selected';
           }
         } else if (type === 'list') {
-          className += ' icon-view-list media-center-view-list';
+          className += ' icon-view-list subscriptions-view-list';
 
           if (this.viewType === 'list') {
             className += ' media-center-view-selected';
@@ -207,7 +225,10 @@
         return className;
       },
       setViewType(t) {
-        this.$emit('update-router', { name: 'subscriptions', query: Object.assign({}, this.query, { viewType: t }) });
+        this.$emit('update-router', {
+          name: 'subscriptions',
+          query: Object.assign({}, this.query, { viewType: t })
+        });
       },
       getSubscribeSearchConfig() {
         subscribeAPI.getSubscribeSearchConfig().then((res) => {

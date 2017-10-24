@@ -5,6 +5,7 @@
       <div v-if="menu.items" class="value-box">
         <span
           v-for="item in menu.items"
+          :key="item.value"
           @click="selectValue(menu, item.value)"
           :class="getItemClass(menu, item.value)">
           {{ item.label }}
@@ -55,13 +56,17 @@
       },
       'datetimerange.FIELD36'(val) {
         if (val.length > 0) {
-          const time = val[0] ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString() : '';
+          const time = val[0]
+            ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString()
+            : '';
           this.selfFilterList.FIELD36 = time;
         }
       },
       'datetimerange.FIELD162'(val) {
         if (val.length > 0) {
-          const time = val[0] ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString(): '';
+          const time = val[0]
+            ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString()
+            : '';
           this.selfFilterList.FIELD162 = time;
         }
       }

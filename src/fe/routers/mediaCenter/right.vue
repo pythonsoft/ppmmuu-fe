@@ -9,17 +9,17 @@
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="title"></div>
             <ul class="media-video-title-bar">
-              <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
+              <li @click.stop="prepareDownload()">
+                <span title="下载" class="iconfont icon-video-download"></span>
               </li>
-              <li>
-                <span title="剪辑" class="iconfont icon-cut" @click.stop="gotoEditer"></span>
+              <li @click.stop="gotoEditer">
+                <span title="剪辑" class="iconfont icon-cut"></span>
               </li>
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="添加" class="iconfont icon-addto"></span>
               </li>
-              <li>
-                <span title="上架" class="iconfont icon-shangjialine" @click.stop="createShelf"></span>
+              <li @click.stop="createShelf">
+                <span title="上架" class="iconfont icon-shangjialine"></span>
               </li>
             </ul>
           </div>
@@ -79,11 +79,28 @@
             </div>
           </div>
         </fj-tab-pane>
+        <fj-tab-pane label="视频片段" name="tab3" v-if="false">
+          <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in fragments">
+            <table class="media-center-table">
+              <tr>
+                <td class="item-info-key" width="80">文件名: </td>
+                <td class="item-info-value" width="303">
+                  <div class="media-center-file-name">
+                    {{ file.name || '无文件名' }}
+                    <span class="media-center-file-type">
+                      {{ file.SANAME || '无信息' }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </fj-tab-pane>
       </fj-tabs>
     </div>
     <fj-dialog
-            title="上架"
-            :visible.sync="shelfDialogVisible">
+        title="上架"
+        :visible.sync="shelfDialogVisible">
       <p>已添加至上架，确定再次添加</p>
       <div slot="footer" class="dialog-footer">
         <fj-button @click.stop="shelfDialogVisible=false">取消</fj-button><!--
@@ -132,7 +149,7 @@
       Player
     },
     props: {
-      videoInfo: { type: Object, default: {} }
+      videoInfo: { type: Object, default: {} },
     },
     data() {
       return {
@@ -149,6 +166,8 @@
           INPOINT: 0,
           OUTPOINT: 0
         },
+        rootid: '',
+        fragments: [],
         fileInfo: {},
         downloadDialogDisplay: false,
         shelfDialogVisible: false,
@@ -160,14 +179,18 @@
     watch: {
       videoInfo(val) {
         this.title = this.getTitle(val);
-        this.shelfName = this.title.replace('<em>','');
-        this.shelfName = this.shelfName.replace('</em>','');
+        this.shelfName = this.title.replace(/<em>/g,'').replace(/<\/em>/g,'');
+        if(this.shelfName.indexOf('.') !== -1) {
+          this.shelfName = this.shelfName.slice(0, this.shelfName.lastIndexOf('.'));
+        }
         this.program = {};
         this.poster = this.getThumb(val);
         this.item = val;
         this.videoId = val.id;
+        this.rootid = val.rootid;
         this.getDetail();
         this.getStream();
+        this.getVideoFragments();
       },
       program(val) {
         const keys = Object.keys(val);
@@ -203,6 +226,32 @@
         }).catch((error) => {
           me.$message.error(error);
         });
+      },
+      getVideoFragments() {
+        const me = this;
+        const options = {
+          source: config.FILETR_FIELDS,
+          match: [{key: 'rootid', value: me.rootid}],
+          should: [],
+          range: [],
+          sort: {},
+          start: 0,
+          pageSize: 999
+        };
+        const fragments = [];
+        api.esSearch(options)
+          .then((res)=>{
+            const docs = res.data.docs;
+            for(let i = 0, len = docs.length; i < len; i++){
+              if(docs[i].id !== me.rootid){
+                fragments.push(docs[i]);
+              }
+            }
+            me.fragments = fragments;
+          })
+          .catch((error)=>{
+            me.$message.error(error);
+          })
       },
       getThumb,
       getTitle,
@@ -320,18 +369,22 @@
             me.$message.error(err);
             return;
           }
-          const index = rs.result.FILENAME.lastIndexOf('.');
-          const ext = rs.result.FILENAME.slice(index);
+
 
           me.streamInfo = rs.result;
+          me.url = url;
 
-          if(ext !== '.mp4') {
-            me.url = '';
-            me.videoMessage = '暂不支持 ' + ext + '格式的视频播放';
-          }else {
-            me.url = url;
-            me.videoMessage = '';
-          }
+//          const index = rs.result.FILENAME.lastIndexOf('.');
+//          const ext = rs.result.FILENAME.slice(index);
+//          if(ext !== '.mp4') {
+//            me.url = '';
+//            me.videoMessage = '暂不支持 ' + ext + '格式的视频播放';
+//          }else {
+//            me.url = url;
+//            me.videoMessage = '';
+//          }
+
+
 
         }, me);
 
@@ -373,18 +426,7 @@
           objectId: me.videoId,
           name: me.shelfName,
           force: force,
-          details: {},
-          files: me.files
         };
-        for(let key in me.basic){
-          postData.details[key] = me.basic[key];
-        }
-        if(postData.details['OUTPOINT']){
-          postData.details['duration'] = postData.details['OUTPOINT'] - postData.details['INPOINT'];
-        }
-        for(let key in me.program){
-          postData.details[key] = me.program[key].value;
-        }
         shelfApi.createShelfTask(postData).then((res) => {
           me.shelfDialogBtnLoading = false;
           me.shelfDialogVisible = false;
@@ -418,13 +460,20 @@
         const transferParams = rs[type + '_info'];
         const ownerName =  me.program['FIELD314'] ? me.program['FIELD314'].value : '';
 
+        let inpoint = 0;
+        let outpoint = 0;
+
+        //说明是片断子类，这个是需要打点下载的
+        if(me.basic['OBJECTID'] !== me.basic['ROOTID']) {
+          inpoint = this.fileInfo.INPOINT;
+          outpoint = this.fileInfo.INPOINT;
+        }
+
+        //如果不是打点下载，将inpoint，outpoint设置为'0'
         const param = {
           objectid: this.fileInfo.OBJECTID,
-//          如果不是打点下载，将inpoint，outpoint设置为'0'
-//          inpoint: this.fileInfo.INPOINT,
-//          outpoint: this.fileInfo.OUTPOINT,
-          inpoint: 0,
-          outpoint: 0,
+          inpoint: inpoint,
+          outpoint: outpoint,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: templateInfo._id,
@@ -437,7 +486,11 @@
         }
 
         jobAPI.download(param).then((res) => {
-          me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          if(res.data === 'audit'){
+            me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
+          }else {
+            me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          }
         }).catch((error) => {
           me.$message.error(error);
         });

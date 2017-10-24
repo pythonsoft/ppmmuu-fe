@@ -105,6 +105,9 @@
       '$route'(val) {
         this.route = val;
         this.updateContentType();
+        if (val.query.query) {
+          this.query = val.query.query;
+        }
       }
     },
     methods: {
@@ -148,7 +151,7 @@
         } else {
           this.contentType = 'default';
         }
-        if (this.routeQuery && this.routeQuery.objectId) {
+        if (this.routeQuery && this.routeQuery._id) {
           this.isShowWatch = true;
         } else {
           this.isShowWatch = false;
@@ -176,13 +179,13 @@
           });
       },
       linkToChannel(channelId, channelName) {
-        this.updateRouter({ name: 'subscriptions', query: { channel: channelId, channel_name: channelName } });
+        this.updateRouter({
+          name: 'subscriptions',
+          query: { channel: channelId, channel_name: channelName }
+        });
       },
       linkToHome() {
         this.updateRouter({ name: 'subscriptions' });
-      },
-      linkToWatch(objectId) {
-        this.updateRouter({ name: 'subscriptions', query: { objectId: objectId } });
       },
       updateRouter(route) {
         console.log('updateRouter', route);
@@ -193,13 +196,19 @@
       back() {
         if (this.routeIndex <= 0) return;
         this.routeIndex -= 1;
-        const route = { name: this.history[this.routeIndex].name, query: this.history[this.routeIndex].query };
+        const route = {
+          name: this.history[this.routeIndex].name,
+          query: this.history[this.routeIndex].query
+        };
         this.$router.push(route);
       },
       forward() {
         if (this.history.length > 0 && this.routeIndex === this.history.length - 1) return;
         this.routeIndex += 1;
-        const route = { name: this.history[this.routeIndex].name, query: this.history[this.routeIndex].query };
+        const route = {
+          name: this.history[this.routeIndex].name,
+          query: this.history[this.routeIndex].query
+        };
         this.$router.push(route);
       }
     },
