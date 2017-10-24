@@ -466,7 +466,7 @@
         //说明是片断子类，这个是需要打点下载的
         if(me.basic['OBJECTID'] !== me.basic['ROOTID']) {
           inpoint = this.fileInfo.INPOINT;
-          outpoint = this.fileInfo.INPOINT;
+          outpoint = this.fileInfo.OUTPOINT;
         }
 
         //如果不是打点下载，将inpoint，outpoint设置为'0'
