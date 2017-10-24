@@ -99,8 +99,8 @@
       </fj-tabs>
     </div>
     <fj-dialog
-            title="上架"
-            :visible.sync="shelfDialogVisible">
+        title="上架"
+        :visible.sync="shelfDialogVisible">
       <p>已添加至上架，确定再次添加</p>
       <div slot="footer" class="dialog-footer">
         <fj-button @click.stop="shelfDialogVisible=false">取消</fj-button><!--
@@ -369,18 +369,22 @@
             me.$message.error(err);
             return;
           }
-          const index = rs.result.FILENAME.lastIndexOf('.');
-          const ext = rs.result.FILENAME.slice(index);
+
 
           me.streamInfo = rs.result;
+          me.url = url;
 
-          if(ext !== '.mp4') {
-            me.url = '';
-            me.videoMessage = '暂不支持 ' + ext + '格式的视频播放';
-          }else {
-            me.url = url;
-            me.videoMessage = '';
-          }
+//          const index = rs.result.FILENAME.lastIndexOf('.');
+//          const ext = rs.result.FILENAME.slice(index);
+//          if(ext !== '.mp4') {
+//            me.url = '';
+//            me.videoMessage = '暂不支持 ' + ext + '格式的视频播放';
+//          }else {
+//            me.url = url;
+//            me.videoMessage = '';
+//          }
+
+
 
         }, me);
 

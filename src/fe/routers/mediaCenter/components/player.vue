@@ -1,5 +1,6 @@
 <template>
   <div class="playerWrap" :class="{'playerBigMode': isFullscreen || mode === 'big'}" ref="playerWrap" :style="isFullscreen ? {} : { height: `${height}px`, width: `${width}px` }">
+    <div class="videoLoadingMask" v-if="loading"></div>
     <div class="videoBox">
       <video v-on:contextmenu.prevent="contextMenuStop" :style="{display: 'block', width: '100%', height: '100%'}" ref="video" :src="url" crossorigin="anonymous"></video>
       <div v-show="currentVideoSRT" class="video-srt">
@@ -76,6 +77,7 @@
     },
     data() {
       return {
+        loading: true,
         videoSRT: [],
         videoSRTPosition: 0,
         currentVideoSRT: '',
@@ -181,7 +183,17 @@
     mounted() {
       this.video = this.$refs.video;
       this.getSRTArr(this.videoId);
+      this.video.addEventListener('waiting', () => {
+        // console.log('waiting');
+        this.loading = true;
+      });
+      this.video.addEventListener('playing', () => {
+        // console.log('playing');
+        this.loading = false;
+      });
       this.video.addEventListener('loadedmetadata', () => {
+        // console.log('loadedmetadata');
+        this.loading = false;
         this.duration = this.video.duration;
         this.video.currentTime = this.streamInfo.INPOINT / 1000;
         this.currentTime = this.video.currentTime;
