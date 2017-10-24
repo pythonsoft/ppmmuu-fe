@@ -7,6 +7,33 @@
   width: 100%;
   height: 100%;
 }
+.videoLoadingMask {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 36px;
+  left: 0;
+  z-index: 100;
+}
+.videoLoadingMask:before {
+  content: "\e69a";
+  display: inline-block;
+  font-family:"iconfont" !important;
+  font-size:40px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #ddd;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .videoBox {
   position: absolute;
   top: 0;
@@ -14,7 +41,8 @@
   right: 0;
   bottom: 36px;
 }
-.playerBigMode .videoBox {
+.playerBigMode .videoBox,
+.playerBigMode .videoLoadingMask {
   bottom: 56px;
 }
 .playerBottom {
