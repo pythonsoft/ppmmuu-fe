@@ -4,7 +4,7 @@
     @click="()=>{this.$emit('update:activePanel', 'programPanel')}">
     <div class="video-source-title">{{ `素材：${title || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
-      <video v-on:contextmenu.prevent="contextMenuStop" :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }"></video>
+      <video v-on:contextmenu.prevent="contextMenuStop" :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }" crossorigin="anonymous"></video>
     </div>
     <div class="video-source-bottom">
       <div v-if="innerDuration===0" class="player-mask"></div>
