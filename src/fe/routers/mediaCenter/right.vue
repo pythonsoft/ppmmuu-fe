@@ -79,7 +79,7 @@
             </div>
           </div>
         </fj-tab-pane>
-        <fj-tab-pane label="视频片段" name="tab3">
+        <fj-tab-pane label="视频片段" name="tab3" v-if="false">
           <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in fragments">
             <table class="media-center-table">
               <tr>

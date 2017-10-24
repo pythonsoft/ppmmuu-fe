@@ -6,7 +6,7 @@
           <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="name"></div>
-            <ul class="video-title-bar">
+            <ul class="media-video-title-bar">
               <li>
                 <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
               </li>

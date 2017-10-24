@@ -1,6 +1,6 @@
 <template>
   <div class="channel-wrap" ref="channelWrap">
-    <div class="channel-header clearfix" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px' }">
+    <div class="channel-header clearfix">
       <h3 class="channel-name">{{ this.query.channel_name }}</h3>
       <span class="channel-count">共{{ total }}个</span>
       <div class="media-center-view-bar">
@@ -93,7 +93,6 @@
         viewType: 'grid',
         ORDER_OPTIONS: [],
         items: [],
-        itemSize: { width: 198, height: 180 },
         pageSize: 20,
         currentPage: 1,
         listWidth: 1080,
@@ -156,8 +155,7 @@
       },
       resetListWidth() {
         if (!this.$refs.channelWrap) return;
-        const wrapWidth = this.$refs.channelWrap.getBoundingClientRect().width;
-        this.listWidth = Math.floor(wrapWidth / this.itemSize.width) * this.itemSize.width;
+        this.listWidth = this.$refs.channelWrap.getBoundingClientRect().width;
       },
       setViewType(t) {
         this.$emit('update-router', {
