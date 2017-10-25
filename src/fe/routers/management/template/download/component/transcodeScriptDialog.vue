@@ -25,11 +25,11 @@
         <li>
           <div class="title">4、示例</div>
           <pre>
-            if(fileInfo.ext === '.mxf') {
-              result = transcodeTemplates.720p._id; //使用名为720p的转码模板
-            }
+      if(fileInfo.ext === '.mxf') {
+            const keys = Object.keys(transcodeTemplates);
+            result = keys.length ? keys[0] : '';
+          }
 
-            result = ''; //不进行转码
           </pre>
         </li>
       </ul>
