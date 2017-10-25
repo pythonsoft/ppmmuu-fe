@@ -112,7 +112,7 @@ config.fields = [
     type: 'select',
     text: '等级',
     required: false,
-    selected: 'high',
+    selected: 'null',
     options: [
       { text: 'baseline', value: 'baseline', key: 'baseline' },
       { text: 'main', value: 'main', key: 'main' },
@@ -121,7 +121,8 @@ config.fields = [
       { text: 'HQ', value: 'HQ', key: 'HQ' },
       { text: '3.1', value: '3.1', key: '3.1' },
       { text: '4.0', value: '4.0', key: '4.0' },
-      { text: '4.1', value: '4.1', key: '4.1' }
+      { text: '4.1', value: '4.1', key: '4.1' },
+      { text: 'null', value: 'null', key: 'null' }
     ]
   },
   {
