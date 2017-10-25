@@ -15,7 +15,7 @@
             ></fj-input> -->
             <fj-select
               remote
-              :parentEl="selectParentEl"
+              :parent-el="selectParentEl"
               :clear-history-method="clearHistory"
               :history-method="getSearchHistory"
               :remote-method="remoteMethod"
@@ -48,7 +48,7 @@
           <template v-for="config in searchSelectConfigs">
             <div class="media-category">
               <h4>{{config.label}}</h4>
-              <fj-select :parentEl="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
+              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
                 <fj-option
                         v-for="item in config.items"
                         :key="item.key"
@@ -76,7 +76,7 @@
             <h4>新聞日期</h4>
             <div id="media-category-date">
               <fj-date-picker
-                :parentEl="(()=>{return this.$refs.mediaLeft})()"
+                :parent-el="(()=>{return this.$refs.mediaLeft})()"
                 type="datetimerange"
                 placeholder="请选择日期范围"
                 v-model="datetimerange1"
@@ -88,7 +88,7 @@
             <h4>首播日期</h4>
             <div id="media-category-date">
               <fj-date-picker
-                :parentEl="(()=>{return this.$refs.mediaLeft})()"
+                :parent-el="(()=>{return this.$refs.mediaLeft})()"
                 type="datetimerange"
                 placeholder="请选择日期范围"
                 v-model="datetimerange2"
@@ -123,7 +123,7 @@
                 <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
                 --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
                 --><div class="order-select">
-                  <fj-select :parentEl="selectParentEl" v-model="orderVal" size="small">
+                  <fj-select :parent-el="selectParentEl" v-model="orderVal" size="small">
                     <fj-option
                       v-for="item in ORDER_OPTIONS"
                       :key="item.value"

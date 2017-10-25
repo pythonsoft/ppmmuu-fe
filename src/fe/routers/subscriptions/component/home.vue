@@ -15,7 +15,7 @@
           :key="item.objectId"
           :download-fn="showDownloadList"
           :link-to-watch-fn="linkToWatch"
-          :parentEl="parentEl"></SubscribeListItem>
+          :parent-el="parentEl"></SubscribeListItem>
       </ul>
     </div>
     <download-list-view

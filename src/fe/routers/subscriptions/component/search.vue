@@ -18,7 +18,7 @@
       @currentItemChange="()=>{}"
       :downloadFn="showDownloadList"
       :link-to-watch-fn="linkToWatch"
-      :parentEl="parentEl"
+      :parent-el="parentEl"
     ></grid-list-view>
     <div class="media-pagination" v-if="items.length">
       <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="currentPageChange"></pagination>

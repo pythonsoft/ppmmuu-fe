@@ -27,7 +27,7 @@
         left: 0,
         transitionName: 'fj-zoom-in-top',
         dropdownPosition: 'bottom',
-        parentEl: document.body
+        parentEl: this.$parent.parentEl
       };
     },
     watch: {
@@ -45,31 +45,38 @@
       },
       '$parent.parentEl'(val) {
         if (val && val !== this.parentEl) {
-          this.parentEl.removeEventListener('resize', this.resetInputWidth);
-          this.parentEl.removeEventListener('scroll', this.resetDropdownPosition);
-          this.parentEl.removeEventListener('scroll', this.handlePositionChange);
+          if (this.parentEl) {
+            this.parentEl.removeEventListener('resize', this.resetInputWidth);
+            this.parentEl.removeEventListener('scroll', this.resetDropdownPosition);
+            this.parentEl.removeEventListener('scroll', this.handlePositionChange);
+          }
 
           this.parentEl = val;
           val.addEventListener('resize', this.resetInputWidth);
           val.addEventListener('scroll', this.resetDropdownPosition);
           val.addEventListener('scroll', this.handlePositionChange);
+          document.body.appendChild(this.$el);
         }
       }
     },
     mounted() {
       this.resetInputWidth();
-      this.parentEl = this.$parent.parentEl || document.body;
-      this.parentEl.addEventListener('resize', this.resetInputWidth);
-      this.parentEl.addEventListener('scroll', this.resetDropdownPosition);
-      this.parentEl.addEventListener('scroll', this.handlePositionChange);
-      document.body.appendChild(this.$el);
+      if (this.parentEl) {
+        this.parentEl = this.$parent.parentEl || document.body;
+        this.parentEl.addEventListener('resize', this.resetInputWidth);
+        this.parentEl.addEventListener('scroll', this.resetDropdownPosition);
+        this.parentEl.addEventListener('scroll', this.handlePositionChange);
+        document.body.appendChild(this.$el);
+      }
     },
     beforeDestroy() {
       // const parentEl = this.$parent.parentEl || document.body;
-      this.parentEl.removeEventListener('resize', this.resetInputWidth);
-      this.parentEl.removeEventListener('scroll', this.resetDropdownPosition);
-      this.parentEl.removeEventListener('scroll', this.handlePositionChange);
-      document.body.removeChild(this.$el);
+      if (this.parentEl) {
+        this.parentEl.removeEventListener('resize', this.resetInputWidth);
+        this.parentEl.removeEventListener('scroll', this.resetDropdownPosition);
+        this.parentEl.removeEventListener('scroll', this.handlePositionChange);
+        document.body.removeChild(this.$el);
+      }
     },
     methods: {
       resetInputWidth() {
@@ -91,16 +98,28 @@
         const referencePosition = getPosition(this.$parent.reference);
         const dropdownMenuHeight = this.$refs.dropdown.getBoundingClientRect().height;
         const parentElScrollTop = this.parentEl ? this.parentEl.scrollTop : 0;
-        this.left = referencePosition.x;
+        if (this.parentEl) {
+          this.left = referencePosition.x;
+        } else {
+          this.left = 0;
+        }
         if (val === 'top' && dropdownMenuHeight > 0) {
           this.transitionName = 'fj-zoom-in-bottom';
           let marginTop = window.getComputedStyle(this.$refs.dropdown).marginTop || 0;
           marginTop = parseInt(marginTop, 10);
-          this.top = -dropdownMenuHeight - (marginTop * 2) - referencePosition.y - parentElScrollTop;
+          if (this.parentEl) {
+            this.top = -dropdownMenuHeight - (marginTop * 2) - referencePosition.y - parentElScrollTop;
+          } else {
+            this.top = -dropdownMenuHeight - (marginTop * 2);
+          }
         } else {
           this.transitionName = 'fj-zoom-in-top';
           const parentHeight = this.$parent.$el.getBoundingClientRect().height;
-          this.top = parentHeight + referencePosition.y - parentElScrollTop;
+          if (this.parentEl) {
+            this.top = parentHeight + referencePosition.y - parentElScrollTop;
+          } else {
+            this.top = parentHeight;
+          }
         }
       }
     }

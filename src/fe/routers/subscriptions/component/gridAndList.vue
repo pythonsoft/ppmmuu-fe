@@ -8,7 +8,7 @@
         :key="item._id"
         :download-fn="downloadFn"
         :link-to-watch-fn="linkToWatchFn"
-        :parentEl="parentEl"></SubscribeListItem>
+        :parent-el="parentEl"></SubscribeListItem>
     </div>
 
     <ul v-else class="subscribe-grid grid-list clearfix" :style="{ width: !width ? '100%' : width + 'px' }">
@@ -18,7 +18,7 @@
         :key="item._id"
         :download-fn="downloadFn"
         :link-to-watch-fn="linkToWatchFn"
-        :parentEl="parentEl"></SubscribeListItem>
+        :parent-el="parentEl"></SubscribeListItem>
     </ul>
   </div>
 </template>
