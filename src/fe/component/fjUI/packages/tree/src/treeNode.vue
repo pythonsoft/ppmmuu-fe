@@ -98,8 +98,8 @@
       }
     },
     methods: {
-      handleExpandIconClick() {
-        if (this.autoExpand) return;
+      handleExpandIconClick(force = false) {
+        if (this.autoExpand && !force) return;
         if (this.isFolder) {
           if (!this.open) {
             if (this.shouldLoadData()) {
@@ -162,7 +162,7 @@
         this.tree = parent.tree;
       }
       if (this.node[this.nodeKey] === this.defaultExpandedKey) {
-        this.handleExpandIconClick();
+        this.handleExpandIconClick('force');
       }
     },
     components: {

@@ -11,6 +11,8 @@
         :list-group="handleTreeNodeClick"
         :btn-click="btnClick"
         :tree-node-current-change="treeNodeCurrentChange"
+        :default-tree-data="[{_id: 'all', parentId: '', name: '全部', children: [], isFolder: true}]"
+        default-expanded-key="all"
       ></tree-view>
     </div>
     <div class="right-list">
@@ -176,7 +178,11 @@
         if (node === undefined) {
           query.parentId = '';
         } else {
-          query.parentId = node.info ? node.info._id : '';
+          if (node.info && (node.info._id !== 'all')) {
+            query.parentId = node.info._id;
+          } else {
+            query.parentId = '';
+          }
         }
         me.groupId = query.parentId;
         me.clickNodeSearch = true;
@@ -193,7 +199,7 @@
           const searchObj = {
             page: me.currentPage,
             pageSize: me.pageSize,
-            groupId: node.id
+            groupId: node.id === 'all' ? '' : node.id
           };
           me.listTemplate(searchObj);
         }
@@ -227,7 +233,7 @@
         const searchObj = {
           page: me.currentPage,
           pageSize: me.pageSize,
-          groupId: treeNode.id
+          groupId: treeNode.id === 'all' ? '' : treeNode.id
         };
         me.listTemplate(searchObj);
       },
@@ -295,7 +301,7 @@
         const param = {
           page: this.page,
           pageSize: this.pageSize,
-          groupId: this.currentNode.id || ''
+          groupId: (this.currentNode.id && this.currentNode.id !== 'all') ? this.currentNode.id : ''
         };
         this.listTemplate(param);
       },
