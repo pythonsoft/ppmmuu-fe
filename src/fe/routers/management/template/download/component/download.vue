@@ -13,6 +13,12 @@
       </div>
       <fj-button @click.stop.prevent="bucketBrowserVisible=true">修改</fj-button>
     </fj-form-item>
+    <fj-form-item label="分组" prop="groupName">
+      <div class="group-input">
+        <fj-input v-model="formData.groupName" :readonly="true"></fj-input>
+      </div>
+      <fj-button @click.stop.prevent="groupBrowserVisible=true">修改</fj-button>
+    </fj-form-item>
     <fj-form-item label="传输方式" prop="type">
       <div class="template-dialog-checkbox-item">
         <fj-checkbox-group v-model="formData.type">
@@ -72,6 +78,8 @@
     <transcode-script-dialog-view
       :visible.sync="transcodeScriptDialogVisible"
     ></transcode-script-dialog-view>
+
+    <add-group :visible.sync="groupBrowserVisible"  @add-owner="addOwner" @list-group="listGroup" title="修改分组"></add-group>
   </div>
 </template>
 <script>
@@ -80,7 +88,9 @@
   import scriptDialogView from './scriptDialog';
   import transcodeScriptDialogView from './transcodeScriptDialog.vue';
   import TranscodeTemplateList from './transcodeTemplateList';
-  import FjCheckboxGroup from "../../../../../component/fjUI/packages/checkboxGroup/src/checkboxGroup.vue";
+  import FjCheckboxGroup from '../../../../../component/fjUI/packages/checkboxGroup/src/checkboxGroup.vue';
+  import AddGroup from './groupTree';
+  import { formatQuery } from '../../../../../common/utils';
 
   const config = require('../../../task/config');
   const api = require('../../../../../api/template');
@@ -105,13 +115,16 @@
       'bucket-browser-view': bucketBrowserView,
       'script-dialog-view': scriptDialogView,
       'transcode-script-dialog-view': transcodeScriptDialogView,
-      TranscodeTemplateList
+      TranscodeTemplateList,
+      AddGroup
     },
     created() {
       if (this.type !== 'add') {
         this.formData.id = this.templateInfo._id;
         this.formData.name = this.templateInfo.name;
         this.formData.bucketId = this.templateInfo.details.bucketId;
+        this.formData.groupId = this.templateInfo.groupId;
+        this.formData.groupName = this.templateInfo.groupName;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
         this.formData.type = this.templateInfo.type === '2' ? [this.templateInfo.type] : [];
@@ -128,10 +141,13 @@
         transcodeScriptDialogVisible: false,
         bucketBrowserVisible: false,
         subtitleType: subtitleType,
+        groupBrowserVisible: false,
         formData: {
           id: '',
           name: '',
           bucketId: '',
+          groupId: '',
+          groupName: '',
           script: '',
           type: [],
           subtitleType: [],
@@ -149,7 +165,10 @@
           ],
           script: [
             { required: true, message: '请填写脚本' }
-          ]
+          ],
+          groupName: [
+            { required: true, message: '请选择分组' }
+          ],
         }
       };
     },
@@ -194,7 +213,6 @@
         const me = this;
         const data = Object.assign({}, this.formData);
         data.type = data.type ? (data.type.length !== 0 ? data.type[0] : '') : '';
-        data.groupId = this.groupId;
         data.transcodeTemplates = JSON.stringify(data.transcodeTemplates);
         api.createDownloadTemplate(data, me).then((res) => {
           me.$message.success('保存成功');
@@ -228,6 +246,30 @@
       },
       bucketConfirm(val) {
         this.formData.bucketId = val._id;
+      },
+      addOwner(row) {
+        row = row.info ? row.info : row;
+        const type = row.type || '3';
+        const postData = {
+          type: type,
+          _id: row._id
+        };
+        this.formData.groupId = row._id;
+        this.formData.groupName = row.name;
+        this.groupBrowserVisible = false;
+      },
+      listGroup(query, cb){
+        const me = this;
+        api.listTemplateGroup(formatQuery(query, true)).then((res) => {
+          const docs = res.data.docs || [];
+          if (docs.length === 0) {
+            me.groupBrowserVisible = false;
+            me.$message.error('没有部门信息');
+          }
+          cb && cb(res.data.docs);
+        }).catch((err) => {
+          me.$message.error(err);
+        });
       }
     }
   };
