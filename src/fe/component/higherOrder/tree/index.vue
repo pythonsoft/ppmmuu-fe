@@ -275,6 +275,12 @@
       };
     },
     props: {
+      defaultTreeData: {
+        type: Array,
+        default() {
+          return [];
+        }
+      },
       nodeKey: { type: String, default: 'id' },
       treeDataBaseKey: { type: String, default: '_id' },
       title: { type: String, default: '分组' },
@@ -318,7 +324,11 @@
 
       this.treeDataBaseInstance = new TreeDataBase(this.treeDataBaseKey, this.rootKey);
 
-      me.vueInstance.$emit('tree.listGroup');
+      if (this.defaultTreeData.length > 0) {
+        this.insertNode('', this.defaultTreeData);
+        this.selectedNodeInfo = this.treeData[0];
+      }
+      this.vueInstance.$emit('tree.listGroup');
     },
     destroyed() {
       const me = this;
