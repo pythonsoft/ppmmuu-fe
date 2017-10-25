@@ -1,7 +1,7 @@
 <template>
   <fj-dialog
     title="存储区选择器"
-    :visible.sync="visible"
+    :visible.sync="dialogVisible"
     @close="close">
     <div class="bucket-browser-content">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
@@ -37,17 +37,21 @@
     },
     data() {
       return {
+        dialogVisible: this.visible,
         tableData: [],
         currentRow: {}
       };
     },
     watch: {
-      visible(val) {
+      dialogVisible(val) {
         if (val) {
           this.list();
         } else {
           this.tableData = [];
         }
+      },
+      visible(val) {
+        this.dialogVisible = val;
       }
     },
     created() {},
