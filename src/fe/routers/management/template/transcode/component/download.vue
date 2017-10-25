@@ -4,7 +4,7 @@
       <template v-for="item in fields">
         <fj-form-item :label="item.text" :prop="item.field">
           <template v-if="item.type==='select'">
-            <fj-select v-model="formData[item.field]" :parentEl="selectParentEl">
+            <fj-select v-model="formData[item.field]">
               <fj-option
                       v-for="option in item.options"
                       :key="option.key"
@@ -43,16 +43,12 @@
         this.initParam();
       }
     },
-    mounted() {
-      this.selectParentEl = document.querySelector('.fj-slide-dialog-wrapper');
-    },
     data() {
       return {
         fields: config.fields,
         formData: config.getFormData(),
         isBtnLoading: false,
-        rules: config.getFormRules(),
-        selectParentEl: null
+        rules: config.getFormRules()
       };
     },
     methods: {

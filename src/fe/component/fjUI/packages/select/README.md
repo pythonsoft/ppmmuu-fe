@@ -14,3 +14,4 @@
 | clear-history-method | 清空历史记录的方法 | function | — | - | ✅ |
 | loading | 是否正在从远程获取数据 | boolean | — | false | ✅ |
 | theme | 输入框主题样式 | string | stroke, fill, dark | stroke | ✅ |
+| parent-el | 最近的绝对定位的父元素，如果赋值了，就把下拉菜单挂载在body上，这样可以避免下拉菜单被遮挡的问题 | - | - | - | ✅ |

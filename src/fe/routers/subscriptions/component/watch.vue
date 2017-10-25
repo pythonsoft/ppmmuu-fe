@@ -19,7 +19,7 @@
               :items="items"
               :downloadFn="showDownloadList"
               :link-to-watch-fn="currentItemChange"
-              :parentEl="parentEl"
+              :parent-el="parentEl"
             ></grid-list-view>
           </div>
         </div>
