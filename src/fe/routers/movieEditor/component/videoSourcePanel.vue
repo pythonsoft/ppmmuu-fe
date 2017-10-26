@@ -183,16 +183,19 @@
     },
     watch: {
       'videoInfo.INPOINT'(val) {
-        this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
-        this.inTime = val;
+        // this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
+        // this.inTime = val;
+        this.reset();
       },
       'videoInfo.OUTPOINT'(val) {
-        this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
-        this.outTime = val;
+        // this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
+        // this.outTime = val;
+        this.reset();
       },
       videoId(val) {
         this.loading = true;
         this.reset();
+        this.videoSource = '';
         this.getStream(val);
         this.getSRTArr(val);
       },
@@ -338,6 +341,7 @@
         this.moveIndicatorTimer = null;
         this.moveIndicatorTimeId = null;
         this.updateCurrentTimeTimeId = null;
+        this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
       },
       keydown(e) {
         if (e.shiftKey) {

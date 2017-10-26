@@ -304,10 +304,9 @@
         }
       },
       handleAddtoMenu(data, leaveOrNot) {
-        if (isEmptyObject(this.fileInfo)) {
+        // if (isEmptyObject(this.fileInfo)) {
           this.fileInfo = this.getDefaultFileInfo();
-        }
-
+        // }
         if (isEmptyObject(this.fileInfo)) {
           this.$message.error('当前没有视频可以进行编辑');
           return false;
@@ -317,11 +316,11 @@
         reqData.name = this.fileInfo.FILENAME;
 
         reqData.snippet = {
-          objectId: this.fileInfo.OBJECTID,
+          objectId: this.basic.OBJECTID,
           thumb: this.poster,
-          input: this.fileInfo.INPOINT,
-          output: this.fileInfo.OUTPOINT,
-          duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
+          input: this.basic.INPOINT,
+          output: this.basic.OUTPOINT,
+          duration: this.basic.OUTPOINT - this.basic.INPOINT,
           fileTypeId: this.fileInfo.FILETYPEID
         };
 
@@ -347,11 +346,11 @@
         const reqData = { parentId: '' };
         reqData.name = this.fileInfo.FILENAME;
         reqData.snippet = {
-          objectId: this.fileInfo.OBJECTID,
+          objectId: this.basic.OBJECTID,
           thumb: this.poster,
-          input: this.fileInfo.INPOINT,
-          output: this.fileInfo.OUTPOINT,
-          duration: this.fileInfo.OUTPOINT - this.fileInfo.INPOINT,
+          input: this.basic.INPOINT,
+          output: this.basic.OUTPOINT,
+          duration: this.basic.OUTPOINT - this.basic.INPOINT,
           fileTypeId: this.fileInfo.FILETYPEID
         };
 
