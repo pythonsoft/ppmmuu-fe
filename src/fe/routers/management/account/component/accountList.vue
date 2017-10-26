@@ -109,7 +109,8 @@
     STATUS_OPTIONS,
     STATUS_CONFIG,
     VERIFY_TYPE_CONFIG,
-    PERMISSION_TYPE_CONFIG
+    PERMISSION_TYPE_CONFIG,
+    GROUP_CONFIG
   } from '../config';
 
   export default {
@@ -266,12 +267,16 @@
       addOwner(row, parentNode) {
         const requestData = {};
         requestData._ids = this.selectedItems.map(item => item._id).join(',');
-        if (parentNode) {
-          requestData.teamId = row.info._id;
-          requestData.departmentId = parentNode.info._id;
-        } else {
+
+        if (row.info.type === GROUP_CONFIG.department.type) {
           requestData.departmentId = row.info._id;
+        } else if(row.info.type === GROUP_CONFIG.group.type) {
+          requestData.teamId = row.info._id;
+        }else {
+          this.$message.error('不能移动到别的公司');
+          return false;
         }
+
         groupAPI.postJustifyUserGroup(requestData)
           .then((response) => {
             this.updateList();

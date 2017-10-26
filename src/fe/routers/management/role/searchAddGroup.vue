@@ -1,14 +1,15 @@
 <template>
   <fj-dialog
-          :title="title"
-          :visible.sync="addOwnerDialogVisible"
-          @close="close">
-    <div class="add-group-tree">
+    :title="title"
+    :visible.sync="addOwnerDialogVisible"
+    @close="close"
+  >
+    <div class="add-group-tree" v-if="visible">
       <tree-view
-              :showUpper="false"
-              :vueInstance="vueInstance"
-              :listGroup="listGroup"
-              :treeNodeCurrentChange="treeNodeCurrentChange"
+        :showUpper="false"
+        :vueInstance="vueInstance"
+        :listGroup="listGroup"
+        :treeNodeCurrentChange="treeNodeCurrentChange"
       ></tree-view>
     </div>
     <div slot="footer" class="dialog-footer">
@@ -23,7 +24,6 @@
   import treeView from '../../../component/higherOrder/tree/index';
   import { formatQuery, getTree, getTreeNode } from '../../../common/utils';
 
-  const api = require('../../../api/role');
   const groupApi = require('../../../api/group');
 
   const CHILD_NODE_CONFIG = {
@@ -93,7 +93,7 @@
         if (this.currentNodeParent) {
           this.currentNodeParent._id = this.currentNodeParent.id;
         }
-        console.log(this.currentNode);
+        console.log(this.currentNode, this.currentNodeParent);
         this.$emit('add-owner', this.currentNode, this.currentNodeParent);
         return true;
       },
