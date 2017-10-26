@@ -100,7 +100,7 @@
       },
       controller: {
         type: String,
-        default: 'inPoint,outPoint,gotoInPoint,prevFrame,play,nextFrame,gotoOutPoint,insert,camera'
+        default: 'markIn,markOut,gotoInPoint,prevFrame,play,nextFrame,gotoOutPoint,insert,camera'
       }
     },
     data() {
@@ -183,15 +183,19 @@
     },
     watch: {
       'videoInfo.INPOINT'(val) {
-        this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
-        this.inTime = val;
+        // this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
+        // this.inTime = val;
+        this.reset();
       },
       'videoInfo.OUTPOINT'(val) {
-        this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
-        this.outTime = val;
+        // this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
+        // this.outTime = val;
+        this.reset();
       },
       videoId(val) {
+        this.loading = true;
         this.reset();
+        this.videoSource = '';
         this.getStream(val);
         this.getSRTArr(val);
       },
@@ -211,11 +215,14 @@
       controller(val) {
         this.controllerList = this.getControllerList(val);
       },
+      currentTime(val) {
+        const progressBar = this.getProgressBarStyle();
+        const progressBarWidth = progressBar.width;
+        this.offset = (this.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
+      },
       inTime(val) {
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
-        // console.log('watch inTime this.video.duration', this.video.duration, progressBarWidth);
-        // console.log('watch inTime progressBarWidth', progressBarWidth);
         if (progressBarWidth > 0) {
           this.inPointOffset = (val - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 9;
           if (val <= this.outTime) {
@@ -228,7 +235,6 @@
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         if (progressBarWidth > 0) {
-          // console.log('outPointOffset', val, this.videoInfo.INPOINT);
           this.outPointOffset = (val - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 5;
           if (this.inTime <= val) {
             this.clipDuration = val - this.inTime;
@@ -244,10 +250,13 @@
       }
     },
     mounted() {
-      if (this.$route.params.objectId) {
-        this.getStream(this.$route.params.objectId);
-        this.getSRTArr(this.$route.params.objectId);
-        this.getDetail(this.$route.params.objectId);
+      const objectId = this.$route.params.objectId;
+      if (objectId) {
+        this.getStream(objectId);
+        this.getSRTArr(objectId);
+        this.getDetail(objectId);
+      } else {
+        this.loading = false;
       }
       this.video = this.$refs.video;
       this.video.addEventListener('waiting', () => {
@@ -260,8 +269,6 @@
         this.loading = false;
         this.video.currentTime = this.videoInfo.INPOINT;
         this.currentTime = this.video.currentTime;
-        // this.clipDuration = this.video.duration;
-        // this.outTime = this.video.duration;
         if (this.isActivePanel) {
           if (!this.duration) return;
           window.addEventListener('keyup', this.keyup);
@@ -334,6 +341,7 @@
         this.moveIndicatorTimer = null;
         this.moveIndicatorTimeId = null;
         this.updateCurrentTimeTimeId = null;
+        this.clipDuration = this.videoInfo.OUTPOINT - this.videoInfo.INPOINT;
       },
       keydown(e) {
         if (e.shiftKey) {
@@ -366,13 +374,13 @@
         const controllerArr = controller.split(',');
         const list = [];
         const controllerConfig = {
-          inPoint: {
+          markIn: {
             name: 'in-point',
             icon: 'icon-in-point',
             tooltip: '标记入点(I)',
             clickFn: this.markIn
           },
-          outPoint: {
+          markOut: {
             name: 'out-point',
             icon: 'icon-out-point',
             tooltip: '标记出点(O)',
@@ -449,9 +457,6 @@
         this.video.currentTime = this.inTime;
         this.currentTime = this.inTime;
         this.updateCurrentSRT();
-        const progressBar = this.getProgressBarStyle();
-        const progressBarWidth = progressBar.width;
-        this.offset = (this.video.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
       },
       updateCurrentSRT() {
         if (this.videoSRT.length === 0) return;
@@ -483,13 +488,8 @@
         this.video.currentTime = this.outTime;
         this.currentTime = this.outTime;
         this.updateCurrentSRT();
-        const progressBar = this.getProgressBarStyle();
-        const progressBarWidth = progressBar.width;
-        this.offset = (this.video.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
       },
       markIn() {
-        // console.log('this.video.currentTime', this.video.currentTime);
-        // console.log('this.video.duration', this.video.duration);
         if (this.video.currentTime <= this.videoInfo.OUTPOINT
           && this.video.currentTime >= this.videoInfo.OUTPOINT - 1 / this.fps) {
           // 如果currenttime距离结束时间不够一帧
@@ -537,7 +537,6 @@
             this.outTime = this.video.currentTime;
           }
         }
-        // console.log('outTime', this.outTime, this.video.currentTime);
         this.isShowInPoint = true;
         this.isShowOutPoint = true;
         if (this.outTime < this.inTime) {
@@ -550,8 +549,6 @@
           this.play();
           this.isPlaying = true;
           this.moveIndicatorTimer = setInterval(() => {
-            const progressBar = this.getProgressBarStyle();
-            const progressBarWidth = progressBar.width;
             this.currentTime = this.video.currentTime;
             if (this.videoSRT.length > 0) {
               if (this.videoSRT[this.videoSRTPosition].start >= this.currentTime - 1 / this.fps
@@ -568,7 +565,6 @@
               clearInterval(this.moveIndicatorTimer);
             }
 
-            this.offset = (this.video.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
           }, this.interval);
         } else if (this.isPlaying) {
           this.pause();
@@ -583,11 +579,7 @@
         if (this.video.currentTime < 1 / this.fps + this.videoInfo.INPOINT) return;
         this.video.currentTime -= 1 / this.fps;
         this.currentTime = this.video.currentTime;
-        // this.video.currentTime = this.currentTime;
         this.updateCurrentSRT();
-        const progressBar = this.getProgressBarStyle();
-        const progressBarWidth = progressBar.width;
-        this.offset = (this.video.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
       },
       gotoNextFrame() {
         if (this.isPlaying) {
@@ -596,11 +588,7 @@
         if (this.video.currentTime > this.videoInfo.OUTPOINT - 1 / this.fps) return;
         this.video.currentTime += 1 / this.fps;
         this.currentTime = this.video.currentTime;
-        // this.video.currentTime = this.currentTime;
         this.updateCurrentSRT();
-        const progressBar = this.getProgressBarStyle();
-        const progressBarWidth = progressBar.width;
-        this.offset = (this.video.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
       },
       play() {
         this.video.play();
@@ -638,7 +626,6 @@
         const x = e.clientX;
         const progressBar = this.getProgressBarStyle();
         const currentLeft = x - progressBar.left;
-        this.offset = currentLeft;
         this.video.currentTime = currentLeft / progressBar.width * this.duration + this.videoInfo.INPOINT;
         this.currentTime = this.video.currentTime;
         this.updateCurrentSRT();

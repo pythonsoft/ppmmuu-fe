@@ -66,7 +66,7 @@
     },
     methods: {
       formatTime(time = 0) {
-        return transformSecondsToStr(time, 'HH:mm:ss');
+        return transformSecondsToStr(time / 25, 'HH:mm:ss');
       },
       dblclickFolder() {
         this.nodeStatus = 'editing';
