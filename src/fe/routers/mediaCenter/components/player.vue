@@ -158,6 +158,7 @@
         }
       },
       streamInfo(val) {
+        // 视频的长度是由入出点决定的，该入出点由getStream接口返回
         this.INPOINT = val.INPOINT / this.fps;
         this.OUTPOINT = val.OUTPOINT / this.fps;
         this.reset();
