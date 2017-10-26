@@ -2,7 +2,7 @@
   <div class="playerWrap" :class="{'playerBigMode': isFullscreen || mode === 'big'}" ref="playerWrap" :style="isFullscreen ? {} : { height: `${height}px`, width: `${width}px` }">
     <div class="videoLoadingMask" v-if="loading"></div>
     <div class="videoBox">
-      <video v-on:contextmenu.prevent="contextMenuStop" :style="{display: 'block', width: '100%', height: '100%'}" ref="video" :src="url" crossorigin="anonymous"></video>
+      <video @contextmenu.prevent="contextMenuStop" :style="{display: 'block', width: '100%', height: '100%'}" ref="video" :src="url" crossorigin="anonymous"></video>
       <div v-show="currentVideoSRT" class="video-srt">
         <span class="video-srt-text">{{ currentVideoSRT }}</span>
       </div>
@@ -77,6 +77,8 @@
     },
     data() {
       return {
+        INPOINT: this.streamInfo.INPOINT / this.fps || 0,
+        OUTPOINT: this.streamInfo.OUTPOINT / this.fps || 0,
         loading: true,
         videoSRT: [],
         videoSRTPosition: 0,
@@ -87,7 +89,7 @@
         moveIndicatorTimeId: null,
         updateCurrentTimeTimeId: null,
         currentTime: 0,
-        duration: 0,
+        duration: (this.streamInfo.OUTPOINT - this.streamInfo.INPOINT) / this.fps,
         indicatorOffset: 0,
         playProgressPercent: 0,
         hoverProgressPercent: 0,
@@ -108,7 +110,7 @@
         return Math.floor(1000 / this.fps);
       },
       displayCurrentTime() {
-        return transformSecondsToStr(this.currentTime, 'HH:mm:ss');
+        return transformSecondsToStr(this.innerCurrentTime, 'HH:mm:ss');
       },
       displayDuration() {
         return transformSecondsToStr(this.duration, 'HH:mm:ss');
@@ -124,6 +126,10 @@
       },
       volumeSliderHandleStyle() {
         return { left: `${this.volumeSliderOffset}px` };
+      },
+      innerCurrentTime() {
+        return this.currentTime - this.INPOINT > this.OUTPOINT
+          ? this.OUTPOINT : this.currentTime - this.INPOINT;
       }
     },
     watch: {
@@ -152,14 +158,19 @@
         }
       },
       streamInfo(val) {
-        this.video.currentTime = val.INPOINT / 1000;
-        this.currentTime = this.video.currentTime;
+        // 视频的长度是由入出点决定的，该入出点由getStream接口返回
+        this.INPOINT = val.INPOINT / this.fps;
+        this.OUTPOINT = val.OUTPOINT / this.fps;
+        this.reset();
+        this.video.currentTime = val.INPOINT / this.fps;
+        // this.currentTime = this.video.currentTime;
+        // this.duration = (val.OUTPOINT - val.INPOINT) / this.fps;
         this.updateCurrentSRT();
       },
       currentTime(val) {
         const progressBarWidth = this.getProgressBarStyle().width;
-        this.indicatorOffset = val / this.video.duration * progressBarWidth;
-        this.playProgressPercent = val / this.video.duration;
+        this.indicatorOffset = (val - this.INPOINT) / this.duration * progressBarWidth;
+        this.playProgressPercent = (val - this.INPOINT) / this.duration;
       },
       isFullscreen(val) {
         if (val) {
@@ -175,8 +186,8 @@
         }
         setTimeout(() => {
           const progressBarWidth = this.getProgressBarStyle().width;
-          this.indicatorOffset = this.video.currentTime / this.video.duration * progressBarWidth;
-          this.playProgressPercent = this.video.currentTime / this.video.duration;
+          this.indicatorOffset = this.innerCurrentTime / this.duration * progressBarWidth;
+          this.playProgressPercent = this.innerCurrentTime / this.duration;
         }, 500);
       }
     },
@@ -184,18 +195,15 @@
       this.video = this.$refs.video;
       this.getSRTArr(this.videoId);
       this.video.addEventListener('waiting', () => {
-        // console.log('waiting');
         this.loading = true;
       });
       this.video.addEventListener('playing', () => {
-        // console.log('playing');
         this.loading = false;
       });
       this.video.addEventListener('loadedmetadata', () => {
-        // console.log('loadedmetadata');
         this.loading = false;
-        this.duration = this.video.duration;
-        this.video.currentTime = this.streamInfo.INPOINT / 1000;
+        // this.duration = this.video.duration;
+        this.video.currentTime = this.INPOINT;
         this.currentTime = this.video.currentTime;
         this.updateCurrentSRT();
       });
@@ -215,16 +223,18 @@
         return false;
       },
       reset() {
+        this.pause();
         this.videoSRT = [];
         this.videoSRTPosition = 0;
         this.currentVideoSRT = '';
         this.isPlaying = false;
+        clearInterval(this.moveIndicatorTimer);
         this.moveIndicatorTimer = null;
         this.progressBarHoverTimer = null;
         this.moveIndicatorTimeId = null;
         this.updateCurrentTimeTimeId = null;
-        this.currentTime = 0;
-        this.duration = 0;
+        this.currentTime = this.INPOINT || 0;
+        this.duration = this.OUTPOINT - this.INPOINT;
         this.indicatorOffset = 0;
         this.playProgressPercent = 0;
         this.hoverProgressPercent = 0;
@@ -304,7 +314,7 @@
           }
         }
 
-        if (this.currentTime === this.video.duration) {
+        if (this.currentTime <= this.OUTPOINT && this.currentTime + this.interval / 1000 >= this.OUTPOINT) {
           this.isPlaying = false;
           clearInterval(this.moveIndicatorTimer);
         }
@@ -324,9 +334,9 @@
 
         this.isShowHoverProgress = true;
         this.hoverProgressPercent = currentLeft / progressBar.width;
-        this.tooltipTime = currentLeft / progressBar.width * this.video.duration;
+        this.tooltipTime = currentLeft / progressBar.width * this.duration;
         if (this.tooltipTime < 0) this.tooltipTime = 0;
-        if (this.tooltipTime > this.video.duration) this.tooltipTime = this.video.duration;
+        if (this.tooltipTime > this.duration) this.tooltipTime = this.duration;
         this.tooltipText = transformSecondsToStr(this.tooltipTime, 'HH:mm:ss');
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 59;
@@ -352,7 +362,7 @@
         const currentLeft = x - progressBar.left;
         // this.indicatorOffset = currentLeft;
         // this.playProgressPercent = currentLeft / progressBar.width;
-        this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
+        this.video.currentTime = currentLeft / progressBar.width * this.duration + this.INPOINT;
         this.currentTime = this.video.currentTime;
         this.updateCurrentSRT();
       },
@@ -401,7 +411,7 @@
           } else if (x < progressBar.left) {
             currentLeft = 0;
           }
-          this.video.currentTime = currentLeft / progressBar.width * this.video.duration;
+          this.video.currentTime = currentLeft / progressBar.width * this.duration + this.INPOINT;
           this.currentTime = this.video.currentTime;
           this.updateCurrentSRT();
         }, this.interval);
