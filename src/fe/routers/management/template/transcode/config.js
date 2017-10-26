@@ -129,13 +129,37 @@ config.fields = [
     field: 'tsbitrate', type: 'input', text: 'ts流比特率', required: false, value: 'null'
   },
   {
-    field: 'watermarkFile', type: 'input', text: '水印', required: false, value: 'null'
+    field: 'watermarkFile', type: 'input', text: '水印地址', required: false, value: 'null'
   },
   {
-    field: 'leftmargin', type: 'input', text: '水印left边距', required: false, value: 'null'
+    field: 'isUsed',
+    type: 'select',
+    text: '是否启用水印',
+    required: true,
+    selected: '0',
+    options: [
+      { text: '不启用', value: '0', key: 'isUsed0' },
+      { text: '启用', value: '1', key: 'isUsed1' }
+    ]
   },
   {
-    field: 'topmargin', type: 'input', text: '水印top边距', required: false, value: 'null'
+    field: 'position',
+    type: 'select',
+    text: '水印位置',
+    required: true,
+    selected: '0',
+    options: [
+      { text: '左上角', value: '0', key: 'position0' },
+      { text: '右上角', value: '1', key: 'position1' },
+      { text: '左下角', value: '2', key: 'position2' },
+      { text: '右下角', value: '3', key: 'position3' }
+    ]
+  },
+  {
+    field: 'xmargin', type: 'input', text: '水印x边距', required: false, value: 'null'
+  },
+  {
+    field: 'ymargin', type: 'input', text: '水印y边距', required: false, value: 'null'
   },
   {
     field: 'enableaudio',
@@ -158,7 +182,8 @@ config.fields = [
     options: [
       { text: 'libfdk_aac', value: 'libfdk_aac', key: 'libfdk_aac' },
       { text: 'pcm_s16le', value: 'pcm_s16le', key: 'pcm_s16le' },
-      { text: 'mp2', value: 'mp2', key: 'mp2' }
+      { text: 'mp2', value: 'mp2', key: 'mp2' },
+      { text: 'libmp3lame', value: 'libmp3lame', key: 'libmp3lame' }
     ]
   },
   {
@@ -188,6 +213,17 @@ config.fields = [
     options: [
       { text: 'true', value: 'true', key: 'enableaudio1' },
       { text: 'false', value: 'false', key: 'enableaudio2' }
+    ]
+  },
+  {
+    field: 'intra',
+    type: 'select',
+    text: '是否全是I帧',
+    required: false,
+    selected: '0',
+    options: [
+      { text: 'true', value: '1', key: 'intra1' },
+      { text: 'false', value: '0', key: 'intra2' }
     ]
   },
   {
