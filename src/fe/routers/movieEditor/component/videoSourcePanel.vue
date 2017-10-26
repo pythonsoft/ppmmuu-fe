@@ -4,6 +4,7 @@
     @click="()=>{this.$emit('update:activePanel', 'sourcePanel')}">
     <div class="video-source-title">{{ `源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
+      <div class="videoSourceLoadingMask" v-if="loading"></div>
       <video v-on:contextmenu.prevent="contextMenuStop" :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }" crossorigin="anonymous"></video>
       <div v-show="currentVideoSRT" class="video-srt">
         <span class="video-srt-text">{{ currentVideoSRT }}</span>
@@ -137,7 +138,8 @@
           FILENAME: '',
           INPOINT: '',
           OUTPOINT: ''
-        }
+        },
+        loading: true
       };
     },
     computed: {
@@ -183,6 +185,7 @@
       },
       isActivePanel(val) {
         if (val) {
+          console.log('isActivePanel');
           if (!this.video.duration) return;
           window.addEventListener('keyup', this.keyup);
           window.addEventListener('keydown', this.keydown);
@@ -232,22 +235,31 @@
         this.getDetail(this.$route.params.objectId);
       }
       this.video = this.$refs.video;
+      this.video.addEventListener('waiting', () => {
+        console.log('waiting');
+        this.loading = true;
+      });
+      this.video.addEventListener('playing', () => {
+        console.log('playing');
+        this.loading = false;
+      });
       this.video.addEventListener('loadedmetadata', () => {
+        this.loading = false;
         this.clipDuration = this.video.duration;
         this.duration = this.video.duration;
         this.outTime = this.video.duration;
+        if (this.isActivePanel) {
+          if (!this.duration) return;
+          window.addEventListener('keyup', this.keyup);
+          window.addEventListener('keydown', this.keydown);
+        } else {
+          window.removeEventListener('keyup', this.keyup);
+          window.removeEventListener('keydown', this.keydown);
+        }
       });
       this.video.addEventListener('loadeddata', () => {
         this.inTimeScreenshot = this.createImage();
       });
-      if (this.isActivePanel) {
-        if (!this.video.duration) return;
-        window.addEventListener('keyup', this.keyup);
-        window.addEventListener('keydown', this.keydown);
-      } else {
-        window.removeEventListener('keyup', this.keyup);
-        window.removeEventListener('keydown', this.keydown);
-      }
     },
     beforeDestroy() {
       if (this.isPlaying) {
