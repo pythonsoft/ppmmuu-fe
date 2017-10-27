@@ -33,7 +33,8 @@
       <fj-tabs v-if="!isEmptyObject(item)" v-model="activeTabName" @tab-click="handleTabClick" class="media-video-panel-wrap">
         <fj-tab-pane label="条目信息" name="tab1">
           <div class="media-center-file-item">
-            <table class="media-center-table">
+            <template v-if="programEmpty">无</template>
+            <table class="media-center-table" v-else>
               <tr v-for="(info, key) in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
@@ -173,7 +174,8 @@
         shelfDialogVisible: false,
         shelfDialogBtnLoading: false,
         videoId: '',
-        shelfName: ''
+        shelfName: '',
+        programEmpty: false
       };
     },
     watch: {
@@ -216,10 +218,21 @@
       handleTabClick(tab) {
 
       },
+      isProgramEmpty(){
+        const program = this.program;
+        for(let key in program){
+          const info = program[key];
+          if(info.value){
+            return false;
+          }
+        }
+        return true;
+      },
       getDetail() {
         const me = this;
         api.getObject({ params: { objectid: this.item.id } }).then((res) => {
           me.program = res.data.result.detail.program;
+          me.programEmpty = me.isProgramEmpty();
           me.basic = res.data.result.basic;
           me.files = res.data.result.files;
           delete me.program.OBJECTID;

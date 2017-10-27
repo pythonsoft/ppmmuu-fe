@@ -3,7 +3,6 @@
     <div class="iconfont icon-phoenixtv subscribe-grid-image">
       <img class="subscribe-thumb" v-lazy="item.poster" >
       <div class="subscribe-list-item-overlay">
-        <span class="iconfont icon-play play-btn"></span>
         {{getDuration(item)}}
       </div>
     </div>
@@ -26,7 +25,6 @@
       <div class="iconfont icon-phoenixtv subscribe-list-item-thumb-wrap">
         <img class="subscribe-list-thumb" v-lazy="item.poster" >
         <div class="subscribe-list-item-overlay">
-          <span class="iconfont icon-play play-btn"></span>
           {{getDuration(item)}}
         </div>
       </div>

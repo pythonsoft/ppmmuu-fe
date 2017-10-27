@@ -612,4 +612,18 @@ utils.mergeRangeArray = function (intervals) {
   return result;
 };
 
+utils.uploadTranscodeTemplateWatermark = function uploadTranscodeTemplateWatermark(param, configs) {
+  return new Promise((resolve, reject) => {
+    config.post(`${config.defaults.jobApi}/upload`, param, configs).then((response) => {
+      const res = response.data;
+      if (res.status === '0') {
+        resolve(res);
+      }
+      reject(res.statusInfo.message);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+};
+
 module.exports = utils;
