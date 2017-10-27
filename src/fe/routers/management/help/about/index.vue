@@ -28,7 +28,10 @@
           <div class="about-system-item-title">
             当前版本1.5.3.0
             <div class="about-system-update-bar">
-              <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="upload">上传安装包</fj-button>
+              <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="handleClick">
+                上传安装包(.zip)
+              </fj-button>
+              <input ref="helpPackageUploadBtn" accept="application/zip" class="about-upload-input" @change="(event) => upload(event)" type="file">
             </div>
           </div>
           <div class="detail">
@@ -56,6 +59,8 @@
   import LayoutTwoRowTitle from '../../../../component/layout/twoRowTitle/index';
   import FjInput from "../../../../component/fjUI/packages/input/src/input.vue";
 
+  const api = require('../../../../api/help');
+
   export default {
     components: {
       FjInput,
@@ -72,9 +77,37 @@
     destroyed() {
     },
     methods: {
-      upload() {
-
+      handleClick() {
+        const fileBtnEl = this.$refs.helpPackageUploadBtn;
+        if(!this.isBtnLoading) {
+          fileBtnEl.click();
+        }
       },
+      upload(event) {
+        const me = this;
+        const file = event.target.files[0];
+
+        if (file.type !== 'application/zip') {
+          this.$message.error('文件zip类型!');
+          return false;
+        }
+
+        const config = {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        };
+        const param = new FormData(); // 创建form对象
+        param.append('file', file, file.name); // 通过append向form对象添加数据
+        me.isBtnLoading = true;
+
+        api.uploadPackage(param).then((res) => {
+          me.isBtnLoading = false;
+        }).catch((error) => {
+          me.isBtnLoading = false;
+          me.$message.error(error);
+        });
+
+        return true;
+      }
     }
-  };
+  }
 </script>

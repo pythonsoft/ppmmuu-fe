@@ -53,5 +53,10 @@
   float: right;
 }
 
+.about-upload-input {
+  position: absolute;
+  left: -9999px;
+}
+
 
 
