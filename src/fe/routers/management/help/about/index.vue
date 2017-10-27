@@ -28,7 +28,7 @@
           <div class="about-system-item-title">
             当前版本1.5.4.0
             <div class="about-system-update-bar">
-              <fj-button type="primary" size="mini" :loading="isBtnLoading">
+              <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="handleClick">
                 上传安装包(.zip)
               </fj-button>
               <input ref="helpPackageUploadBtn" accept="application/zip" class="about-upload-input" @change="(event) => upload(event)" type="file">
