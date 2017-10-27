@@ -26,9 +26,9 @@
         <div class="about-system-item">
           <div class="subtitle">ump系统</div>
           <div class="about-system-item-title">
-            当前版本1.5.3.0
+            当前版本1.5.4.0
             <div class="about-system-update-bar">
-              <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="handleClick">
+              <fj-button type="primary" size="mini" :loading="isBtnLoading">
                 上传安装包(.zip)
               </fj-button>
               <input ref="helpPackageUploadBtn" accept="application/zip" class="about-upload-input" @change="(event) => upload(event)" type="file">
@@ -37,15 +37,12 @@
           <div class="detail">
             <div class="detail-title">版本更新</div>
             <ul>
-              <li>*.管理--转码模板--添加水印参数</li>
-              <li>*.管理--转码模板--参数明确</li>
-              <li>*.媒体库--时长显示不一致</li>
-              <li>*.视频编辑器，右侧视频播放器的“截图”功能不能使用 </li>
-              <li>*.管理--转码模板--下接框触发事件出错修正 </li>
-              <li>*.管理--下载模板--添加新模板及变理模板时添加新内容“所属分组” </li>
-              <li>*.优化视频播放体验--视频播放缓冲时显示“视频加载中...” </li>
-              <li>*.媒体库--片断子类播放时没有时长 </li>
-              <li>*.媒体库--播放起始位置修正 </li>
+              <li>*.下载模板--分组不能删除</li>
+              <li>*.转码模板--添加水印设置</li>
+              <li>*.下载模板--转码脚本优化</li>
+              <li>*.条目信息如果没有内容显示无 </li>
+              <li>*.添加用户时，需要明显提显是什么原因失败 </li>
+              <li>*.订阅－非视频详情页的视频播放按钮去掉 </li>
             </ul>
           </div>
         </div>
