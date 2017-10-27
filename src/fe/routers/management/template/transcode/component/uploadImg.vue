@@ -19,7 +19,8 @@
   </div>
 </template>
 <script>
-  import { uploadTranscodeTemplateWatermark } from '../../../../../common/utils';
+  const api = require('../../../../../api/upload');
+  const templateApi =require('../../../../../api/template')
 
   export default {
     name: 'uploadImg',
@@ -35,7 +36,7 @@
     },
     data() {
       return {
-        path: this.imgPath,
+        path: '',
         isLoading: false,
         isHover: false
       };
@@ -46,7 +47,7 @@
     },
     watch: {
       imgPath(val) {
-        this.path = val;
+        this.path = templateApi.getWatermark(val);
       }
     },
     methods: {
@@ -83,7 +84,7 @@
         }; // 添加请求头
 
         this.isLoading = true;
-        uploadTranscodeTemplateWatermark(param, config)
+        api.uploadWatermark(param, config)
           .then((res) => {
             me.path = res.data;
             me.isLoading = false;
