@@ -6,8 +6,6 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 axios.defaults.baseURL = 'http://localhost:8080';
-//上传水印使用
-axios.defaults.jobApi = 'http://10.0.15.80:8080';
 // axios.defaults.baseURL = 'http://10.0.16.125:8080';
 
 // axios.defaults.streamURL = 'http://localhost:8080';
