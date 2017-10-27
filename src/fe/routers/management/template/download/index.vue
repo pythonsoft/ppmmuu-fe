@@ -89,7 +89,7 @@
         ></add-group>
 
         <edit-group
-          :info="nodeInfo"
+          :id="nodeInfo._id"
           :dialogVisible.sync="isShowEditGroupDialog"
           @edited="vueInstance.$emit('tree.listGroup')"
         ></edit-group>
@@ -270,7 +270,8 @@
             me.isDeleteBtnLoading = false;
             me.deleteDialogVisible = false;
             if (this.dialogTitle === '组') {
-              me.vueInstance.$emit('tree.removeNode', this.deleteGroupDialogId);
+              me.vueInstance.$emit('tree.removeNode', this.deleteDialogId);
+              me.isDeleteBtnLoading = false;
             } else {
               this.handleClickSearch();
             }

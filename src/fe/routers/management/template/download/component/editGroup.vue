@@ -7,6 +7,12 @@
       <fj-form-item :label="`请输入组名称`" prop="name">
         <fj-input v-model="formData.name" />
       </fj-form-item>
+      <fj-form-item label="删除保护">
+        <fj-radio-group v-model="formData.deleteDeny" custom-class="radio-group">
+          <fj-radio label="1">开启</fj-radio>
+          <fj-radio label="0">关闭</fj-radio>
+        </fj-radio-group>
+      </fj-form-item>
     </fj-form>
     <div slot="footer" class="dialog-footer">
       <fj-button @click="handleClose">取消</fj-button><!--
@@ -20,15 +26,17 @@
 
   export default {
     props: {
-      info: Object,
+      id: String,
       dialogVisible: Boolean
     },
     data() {
       return {
-        visible: this.dialogVisible,
+        visible: false,
         isBtnLoading: false,
         formData: {
-          name: ''
+          _id: '',
+          name: '',
+          deleteDeny: '1'
         },
         rules: {
           name: [
@@ -40,14 +48,27 @@
     watch: {
       dialogVisible(val) {
         this.visible = val;
+        this.getGroup();
       },
-      info(val) {
-        this.formData = Object.assign({}, val);
+      id(val) {
+        this.getGroup();
       }
     },
     methods: {
       handleClose() {
         this.$emit('update:dialogVisible', false);
+      },
+      getGroup(){
+        const me = this;
+        groupAPI.getGroup(formatQuery({groupId: me.id}, true))
+          .then(function(res){
+            me.formData._id = res.data._id;
+            me.formData.name = res.data.name;
+            me.formData.deleteDeny = res.data.deleteDeny;
+          })
+          .catch(function(error){
+            me.$message.error(error);
+          })
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -55,11 +76,13 @@
             const me = this;
             const postData = {};
             postData.name = this.formData.name;
-            postData.groupId = this.info._id;
+            postData.deleteDeny = this.formData.deleteDeny;
+            postData.groupId = this.formData._id;
             this.isBtnLoading = true;
             groupAPI.updateTemplateGroup(postData)
               .then((response) => {
                 me.formData.name = '';
+                me.formData.deleteDeny = '1';
                 me.$emit('edited');
                 me.$message.success('保存成功');
                 me.isBtnLoading = false;
@@ -75,3 +98,11 @@
     }
   };
 </script>
+<style>
+  .radio-group {
+    line-height: 36px;
+  }
+  .radio-group label {
+    margin-right: 34px;
+  }
+</style>
