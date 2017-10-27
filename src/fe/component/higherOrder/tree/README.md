@@ -3,8 +3,7 @@
 ### attributes
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |-------- |
-| nodeKey | 每个树节点的唯一标识属性 | string | - | id | ✅ |
-| treeDataBaseKey | 以原始数据中哪个属性做为key | string | - | _id | ✅ |
+| nodeKey | 每个树节点的唯一标识属性 | string | - | _id | ✅ |
 | title | 左上角文字内容 | string | — | 分组 | ✅ |
 | addBtnText | 右上按键的文字显示 | string | — | 添加组 | ✅ |
 | vueInstance | 用于消息传递的vue实例 | object | — | - | ✅ |
