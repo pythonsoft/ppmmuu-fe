@@ -49,7 +49,7 @@
 <script>
   import Vue from 'vue';
   import TreeNodeContent from './sourceTreeNode';
-  import TreeView from '../../../component/higherOrder/tree';
+  import TreeView from '../../../component/higherOrder/tree/_index';
   import ivideoAPI from '../../../api/ivideo';
 
   const TYPE_CONFIG = {
@@ -75,9 +75,9 @@
       };
     },
     methods: {
-      listGroup(treeNode, cb) {
-        if (treeNode.info) {
-          this.listSourceItem(treeNode.info._id, cb);
+      listGroup(id = '', cb) {
+        if (id) {
+          this.listSourceItem(id, cb);
         } else {
           ivideoAPI.init().then((res) => {
             const data = res.data;
@@ -94,21 +94,23 @@
         }
       },
       treeNodeCurrentChange(node) {
-        this.currentNodeId = node.id;
-        this.currentNodeInfo = node.info;
+        this.currentNodeId = node._id;
+        this.currentNodeInfo = node;
       },
       showDeleteNodeDialog() {
         if (!this.currentNodeId) return;
         this.deleteNodeDialogVisible = true;
       },
       cancelCreate(node) {
-        this.vueInstance.$emit('tree.removeNode', node.id);
+        this.vueInstance.$emit('tree.removeNode', node._id);
       },
       handleDeleteNode() {
         this.isDeleteBtnLoading = true;
         ivideoAPI.removeItem({ id: this.currentNodeId })
           .then((response) => {
             this.vueInstance.$emit('tree.removeNode', this.currentNodeId);
+            this.currentNodeId = '';
+            this.currentNodeInfo = {};
             this.$message.success('删除成功');
             this.isDeleteBtnLoading = false;
             this.deleteNodeDialogVisible = false;
@@ -146,11 +148,12 @@
       updateCurrentSource(item) {
         this.$emit('updateCurrentSource', item);
       },
-      createDirectory(reqData) {
+      createDirectory(reqData, removeNodeId) {
         ivideoAPI.createDirectory(reqData)
           .then((response) => {
-            this.vueInstance.$emit('tree.listGroup');
-            // this.vueInstance.$emit('tree.removeNode', this.currentNodeId);
+            const id = reqData.parentId === this._id ? '' : reqData.parentId;
+            this.vueInstance.$emit('tree.removeNode', removeNodeId);
+            this.vueInstance.$emit('tree.listGroup', id);
             // this.$message.success('删除成功');
           })
           .catch((error) => {
@@ -160,7 +163,7 @@
       updateDirectory(reqData) {
         ivideoAPI.updateItem(reqData)
           .then((response) => {
-            this.vueInstance.$emit('tree.listGroup');
+            this.vueInstance.$emit('tree.updateNode', reqData.id, { name: reqData.name });
           })
           .catch((error) => {
             this.$message.error(error);
@@ -171,9 +174,10 @@
           _id: `new${new Date().getTime()}`,
           name: 'new',
           type: 'new',
-          isFolder: true
+          isFolder: true,
+          parentId: this._id
         };
-        this.vueInstance.$emit('tree.insertNode', this.currentNodeId || this._id, [node]);
+        this.vueInstance.$emit('tree.insertNode', this.currentNodeId, node);
       }
     },
     created() {

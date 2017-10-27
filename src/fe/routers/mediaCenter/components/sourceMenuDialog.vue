@@ -16,7 +16,7 @@
 </template>
 <script>
   import Vue from 'vue';
-  import TreeView from '../../../component/higherOrder/tree';
+  import TreeView from '../../../component/higherOrder/tree/_index';
   import ivideoAPI from '../../../api/ivideo';
 
   export default {
@@ -36,9 +36,9 @@
       });
     },
     methods: {
-      listGroup(treeNode, cb) {
-        if (treeNode.info) {
-          this.listSourceItem(treeNode.info._id, cb);
+      listGroup(id = '', cb) {
+        if (id) {
+          this.listSourceItem(id, cb);
         } else {
           ivideoAPI.init().then((res) => {
             const data = res.data;
@@ -62,7 +62,7 @@
         });
       },
       treeNodeCurrentChange(node) {
-        this.currentNodeId = node.id;
+        this.currentNodeId = node._id;
       },
       submit() {
         this.$emit('addto-menu', { parentId: this.currentNodeId });

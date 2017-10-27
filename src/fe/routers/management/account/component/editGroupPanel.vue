@@ -164,6 +164,7 @@
               .then((res) => {
                 this.$message.success('保存成功');
                 this.isBtnLoading = false;
+                this.$emit('update', { name: this.formData.name });
                 this.cancel();
               }).catch((error) => {
                 this.isBtnLoading = false;

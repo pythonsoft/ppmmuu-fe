@@ -28,6 +28,7 @@
         v-if="viewRouter === 'propertyView'"
         :selectedNodeInfo="selectedNodeInfo"
         @cancel="homeView"
+        @update="(newInfo)=>{vueInstance.$emit('tree.updateNode', selectedNodeInfo._id, newInfo)}"
       ></engine-property-view>
 
       <service-list-view
@@ -83,7 +84,7 @@
   import Vue from 'vue';
 
   import layoutTwoColumn from '../../../component/layout/twoColumn/index';
-  import treeView from '../../../component/higherOrder/tree/index';
+  import treeView from '../../../component/higherOrder/tree/_index';
 
   import dialogView from './dialog';
   import engineListView from './engineList';
@@ -206,8 +207,9 @@
           this.selectedNodeInfo = node;
           this.visible = true;
           this.actionName = command;
-          this.vueInstance.$emit('tree.listGroup');
+          this.vueInstance.$emit('tree.listGroup', node._id);
         } else {
+          this.selectedNodeInfo = node;
           this.viewRouter = command;
         }
       },
@@ -227,11 +229,11 @@
         this.processSlideDialogVisible = flag;
       },
 
-      listGroup(treeNode, cb) {
+      listGroup(id = '', cb) {
         const me = this;
 
         const param = {
-          parentId: treeNode.id || '',
+          parentId: id,
           page: 1,
           pageSize: 200,
           fields: '',
