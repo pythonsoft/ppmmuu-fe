@@ -48,7 +48,8 @@
     },
     created() {
       if (this.type !== 'add') {
-        this.formData = Object.assign({}, this.templateInfo);
+        this.initParam();
+        this.formData = Object.assign({}, this.formData, this.templateInfo);
       }else{
         this.initParam();
       }
