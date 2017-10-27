@@ -26,7 +26,7 @@
         <div class="about-system-item">
           <div class="subtitle">ump系统</div>
           <div class="about-system-item-title">
-            当前版本1.5.1.0
+            当前版本1.5.3.0
             <div class="about-system-update-bar">
               <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="upload">上传安装包</fj-button>
             </div>
@@ -34,10 +34,15 @@
           <div class="detail">
             <div class="detail-title">版本更新</div>
             <ul>
-              <li>*.视频播放路径变更</li>
-              <li>*.媒体库－从其他页面跳转到媒体库页面时没有上架按钮，需要重新刷新页面才出现上架按钮 。</li>
-              <li>*.订阅－视频详情页条目信息改为“节目简介”，字段信息顺序调整。</li>
-              <li>*.媒体库--首页及检索结果页默认使用发布时间排倒序。</li>
+              <li>*.管理--转码模板--添加水印参数</li>
+              <li>*.管理--转码模板--参数明确</li>
+              <li>*.媒体库--时长显示不一致</li>
+              <li>*.视频编辑器，右侧视频播放器的“截图”功能不能使用 </li>
+              <li>*.管理--转码模板--下接框触发事件出错修正 </li>
+              <li>*.管理--下载模板--添加新模板及变理模板时添加新内容“所属分组” </li>
+              <li>*.优化视频播放体验--视频播放缓冲时显示“视频加载中...” </li>
+              <li>*.媒体库--片断子类播放时没有时长 </li>
+              <li>*.媒体库--播放起始位置修正 </li>
             </ul>
           </div>
         </div>

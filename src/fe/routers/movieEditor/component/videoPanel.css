@@ -1,34 +1,3 @@
-.media-browser-header {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  left: 20px;
-  height: 24px;
-}
-.media-browser-wrap .dialog-content {
-  font-size: 14px;
-}
-.media-browser-content {
-  position: absolute;
-  top: 34px;
-  right: 10px;
-  left: 20px;
-  bottom: 0;
-  overflow: auto;
-}
-.media-browser-title {
-  float: left;
-  font-size: 12px;
-  font-weight: bold;
-  color: #2A3E52;
-  line-height: 24px;
-}
-.dark .media-browser-title {
-  color: #CED9E5;
-}
-.media-browser-controller-wrap {
-  float: right;
-}
 .video-source-wrap,
 .media-browser-wrap,
 .workspace-panel-wrap {
@@ -61,6 +30,28 @@
   right: 20px;
   left: 20px;
   bottom: 98px;
+}
+.videoSourceLoadingMask {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+}
+.videoSourceLoadingMask:before {
+  content: "\e69a";
+  display: inline-block;
+  font-family:"iconfont" !important;
+  font-size:40px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #ddd;
+  animation: rotate 1s linear infinite;
 }
 .video-source-bottom {
   position: absolute;
