@@ -15,7 +15,7 @@
           <template v-else>
             <div class="template-transcode-watermark" v-if="item.field==='watermarkFile'">
               <upload-img
-                      :uploadApi="uploadApi"
+                      :maxSize="4"
                       :imgPath="formData[item.field]"
                       @img-change="imgChange"></upload-img>
             </div>
