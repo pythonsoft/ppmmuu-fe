@@ -59,3 +59,10 @@
   color: #38B1EB;
   cursor: default;
 }
+
+.template-transcode-watermark{
+  margin-top: 20px;
+  padding-top: 10px;
+  height: 160px;
+}
+

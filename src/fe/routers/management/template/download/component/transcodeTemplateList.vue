@@ -8,6 +8,7 @@
       <fj-table :data="data" @selection-change="selectedTableSelectionChange">
         <fj-table-column type="selection" width="20"></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="code" label="模板编码"></fj-table-column>
       </fj-table>
     </div>
     <fj-dialog
@@ -18,6 +19,7 @@
         <fj-table :data="tableData" @selection-change="handleSelectionChange">
           <fj-table-column type="selection" width="20"></fj-table-column>
           <fj-table-column prop="name" label="名称"></fj-table-column>
+          <fj-table-column prop="code" label="模板编码"></fj-table-column>
         </fj-table>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -59,7 +61,7 @@
         };
         templateAPI.listTemplate({ params: param }, this).then((res) => {
           this.tableData = res.data.docs.map(item => {
-            return { _id: item.id, name: item.templateName };
+            return { _id: item.id, name: item.templateName, code: item.templateCode };
           });
         }).catch((error) => {
           this.$message.error(error);

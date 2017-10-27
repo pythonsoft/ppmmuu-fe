@@ -26,10 +26,8 @@
           <div class="title">4、示例</div>
           <pre>
       if(fileInfo.ext === '.mxf') {
-            const keys = Object.keys(transcodeTemplates);
-            result = keys.length ? keys[0] : '';
+            result = transcodeTemplates.Transcode_mxf.id;
           }
-
           </pre>
         </li>
       </ul>
@@ -50,7 +48,7 @@
         display: false,
         tableData: [
           { name: 'downloadTemplate', description: '当前下载模板的信息' },
-          { name: 'transcodeTemplates', description: '当前转码模板信息，如：transcodeTemplates.转码模板ID.属性' },
+          { name: 'transcodeTemplates', description: '当前转码模板信息，如：transcodeTemplates.转码模板编码.属性' },
           { name: 'fileInfo', description: '文件信息，{ ext: "后缀", name: "文件名" }，如：fileInfo.ext' },
         ]
       };

@@ -13,7 +13,13 @@
             </fj-select>
           </template>
           <template v-else>
-            <fj-input v-model="formData[item.field]"></fj-input>
+            <div class="template-transcode-watermark" v-if="item.field==='watermarkFile'">
+              <upload-img
+                      :uploadApi="uploadApi"
+                      :imgPath="formData[item.field]"
+                      @img-change="imgChange"></upload-img>
+            </div>
+            <fj-input v-model="formData[item.field]" v-else></fj-input>
           </template>
         </fj-form-item>
       </template>
@@ -26,6 +32,7 @@
 </template>
 <script>
   import '../index.css';
+  import UploadImg from './uploadImg';
 
   const api = require('../../../../../api/job');
   const config = require('../config');
@@ -35,6 +42,9 @@
     props: {
       templateInfo: Object,
       type: String
+    },
+    components: {
+      'upload-img': UploadImg
     },
     created() {
       if (this.type !== 'add') {
@@ -102,6 +112,12 @@
 
         return false;
       },
+      imgChange(cover) {
+        this.formData['watermarkFile'] = cover;
+      },
+      uploadApi() {
+
+      }
     }
   };
 </script>
