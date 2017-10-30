@@ -13,7 +13,7 @@ document.addEventListener('mouseup', (e) => {
 
 export default {
   bind(el, binding, vnode) {
-    const id = nodeList.push(el) - 1;
+    const id = nodeList.push(el) - 1 + new Date().getTime();
     const documentHandler = function (mouseup, mousedown) {
       if (!vnode.context || el.contains(mouseup.target)) return;
       if (binding.expression && el[ctx].methodName && vnode.context[el[ctx].methodName]) {

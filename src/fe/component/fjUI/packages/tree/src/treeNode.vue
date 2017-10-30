@@ -30,6 +30,7 @@
       <fj-tree-node
         v-for="(item, index) in node.children"
         v-if="item.name"
+        :autoExpand="autoExpand"
         :node-key="nodeKey"
         :default-expanded-key="defaultExpandedKey"
         :node-style="nodeStyle"
