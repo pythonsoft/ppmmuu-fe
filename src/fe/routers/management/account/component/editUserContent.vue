@@ -228,11 +228,11 @@
       addOwner(row, parentNode) {
         if (parentNode) {
           this.groupName = `${parentNode.name} / ${row.name}`;
-          this.formData.teamId = row.info._id;
-          this.formData.departmentId = parentNode.info._id;
+          this.formData.teamId = row._id;
+          this.formData.departmentId = parentNode._id;
         } else {
           this.groupName = row.name;
-          this.formData.teamId = row.info._id;
+          this.formData.teamId = row._id;
           this.formData.departmentId = '';
         }
         this.addGroupDialogVisible = false;

@@ -156,7 +156,7 @@
           name: '',
           belong: '',
           area: '',
-          groupId: me.selectedNodeInfo.id,
+          groupId: me.selectedNodeInfo && me.selectedNodeInfo._id || '',
           isVirtual: '0', // 0||1
           isTest: '0', // 0||1
           ip: '',
@@ -207,7 +207,7 @@
             me.showErrorInfo(error);
           });
         } else {
-          me.formData.groupId = me.selectedNodeInfo.id;
+          me.formData.groupId = me.selectedNodeInfo && me.selectedNodeInfo._id || '';
           api.addEngine(me.formData).then((res) => {
             me.$message.success('添加引擎成功');
             me.confirmFn && me.confirmFn(res.data);

@@ -2,15 +2,15 @@
   <div class="clearfix" style="height: 100%;">
     <div class="left-tree">
       <tree-view
-              title="分组结构"
-              addBtnText="添加分组"
-              :vue-instance="vueInstance"
-              :menus="dropMenus"
-              menu-width="90px"
-              :exec-command="execCommand"
-              :list-group="handleTreeNodeClick"
-              :btn-click="btnClick"
-              :tree-node-current-change="treeNodeCurrentChange"
+        title="分组结构"
+        addBtnText="添加分组"
+        :vue-instance="vueInstance"
+        :menus="dropMenus"
+        menu-width="90px"
+        :exec-command="execCommand"
+        :list-group="handleTreeNodeClick"
+        :btn-click="btnClick"
+        :tree-node-current-change="treeNodeCurrentChange"
       ></tree-view>
     </div>
     <div class="right-list">
@@ -80,16 +80,14 @@
 
         </fj-dialog>
         <add-group
-                :parentId="addGroupDialogParentId"
-                :dialogVisible.sync="isShowAddGroupDialog"
-                @added="vueInstance.$emit('tree.listGroup')">
-
+          :parentId="addGroupDialogParentId"
+          :dialogVisible.sync="isShowAddGroupDialog"
+          @added="vueInstance.$emit('tree.listGroup', addGroupDialogParentId)">
         </add-group>
         <edit-group
-                :info="nodeInfo"
-                :dialogVisible.sync="isShowEditGroupDialog"
-                @edited="vueInstance.$emit('tree.listGroup')">
-
+          :info="nodeInfo"
+          :dialogVisible.sync="isShowEditGroupDialog"
+          @edited="(newInfo)=>{vueInstance.$emit('tree.updateNode', nodeInfo._id, newInfo)}">
         </edit-group>
       </four-row-layout-right-content>
     </div>
@@ -99,9 +97,8 @@
   import Vue from 'vue';
   import { formatQuery, getTree } from '../../../common/utils';
   import TwoRowTree from '../../../component/layout/twoRowTree/index';
-  import TreeView from '../../../component/higherOrder/tree';
+  import TreeView from '../../../component/higherOrder/tree/_index';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
-  import TreeNodeContent from './treeNodeContent';
   import addGroup from './component/addGroupDialog';
   import editGroup from './component/editGroup';
 
@@ -113,7 +110,6 @@
     components: {
       'two-row-tree': TwoRowTree,
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'tree-node-content': TreeNodeContent,
       'add-group': addGroup,
       'edit-group': editGroup,
       'tree-view': TreeView
@@ -174,15 +170,28 @@
 
       execCommand(command, node) {
         const title = '组织';
+        // switch (command) {
+        //   case 'delete':
+        //     this.handleOpenDeleteDialog(node.info.id);
+        //     break;
+        //   case 'new':
+        //     this.handleOpenAddDialog(node.info.id);
+        //     break;
+        //   case 'edit':
+        //     this.handleShowEditDialog(node.info);
+        //     break;
+        //   default:
+        //     break;
+        // }
         switch (command) {
           case 'delete':
-            this.handleOpenDeleteDialog(node.info.id);
+            this.handleOpenDeleteDialog(node.id);
             break;
           case 'new':
-            this.handleOpenAddDialog(node.info.id);
+            this.handleOpenAddDialog(node.id);
             break;
           case 'edit':
-            this.handleShowEditDialog(node.info);
+            this.handleShowEditDialog(node);
             break;
           default:
             break;
@@ -225,7 +234,7 @@
             me.isDeleteBtnLoading = false;
             me.deleteDialogVisible = false;
             if (this.dialogTitle === '组') {
-              me.vueInstance.$emit('tree.removeNode', this.deleteGroupDialogId);
+              me.vueInstance.$emit('tree.removeNode', _id);
             } else {
               this.handleClickSearch();
             }
@@ -245,14 +254,15 @@
         this.nodeInfo = info;
       },
 
-      handleTreeNodeClick(node, cb) {
+      handleTreeNodeClick(id = '', cb) {
         const me = this;
         const query = {};
-        if (node === undefined) {
-          query.parent = '';
-        } else {
-          query.parent = node.info ? node.info.id : '';
-        }
+        // if (node === undefined) {
+        //   query.parent = '';
+        // } else {
+        //   query.parent = node.info ? node.info.id : '';
+        // }
+        query.parent = id;
         me.groupId = query.parent;
         me.clickNodeSearch = true;
         apiConfig.getListGroup(formatQuery(query, true))
@@ -262,16 +272,16 @@
           .catch((err) => {
             me.showErrorInfo(err);
           });
-        if (node !== undefined) {
-          me.currentNode = node;
-          me.currentPage = 1;
-          const searchObj = {
-            page: me.currentPage,
-            pageSize: me.pageSize,
-            groupId: node.id
-          };
-          me.getListConfig(searchObj);
-        }
+        // if (node !== undefined) {
+        //   me.currentNode = node;
+        //   me.currentPage = 1;
+        //   const searchObj = {
+        //     page: me.currentPage,
+        //     pageSize: me.pageSize,
+        //     groupId: node.id
+        //   };
+        //   me.getListConfig(searchObj);
+        // }
       },
 
       getListConfig(searchObj) {
@@ -406,7 +416,7 @@
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetSlideDialog();
-              me.handleTreeNodeClick(me.currentNode);
+              me.handleTreeNodeClick(me.currentNode._id);
             })
             .catch((err) => {
               me.showErrorInfo(err);
@@ -421,7 +431,7 @@
             .then((res) => {
               me.showSuccessInfo(`${message}成功`);
               me.resetSlideDialog();
-              me.handleTreeNodeClick(me.currentNode);
+              me.handleTreeNodeClick(me.currentNode._id);
             })
             .catch((err) => {
               me.showErrorInfo(err);

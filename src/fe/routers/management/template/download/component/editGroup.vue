@@ -81,6 +81,7 @@
             this.isBtnLoading = true;
             groupAPI.updateTemplateGroup(postData)
               .then((response) => {
+                me.$emit('edited', { name: me.formData.name });
                 me.formData.name = '';
                 me.formData.deleteDeny = '1';
                 me.$emit('edited');

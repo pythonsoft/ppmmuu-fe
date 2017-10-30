@@ -205,7 +205,7 @@
 
         const param = {
           keyword: me.keyword,
-          groupId: me.selectedNodeInfo.id || '',
+          groupId: me.selectedNodeInfo._id || '',
           page: me.page,
           pageSize: me.pageSize
         };

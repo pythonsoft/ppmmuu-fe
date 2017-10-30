@@ -30,6 +30,7 @@
       <fj-tree-node
         v-for="(item, index) in node.children"
         v-if="item.name"
+        :autoExpand="autoExpand"
         :node-key="nodeKey"
         :default-expanded-key="defaultExpandedKey"
         :node-style="nodeStyle"
@@ -76,7 +77,8 @@
     },
     computed: {
       isFolder() {
-        if (this.node.info && this.node.info.isFolder) return true;
+        if (this.node && this.node.isFolder) return true;
+        // if (this.node.info && this.node.info.isFolder) return true;
         return this.node.children && this.node.children.length > 0;
       },
       isCurrentNode() {

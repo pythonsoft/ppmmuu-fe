@@ -21,7 +21,8 @@
         :name="editPanelName"
         :type="editPanelType"
         :data="groupDetail"
-        @cancel="mainContent = 'default'"></edit-group-panel>
+        @cancel="mainContent = 'default'"
+        @update="(newInfo)=>{vueInstance.$emit('tree.updateNode', companyId, newInfo)}"></edit-group-panel>
       <permission-panel
         v-show="mainContent === 'permissionPanel'"
         :id="permissionPanelId"
@@ -39,7 +40,7 @@
       :title="addGroupDialogTitle"
       :parentId="addGroupDialogParentId"
       :dialogVisible.sync="isShowAddGroupDialog"
-      @added="vueInstance.$emit('tree.listGroup')"></add-group-dialog>
+      @added="vueInstance.$emit('tree.listGroup', addGroupDialogParentId)"></add-group-dialog>
     <fj-dialog
       :title="`删除${deleteGroupDialogTitle}`"
       :visible.sync="deleteGroupDialogVisible">
@@ -57,7 +58,7 @@
 <script>
   import Vue from 'vue';
   import AddGroupDialog from './component/addGroupDialog';
-  import TreeView from '../../../component/higherOrder/tree';
+  import TreeView from '../../../component/higherOrder/tree/_index';
   import EditGroupPanel from './component/editGroupPanel';
   import PermissionPanel from './component/permissionPanel';
   import AccountList from './component/accountList';
@@ -98,37 +99,60 @@
     },
     methods: {
       execCommand(command, node) {
-        const childType = this.APPENDCHILD_CONFIG[node.info.type];
-        let title = this.TYPE_CONFIG[node.info.type];
+        const childType = this.APPENDCHILD_CONFIG[node.type];
+        let title = this.TYPE_CONFIG[node.type];
         switch (command) {
           case 'delete':
-            this.handleOpenDeleteDialog(title, node.info._id);
+            this.handleOpenDeleteDialog(title, node._id);
             break;
           case 'newDepartment':
             title = this.TYPE_CONFIG[this.APPENDCHILD_CONFIG[0]];
-            this.handleOpenAddDialog(this.APPENDCHILD_CONFIG[0], title, node.info._id);
+            this.handleOpenAddDialog(this.APPENDCHILD_CONFIG[0], title, node._id);
             break;
           case 'new':
             title = this.TYPE_CONFIG[childType];
-            this.handleOpenAddDialog(childType, title, node.info._id);
+            this.handleOpenAddDialog(childType, title, node._id);
             break;
           case 'edit':
-            this.handleShowEditPanel(node.info);
+            this.handleShowEditPanel(node);
             break;
           case 'permission':
-            this.handleShowPermissionPanel(node.info);
+            this.handleShowPermissionPanel(node);
             break;
           default:
             break;
         }
+        // const childType = this.APPENDCHILD_CONFIG[node.info.type];
+        // let title = this.TYPE_CONFIG[node.info.type];
+        // switch (command) {
+        //   case 'delete':
+        //     this.handleOpenDeleteDialog(title, node.info._id);
+        //     break;
+        //   case 'newDepartment':
+        //     title = this.TYPE_CONFIG[this.APPENDCHILD_CONFIG[0]];
+        //     this.handleOpenAddDialog(this.APPENDCHILD_CONFIG[0], title, node.info._id);
+        //     break;
+        //   case 'new':
+        //     title = this.TYPE_CONFIG[childType];
+        //     this.handleOpenAddDialog(childType, title, node.info._id);
+        //     break;
+        //   case 'edit':
+        //     this.handleShowEditPanel(node.info);
+        //     break;
+        //   case 'permission':
+        //     this.handleShowPermissionPanel(node.info);
+        //     break;
+        //   default:
+        //     break;
+        // }
       },
-      listGroup(treeNode, cb) {
+      listGroup(id = '', cb) {
         const requestData = {
-          parentId: ''
+          parentId: id
         };
-        if (treeNode.info) {
-          requestData.parentId = treeNode.info._id;
-        }
+        // if (treeNode.info) {
+        //   requestData.parentId = treeNode.info._id;
+        // }
 
         groupAPI.getGroupList({ params: requestData })
           .then((response) => {
@@ -141,10 +165,15 @@
         this.handleOpenAddDialog('0', '公司', '');
       },
       treeNodeCurrentChange(treeNode) {
+        // this.mainContent = 'default';
+        // this.selectedNode = treeNode.info;
+        // if (treeNode.info.type === GROUP_CONFIG.company.type) {
+        //   this.companyId = treeNode.info._id;
+        // }
         this.mainContent = 'default';
-        this.selectedNode = treeNode.info;
-        if (treeNode.info.type === GROUP_CONFIG.company.type) {
-          this.companyId = treeNode.info._id;
+        this.selectedNode = treeNode;
+        if (treeNode.type === GROUP_CONFIG.company.type) {
+          this.companyId = treeNode._id;
         }
       },
       handleOpenAddDialog(type, title, parentId = '') {
@@ -178,7 +207,20 @@
         this.permissionPanelType = node.type;
         this.permissionPanelId = node._id;
         this.permissionPanelParentIds = [];
-        this.vueInstance.$emit('tree.getParentsId', node._id, (ids) => {
+        this.vueInstance.$emit('tree.getParents', node._id, (nodes) => {
+          if (nodes.length === 0) {
+            this.permissionPanelParentIds = [];
+            return;
+          }
+          const ids = [];
+          let type = '';
+          // 过滤父节点，使得部门只取最靠近的一个
+          nodes.forEach(node => {
+            if (node.type !== type) {
+              ids.push(node._id);
+              type = node.type;
+            }
+          });
           this.permissionPanelParentIds = ids;
         });
         // this.getParentIds(this.permissionPanelParentIds, node._id, this.treeData);

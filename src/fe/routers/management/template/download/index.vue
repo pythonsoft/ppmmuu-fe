@@ -60,7 +60,7 @@
           :templateInfo="templateInfo"
           :visible.sync="dialogDisplay"
           :type="table.type"
-          :groupId="currentNode.id || ''"
+          :groupId="currentNode._id || ''"
           @listTemplate="handleClickSearch"
         ></dialog-view>
 
@@ -85,13 +85,13 @@
         <add-group
           :parentId="addGroupDialogParentId"
           :dialogVisible.sync="isShowAddGroupDialog"
-          @added="vueInstance.$emit('tree.listGroup')"
+          @added="vueInstance.$emit('tree.listGroup', addGroupDialogParentId)"
         ></add-group>
 
         <edit-group
           :id="nodeInfo._id"
           :dialogVisible.sync="isShowEditGroupDialog"
-          @edited="vueInstance.$emit('tree.listGroup')"
+          @edited="(newInfo)=>{vueInstance.$emit('tree.updateNode', nodeInfo._id, newInfo)}"
         ></edit-group>
 
       </layout-four-row>
@@ -102,7 +102,7 @@
   import './index.css';
   import Vue from 'vue';
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
-  import TreeView from '../../../../component/higherOrder/tree';
+  import TreeView from '../../../../component/higherOrder/tree/_index';
   import dialog from './dialog';
   import utils from '../../../../common/utils';
   import { formatQuery } from '../../../../common/utils';
@@ -171,19 +171,19 @@
     destroyed() {
     },
     methods: {
-      handleTreeNodeClick(node, cb) {
+      handleTreeNodeClick(id = '', cb) {
         const me = this;
         const query = {};
         query.isIncludeChild = '1';
-        if (node === undefined) {
-          query.parentId = '';
-        } else {
-          if (node.info && (node.info._id !== 'all')) {
-            query.parentId = node.info._id;
+        // if (node === undefined) {
+        //   query.parentId = '';
+        // } else {
+          if (id !== 'all') {
+            query.parentId = id;
           } else {
             query.parentId = '';
           }
-        }
+        // }
         me.groupId = query.parentId;
         me.clickNodeSearch = true;
         api.listTemplateGroup(formatQuery(query, true))
@@ -193,31 +193,31 @@
           .catch((err) => {
             me.showErrorInfo(err);
           });
-        if (node !== undefined) {
-          me.currentNode = node;
-          me.currentPage = 1;
-          const searchObj = {
-            page: me.currentPage,
-            pageSize: me.pageSize,
-            groupId: node.id === 'all' ? '' : node.id
-          };
-          me.listTemplate(searchObj);
-        }
+        // if (node !== undefined) {
+        //   me.currentNode = node;
+        //   me.currentPage = 1;
+        //   const searchObj = {
+        //     page: me.currentPage,
+        //     pageSize: me.pageSize,
+        //     groupId: node.id === 'all' ? '' : node.id
+        //   };
+        //   me.listTemplate(searchObj);
+        // }
       },
       execCommand(command, node) {
         const title = '组织';
         switch (command) {
           case 'delete':
-            this.handleOpenDeleteDialog(node.info._id);
+            this.handleOpenDeleteDialog(node._id);
             break;
           case 'new':
-            this.handleOpenAddDialog(node.info._id);
+            this.handleOpenAddDialog(node._id);
             break;
           case 'edit':
-            this.handleShowEditDialog(node.info);
+            this.handleShowEditDialog(node);
             break;
           case 'permission':
-            this.handleShowPermissionPanel(node.info);
+            this.handleShowPermissionPanel(node);
             break;
           default:
             break;
@@ -233,7 +233,7 @@
         const searchObj = {
           page: me.currentPage,
           pageSize: me.pageSize,
-          groupId: treeNode.id === 'all' ? '' : treeNode.id
+          groupId: treeNode._id === 'all' ? '' : treeNode._id
         };
         me.listTemplate(searchObj);
       },
@@ -302,7 +302,7 @@
         const param = {
           page: this.page,
           pageSize: this.pageSize,
-          groupId: (this.currentNode.id && this.currentNode.id !== 'all') ? this.currentNode.id : ''
+          groupId: (this.currentNode._id && this.currentNode._id !== 'all') ? this.currentNode._id : ''
         };
         this.listTemplate(param);
       },

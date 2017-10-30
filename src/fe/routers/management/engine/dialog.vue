@@ -107,7 +107,7 @@
         }
 
         api.addGroup({
-          parentId: me.selectedNodeInfo.id || '',
+          parentId: me.selectedNodeInfo && me.selectedNodeInfo._id || '',
           name: name
         }, me).then((res) => {
           me.$message.success('成功添加');
@@ -123,11 +123,11 @@
       deleteGroupAPI(cb) {
         const me = this;
 
-        if (!me.selectedNodeInfo || !me.selectedNodeInfo.id) {
+        if (!me.selectedNodeInfo || !me.selectedNodeInfo._id) {
           me.showErrorInfo('当前没有可以删除的组');
           return false;
         }
-        const id = me.selectedNodeInfo.id;
+        const id = me.selectedNodeInfo && me.selectedNodeInfo._id;
         api.removeGroup({ groupId: id }, me).then(() => {
           me.vueInstance.$emit('tree.removeNode', id);
           cb && cb();

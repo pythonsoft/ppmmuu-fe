@@ -86,7 +86,7 @@
     },
     watch: {
       selectedNodeInfo(v) {
-        this.getGroup(v.id);
+        this.getGroup(v._id);
       }
     },
     data() {
@@ -108,7 +108,7 @@
       };
     },
     created() {
-      this.getGroup(this.selectedNodeInfo.id);
+      this.getGroup(this.selectedNodeInfo._id);
     },
     methods: {
       submitForm() {
@@ -116,10 +116,11 @@
         this.$refs.basicForm.validate((valid) => {
           if (valid) {
             const requestData = Object.assign({}, me.formData);
-            requestData.groupId = me.selectedNodeInfo.id;
+            requestData.groupId = me.selectedNodeInfo._id;
 
             api.updateGroup(requestData).then(() => {
               me.$message.success('保存成功');
+              me.$emit('update', { name: me.formData.name });
             }).catch((error) => {
               me.$message.error(error);
             });

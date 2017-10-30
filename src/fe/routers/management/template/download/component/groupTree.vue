@@ -20,7 +20,7 @@
 <script>
   import Vue from 'vue';
 
-  import treeView from '../../../../../component/higherOrder/tree/index';
+  import treeView from '../../../../../component/higherOrder/tree/_index';
 
   const CHILD_NODE_CONFIG = {
     0: '1',
@@ -85,19 +85,19 @@
           this.showErrorInfo('没有选中的组织');
           return false;
         }
-        this.currentNode._id = this.currentNode.id;
-        if (this.currentNodeParent) {
-          this.currentNodeParent._id = this.currentNodeParent.id;
-        }
+        // this.currentNode._id = this.currentNode.id;
+        // if (this.currentNodeParent) {
+        //   this.currentNodeParent._id = this.currentNodeParent.id;
+        // }
         this.$emit('add-owner', this.currentNode, this.currentNodeParent);
         return true;
       },
-      listGroup(node, cb) {
+      listGroup(id = '', cb) {
         const me = this;
         if (!this.visible) { return false; }
 
         const query = {
-          parentId: node.id ? node.id : (this.parentId || '')
+          parentId: id ? id : (this.parentId || '')
         };
         this.$emit('list-group', query, cb);
       },

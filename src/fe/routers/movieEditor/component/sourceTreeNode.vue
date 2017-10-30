@@ -11,12 +11,12 @@
       @click.stop=""
       @keyup.enter="submit"
       v-clickoutside="handleCancel">
-    <div v-else :class="[$style.mediaWrap, currentNodeId === node.id ? $style.currentMedia : '']" @dblclick="updateCurrentSource">
+    <div v-else :class="[$style.mediaWrap, currentNodeId === node._id ? $style.currentMedia : '']" @dblclick="updateCurrentSource">
       <div :class="$style.mediaLeft" class="clearfix">
-        <img :class="$style.mediaImg" :src="node.info.snippet && node.info.snippet.thumb" height="29px">
+        <img :class="$style.mediaImg" :src="node.snippet && node.snippet.thumb" height="29px">
         <p :class="$style.mediaName">{{ node.name }}</p>
       </div>
-      <span :class="$style.mediaDuration">{{ formatTime(node.info.snippet.duration) }}</span>
+      <span :class="$style.mediaDuration">{{ formatTime(node.snippet.duration) }}</span>
     </div>
   </div>
 </template>
@@ -45,10 +45,10 @@
     },
     computed: {
       isShowFolderName() {
-        return this.nodeStatus === 'editing' ? false : TYPE_CONFIG[this.node.info.type] === 'folder';
+        return this.nodeStatus === 'editing' ? false : TYPE_CONFIG[this.node.type] === 'folder';
       },
       isShowInput() {
-        return this.nodeStatus === 'editing' ? true : TYPE_CONFIG[this.node.info.type] === 'input';
+        return this.nodeStatus === 'editing' ? true : TYPE_CONFIG[this.node.type] === 'input';
       }
     },
     created() {
@@ -73,7 +73,7 @@
         this.inputValue = this.node.name;
       },
       updateCurrentSource() {
-        this.$emit('updateCurrentSource', this.node.info);
+        this.$emit('updateCurrentSource', this.node);
       },
       handleCancel() {
         if (this.nodeStatus === 'editing') {
@@ -88,11 +88,11 @@
           name: this.inputValue
         };
         if (this.nodeStatus === 'editing') {
-          reqData.id = this.node.id;
+          reqData.id = this.node._id;
           this.$emit('updateDirectory', reqData);
           this.nodeStatus = 'normal';
         } else {
-          this.$emit('createDirectory', reqData);
+          this.$emit('createDirectory', reqData, this.node._id);
         }
       }
     }

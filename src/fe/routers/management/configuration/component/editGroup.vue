@@ -59,8 +59,8 @@
             this.isBtnLoading = true;
             groupAPI.postUpdateGroup(postData)
               .then((response) => {
+                me.$emit('edited', { name: me.formData.name });
                 me.formData.name = '';
-                me.$emit('edited');
                 me.$message.success('保存成功');
                 me.isBtnLoading = false;
                 me.handleClose();
