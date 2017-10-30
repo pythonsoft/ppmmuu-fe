@@ -77,6 +77,7 @@ config.fields = [
     options: [
       { text: '1920x1080', value: '1920x1080', key: '1920x1080' },
       { text: '1280x720', value: '1280x720', key: '1280x720' },
+      { text: '720x576', value: '720x576', key: '720x576' },
       { text: '640x360', value: '640x360', key: '640x360' }
     ]
   },
