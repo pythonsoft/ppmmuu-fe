@@ -6,18 +6,18 @@
           <template v-if="item.type==='select'">
             <fj-select v-model="formData[item.field]">
               <fj-option
-                      v-for="option in item.options"
-                      :key="option.key"
-                      :value="option.value"
-                      :label="option.text"></fj-option>
+                v-for="option in item.options"
+                :key="option.key"
+                :value="option.value"
+                :label="option.text"></fj-option>
             </fj-select>
           </template>
           <template v-else>
             <div class="template-transcode-watermark" v-if="item.field==='watermarkFile'">
               <upload-img
-                      :maxSize="4"
-                      :imgPath="formData[item.field]"
-                      @img-change="imgChange"></upload-img>
+                :maxSize="4"
+                :imgPath="formData[item.field]"
+                @img-change="imgChange"></upload-img>
             </div>
             <fj-input v-model="formData[item.field]" v-else></fj-input>
           </template>
