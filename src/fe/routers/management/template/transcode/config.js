@@ -12,12 +12,17 @@ config.fields = [
     type: 'select',
     text: '容器格式',
     required: true,
-    selected: 'mp4',
+    selected: 'mxf',
     show: true,
     options: [
+      { text: 'avi', value: 'avi', key: 'avi' },
+      { text: 'mpg', value: 'mpg', key: 'mpg' },
       { text: 'mp4', value: 'mp4', key: 'mp4' },
+      { text: 'mov', value: 'mov', key: 'mov' },
       { text: 'mxf', value: 'mxf', key: 'mxf' },
-      { text: 'mov', value: 'mov', key: 'mov' }
+      { text: 'ts', value: 'ts', key: 'ts' },
+      { text: 'vob', value: 'vob', key: 'vob' },
+      { text: 'flv', value: 'flv', key: 'flv' }
     ]
   },
   {
@@ -53,7 +58,7 @@ config.fields = [
     options: [
       { text: 'yuv420p', value: 'yuv420p', key: 'yuv420p' },
       { text: 'yuv422p', value: 'yuv422p', key: 'yuv422p' },
-      { text: 'yuyv422', value: 'yuyv422', key: 'yuyv422' },
+      { text: 'yuyv422p', value: 'yuyv422p', key: 'yuyv422p' },
       { text: 'yuv422p10le', value: 'yuv422p10le', key: 'yuv422p10le' }]
   },
   {
@@ -180,10 +185,10 @@ config.fields = [
     selected: 'libfdk_aac',
     show: true,
     options: [
+      { text: 'mp2', value: 'mp2', key: 'mp2' },
+      { text: 'libmp3lame', value: 'libmp3lame', key: 'libmp3lame' },
       { text: 'libfdk_aac', value: 'libfdk_aac', key: 'libfdk_aac' },
       { text: 'pcm_s16le', value: 'pcm_s16le', key: 'pcm_s16le' },
-      { text: 'mp2', value: 'mp2', key: 'mp2' },
-      { text: 'libmp3lame', value: 'libmp3lame', key: 'libmp3lame' }
     ]
   },
   {
@@ -197,8 +202,8 @@ config.fields = [
     selected: '48000',
     show: true,
     options: [
-      { text: '48000', value: '48000', key: 'samplerate1' },
-      { text: '44100', value: '44100', key: 'samplerate2' }
+      { text: '44100', value: '44100', key: 'samplerate2' },
+      { text: '48000', value: '48000', key: 'samplerate1' }
     ]
   },
   {

@@ -503,12 +503,7 @@ utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
       if (dateString.length === 1) {
         dateString = dateString[0].replace(/\\/g, '\/');
       }
-      /*
-      * FILENAME: "Visionaries PIN 20171022 Mon ZANITH_34D42E1C-D9C1-44D4-AB48-49A5A88C65A9.mp4"
-      * INPOINT: 0
-      * OUTPOINT: 750
-      * UNCPATH: "U:\MAM\low1\2017\10\16"
-      * */
+
       const dateArray = dateString.split('/');
       const year = dateArray[1] * 1;
       const month = dateArray[2] * 1;
