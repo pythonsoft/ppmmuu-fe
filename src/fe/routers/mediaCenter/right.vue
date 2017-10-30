@@ -81,7 +81,8 @@
           </div>
         </fj-tab-pane>
         <fj-tab-pane label="视频片段" name="tab3">
-          <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in fragments">
+          <div class="media-center-file-item media-center-file-item-bottom-line" v-if="fragments.length === 0">无</div>
+          <div class="media-center-file-item media-center-file-item-bottom-line" v-else v-for="file in fragments">
             <table class="media-center-table">
               <tr>
                 <td class="item-info-value" width="303" @click="$emit('update-list', fragments)">
