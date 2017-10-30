@@ -99,7 +99,6 @@
   import TwoRowTree from '../../../component/layout/twoRowTree/index';
   import TreeView from '../../../component/higherOrder/tree/_index';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
-  import TreeNodeContent from './treeNodeContent';
   import addGroup from './component/addGroupDialog';
   import editGroup from './component/editGroup';
 
@@ -111,7 +110,6 @@
     components: {
       'two-row-tree': TwoRowTree,
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'tree-node-content': TreeNodeContent,
       'add-group': addGroup,
       'edit-group': editGroup,
       'tree-view': TreeView

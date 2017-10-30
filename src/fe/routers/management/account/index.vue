@@ -208,7 +208,7 @@
         this.permissionPanelId = node._id;
         this.permissionPanelParentIds = [];
         this.vueInstance.$emit('tree.getParentsId', node._id, (ids) => {
-          console.log('ids', ids);
+          // console.log('ids', ids);
           this.permissionPanelParentIds = ids;
         });
         // this.getParentIds(this.permissionPanelParentIds, node._id, this.treeData);

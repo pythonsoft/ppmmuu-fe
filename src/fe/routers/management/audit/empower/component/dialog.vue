@@ -191,7 +191,6 @@
         this.addGroupDialogTitle = '修改审核部门';
       },
       addOwner(row) {
-        row = row.info ? row.info : row;
         const type = row.type || '3';
         const postData = {
           type: type,

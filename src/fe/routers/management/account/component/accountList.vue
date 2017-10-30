@@ -268,10 +268,10 @@
         const requestData = {};
         requestData._ids = this.selectedItems.map(item => item._id).join(',');
 
-        if (row.info.type === GROUP_CONFIG.department.type) {
-          requestData.departmentId = row.info._id;
-        } else if(row.info.type === GROUP_CONFIG.group.type) {
-          requestData.teamId = row.info._id;
+        if (row.type === GROUP_CONFIG.department.type) {
+          requestData.departmentId = row._id;
+        } else if(row.type === GROUP_CONFIG.group.type) {
+          requestData.teamId = row._id;
         }else {
           this.$message.error('不能移动到别的公司');
           return false;
