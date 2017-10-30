@@ -80,18 +80,34 @@
             </div>
           </div>
         </fj-tab-pane>
-        <fj-tab-pane label="视频片段" name="tab3" v-if="false">
+        <fj-tab-pane label="视频片段" name="tab3">
           <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in fragments">
             <table class="media-center-table">
               <tr>
-                <td class="item-info-key" width="80">文件名: </td>
-                <td class="item-info-value" width="303">
-                  <div class="media-center-file-name">
-                    {{ file.name || '无文件名' }}
-                    <span class="media-center-file-type">
-                      {{ file.SANAME || '无信息' }}
+                <td class="item-info-value" width="303" @click="$emit('update-list', fragments)">
+                  <div class="media-center-list-title-wrap">
+                    <span :class="getMediaFormatStyle(file, 'media-center-list-color-span')">
+                      {{getMediaFormat(file)}}
                     </span>
+                    <span :class="setThumbClass(file.id, 'media-center-list-title')" v-html="getTitle(file)"></span>
                   </div>
+                  <ul class="media-center-list-bar">
+                    <li>
+                      <span title="分类" class="media-center-list-bar-color-span" v-html="file.program_type || '无分类'"></span>
+                    </li>
+                    <li>
+                      <span title="编目类别" class="media-center-list-bar-color-span">{{ file.ccid }}</span>
+                    </li>
+                    <li v-if="file.f_str_187">
+                      <span title="HOUSENO" class="media-center-list-bar-color-span">{{ file.f_str_187 }}</span>
+                    </li>
+                    <li v-if="file.f_str_314">
+                      <span title="资源所属部门" class="media-center-list-bar-color-span">{{ file.f_str_314 }}</span>
+                    </li>
+                    <li>
+                      <span title="发布时间">{{ formatTime(file.publish_time) || '无发布时间' }}</span>
+                    </li>
+                  </ul>
                 </td>
               </tr>
             </table>
@@ -117,7 +133,14 @@
 <script>
   import Vue from 'vue';
   import './index.css';
-  import { getTitle, getThumb } from './common';
+  import {
+    getDuration,
+    getThumb,
+    getMediaFormat,
+    getMediaFormatStyle,
+    getReplaceName,
+    getTitle,
+  } from './common';
   import {
     isEmptyObject,
     formatSize,
@@ -270,6 +293,20 @@
       getTitle,
       isEmptyObject,
       formatSize,
+      getDuration,
+      getMediaFormat,
+      getMediaFormatStyle,
+      getReplaceName,
+      formatTime,
+      setThumbClass(id, className) {
+        let cn = className || '';
+
+        // if (this.selectInfoId && this.selectInfoId === id) {
+        //   cn += ' media-center-title-selected';
+        // }
+
+        return cn;
+      },
       formatContent(v) {
         let r = v;
 

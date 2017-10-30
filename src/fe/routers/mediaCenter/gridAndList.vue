@@ -167,6 +167,7 @@
 }
 
 .media-center-list-color-span {
+  display: inline-block;
   width: 40px;
   height: 15px;
   line-height: 16px;
@@ -210,9 +211,11 @@
 .media-center-title-selected{
   color: #38B1EB;
 }
-
+.media-center-list-title-wrap {
+  margin-bottom: 12px;
+}
 .media-center-list-description {
-  margin: 12px 0 8px;
+  margin-bottom: 8px;
   font-size: 12px;
   color: #4C637B;
   font-weight: normal;

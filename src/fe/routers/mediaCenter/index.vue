@@ -147,7 +147,7 @@
               @currentItemChange="currentItemChange"
             ></grid-list-view>
 
-            <div class="media-pagination" v-if="items.length">
+            <div class="media-pagination" v-if="items.length > 1">
               <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></pagination>
             </div>
           </template>
@@ -158,6 +158,7 @@
       <media-right
         :videoInfo="currentVideo"
         @showMovieEditor="setMovieEditorDisplay"
+        @update-list="(data)=>{items = data;total = data.length;searchResult = ''}"
       ></media-right>
     </template>
   </layout-three-column>
