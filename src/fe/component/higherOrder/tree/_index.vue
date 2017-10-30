@@ -6,7 +6,7 @@
     v-if="!showUpper"
     :theme="theme"
     :data="treeData"
-    :autoExpand="autoExpand"
+    :auto-expand="autoExpand"
     :node-key="nodeKey"
     :render-content="renderItem"
     @current-change="_treeNodeCurrentChange"
@@ -26,7 +26,7 @@
         :load="loadChildren"
         :default-expanded-key="defaultExpandedKey"
         :data="treeData"
-        :autoExpand="autoExpand"
+        :auto-expand="autoExpand"
         :node-key="nodeKey"
         :render-content="renderItem"
         @current-change="_treeNodeCurrentChange"
@@ -142,7 +142,7 @@
       const data = this.topIndexs.map(index => {
         return this.getNode(index);
       });
-      console.log('getTreeData', data);
+      // console.log('getTreeData', data);
       return data;
     }
   };
@@ -262,7 +262,6 @@
       _listGroup(parentId = '', resolve) {
         this.listGroup && this.listGroup(parentId, (data) => {
           this.insert(parentId, data);
-
           resolve && resolve();
         });
       },
@@ -285,6 +284,7 @@
         this.treeData = this.treeDataBaseInstance.getTreeData();
         if (this.selectedNodeInfo && this.selectedNodeInfo[this.nodeKey] === id) {
           this.selectedNodeInfo = {};
+          this.treeNodeCurrentChange && this.treeNodeCurrentChange({}, {});
         }
       }
     },
