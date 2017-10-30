@@ -1,14 +1,14 @@
 <template>
   <fj-dialog
-          :title="title"
-          :visible.sync="addOwnerDialogVisible"
-          @close="close">
+      :title="title"
+      :visible.sync="addOwnerDialogVisible"
+      @close="close">
     <div class="add-group-tree">
       <tree-view
-              :showUpper="false"
-              :vueInstance="vueInstance"
-              :listGroup="listGroup"
-              :treeNodeCurrentChange="treeNodeCurrentChange"
+        :showUpper="false"
+        :vueInstance="vueInstance"
+        :listGroup="listGroup"
+        :treeNodeCurrentChange="treeNodeCurrentChange"
       ></tree-view>
     </div>
     <div slot="footer" class="dialog-footer">

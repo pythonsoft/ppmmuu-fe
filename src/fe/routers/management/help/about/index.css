@@ -58,5 +58,18 @@
   left: -9999px;
 }
 
+.help-file-read-content{
+  position: relative;
+  height: 400px;
+  background: #292929;
+  color: #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+.help-file-read .layout-panel-slide-vertical-bar {
+  border-left-color: #ddd;
+}
+
 
 

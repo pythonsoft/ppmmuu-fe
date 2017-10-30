@@ -26,7 +26,7 @@
         <div class="about-system-item">
           <div class="subtitle">ump系统</div>
           <div class="about-system-item-title">
-            当前版本1.5.4.0
+            当前版本{{version}}
             <div class="about-system-update-bar">
               <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="handleClick">
                 上传安装包(.zip)
@@ -37,17 +37,17 @@
           <div class="detail">
             <div class="detail-title">版本更新</div>
             <ul>
-              <li>*.下载模板--分组不能删除</li>
-              <li>*.转码模板--添加水印设置</li>
-              <li>*.下载模板--转码脚本优化</li>
-              <li>*.条目信息如果没有内容显示无 </li>
-              <li>*.添加用户时，需要明显提显是什么原因失败 </li>
-              <li>*.订阅－非视频详情页的视频播放按钮去掉 </li>
+              <li v-for="item in updateList">*.{{item}}</li>
             </ul>
           </div>
         </div>
       </div>
     </template>
+    <help-file-reader
+      :visible.sync="visible"
+      :packageInfo="packageInfo"
+      @close="closeHandle"
+    ></help-file-reader>
   </layout-two-row-title>
 </template>
 <script>
@@ -55,25 +55,34 @@
   import utils from '../../../../common/utils';
   import LayoutTwoRowTitle from '../../../../component/layout/twoRowTitle/index';
   import FjInput from "../../../../component/fjUI/packages/input/src/input.vue";
+  import HelpFileReader from "./component/fileReader.vue";
 
   const api = require('../../../../api/help');
 
   export default {
     components: {
+      HelpFileReader,
       FjInput,
       LayoutTwoRowTitle
     },
     data() {
       return {
+        visible: false,
         isBtnLoading: false,
+        packageInfo: {},
+        updateList: [],
+        version: '无',
       };
     },
     created() {
-
+      this.getDetail()
     },
     destroyed() {
     },
     methods: {
+      closeHandle() {
+        this.getDetail();
+      },
       handleClick() {
         const fileBtnEl = this.$refs.helpPackageUploadBtn;
         if(!this.isBtnLoading) {
@@ -89,21 +98,32 @@
           return false;
         }
 
-        const config = {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        };
         const param = new FormData(); // 创建form对象
         param.append('file', file, file.name); // 通过append向form对象添加数据
         me.isBtnLoading = true;
 
         api.uploadPackage(param).then((res) => {
           me.isBtnLoading = false;
+          me.packageInfo = res.data;
+          me.visible = true;
         }).catch((error) => {
           me.isBtnLoading = false;
           me.$message.error(error);
         });
 
         return true;
+      },
+      getDetail() {
+        const me = this;
+
+        api.detail({
+          params: { id: this.packageInfo._id }
+        }).then((res) => {
+          me.updateList = res.data.updateList;
+          me.version = res.data.version;
+        }).catch((error) => {
+          me.$message.error(error);
+        });
       }
     }
   }
