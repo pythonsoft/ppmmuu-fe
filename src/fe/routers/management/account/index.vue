@@ -207,8 +207,20 @@
         this.permissionPanelType = node.type;
         this.permissionPanelId = node._id;
         this.permissionPanelParentIds = [];
-        this.vueInstance.$emit('tree.getParentsId', node._id, (ids) => {
-          // console.log('ids', ids);
+        this.vueInstance.$emit('tree.getParents', node._id, (nodes) => {
+          if (nodes.length === 0) {
+            this.permissionPanelParentIds = [];
+            return;
+          }
+          const ids = [];
+          let type = '';
+          // 过滤父节点，使得部门只取最靠近的一个
+          nodes.forEach(node => {
+            if (node.type !== type) {
+              ids.push(node._id);
+              type = node.type;
+            }
+          });
           this.permissionPanelParentIds = ids;
         });
         // this.getParentIds(this.permissionPanelParentIds, node._id, this.treeData);

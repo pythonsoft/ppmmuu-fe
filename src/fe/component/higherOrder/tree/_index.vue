@@ -111,15 +111,15 @@
         this.nodes[node[this.key]] = node;
       });
     }
-    getParentsId(id) {
-      const ids = [];
-      if (!this.nodes[id]) return ids;
+    getParents(id) {
+      const parents = [];
+      if (!this.nodes[id]) return parents;
       let parentId = this.nodes[id].parentId;
       while (parentId) {
-        ids.push(parentId);
+        parents.push(this.nodes[parentId]);
         parentId = this.nodes[parentId].parentId;
       }
-      return ids;
+      return parents;
     }
     getNode(id) {
       if (!id) return null;
@@ -197,8 +197,8 @@
       this.vueInstance.$on('tree.updateNode', (id, newInfo) => {
         this.updateNode(id, newInfo);
       });
-      this.vueInstance.$on('tree.getParentsId', (id, cb) => {
-        cb && cb(this.treeDataBaseInstance.getParentsId(id));
+      this.vueInstance.$on('tree.getParents', (id, cb) => {
+        cb && cb(this.treeDataBaseInstance.getParents(id));
       });
 
       this.vueInstance.$emit('tree.listGroup');
@@ -207,7 +207,7 @@
       this.vueInstance.$off('tree.listGroup');
       this.vueInstance.$off('tree.removeNode');
       this.vueInstance.$off('tree.insertNode');
-      this.vueInstance.$off('tree.getParentsId');
+      this.vueInstance.$off('tree.getParents');
     },
     methods: {
       _btnClick() {
