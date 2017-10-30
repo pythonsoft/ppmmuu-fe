@@ -199,6 +199,9 @@
           });
       },
       handleSearch() {
+        this.group._id = this.companyId;
+        this.group.type = GROUP_CONFIG['company'].type;
+        this.currentPage = 1;
         this.updateList();
       },
       handleSelectionChange(val) {
