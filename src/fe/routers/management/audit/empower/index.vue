@@ -146,7 +146,7 @@
       confirmDialog() {
         const me = this;
 
-        api.removeAuditRule({ id: this.table.currentRowInfo._id }, me).then((res) => {
+        api.removeAuditRule({ ids: this.table.currentRowInfo._id }, me).then((res) => {
           me.$message.success('删除成功');
           me.listRuleInfo();
           me.confirmDialogDisplay = false;
