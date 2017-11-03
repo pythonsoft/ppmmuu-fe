@@ -272,11 +272,13 @@
             const progressBar = this.getProgressBarStyle();
             const progressBarWidth = progressBar.width;
             this.currentTime = this.video.currentTime;
-            if (this.currentTime >= this.range[1]) {
-              this.isPlaying = false;
+            if (this.currentTime + 1 / this.fps >= this.range[1]
+              && this.currentTime <= this.range[1]) {
               this.pause();
+              this.isPlaying = false;
               clearInterval(this.moveIndicatorTimer);
             }
+
             this.offset = (this.video.currentTime - this.range[0])
               / this.innerDuration * progressBarWidth;
             if (this.offset > progressBarWidth) this.offset = progressBarWidth;

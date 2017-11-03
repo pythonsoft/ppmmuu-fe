@@ -314,7 +314,8 @@
           }
         }
 
-        if (this.currentTime <= this.OUTPOINT && this.currentTime + this.interval / 1000 >= this.OUTPOINT) {
+        if (this.currentTime <= this.OUTPOINT && this.currentTime + 1 / this.fps >= this.OUTPOINT) {
+          this.pause();
           this.isPlaying = false;
           clearInterval(this.moveIndicatorTimer);
         }

@@ -561,6 +561,7 @@
               }
             }
             if (this.currentTime <= this.videoInfo.OUTPOINT && this.currentTime + 1 / this.fps >= this.videoInfo.OUTPOINT) {
+              this.pause();
               this.isPlaying = false;
               clearInterval(this.moveIndicatorTimer);
             }
