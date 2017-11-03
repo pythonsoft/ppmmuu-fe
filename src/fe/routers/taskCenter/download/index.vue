@@ -225,7 +225,8 @@
 
         const param = {
           page: this.page,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          processType: 'download',
         };
 
         if (this.formData.status) {
@@ -235,46 +236,6 @@
         if (this.formData.currentStep) {
           param.currentStep = this.formData.currentStep;
         }
-
-        /**
-        const mock = {
-          "status":"0",
-          "data":{
-            "docs":[
-              {
-                "id":"b850529d-43fa-47e8-9502-97fad80ad775",
-                "tasklist":[
-                  {
-                    "taskName":"下载",
-                    "taskType":"media_download",
-                    "taskId":"59ae6ef758b26b017acc2eb2",
-                    "status":"dealing",
-                    "position":0,
-                    "createParams":"{
-                      \"objectid\":\"5A73A94C-BA88-5995-4459-4B2F551B5962\",
-                      \"inpoint\":0,
-                      \"outpoint\":412435,
-                      \"fileName\":\"testA.mp4\"
-                    }",
-                    "queryParams":"jobid\u003d59ae6ef758b26b017acc2eb2",
-                    "serialNO":0,
-                    "errMsg":"can not stop,task not support",
-                    "filePath":"/root/media/2017/09/05/172545447testA.mp4",
-                    "fileName":"172545447testA.mp4"}],
-                "status":"dealing",
-                "currentStep":0,
-                "filePath":"/root/media/2017/09/05/172545447testA.mp4",
-                "fileName":"172545447testA.mp4",
-                "createTime":"2017-09-05T09:25:43.607Z",
-                "lastModify":"2017-09-07T08:09:33.727Z"}],
-            "page":1,
-            "pageCount":1,
-            "pageSize":20,
-            "total":1
-          },
-          "statusInfo":{}
-        };
-         **/
 
         api.listJob({ params: param }, notNeedProcess ? '' : me).then((res) => {
           me.tableData = res.data.docs;
