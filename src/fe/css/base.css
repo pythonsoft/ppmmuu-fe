@@ -51,6 +51,7 @@ html,body,#app {
   right: 0;
   bottom: 0;
   left: 84px;
+  overflow-y: auto;
 }
 .main-content {
   width: 100%;
