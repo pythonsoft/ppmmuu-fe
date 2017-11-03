@@ -38,13 +38,14 @@
           </template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="userName" width="140" label="用户名">
+        <fj-table-column prop="processType" width="80" label="任务类型"></fj-table-column>
+        <fj-table-column prop="userName" width="120" label="用户名">
           <template scope="props">{{ props.row.userName || '-' }}</template>
         </fj-table-column>
-        <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
+        <fj-table-column prop="createTime" width="160"label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="lastModify" width="160" align="center" label="修改时间">
+        <fj-table-column prop="lastModify" width="160" label="修改时间">
           <template scope="props">{{ props.row.lastModify | formatTime }}</template>
         </fj-table-column>
       </fj-table>
