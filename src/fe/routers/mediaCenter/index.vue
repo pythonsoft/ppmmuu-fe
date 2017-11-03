@@ -161,6 +161,8 @@
         @update-list="(data)=>{items = data;total = data.length;searchResult = ''}"
       ></media-right>
     </template>
+
+    <im></im>
   </layout-three-column>
 </template>
 <script>
@@ -192,6 +194,8 @@
   import gridAndList from './gridAndList';
   import mediaRight from './right';
 
+  import im from '../../component/im/index';
+
   const api = require('../../api/media');
   const userAPI = require('../../api/user');
 
@@ -200,7 +204,8 @@
       'layout-three-column': threeColumn,
       'media-right': mediaRight,
       'grid-list-view': gridAndList,
-      Pagination
+      Pagination,
+      im
     },
     data() {
       return {

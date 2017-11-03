@@ -29,7 +29,7 @@
         <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showUserStatusDialog('enable')">启用</fj-button>
         <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showUserStatusDialog('disabled')">禁用</fj-button>
         <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showUserStatusDialog('delete')">删除</fj-button>
-        <fj-button size="mini" type="primary" :disabled="selectedItems.length!=1" @click="showBindMediaExpressDialog">绑定快传账户</fj-button>
+        <fj-button size="mini" type="primary" :disabled="selectedItems.length!=1" @click="showBindMediaExpressDialog">快传配置</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -64,7 +64,7 @@
           @updateList="updateList"></edit-user-content>
     </fj-slide-dialog>
     <fj-slide-dialog
-            title="绑定快传账户"
+            title="快传配置"
             :visible.sync="bindMediaExpressDialogVisible">
             <bind-media-express
               :id="bindMediaExpressDialogId"
