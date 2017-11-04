@@ -207,6 +207,11 @@
   import { getItemFromLocalStorage } from '../../common/utils';
   import FjInput from "../fjUI/packages/input/src/input.vue";
 
+  const accountMode = 1;
+  //官方 demo appid,需要开发者自己修改
+  const sdkAppID = 1400047308;
+  const accountType = 18694;
+
   export default {
     components: {FjInput},
     name: 'im',
