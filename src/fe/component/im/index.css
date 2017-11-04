@@ -273,6 +273,22 @@
   border-radius: 4px;
 }
 
+.im-dialog-main-right-content-item .body .message .resend{
+  padding: 4px 13px;
+  font-size: 12px;
+  border-radius: 4px;
+  color: red;
+  cursor: pointer;
+}
+
+.im-dialog-main-right-content-item .body .message .resend .iconfont {
+  font-size: 12px;
+}
+
+.im-dialog-main-right-content-item .body .message .resend:hover{
+  color: #ff3f4e;
+}
+
 .im-dialog-main-right-content .left .body{
   padding-left: 36px;
   float: left;

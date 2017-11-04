@@ -152,21 +152,6 @@
             </div>
             <div class="im-dialog-main-right-content">
               <div class="im-dialog-main-right-content-item left">
-               <div class="time">21:55</div>
-               <div class="body">
-                 <div class="avatar">
-                   <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                   <img v-else class="im-avatar im-img-style" width="30" height="30">
-                 </div>
-                 <div class="message">
-                   <div class="name">sasa</div>
-                   <div class="detail">
-                     加班还是聚餐去啦？
-                   </div>
-                 </div>
-               </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
                 <div class="time">21:55</div>
                 <div class="body">
                   <div class="avatar">
@@ -178,126 +163,10 @@
                     <div class="detail">
                       加班还是聚餐去啦？
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
+                    <p class="resend">
+                      <span class="iconfont icon-info"></span>
+                      点击重发
+                    </p>
                   </div>
                 </div>
               </div>
@@ -313,6 +182,10 @@
                     <div class="detail">
                       加班还是聚餐去啦？
                     </div>
+                    <p class="resend">
+                      <span class="iconfont icon-info"></span>
+                      点击重发
+                    </p>
                   </div>
                 </div>
               </div>
