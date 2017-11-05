@@ -1,0 +1,27 @@
+.ui-department-browser-content{
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  background: #f8fafb;
+}
+.ui-department-browser-content-fix-scroll{
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.ui-department-browser-content-user-bar{
+  padding: 6px 4px;
+  overflow: auto;
+}
+
+.ui-department-browser-search-item {
+  float: right;
+  margin-left: 10px;
+  line-height: 100%;
+}
+
+.ui-department-browser-content-user-list{
+  overflow-y: auto;
+  overflow-x: hidden;
+}

@@ -17,7 +17,7 @@
                   <img v-else class="im-avatar im-img-style" width="30" height="30">
                 </div>
                 <div class="im-main-left-header-top-name">{{userInfo.name || '无名'}}</div>
-                <div class="iconfont icon-menu im-icon-menu"></div>
+                <div class="iconfont icon-menu im-icon-menu" @click="displayMenu"></div>
               </div>
               <div class="im-dialog-main-left-search">
                 <fj-input
@@ -200,12 +200,19 @@
         <div class="iconfont icon-small-close im-icon-small-close" @click="closeHandle"></div>
       </div>
     </div>
+
+    <department-browser
+      :visible.sync="departmentBrowserVisible"
+      @confirm="departmentBrowserConfirm"
+    ></department-browser>
   </div>
 </template>
 <script>
   import './index.css'
   import { getItemFromLocalStorage } from '../../common/utils';
-  import FjInput from "../fjUI/packages/input/src/input.vue";
+  import DepartmentBrowser from "../higherOrder/departmentBrowser/index.vue";
+
+  const api = require('./api');
 
   const accountMode = 1;
   //官方 demo appid,需要开发者自己修改
@@ -213,10 +220,11 @@
   const accountType = 18694;
 
   export default {
-    components: {FjInput},
+    components: {DepartmentBrowser},
     name: 'im',
     data() {
       return {
+        departmentBrowserVisible: false,
         message: null,
         dialogVisible: false,
         userInfo: {},
@@ -225,13 +233,30 @@
     },
     created() {
       this.userInfo = getItemFromLocalStorage('userInfo');
+      this.login();
     },
     methods: {
+      displayMenu() {
+        this.departmentBrowserVisible = true;
+      },
       displayDialog() {
         this.dialogVisible = true;
       },
       closeHandle() {
         this.dialogVisible = false;
+      },
+      departmentBrowserConfirm() {
+
+      },
+      login() {
+        api.login({
+          username: this.userInfo._id,
+          displayname: this.userInfo.name
+        }).then((res) => {
+          console.log('login --->', res);
+        }).catch((err) => {
+          this.$message.error(err);
+        });
       }
     }
   }
