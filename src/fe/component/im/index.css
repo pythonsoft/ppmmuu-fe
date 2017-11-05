@@ -1,12 +1,357 @@
-.im-main {
-  width: 50px;
-  height: 50px;
+.im-main{
+  font-family: Helvetica Neue,Helvetica,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+  color: #fff;
+}
+
+.im-main-trigger {
+  width: 44px;
+  height: 40px;
   text-align: center;
-  line-height: 50px;
+  line-height: 40px;
   position: absolute;
   bottom: 0;
   right: 20px;
   background-color: #4C637B;
-  color: #fff;
+  color: #ccc;
   border-radius: 4px 4px 0 0;
+}
+
+.im-main-trigger:hover{
+  color: #fff;
+}
+
+.im-dialog {
+  width: 740px;
+  height: 460px;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 5px 27px rgba(0,0,0,.2);
+}
+
+.im-dialog-wrap{
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.im-dialog-main{
+  padding-left: 180px;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.im-dialog-main-left{
+  position: absolute;
+  left:0;
+  top:0;
+  bottom: 0;
+  padding-top: 90px;
+  box-sizing: border-box;
+  width: 180px;
+  overflow: hidden;
+  background-color: #2e3641;
+  border-radius: 4px 0 0;
+}
+
+.im-main-left-header{
+  padding: 8px;
+  height: 90px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left:0;
+  right: 0;
+  cursor: default;
+  background: #2e3238;
+  border-radius: 4px 0 0 0;
+}
+
+.im-main-left-header-top{
+  position: relative;
+  padding-left: 36px;
+  padding-right: 16px;
+  height: 30px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.im-main-left-header-top-avatar{
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.im-icon-menu{
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  right: 0;
+  top: 2px;
+  color: #999;
+}
+
+.im-main-left-header-top-name{
+  height: 30px;
+  line-height: 1.5;
+  color: #eee;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  overflow: hidden;
+  font-size: 16px;
+}
+
+.im-dialog-main-left-search{
+  margin-top: 8px;
+}
+
+.im-dialog-main-left-search .fj-input-icon{
+  color: #999;
+}
+
+.im-dialog-main-left-search .fj-input-icon:hover{
+  background-color: #454545;
+}
+
+.im-dialog-main-left-search .fj-input-inner-fill{
+  background-color: #26292e;
+  color: #fff;
+  font-size: 12px;
+  border: none;
+}
+
+.im-main-left-dialog-list{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.im-main-left-dialog-list-item{
+  padding: 12px 8px 12px 44px;
+  position: relative;
+  height: 46px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-bottom: 1px solid #2a2d33;
+}
+
+.im-main-left-dialog-list .active{
+  background: #3a3f45;
+}
+
+.im-main-left-dialog-list-item .content {
+  height: 22px;
+  position: relative;
+  line-height: 22px;
+  padding-right: 40px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  overflow: hidden;
+}
+
+.im-main-left-dialog-list-item .content .time{
+  color: #6b6f7c;
+  height: 22px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.im-main-left-dialog-list-item .avatar{
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  background: #2e3238;
+}
+
+.im-main-left-dialog-list .active .time{
+  background: #3a3f45;
+  color: #eee;
+}
+
+.im-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.im-img-style {
+  background: url(/static/img/avatar.png) no-repeat;
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+
+.im-dialog-main-right{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  padding: 40px 0 80px;
+  box-sizing: border-box;
+  background-color: #eee;
+}
+
+.im-dialog-main-right-bar{
+  height: 38px;
+  padding: 0 10px;
+  line-height: 38px;
+  font-size: 14px;
+  color: #333;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.im-dialog-main-right-bar-wrap{
+  padding: 0 8px;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.im-dialog-main-right-content{
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+}
+
+.im-dialog-main-right-content-item{
+  padding: 8px;
+  position: relative;
+  color: #333;
+  overflow: auto;
+}
+
+.im-dialog-main-right-content-item .time{
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: #ccc;
+}
+
+.im-dialog-main-right-content-item .body{
+  max-width: 80%;
+  position: relative;
+}
+
+.im-dialog-main-right-content-item .body .avatar{
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  top: 0;
+}
+
+.im-dialog-main-right-content-item .body .message .name{
+  color: #4f4f4f;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+.im-dialog-main-right-content-item .body .message .detail{
+  word-wrap: break-word;
+  word-break: break-all;
+  padding: 4px 13px;
+  background-color: #fff;
+  font-size: 14px;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.im-dialog-main-right-content-item .body .message .resend{
+  padding: 4px 13px;
+  font-size: 12px;
+  border-radius: 4px;
+  color: red;
+  cursor: pointer;
+}
+
+.im-dialog-main-right-content-item .body .message .resend .iconfont {
+  font-size: 12px;
+}
+
+.im-dialog-main-right-content-item .body .message .resend:hover{
+  color: #ff3f4e;
+}
+
+.im-dialog-main-right-content .left .body{
+  padding-left: 36px;
+  float: left;
+}
+
+.im-dialog-main-right-content .left .body .avatar{
+  left: 0;
+}
+
+.im-dialog-main-right-content .left .body .message .name{
+  text-align: left;
+}
+
+.im-dialog-main-right-content .right .body{
+  padding-right: 36px;
+  float: right;
+}
+
+.im-dialog-main-right-content .right .body .avatar{
+  right: 0;
+}
+
+.im-dialog-main-right-content .right .body .message .name{
+  text-align: right;
+}
+
+.im-dialog-main-right-chat{
+  height: 80px;
+  padding: 8px;
+  position: absolute;
+  left: 0;
+  right:0;
+  bottom: 0;
+}
+
+.im-dialog-main-right-chat-wrap{
+  height: 64px;
+  box-sizing: border-box;
+  border-top: 1px solid #e1e1e1;
+}
+
+.im-dialog-main-right-chat-wrap textarea{
+  height: 100%;
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  resize: none;
+  border: none;
+  background-color: #eee;
+  color: #000;
+}
+
+.im-icon-small-close {
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  text-align: center;
+  line-height: 20px;
+  color: #999;
+}
+
+.im-icon-small-close:hover{
+  background: #ddd;
 }

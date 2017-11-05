@@ -36,13 +36,13 @@
           <div class="media-category">
             <h4>HOUSENO</h4>
             <fj-input
-                    placeholder="请输入HOUSENO"
-                    size="small"
-                    theme="fill"
-                    v-model="houseNo"
-                    icon="icon-search input-search-icon"
-                    @on-icon-click="searchHouseNoClick"
-                    @keydown.native.enter.prevent="searchHouseNoClick"
+              placeholder="请输入HOUSENO"
+              size="small"
+              theme="fill"
+              v-model="houseNo"
+              icon="icon-search input-search-icon"
+              @on-icon-click="searchHouseNoClick"
+              @keydown.native.enter.prevent="searchHouseNoClick"
             ></fj-input>
           </div>
           <template v-for="config in searchSelectConfigs">
@@ -50,10 +50,10 @@
               <h4>{{config.label}}</h4>
               <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
                 <fj-option
-                        v-for="item in config.items"
-                        :key="item.key"
-                        :label="item.label"
-                        :value="item.value">
+                  v-for="item in config.items"
+                  :key="item.key"
+                  :label="item.label"
+                  :value="item.value">
                 </fj-option>
               </fj-select>
             </div>
