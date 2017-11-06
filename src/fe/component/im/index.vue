@@ -216,8 +216,6 @@
 
   const accountMode = 1;
   //官方 demo appid,需要开发者自己修改
-  const sdkAppID = 1400047308;
-  const accountType = 18694;
 
   export default {
     components: {DepartmentBrowser},
@@ -249,13 +247,8 @@
 
       },
       login() {
-        api.login({
-          username: this.userInfo._id,
-          displayname: this.userInfo.name
-        }).then((res) => {
-          console.log('login --->', res);
-        }).catch((err) => {
-          this.$message.error(err);
+        api.login(this.userInfo._id, this.userInfo.name, (err, rs) => {
+          console.log(err, rs);
         });
       }
     }
