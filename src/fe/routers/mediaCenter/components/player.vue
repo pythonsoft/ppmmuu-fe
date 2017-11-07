@@ -161,8 +161,10 @@
         // 视频的长度是由入出点决定的，该入出点由getStream接口返回
         this.INPOINT = val.INPOINT / this.fps;
         this.OUTPOINT = val.OUTPOINT / this.fps;
+        console.log('this.INPOINT', this.INPOINT);
         this.reset();
         this.video.currentTime = val.INPOINT / this.fps;
+        console.log('this.video.duration', this.video.duration);
         // this.currentTime = this.video.currentTime;
         // this.duration = (val.OUTPOINT - val.INPOINT) / this.fps;
         this.updateCurrentSRT();
