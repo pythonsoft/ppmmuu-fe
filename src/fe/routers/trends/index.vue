@@ -136,7 +136,7 @@
     <div class="scrum-stage">
       <div class="geo-box board">
         <h3>地域风向标</h3>
-        <div class="geo-chart-box"></div>
+        <div class="geo-chart-box" ref="geoChart"></div>
         <div class="geo-news-box">
           <fj-tabs v-model="activeTabName">
             <fj-tab-pane label="实时热点" name="tab1">
@@ -147,9 +147,17 @@
                 <li>佛山</li>
               </ul>
               <ul class="geo-article-list">
-                <li>
-                  <h4>韩媒：中韩加快为“萨德”矛盾画句号 两国高层交往将回正轨</h4>
-                  <span>2017-06-12 15:34</span>
+                <li class="clearfix">
+                  <h4 class="geo-article-title">今年国庆，很多徒步队伍先后进入这条探险级新线路——念青东，数百座海拔 6000 米以</h4>
+                  <span class="geo-article-time">2017-06-12 15:34</span>
+                </li>
+                <li class="clearfix">
+                  <h4 class="geo-article-title">今年国庆，很多徒步队伍先后进入这条探险级新线路——念青东，数百座海拔 6000 米以</h4>
+                  <span class="geo-article-time">2017-06-12 15:34</span>
+                </li>
+                <li class="clearfix">
+                  <h4 class="geo-article-title">今年国庆，很多徒步队伍先后进入这条探险级新线路——念青东，数百座海拔 6000 米以</h4>
+                  <span class="geo-article-time">2017-06-12 15:34</span>
                 </li>
               </ul>
             </fj-tab-pane>
@@ -158,23 +166,84 @@
           </fj-tabs>
         </div>
       </div>
-      <div class="spread-path-box board"></div>
+      <div class="spread-path-box board">
+        <div class="spread-path-chart-box" ref="spreadPathChart"></div>
+      </div>
     </div>
     <div class="scrum-stage">
-      <div class="spread-trend-box board"></div>
-      <div class="event-timeline-box board"></div>
-      <div class="sentiment-box board"></div>
+      <div class="spread-trend-box board">
+        <div class="spread-trend-chart-box" ref="spreadTrendChart"></div>
+      </div>
+      <div class="event-timeline-box board">
+        <h3>事件脉络</h3>
+        <div class="clearfix">
+          <span class="timeline-date">2017-10-18</span>
+          <span class="timeline-fold-btn">收起 <i class="iconfont icon-arrow-right icon-fold"></i></span>
+          <ul class="timeline-article-list">
+            <li class="timeline-article-item">
+              <h4 class="timeline-article-title">学习十九大精神进行时｜成都市教育局专题传达学习党的十九大及全市传达学习会精神</h4>
+              <span class="timeline-article-info">19:26 成都教育发布</span>
+            </li>
+            <li class="timeline-article-item">
+              <h4 class="timeline-article-title">学习十九大精神进行时</h4>
+              <span class="timeline-article-info">19:26 成都教育发布</span>
+            </li>
+            <li class="timeline-article-item">
+              <span class="timeline-view-more">加载更多</span>
+            </li>
+          </ul>
+        </div>
+        <div class="clearfix">
+          <span class="timeline-date">2017-10-19</span>
+          <span class="timeline-fold-btn">收起 <i class="iconfont icon-arrow-right icon-fold"></i></span>
+          <ul class="timeline-article-list">
+            <li class="timeline-article-item">
+              <h4 class="timeline-article-title">学习十九大精神进行时｜成都市教育局专题传达学习党的十九大及全市传达学习会精神</h4>
+              <span class="timeline-article-info">19:26 成都教育发布</span>
+            </li>
+            <li class="timeline-article-item">
+              <h4 class="timeline-article-title">学习十九大精神进行时</h4>
+              <span class="timeline-article-info">19:26 成都教育发布</span>
+            </li>
+            <li class="timeline-article-item">
+              <span class="timeline-view-more">加载更多</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="sentiment-box board">
+        <div class="sentiment-chart-box" ref="sentimentChart"></div>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import './index.css';
+  import echarts from 'echarts';
+  import china from 'echarts/map/js/china';
+  import { geoOption } from './option/geoOption';
+  import { spreadPathOption } from './option/spreadPathOption';
+  import { spreadTrendOption } from './option/spreadTrendOption';
+  import { sentimentOption } from './option/sentimentOption';
 
   export default {
     data() {
       return {
         activeTabName: 'tab1'
       };
+    },
+    mounted() {
+      const geoChart = echarts.init(this.$refs.geoChart);
+      geoChart.setOption(geoOption);
+
+      const spreadPathChart = echarts.init(this.$refs.spreadPathChart);
+      spreadPathChart.setOption(spreadPathOption);
+
+      const spreadTrendChart = echarts.init(this.$refs.spreadTrendChart);
+      spreadTrendChart.setOption(spreadTrendOption);
+
+      const sentimentChart = echarts.init(this.$refs.sentimentChart);
+      sentimentChart.setOption(sentimentOption);
     }
   };
 </script>

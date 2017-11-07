@@ -28,30 +28,41 @@
   height: 715px;
   padding: 16px 20px 20px;
   background: #fff;
+  overflow-y: auto;
+  overflow-y: overlay;
 }
 .graph-box {
   width: 546px;
   height: 281px;
+  padding: 16px 20px 20px;
   background: #fff;
 }
 .spread-path-box {
   width: 546px;
   height: 281px;
+  padding: 16px 20px 20px;
   background: #fff;
 }
 .spread-trend-box {
   width: 626px;
   height: 325px;
+  padding: 16px 20px 20px;
   background: #fff;
 }
 .event-timeline-box {
   width: 626px;
   height: 370px;
+  padding: 16px 20px 20px;
   background: #fff;
+  overflow-y: auto;
+}
+.event-timeline-box h3 {
+  margin-bottom: 30px;
 }
 .sentiment-box {
   width: 626px;
   height: 281px;
+  padding: 16px 20px 20px;
   background: #fff;
 }
 .topic-list {
@@ -143,4 +154,89 @@
 }
 .geo-article-list {
   margin-top: 32px;
+}
+.geo-article-list li {
+  margin-bottom: 28px;
+}
+.geo-article-title {
+  display: inline-block;
+  width: 349px;
+  font-weight: bold;
+  color: #4C637B;
+}
+.geo-article-time {
+  float: right;
+  vertical-align: top;
+  color: #9FB3CA;
+}
+.timeline-date {
+  float: left;
+  color: #4C637B;
+}
+.timeline-fold-btn {
+  float: right;
+  color: #9FB3CA;
+  cursor: pointer;
+}
+.icon-fold {
+  display: inline-block;
+  font-size: 12px;
+  transform: rotate(-90deg);
+}
+.timeline-article-list {
+  margin-left: 106px;
+  margin-top: 17px;
+  position: relative;
+}
+.timeline-article-title {
+  font-weight: bold;
+  color: #4C637B;
+}
+.timeline-article-info {
+  font-size: 12px;
+  color: #9FB3CA;
+}
+
+.timeline-article-list:after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -25px;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #CED9E5;
+  border-radius: 50%;
+  background: #fff;
+}
+.timeline-article-list:before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  bottom: -15px;
+  left: -23px;
+  width: 0;
+  border-left: 1px solid #CED9E5;
+}
+.timeline-article-item {
+  margin-bottom: 8px;
+}
+.timeline-view-more {
+  display: inline-block;
+  padding: 2px 7px;
+  background: #EBF3FB;
+  border-radius: 4px;
+  color: #4C637B;
+  cursor: pointer;
+}
+.spread-path-chart-box {
+  width: 100%;
+  height: 100%;
+}
+.spread-trend-chart-box {
+  width: 100%;
+  height: 100%;
+}
+.sentiment-chart-box {
+  width: 100%;
+  height: 100%;
 }
