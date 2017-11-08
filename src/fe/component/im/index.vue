@@ -192,7 +192,7 @@
             </div>
             <div class="im-dialog-main-right-chat">
               <div class="im-dialog-main-right-chat-wrap">
-                <textarea placeholder="按下Cmd+Enter换行"></textarea>
+                <textarea placeholder="按下Cmd+Enter换行" @keyup.enter="sendMessage"></textarea>
               </div>
             </div>
           </div>
@@ -216,8 +216,6 @@
 
   const accountMode = 1;
   //官方 demo appid,需要开发者自己修改
-  const sdkAppID = 1400047308;
-  const accountType = 18694;
 
   export default {
     components: {DepartmentBrowser},
@@ -248,14 +246,19 @@
       departmentBrowserConfirm() {
 
       },
+      sendMessage() {
+        console.log('send message');
+        api.sendMessage('a44ffba0-944c-11e7-bf92-d9316a87fd08', '谢朝宁', '', 'test', (err, r) => {
+          console.log(err, r);
+        });
+      },
       login() {
-        api.login({
-          username: this.userInfo._id,
-          displayname: this.userInfo.name
-        }).then((res) => {
-          console.log('login --->', res);
-        }).catch((err) => {
-          this.$message.error(err);
+        console.log('userInfo -->', this.userInfo);
+        api.login(this.userInfo._id, this.userInfo.name, this.userInfo.photo, (err, rs) => {
+          console.log(err, rs);
+          api.getRecentContactList((err, r) => {
+            console.log('getRecentContactList -> ', err, r);
+          });
         });
       }
     }

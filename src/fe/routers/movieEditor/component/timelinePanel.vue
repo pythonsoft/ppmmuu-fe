@@ -137,6 +137,7 @@
         }
       },
       download(rs, type) {
+        const me = this;
         if (this.sequences.length === 0 || this.currentSequenceIndex < 0) return;
         const item = this.sequences[this.currentSequenceIndex];
         const templateInfo = rs[type];
@@ -148,7 +149,8 @@
           outpoint: Math.floor(item.range[1] * 25),
           filename: item.title,
           filetypeid: item.filetypeid,
-          templateId: templateInfo._id
+          templateId: templateInfo._id,
+          ownerName: item.ownerName,
         };
 
         if(transferParams) {
@@ -157,8 +159,11 @@
         }
 
         jobAPI.download(param).then((res) => {
-          this.$message.success('正在下载文件，请到"任务"查看详细情况');
-        }).catch((error) => {
+          if(res.data === 'audit'){
+            me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
+          }else {
+            me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          }        }).catch((error) => {
           this.$message.error(error);
         });
 

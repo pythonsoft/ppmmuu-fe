@@ -372,7 +372,7 @@
           input: this.basic.INPOINT,
           output: this.basic.OUTPOINT,
           duration: this.basic.OUTPOINT - this.basic.INPOINT,
-          fileTypeId: this.fileInfo.FILETYPEID
+          fileTypeId: this.fileInfo.FILETYPEID,
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
@@ -402,7 +402,7 @@
           input: this.basic.INPOINT,
           output: this.basic.OUTPOINT,
           duration: this.basic.OUTPOINT - this.basic.INPOINT,
-          fileTypeId: this.fileInfo.FILETYPEID
+          fileTypeId: this.fileInfo.FILETYPEID,
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
@@ -507,7 +507,6 @@
         const me = this;
         const templateInfo = rs[type];
         const transferParams = rs[type + '_info'];
-        const ownerName =  me.program['FIELD314'] ? me.program['FIELD314'].value : '';
 
         let inpoint = 0;
         let outpoint = 0;
@@ -526,7 +525,6 @@
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: templateInfo._id,
-          ownerName: ownerName
         };
 
         if(transferParams) {
