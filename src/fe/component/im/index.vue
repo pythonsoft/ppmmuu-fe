@@ -192,7 +192,7 @@
             </div>
             <div class="im-dialog-main-right-chat">
               <div class="im-dialog-main-right-chat-wrap">
-                <textarea placeholder="按下Cmd+Enter换行"></textarea>
+                <textarea placeholder="按下Cmd+Enter换行" @keyup.enter="sendMessage"></textarea>
               </div>
             </div>
           </div>
@@ -246,9 +246,19 @@
       departmentBrowserConfirm() {
 
       },
+      sendMessage() {
+        console.log('send message');
+        api.sendMessage('a44ffba0-944c-11e7-bf92-d9316a87fd08', '谢朝宁', '', 'test', (err, r) => {
+          console.log(err, r);
+        });
+      },
       login() {
-        api.login(this.userInfo._id, this.userInfo.name, (err, rs) => {
+        console.log('userInfo -->', this.userInfo);
+        api.login(this.userInfo._id, this.userInfo.name, this.userInfo.photo, (err, rs) => {
           console.log(err, rs);
+          api.getRecentContactList((err, r) => {
+            console.log('getRecentContactList -> ', err, r);
+          });
         });
       }
     }

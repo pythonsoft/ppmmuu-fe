@@ -213,7 +213,17 @@ api.timaccounts = function (data) {
   });
 };
 
-api.login = function(userId, userName, cb) {
+//当前用户身份
+const loginInfo = {
+  sdkAppID: sdkAppID, //用户所属应用id,必填
+  identifier: '', //当前用户ID,必须是否字符串类型，必填
+  accountType: accountType, //用户所属应用帐号类型，必填
+  userSig: '', //当前用户身份凭证，必须是字符串类型，必填
+  identifierNick: null, //当前用户昵称，不用填写，登录接口会返回用户的昵称，如果没有设置，则返回用户的id
+  headurl: 'img/me.jpg' //当前用户默认头像，选填，如果设置过头像，则可以通过拉取个人资料接口来得到头像信息
+};
+
+api.login = function(userId, userName, headurl, cb) {
 
   api.timaccounts({
     username: userId,
@@ -222,15 +232,9 @@ api.login = function(userId, userName, cb) {
 
     const data = res.data;
 
-    //当前用户身份
-    const loginInfo = {
-      'sdkAppID': sdkAppID, //用户所属应用id,必填
-      'identifier': userId, //当前用户ID,必须是否字符串类型，必填
-      'accountType': accountType, //用户所属应用帐号类型，必填
-      'userSig': data.usersig, //当前用户身份凭证，必须是字符串类型，必填
-      'identifierNick': null, //当前用户昵称，不用填写，登录接口会返回用户的昵称，如果没有设置，则返回用户的id
-      'headurl': 'img/me.jpg' //当前用户默认头像，选填，如果设置过头像，则可以通过拉取个人资料接口来得到头像信息
-    };
+    loginInfo.identifier = userId;
+    loginInfo.userSig = data.usersig;
+    loginInfo.headurl = headurl;
 
     webim.login(loginInfo, listeners, options, (resp) => {
         loginInfo.identifierNick = resp.identifierNick; //设置当前用户昵称
@@ -245,5 +249,40 @@ api.login = function(userId, userName, cb) {
   });
 
 };
+
+api.sendMessage = function(toId, toName, friendHeadUrl, content, cb) {
+  const msgTime = Math.round(new Date().getTime() / 1000);
+  const random = Math.round(Math.random() * 4294967296);//消息随机数，用于去重
+  const seq = -1;//消息序列，-1表示sdk自动生成，用于去重
+  const isSend = true;//是否为自己发送
+
+  const selType = webim.SESSION_TYPE.C2C; //定认为私聊
+  let selSess = webim.MsgStore.sessByTypeId(selType, toId);
+
+  if (!selSess) {
+    selSess = new webim.Session(selType, toId, toName, friendHeadUrl, Math.round(new Date().getTime() / 1000), seq);
+  }
+  const msg = new webim.Msg(selSess, isSend, seq, random, msgTime, loginInfo.identifier, webim.C2C_MSG_SUB_TYPE.COMMON, loginInfo.identifierNick);
+
+  msg.addText(new webim.Msg.Elem.Text(content));
+  webim.sendMsg(msg, () => {
+    return cb && cb(null, 'ok');
+  }, (err) => {
+    return cb && cb(err);
+  });
+};
+
+api.getRecentContactList = function(cb) {
+  webim.getRecentContactList({
+    'Count': 50 //最近的会话数 ,最大为100, 50个为最大免费上限
+  }, (resp) => {
+    return cb && cb(null, resp);
+    //业务处理
+  }, (resp) => {
+    //错误回调
+    return cb && cb(resp);
+  });
+};
+
 
 module.exports = api;
