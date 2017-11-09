@@ -275,7 +275,7 @@
         const me = this;
 
         const param = {
-          jobId: this.table.currentRowInfo.taskId
+          jobId: this.parentInfo.id
         };
 
         if (!param.jobId) {
@@ -302,7 +302,7 @@
         const me = this;
 
         const param = {
-          jobId: this.table.currentRowInfo.taskId
+          jobId: this.parentInfo.id
         };
 
         if (!param.jobId) {

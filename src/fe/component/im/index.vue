@@ -13,8 +13,8 @@
             <div class="im-main-left-header">
               <div class="im-main-left-header-top">
                 <div class="im-main-left-header-top-avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
+                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                  <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
                 <div class="im-main-left-header-top-name">{{userInfo.name || '无名'}}</div>
                 <div class="iconfont icon-menu im-icon-menu" @click="displayMenu"></div>
@@ -34,112 +34,29 @@
             <div class="im-main-left-dialog-list">
               <div class="im-main-left-dialog-list-item">
                 <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
+                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                  <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
                 <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
+                  幸福大家庭
                 </div>
               </div>
               <div class="im-main-left-dialog-list-item active">
                 <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
+                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                  <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
                 <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
+                  幸福大家庭
                 </div>
               </div>
               <div class="im-main-left-dialog-list-item">
                 <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
+                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                  <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
                 <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                  <img v-else class="im-avatar im-img-style" width="30" height="30">
-                </div>
-                <div class="content">
-                  <span>幸福大家庭</span>
-                  <span class="time">20:40</span>
+                  幸福大家庭
                 </div>
               </div>
             </div>
@@ -155,8 +72,8 @@
                 <div class="time">21:55</div>
                 <div class="body">
                   <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
+                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                    <img v-else class="im-avatar im-img-style" width="24" height="24">
                   </div>
                   <div class="message">
                     <div class="name">sasa</div>
@@ -174,8 +91,8 @@
                 <div class="time">21:55</div>
                 <div class="body">
                   <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="30" height="30">
-                    <img v-else class="im-avatar im-img-style" width="30" height="30">
+                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                    <img v-else class="im-avatar im-img-style" width="24" height="24">
                   </div>
                   <div class="message">
                     <div class="name">sasa</div>
