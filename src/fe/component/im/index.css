@@ -20,6 +20,24 @@
   color: #fff;
 }
 
+.im-main-trigger .user-avatar {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 8px auto;
+}
+
+.im-main-trigger-red-point {
+  height: 6px;
+  width: 6px;
+  background: #3ab0eb;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border-radius: 50%;
+}
+
 .im-dialog {
   width: 586px;
   height: 428px;
