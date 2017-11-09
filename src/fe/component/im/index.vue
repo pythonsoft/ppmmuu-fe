@@ -17,8 +17,8 @@
                   <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
                 <div class="im-main-left-header-top-name">{{userInfo.name || '无名'}}</div>
-                <div class="iconfont icon-menu im-icon-menu" @click="displayMenu"></div>
               </div>
+              <div class="iconfont icon-tongxunlu im-icon-menu" @click="displayMenu"></div>
               <div class="im-dialog-main-left-search">
                 <fj-input
                   placeholder="请输入用户名"
@@ -65,6 +65,7 @@
             <div class="im-dialog-main-right-bar">
               <div class="im-dialog-main-right-bar-wrap">
                 sasa
+                <span class="iconfont icon-xiala"></span>
               </div>
             </div>
             <div class="im-dialog-main-right-content">
@@ -109,7 +110,11 @@
             </div>
             <div class="im-dialog-main-right-chat">
               <div class="im-dialog-main-right-chat-wrap">
-                <textarea placeholder="按下Cmd+Enter换行" @keyup.enter="sendMessage"></textarea>
+                <textarea @keyup.enter="sendMessage"></textarea>
+              </div>
+              <div class="im-dialog-main-right-chat-bar">
+                <span>按下Cmd+Enter换行</span>
+                <fj-button size="small" @click="sendMessage">发送</fj-button>
               </div>
             </div>
           </div>
@@ -128,6 +133,7 @@
   import './index.css'
   import { getItemFromLocalStorage } from '../../common/utils';
   import DepartmentBrowser from "../higherOrder/departmentBrowser/index.vue";
+  import FjButton from "../fjUI/packages/button/src/button.vue";
 
   const api = require('./api');
 
@@ -135,7 +141,9 @@
   //官方 demo appid,需要开发者自己修改
 
   export default {
-    components: {DepartmentBrowser},
+    components: {
+      FjButton,
+      DepartmentBrowser},
     name: 'im',
     data() {
       return {
