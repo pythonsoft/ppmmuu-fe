@@ -1,6 +1,6 @@
 .im-main{
   font-family: Helvetica Neue,Helvetica,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
-  color: #fff;
+  color: #9FB3CA;
 }
 
 .im-main-trigger {
@@ -73,7 +73,7 @@
 .im-main-left-header-top{
   position: relative;
   padding-left: 32px;
-  padding-right: 16px;
+  padding-right: 36px;
   height: 24px;
   width: 100%;
   box-sizing: border-box;
@@ -88,12 +88,16 @@
 }
 
 .im-icon-menu{
-  height: 16px;
-  width: 16px;
+  height: 24px;
+  line-height: 24px;
+  width: 44px;
   position: absolute;
+  font-size: 12px;
+  text-align: center;
   right: 0;
-  top: 2px;
+  top: 8px;
   color: #999;
+  background-color: #353535;
 }
 
 .im-main-left-header-top-name{
@@ -194,7 +198,7 @@
   overflow: hidden;
   padding: 40px 0 80px;
   box-sizing: border-box;
-  background-color: #eee;
+  background-color: #F3F5F6;
 }
 
 .im-dialog-main-right-bar{
@@ -211,7 +215,20 @@
 
 .im-dialog-main-right-bar-wrap{
   padding: 0 8px;
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid #E3EAF3;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  color: #2A3E52;
+  font-size: 12px;
+}
+
+.im-dialog-main-right-bar-wrap .iconfont{
+  font-size: 12px;
+  padding-left: 4px;
+  color: #9FB3CA;
 }
 
 .im-dialog-main-right-content{
@@ -224,7 +241,7 @@
 .im-dialog-main-right-content-item{
   padding: 8px;
   position: relative;
-  color: #333;
+  color: #2A3E52;
   overflow: auto;
 }
 
@@ -232,7 +249,7 @@
   height: 20px;
   line-height: 20px;
   text-align: center;
-  color: #ccc;
+  color: #9FB3CA;
 }
 
 .im-dialog-main-right-content-item .body{
@@ -261,7 +278,7 @@
   word-break: break-all;
   padding: 4px 13px;
   background-color: #fff;
-  font-size: 14px;
+  font-size: 12px;
   display: inline-block;
   border-radius: 4px;
 }
@@ -270,7 +287,7 @@
   padding: 4px 13px;
   font-size: 12px;
   border-radius: 4px;
-  color: red;
+  color: #FF3366;
   cursor: pointer;
 }
 
@@ -293,11 +310,17 @@
 
 .im-dialog-main-right-content .left .body .message .name{
   text-align: left;
+  color: #4C637B;
 }
 
 .im-dialog-main-right-content .right .body{
   padding-right: 36px;
   float: right;
+}
+
+.im-dialog-main-right-content .right .body .message .detail {
+  background-color: #38B1EB;
+  color: #fff;
 }
 
 .im-dialog-main-right-content .right .body .avatar{
@@ -309,29 +332,29 @@
 }
 
 .im-dialog-main-right-chat{
-  height: 80px;
-  padding: 8px;
+  height: 86px;
   position: absolute;
   left: 0;
   right:0;
   bottom: 0;
+  border-top: 1px solid #E3EAF3;
 }
 
 .im-dialog-main-right-chat-wrap{
-  height: 64px;
+  height: 50px;
+  padding: 5px 10px;
   box-sizing: border-box;
-  border-top: 1px solid #e1e1e1;
 }
 
 .im-dialog-main-right-chat-wrap textarea{
   height: 100%;
   width: 100%;
-  padding: 4px;
   box-sizing: border-box;
   resize: none;
   border: none;
-  background-color: #eee;
+  background-color: #F3F5F6;
   color: #000;
+  line-height: 150%;
 }
 
 .im-icon-small-close {
@@ -347,4 +370,18 @@
 
 .im-icon-small-close:hover{
   background: #ddd;
+}
+
+.im-dialog-main-right-chat-bar {
+  height: 26px;
+  position: relative;
+  text-align: right;
+  line-height: 26px;
+  padding: 0 10px;
+}
+
+.im-dialog-main-right-chat-bar .fj-button-small {
+  background: #eee;
+  border: 1px solid #CDD9E5;
+  padding: 6px 14px;
 }
