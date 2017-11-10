@@ -121,7 +121,7 @@
       },
       confirmDialog() {
         if (!this.currentNode) {
-          this.showErrorInfo('没有选中的组织');
+          this.$message.error('没有选中的组织');
           return false;
         }
         this.$emit('add-users', this.selectedItems);
@@ -159,7 +159,6 @@
         this.updateList();
       },
       listGroup(id = '', cb) {
-        const me = this;
         if (!this.visible) { return false; }
 
         const query = {
@@ -169,12 +168,12 @@
         groupApi.getGroupList(formatQuery(query, true)).then((res) => {
           const docs = res.data.docs || [];
           if (docs.length === 0) {
-            me.close();
-            me.$message.error('没有部门信息');
+            this.close();
+            this.$message.error('没有部门信息');
           }
           cb && cb(res.data.docs);
         }).catch((err) => {
-          me.showErrorInfo(err);
+          this.$message.error(err);
         });
         return false;
       },

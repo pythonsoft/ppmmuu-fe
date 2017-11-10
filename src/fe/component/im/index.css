@@ -161,6 +161,7 @@
   height: 40px;
   box-sizing: border-box;
   overflow: hidden;
+  cursor: default;
 }
 
 .im-main-left-dialog-list-item:hover{
@@ -188,6 +189,7 @@
   left: 8px;
   top: 8px;
   background: #2e3238;
+  border-radius: 50%;
 }
 
 .im-main-left-dialog-list .active .time{
