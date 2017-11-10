@@ -1,6 +1,8 @@
 import axios from 'axios';
 import bubble from '../higherOrder/bubble/index';
 
+import { merge } from '../../common/utils';
+
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use((config) => {
@@ -659,6 +661,123 @@ api.setProfile = function setProfilePortrait(profile, cb) {
     return cb && cb(null, 'ok');
   }, (err) => {
     return cb && cb(err);
+  });
+};
+
+
+/**
+ * 创建群组
+ * https://cloud.tencent.com/document/product/269/1502
+ * 私有群（Private）：适用于较为私密的聊天场景，群组资料不公开，只能通过邀请的方式加入，类似于微信群。
+ * 公开群（Public）：适用于公开群组，具有较为严格的管理机制、准入机制，类似于QQ群。
+ * 聊天室（ChatRoom）：群成员可以随意进出，组织较为松散。
+ * 互动直播聊天室（AVChatRoom）：适用于互动直播场景，管理上与聊天室相似，但群成员人数无上限；支持以游客身份（不登录）接收消息。
+ * 在线成员广播大群（BChatRoom）：适用于需要向全体在线用户推送消息的场景。
+ * @param info
+ * @param cb
+ * @returns {*}
+ */
+api.createGroup = function createGroup(info, cb) {
+  const groupInfo = merge({
+    'GroupId': '',
+    'Owner_Account': loginInfo.identifier,
+    'Type': 'Private',
+    'Name': '',
+    'FaceUrl': '',
+    'Notification': '',
+    'Introduction': '',
+    'MemberList': [],
+    'ApplyJoinOption': 'FreeAccess' //DisableApply表示禁止任何人申请加入；NeedPermission表示需要群主或管理员审批；FreeAccess表示允许无需审批自由加入群组。
+  }, info);
+
+  if (!groupInfo.Name) {
+    return cb && cb('请输入群组名称');
+  }
+
+  if (webim.Tool.getStrBytes(groupInfo.Name) > 30) {
+    return cb && cb('您输入的群组名称超出限制(最长10个汉字)');
+  }
+
+  if (webim.Tool.getStrBytes(groupInfo.Notification) > 150) {
+    return cb && cb('您输入的群组公告超出限制(最长50个汉字)');
+  }
+
+  if (webim.Tool.getStrBytes(groupInfo.Introduction) > 120) {
+    return cb && cb('您输入的群组简介超出限制(最长40个汉字)');
+  }
+
+  webim.createGroup(groupInfo, () => {
+      return cb && cb(null, '创建群成功');
+      //读取我的群组列表
+      // getJoinedGroupListHigh(getGroupsCallbackOK);
+    }, (err) => {
+      return cb && cb(err.ErrorInfo);
+    }
+  );
+};
+
+//获取我的群组
+api.getMyGroup = function getMyGroup(parmas, cb) {
+
+  const options = merge({
+    'Limit': totalCount,
+    'Offset': 0,
+    //'GroupType':'',
+  }, params);
+
+  options.Member_Account = loginInfo.identifier;
+  options.GroupBaseInfoFilter = [
+    'Type', 'Name', 'Introduction', 'Notification', 'FaceUrl',
+    'CreateTime', 'Owner_Account', 'LastInfoTime', 'LastMsgTime',
+    'NextMsgSeq', 'MemberNum', 'MaxMemberNum', 'ApplyJoinOption', 'ShutUpAllMember'
+  ];
+  options.SelfInfoFilter = ['Role', 'JoinTime', 'MsgFlag', 'UnreadMsgNum'];
+
+  webim.getJoinedGroupListHigh(options, (resp) => {
+    if (!resp.GroupIdList || resp.GroupIdList.length == 0) {
+      alert('你目前还没有加入任何群组');
+      return;
+    }
+    var data = [];
+    for (var i = 0; i < resp.GroupIdList.length; i++) {
+      var group_id = resp.GroupIdList[i].GroupId;
+      var name = webim.Tool.formatText2Html(resp.GroupIdList[i].Name);
+      var type_en = resp.GroupIdList[i].Type;
+      var type = webim.Tool.groupTypeEn2Ch(resp.GroupIdList[i].Type);
+      var role_en = resp.GroupIdList[i].SelfInfo.Role;
+      var role = webim.Tool.groupRoleEn2Ch(resp.GroupIdList[i].SelfInfo.Role);
+      var msg_flag = webim.Tool.groupMsgFlagEn2Ch(
+        resp.GroupIdList[i].SelfInfo.MsgFlag);
+      var msg_flag_en = resp.GroupIdList[i].SelfInfo.MsgFlag;
+      var join_time = webim.Tool.formatTimeStamp(
+        resp.GroupIdList[i].SelfInfo.JoinTime);
+      var member_num = resp.GroupIdList[i].MemberNum;
+      var notification = webim.Tool.formatText2Html(
+        resp.GroupIdList[i].Notification);
+      var introduction = webim.Tool.formatText2Html(
+        resp.GroupIdList[i].Introduction);
+      var ShutUpAllMember = resp.GroupIdList[i].ShutUpAllMember;
+      data.push({
+        'GroupId': group_id,
+        'Name': name,
+        'TypeEn': type_en,
+        'Type': type,
+        'RoleEn': role_en,
+        'Role': role,
+        'MsgFlagEn': msg_flag_en,
+        'MsgFlag': msg_flag,
+        'MemberNum': member_num,
+        'Notification': notification,
+        'Introduction': introduction,
+        'JoinTime': join_time,
+        'ShutUpAllMember': ShutUpAllMember
+      });
+    }
+    //打开我的群组列表对话框
+    $('#get_my_group_table').bootstrapTable('load', data);
+    $('#get_my_group_dialog').modal('show');
+  }, (err) => {
+    alert(err.ErrorInfo);
   });
 };
 

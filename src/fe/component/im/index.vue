@@ -143,7 +143,7 @@
     created() {
       this.myselfInfo = getItemFromLocalStorage('userInfo');
       this.login();
-      console.log(this.myselfInfo);
+      console.log('myselfInfo ===>', this.myselfInfo);
       api.on('im_onMsgNotify', (msg) => {
         console.log('im_onMsgNotify ==>', msg);
       });
@@ -167,6 +167,7 @@
       sendMessage() {
         const val = this.content;
         this.content = '';
+
         api.sendMessage(this.talkToInfo._id, this.talkToInfo.name, this.talkToInfo.photo, val.trim(), (err, r) => {
           if(err) {
             console.log(err);
@@ -186,7 +187,7 @@
             this.$message.error(err);
             return false;
           }
-          this.recentContactList = list.SessionItem;
+          this.recentContactList = list.SessionItem || [];
           console.log('recentContactList -->', this.recentContactList);
         });
       },
