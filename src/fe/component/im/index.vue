@@ -2,7 +2,10 @@
   <div class="im-main">
 
     <div class="im-main-trigger" v-show="!dialogVisible" @click="displayDialog">
-      <span v-if="message">xxx</span>
+      <div v-if="message" class="user-avatar">
+        <img :src="myselfInfo.photo" width="24"/>
+        <div class="im-main-trigger-red-point"></div>
+      </div>
       <span v-else class="iconfont icon-jiqiren im-xiaou-icon"></span>
     </div>
 
@@ -13,12 +16,12 @@
             <div class="im-main-left-header">
               <div class="im-main-left-header-top">
                 <div class="im-main-left-header-top-avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                  <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
                   <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
-                <div class="im-main-left-header-top-name">{{userInfo.name || '无名'}}</div>
-                <div class="iconfont icon-menu im-icon-menu" @click="displayMenu"></div>
+                <div class="im-main-left-header-top-name">{{myselfInfo.name || '无名'}}</div>
               </div>
+              <div class="iconfont icon-tongxunlu im-icon-menu" @click="displayMenu"></div>
               <div class="im-dialog-main-left-search">
                 <fj-input
                   placeholder="请输入用户名"
@@ -32,27 +35,9 @@
               </div>
             </div>
             <div class="im-main-left-dialog-list">
-              <div class="im-main-left-dialog-list-item">
+              <div v-for="item in recentContactList" class="im-main-left-dialog-list-item active" @click="contactClick">
                 <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
-                  <img v-else class="im-avatar im-img-style" width="24" height="24">
-                </div>
-                <div class="content">
-                  幸福大家庭
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item active">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
-                  <img v-else class="im-avatar im-img-style" width="24" height="24">
-                </div>
-                <div class="content">
-                  幸福大家庭
-                </div>
-              </div>
-              <div class="im-main-left-dialog-list-item">
-                <div class="avatar">
-                  <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                  <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
                   <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
                 <div class="content">
@@ -65,6 +50,7 @@
             <div class="im-dialog-main-right-bar">
               <div class="im-dialog-main-right-bar-wrap">
                 sasa
+                <span class="iconfont icon-xiala"></span>
               </div>
             </div>
             <div class="im-dialog-main-right-content">
@@ -72,7 +58,7 @@
                 <div class="time">21:55</div>
                 <div class="body">
                   <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                    <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
                     <img v-else class="im-avatar im-img-style" width="24" height="24">
                   </div>
                   <div class="message">
@@ -91,7 +77,7 @@
                 <div class="time">21:55</div>
                 <div class="body">
                   <div class="avatar">
-                    <img v-if="userInfo.photo" :src="userInfo.photo" class="im-avatar" width="24" height="24">
+                    <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
                     <img v-else class="im-avatar im-img-style" width="24" height="24">
                   </div>
                   <div class="message">
@@ -109,7 +95,11 @@
             </div>
             <div class="im-dialog-main-right-chat">
               <div class="im-dialog-main-right-chat-wrap">
-                <textarea placeholder="按下Cmd+Enter换行" @keyup.enter="sendMessage"></textarea>
+                <textarea @keyup.enter="sendMessage" v-model="content"></textarea>
+              </div>
+              <div class="im-dialog-main-right-chat-bar">
+                <span>按下Cmd+Enter换行</span>
+                <fj-button size="small" @click="sendMessage">发送</fj-button>
               </div>
             </div>
           </div>
@@ -128,29 +118,40 @@
   import './index.css'
   import { getItemFromLocalStorage } from '../../common/utils';
   import DepartmentBrowser from "../higherOrder/departmentBrowser/index.vue";
+  import FjButton from "../fjUI/packages/button/src/button.vue";
 
   const api = require('./api');
 
-  const accountMode = 1;
-  //官方 demo appid,需要开发者自己修改
-
   export default {
-    components: {DepartmentBrowser},
+    components: {
+      FjButton,
+      DepartmentBrowser},
     name: 'im',
     data() {
       return {
+        message: '',
         departmentBrowserVisible: false,
-        message: null,
         dialogVisible: false,
-        userInfo: {},
-        keyword: ''
+        myselfInfo: {}, // 当前登录用户信息
+        talkToInfo: {}, // 当前聊天对象信息
+        keyword: '', // 检索用户时的关键词
+        content: '', //发送窗口内容
+        recentContactList: [], //最近会话列表
+        currentDialogMessages: [], //当前会话所有聊天内容
       }
     },
     created() {
-      this.userInfo = getItemFromLocalStorage('userInfo');
+      this.myselfInfo = getItemFromLocalStorage('userInfo');
       this.login();
+      console.log(this.myselfInfo);
+      api.on('im_onMsgNotify', (msg) => {
+        console.log('im_onMsgNotify ==>', msg);
+      });
     },
     methods: {
+      contactClick() {
+
+      },
       displayMenu() {
         this.departmentBrowserVisible = true;
       },
@@ -164,18 +165,43 @@
 
       },
       sendMessage() {
-        console.log('send message');
-        api.sendMessage('a44ffba0-944c-11e7-bf92-d9316a87fd08', '谢朝宁', '', 'test', (err, r) => {
-          console.log(err, r);
+        const val = this.content;
+        this.content = '';
+        api.sendMessage(this.talkToInfo._id, this.talkToInfo.name, this.talkToInfo.photo, val.trim(), (err, r) => {
+          if(err) {
+            console.log(err);
+            return false;
+          }
         });
       },
       login() {
-        console.log('userInfo -->', this.userInfo);
-        api.login(this.userInfo._id, this.userInfo.name, this.userInfo.photo, (err, rs) => {
-          console.log(err, rs);
-          api.getRecentContactList((err, r) => {
-            console.log('getRecentContactList -> ', err, r);
-          });
+        api.login(this.myselfInfo._id, this.myselfInfo.name, this.myselfInfo.photo, (err, rs) => {
+          this.getRecentContactList();
+          this.setProfile();
+        });
+      },
+      getRecentContactList() {
+        api.getRecentContactList((err, list) => {
+          if(err) {
+            this.$message.error(err);
+            return false;
+          }
+          this.recentContactList = list.SessionItem;
+          console.log('recentContactList -->', this.recentContactList);
+        });
+      },
+      setProfile() {
+        const myselfInfo = this.myselfInfo;
+
+        api.setProfile({
+          nickName: myselfInfo.name,
+          gender: 'unknow',
+          birderDay: '',
+          allowType: 'allowAny',
+          avatar: myselfInfo.photo,
+          sign: '',
+        }, (err, r) => {
+          console.log(err, r);
         });
       }
     }

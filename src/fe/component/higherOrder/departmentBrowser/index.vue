@@ -21,6 +21,7 @@
           <template slot="1">
             <div class="ui-department-browser-content-user">
               <div class="ui-department-browser-content-user-bar">
+                <div class="title">{{departmentName}}</div>
                 <div class="ui-department-browser-search-item">
                   <fj-button size="small" type="primary" @click="handleSearch">查询</fj-button>
                 </div>
@@ -28,7 +29,7 @@
                   <fj-input theme="fill" size="small" placeholder="请输入账户名" v-model="keyword"></fj-input>
                 </div>
               </div>
-              <div class="ui-department-browser-content-user-list" :style="'height:'+ (height - 42) +'px'">
+              <div class="ui-department-browser-content-user-list" :style="'height:'+ (height - 54) +'px'">
                 <fj-table style="font-size: 12px;" :data="tableData" name="accountTable" @selection-change="handleSelectionChange">
                   <fj-table-column type="selection" width="50" align="center"></fj-table-column>
                   <fj-table-column prop="status" label="状态" width="50" align="center">
@@ -101,6 +102,7 @@
         total: 0,
         selectedItems: [],
         keyword: '',
+        departmentName: ''
       }
     },
     created() {
@@ -179,6 +181,7 @@
       treeNodeCurrentChange(treeNode, parentNode) {
         this.currentNode = treeNode;
         this.currentNodeParent = parentNode;
+        this.departmentName = treeNode.name;
         this.updateList();
       },
     }

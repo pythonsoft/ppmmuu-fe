@@ -2,7 +2,9 @@
   position: relative;
   height: 400px;
   overflow: hidden;
-  background: #f8fafb;
+  background: #fff;
+  border: 1px solid #CED9E5;
+  border-radius: 4px;
 }
 .ui-department-browser-content-fix-scroll{
   width: 100%;
@@ -11,8 +13,16 @@
 }
 
 .ui-department-browser-content-user-bar{
-  padding: 6px 4px;
+  padding: 6px 4px 16px;
   overflow: auto;
+}
+
+.ui-department-browser-content-user-bar .title{
+  height: 30px;
+  line-height: 30px;
+  float: left;
+  padding: 0 10px;
+  color: #2A3E52;
 }
 
 .ui-department-browser-search-item {
@@ -24,4 +34,8 @@
 .ui-department-browser-content-user-list{
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.ui-department-browser-content .layout-panel-slide-vertical-bar {
+  border-color: #CED9E5;
 }
