@@ -53,6 +53,18 @@
         </fj-form-item>
       </fj-form>
     </div>
+    <div class="edit-panel-section" v-if="isCompanyForm">
+      <h2>绑定快传用户</h2>
+      <span v-if="tips">快传用户信息： {{tips}}</span>
+      <fj-form label-width="71px" custom-class="edit-group-form">
+        <fj-form-item label="用户名">
+          <fj-input v-model="formData.mediaExpressUser.username" />
+        </fj-form-item>
+        <fj-form-item label="密码">
+          <fj-input v-model="formData.mediaExpressUser.password" type="password"/>
+        </fj-form-item>
+      </fj-form>
+    </div>
     <div class="edit-group-btn-group">
       <fj-button type="primary" :loading="isBtnLoading" @click.stop="submitForm">保存</fj-button><!--
       --><fj-button @click.stop="cancel">取消</fj-button>
@@ -72,6 +84,18 @@
   import groupAPI from '../../../../api/group';
   import { MEMBERCOUNT_LIST, GROUP_CONFIG } from '../config';
 
+  const MEDIAEXPRESS_USER_TYPE = {
+    COMPANYUSER: 0,   //普通成员
+    COMPANYADMIN: 1,  //组织管理员
+    PERSONUSER: 3, //个人用户
+  }
+
+  const MEDIAEXPRESS_USER_TYPE_MAP = {
+    0: '普通成员',   //普通成员
+    1: '组织管理员',  //组织管理员
+    3: '个人用户', //个人用户
+  }
+
   export default {
     props: {
       data: Object,
@@ -82,6 +106,7 @@
     data() {
       return {
         _id: '',
+        tips: '',
         searchResult: [],
         isShowContactDialog: false,
         isBtnLoading: false,
@@ -95,7 +120,8 @@
           },
           deleteDeny: '',
           ad: '',
-          logo: ''
+          logo: '',
+          mediaExpressUser: { username: '', password: ''}
         },
         rules: {
           name: [
@@ -107,6 +133,13 @@
     watch: {
       data(val) {
         this._id = val._id;
+        const mediaExpressUser = val.mediaExpressUser || { username: '', password: ''};
+        val.mediaExpressUser = mediaExpressUser;
+        if(mediaExpressUser && mediaExpressUser.userType && MEDIAEXPRESS_USER_TYPE_MAP[mediaExpressUser.userType]){
+          this.tips = mediaExpressUser.companyName + '(' + MEDIAEXPRESS_USER_TYPE_MAP[mediaExpressUser.userType] +')';
+        }else{
+          this.tips = '';
+        }
         this.initFormData(this.formData, val);
       }
     },
@@ -165,7 +198,11 @@
                 this.$message.success('保存成功');
                 this.isBtnLoading = false;
                 this.$emit('update', { name: this.formData.name });
-                this.cancel();
+                const mediaExpressUser = res.data.mediaExpressUser;
+                if(mediaExpressUser && mediaExpressUser.userType && MEDIAEXPRESS_USER_TYPE_MAP[mediaExpressUser.userType]){
+                  this.tips = mediaExpressUser.companyName + '(' + MEDIAEXPRESS_USER_TYPE_MAP[mediaExpressUser.userType] +')';
+                }
+                //this.cancel();
               }).catch((error) => {
                 this.isBtnLoading = false;
                 this.$message.error(error);

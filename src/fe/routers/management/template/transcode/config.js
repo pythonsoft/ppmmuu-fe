@@ -189,7 +189,7 @@ config.fields = [
       { text: 'mp2', value: 'mp2', key: 'mp2' },
       { text: 'libmp3lame', value: 'libmp3lame', key: 'libmp3lame' },
       { text: 'libfdk_aac', value: 'libfdk_aac', key: 'libfdk_aac' },
-      { text: 'pcm_s16le', value: 'pcm_s16le', key: 'pcm_s16le' },
+      { text: 'pcm_s16le', value: 'pcm_s16le', key: 'pcm_s16le' }
     ]
   },
   {
