@@ -68,7 +68,8 @@ config.TYPE = {
 
 config.TARGET_TYPE = {
   PERSONAL: { text: '个人', value: '0', key: 'PERSONAL' },
-  COMPANY: { text: '企业', value: '1', key: 'COMPANY' }
+  COMPANY: { text: '企业', value: '1', key: 'COMPANY' },
+  ALL: { text: '所有', value: '2', key: 'all'}
 };
 
 config.DELETE_DENY = {
@@ -108,7 +109,7 @@ config.TEMPLATE_TYPE = Object.assign({
 }, config.NODE_TEMPLATE);
 
 method.getTextByValue = function (v, st) {
-  return utils.getTextByValue(config, v, st) || {};
+  return utils.getTextByValue(config, v, st) || '';
 };
 
 method.getConfig = function (configName, key) {

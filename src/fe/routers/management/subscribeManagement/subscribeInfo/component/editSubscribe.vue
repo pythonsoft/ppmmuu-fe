@@ -44,6 +44,24 @@
         ></fj-date-picker>
         <fj-input :value="formatTime(formData.startTime)" :disabled="true" icon="icon-date" v-else></fj-input>
       </fj-form-item>
+      <fj-form-item label="自动推送">
+        <div class="subscribe-autopush">
+          <fj-radio-group v-model="formData.autoPush">
+            <fj-radio class="subscribe-autopush-checkbox"  :label="false">否</fj-radio>
+            <fj-radio class="subscribe-autopush-checkbox"  :label="true">是</fj-radio>
+          </fj-radio-group>
+        </div>
+      </fj-form-item>
+      <fj-form-item label="转码模版">
+        <transcode-template-list
+                :data="formData.transcodeTemplates"
+                @add-template="addTemplate"
+                @delete-template="deleteTemplate"></transcode-template-list>
+      </fj-form-item>
+      <fj-form-item label="转码脚本">
+        <fj-input type="textarea" :rows="7" v-model="formData.transcodeTemplateSelector"></fj-input>
+        <p class="template-download-link" @click="transcodeScriptDialogVisible=true">* 查看脚本说明</p>
+      </fj-form-item>
     </fj-form>
     <div slot="footer">
       <fj-button @click="close">取消</fj-button>
@@ -56,12 +74,17 @@
             @search-user-api="searchOwnerClick"
             title="添加公司">
     </search-add-company>
+    <transcode-script-dialog-view
+            :visible.sync="transcodeScriptDialogVisible"
+    ></transcode-script-dialog-view>
   </fj-slide-dialog>
 </template>
 <script>
   import searchAddCompany from '../../../role/searchAddUser';
   import { formatQuery, formatTime } from '../../../../../common/utils';
   import { getLabelByValue, getSubScribeTypeOptions } from '../config';
+  import transcodeTemplateList from '../../../template/download/component/transcodeTemplateList';
+  import transcodeScriptDialogView from '../../../template/download/component/transcodeScriptDialog';
 
   const api = require('../../../../../api/subscribeManagement');
   const config = require('../config');
@@ -80,10 +103,14 @@
       }
     },
     components: {
-      'search-add-company': searchAddCompany
+      'search-add-company': searchAddCompany,
+      'transcode-template-list': transcodeTemplateList,
+      'transcode-script-dialog-view': transcodeScriptDialogView
     },
     data() {
       return {
+        transcodeScriptDialogVisible: false,
+        mediaexpressDialogDisplay: false,
         isBtnLoading: false,
         SUBSCRIBE_TYPE: [],
         PERIOD_OF_USE: config.PERIOD_OF_USE,
@@ -95,7 +122,10 @@
           subscribeType: [],
           downloadSeconds: '',
           periodOfUse: '',
-          startTime: ''
+          startTime: '',
+          autoPush: true,
+          transcodeTemplateSelector: '',
+          transcodeTemplates: [],
         },
         rules: {
           companyName: [
@@ -160,6 +190,22 @@
       this.initSubScribeType();
     },
     methods: {
+      addTemplate(rows) {
+        rows.forEach((item) => {
+          this.formData.transcodeTemplates.push(item);
+        });
+      },
+      deleteTemplate(rows) {
+        rows.forEach(item => {
+          const index = this.formData.transcodeTemplates.indexOf(item);
+          if (index > -1) {
+            this.formData.transcodeTemplates.splice(index, 1);
+          }
+        });
+      },
+      mediaExpressListConfirm(row) {
+        this.formData.mediaExpressWhite = row.sender;
+      },
       initEditUser() {
         this.$refs.editForm.clearErrors();
         this.dialogVisible = true;
@@ -178,9 +224,12 @@
         }
         api.getSubscribeInfo(formatQuery({ _id: this.id }, true))
           .then((res) => {
-            me.formData = res.data;
+            me.formData = Object.assign({}, me.formData, res.data);
             me.formData.downloadSeconds = me.formData.downloadSeconds/(60*60);
             me.oldStartTime = res.data.startTime;
+            const templateDetail = me.formData.transcodeTemplateDetail;
+            me.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
+            me.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
           })
           .catch((error) => {
             this.$message.error(error);
@@ -205,7 +254,10 @@
           subscribeType: [],
           downloadSeconds: '',
           periodOfUse: '',
-          startTime: ''
+          startTime: '',
+          autoPush: true,
+          transcodeTemplateSelector: '',
+          transcodeTemplates: []
         };
         this.rules['startTime'] = [
           { required: true, message: '请选择开始时间' },
@@ -229,6 +281,10 @@
       add() {
         this.isBtnLoading = true;
         const me = this;
+        me.formData.transcodeTemplateDetail = {
+          transcodeTemplates: me.formData.transcodeTemplates,
+          transcodeTemplateSelector: me.formData.transcodeTemplateSelector
+        }
         api.createSubscribeInfo(this.formData)
           .then((response) => {
             me.dialogVisible = false;
@@ -246,6 +302,10 @@
       edit() {
         this.isBtnLoading = true;
         const me = this;
+        me.formData.transcodeTemplateDetail = {
+          transcodeTemplates: me.formData.transcodeTemplates,
+          transcodeTemplateSelector: me.formData.transcodeTemplateSelector
+        }
         api.updateSubscribeInfo(this.formData)
           .then((response) => {
             me.dialogVisible  = false;
@@ -308,6 +368,15 @@
 
   .subscribe-type-tag .fj-tag {
     background-color: #F4F4F4;
+  }
+
+  .subscribe-autopush-checkbox {
+    margin-right: 10px;
+  }
+
+  .subscribe-autopush {
+    margin-left: -22px;
+    padding-top: 7px;
   }
 </style>
 
