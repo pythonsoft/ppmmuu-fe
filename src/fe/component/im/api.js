@@ -246,7 +246,6 @@ function convertGroupTipMsgToHtml(content) {
   return text;
 }
 
-//
 //把消息转换成Html
 function convertMsgtoHtml(msg) {
   let html = "", elems, elem, type, content;
@@ -506,13 +505,13 @@ api.logout = function logout() {
  * @param content 信息内容
  * @param cb
  */
-api.sendMessage = function(sessionInfo, content, cb) {
-  if (!isEmptyObject(sessionInfo)) {
+api.sendMessage = function(contactInfo, content, cb) {
+  if (isEmptyObject(contactInfo)) {
     return cb && cb('你还没有选中好友或者群组，暂不能聊天');
   }
 
   const info = {
-    toId: sessionInfo.To_Account,
+    toId: contactInfo.To_Account,
     toName: '',
     friendHeadUrl: ''
   };
@@ -526,20 +525,22 @@ api.sendMessage = function(sessionInfo, content, cb) {
 
   let maxLen = 0;
   let err = '';
-  let selType = sessionInfo.Type;
+  let selType = '';
   let subType = '';
 
-  if(sessionInfo.Type === webim.SESSION_TYPE.C2C) {
-    info.toName = sessionInfo.C2cNick;
-    info.friendHeadUrl = sessionInfo.C2cImage;
+  if(contactInfo.Type === webim.RECENT_CONTACT_TYPE.C2C) {
+    info.toName = contactInfo.C2cNick;
+    info.friendHeadUrl = contactInfo.C2cImage;
 
+    selType = webim.SESSION_TYPE.C2C;
     subType = webim.C2C_MSG_SUB_TYPE.COMMON;
     maxLen = webim.MSG_MAX_LENGTH.C2C;
     err = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
   }else {
-    info.toName = sessionInfo.GroupNick;
-    info.friendHeadUrl = sessionInfo.GroupImage;
+    info.toName = contactInfo.GroupNick;
+    info.friendHeadUrl = contactInfo.GroupImage;
 
+    selType = webim.SESSION_TYPE.GROUP;
     subType = webim.GROUP_MSG_SUB_TYPE.COMMON;
     maxLen = webim.MSG_MAX_LENGTH.GROUP;
     err = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
@@ -557,22 +558,25 @@ api.sendMessage = function(sessionInfo, content, cb) {
   let selSess = webim.MsgStore.sessByTypeId(selType, info.toId);
 
   if (!selSess) {
+    console.log('1', selType);
     selSess = new webim.Session(selType, info.toId, info.toName, info.friendHeadUrl, Math.round(new Date().getTime() / 1000), seq);
   }
+
+
   const msg = new webim.Msg(selSess, isSend, seq, random, msgTime, loginInfo.identifier, subType, loginInfo.identifierNick);
 
   let text_obj, face_obj, tmsg, emotionIndex, emotion, restMsgIndex;
   //解析文本和表情
   const expr = /\[[^[\]]{1,3}\]/mg;
-  const emotions = msgtosend.match(expr);
+  const emotions = content.match(expr);
 
   if (!emotions || emotions.length < 1) {
-    text_obj = new webim.Msg.Elem.Text(msgtosend);
+    text_obj = new webim.Msg.Elem.Text(content);
     msg.addText(text_obj);
   } else {
 
     for (let i = 0; i < emotions.length; i++) {
-      tmsg = msgtosend.substring(0, msgtosend.indexOf(emotions[i]));
+      tmsg = content.substring(0, content.indexOf(emotions[i]));
 
       if (tmsg) {
         text_obj = new webim.Msg.Elem.Text(tmsg);
@@ -590,12 +594,12 @@ api.sendMessage = function(sessionInfo, content, cb) {
         msg.addText(text_obj);
       }
 
-      restMsgIndex = msgtosend.indexOf(emotions[i]) + emotions[i].length;
-      msgtosend = msgtosend.substring(restMsgIndex);
+      restMsgIndex = content.indexOf(emotions[i]) + emotions[i].length;
+      content = content.substring(restMsgIndex);
     }
 
-    if (msgtosend) {
-      text_obj = new webim.Msg.Elem.Text(msgtosend);
+    if (content) {
+      text_obj = new webim.Msg.Elem.Text(content);
       msg.addText(text_obj);
     }
   }
@@ -671,7 +675,6 @@ api.setProfile = function setProfilePortrait(profile, cb) {
     return cb && cb(err);
   });
 };
-
 
 /**
  * 创建群组
@@ -787,6 +790,150 @@ api.getMyGroup = function getMyGroup(parmas, cb) {
   }, (err) => {
     alert(err.ErrorInfo);
   });
+};
+
+//读取群组基本资料-高级接口
+api.getGroupInfo = function getGroupInfo(id, cb) {
+  const options = {
+    'GroupIdList': [ id ],
+    'GroupBaseInfoFilter': [
+      'Type',
+      'Name',
+      'Introduction',
+      'Notification',
+      'FaceUrl',
+      'CreateTime',
+      'Owner_Account',
+      'LastInfoTime',
+      'LastMsgTime',
+      'NextMsgSeq',
+      'MemberNum',
+      'MaxMemberNum',
+      'ApplyJoinOption'
+    ],
+    'MemberInfoFilter': [
+      'Account',
+      'Role',
+      'JoinTime',
+      'LastSendMsgTime',
+      'ShutUpUntil'
+    ]
+  };
+
+  webim.getGroupInfo(options, (resp) => {
+    return cb && cb(null, resp);
+  }, (err) => {
+    return cb && cb(err.ErrorInfo);
+  });
+};
+
+const getC2CHistoryMessage = function getC2CHistoryMessage(toId, cb) {
+  //获取最新的c2c历史消息,用于切换好友聊天，重新拉取好友的聊天消息
+  if(!toId) {
+    return cb && cb('请输入好友Id, 以便获取历史消息.');
+  }
+
+  const lastMsgTime = 0; // 第一次拉取好友历史消息时，必须传0
+  const msgKey = '';
+  const options = {
+    'Peer_Account': toId, //好友帐号
+    'MaxCnt': reqMsgCount, //拉取消息条数
+    'LastMsgTime': lastMsgTime, //最近的消息时间，即从这个时间点向前拉取历史消息
+    'MsgKey': msgKey
+  };
+
+  webim.getC2CHistoryMsgs(options, (resp) => {
+    const complete = resp.Complete;//是否还有历史消息可以拉取，1-表示没有，0-表示有
+    const retMsgCount = resp.MsgCount; //返回的消息条数，小于或等于请求的消息条数，小于的时候，说明没有历史消息可拉取了
+    const messages = resp.MsgList;
+
+    if (messages.length === 0) {
+      return cb && cb(null, messages);
+    }
+
+    getPrePageC2CHistroyMsgInfoMap[selToID] = {//保留服务器返回的最近消息时间和消息Key,用于下次向前拉取历史消息
+      'LastMsgTime': resp.LastMsgTime,
+      'MsgKey': resp.MsgKey
+    };
+
+    return cb && cb(null, messages);
+
+  }, (err) => {
+      return cb && cb(err);
+  });
+};
+
+const getGroupHistoryMessage = function getGroupHistoryMessage(toId, cb) {
+  //获取最新的群历史消息,用于切换群组聊天时，重新拉取群组的聊天消息
+  if(!toId) {
+    return cb && cb('请输入群组的Id, 以便获取群历史消息.');
+  }
+
+  api.getGroupInfo(toId, function (err, resp) {
+    if(err) {
+      return cb && cb(err);
+    }
+
+    //拉取最新的群历史消息
+    const options = {
+      'GroupId': toId,
+      'ReqMsgSeq': resp.GroupInfo[0].NextMsgSeq - 1,
+      'ReqMsgNumber': reqMsgCount
+    };
+
+    if (options.ReqMsgSeq === null || options.ReqMsgSeq === undefined || options.ReqMsgSeq <= 0) {
+      return cb && cb(null, []); //该群还没有历史消息
+    }
+
+    webim.syncGroupMsgs(options, (msgList) => {
+      if (msgList.length === 0) {
+        return cb && cb(null, msgList); //该群没有历史消息了
+      }
+
+      getPrePageGroupHistroyMsgInfoMap[selToID] = {
+        "ReqMsgSeq": msgList[msgList.length - 1].MsgSeq - 1
+      };
+
+      return cb && cb(null, msgList);
+
+    }, (err) => {
+      return cb && cb(err.ErrorInfo);
+    });
+  });
+};
+
+api.isGroup = function(t, type = webim.RECENT_CONTACT_TYPE.GROUP) {
+  let isGroup = false;
+
+  if(t === type) {
+    isGroup = true;
+  }
+
+  return isGroup;
+};
+
+api.getAvatar = function(contactInfo) {
+  let headUrl = '';
+
+  if(api.isGroup(contactInfo.Type)) {
+    headUrl = contactInfo.GroupImage;
+  }else {
+    headUrl = contactInfo.C2cImage;
+  }
+
+  return headUrl;
+};
+
+api.getHistoryMessage = function getHistoryMessage(toId, isGroup, cb) {
+  if(isGroup) {
+    getGroupHistoryMessage(toId, cb);
+  }else {
+    getC2CHistoryMessage(toId, cb);
+  }
+};
+
+api.convertMsgToHtml = function(msg) {
+  return convertMsgtoHtml(msg);
 };
 
 api.on = bubble.on;
