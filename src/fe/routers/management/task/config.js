@@ -69,7 +69,7 @@ config.TYPE = {
 config.TARGET_TYPE = {
   PERSONAL: { text: '个人', value: '0', key: 'PERSONAL' },
   COMPANY: { text: '企业', value: '1', key: 'COMPANY' },
-  ALL: { text: '所有', value: '2', key: 'all'}
+  ALL: { text: '所有', value: '2', key: 'all' }
 };
 
 config.DELETE_DENY = {
