@@ -607,4 +607,27 @@ utils.mergeRangeArray = function (intervals) {
   return result;
 };
 
+utils.formatShortTime = function (time) {
+  const t = time.constructor === Number ? new Date(time) : time;
+  const currentTime = new Date();
+  const cn = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+  let formatString = '';
+
+  if(currentTime.getFullYear() !== t.getFullYear()) {
+    formatString = 'YYYY年MM月DD日 HH:mm';
+  }else {
+    if(currentTime.getMonth() !== t.getMonth()) {
+      formatString = 'MM月DD日 HH:mm';
+    }else {
+      if(currentTime.getDay() !== t.getDay()) {
+        formatString = cn[t.getDate()] + ' HH:mm';
+      }else {
+        formatString = 'HH:mm';
+      }
+    }
+  }
+
+  return utils.formatTime(new Date(t), formatString);
+};
+
 module.exports = utils;
