@@ -19,7 +19,7 @@
                   <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
                   <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
-                <div class="im-main-left-header-top-name">{{myselfInfo.name || '无名'}}</div>
+                <div class="im-main-left-header-top-name">{{myselfInfo.name || defaultName}}</div>
               </div>
               <div class="iconfont icon-tongxunlu im-icon-menu" @click="displayMenu"></div>
               <div class="im-dialog-main-left-search">
@@ -35,7 +35,12 @@
               </div>
             </div>
             <div class="im-main-left-dialog-list">
-              <div v-for="item in recentContactList" class="im-main-left-dialog-list-item active" @click="(e) => contactClick(e, item)">
+              <div
+                v-if="recentContactList.length !== 0"
+                v-for="item in recentContactList"
+                :class="talkToInfo.To_Account === item.To_Account? 'im-main-left-dialog-list-item active' : 'im-main-left-dialog-list-item'"
+                @click="(e) => contactClick(e, item)"
+              >
                 <div class="avatar">
                   <img v-if="item.C2cImage || item.GroupImage" :src="item.C2cImage || item.GroupImage" class="im-avatar" width="24" height="24">
                   <img v-else class="im-avatar im-img-style" width="24" height="24">
@@ -46,46 +51,40 @@
               </div>
             </div>
           </div>
-          <div class="im-dialog-main-right">
+
+          <div v-if="isEmptyObject(talkToInfo)" class="im-dialog-main-right">
             <div class="im-dialog-main-right-bar">
               <div class="im-dialog-main-right-bar-wrap">
-                sasa
+                <span class="im-dialog-main-right-bar-wrap-tip">找个人聊聊天吧</span>
+              </div>
+            </div>
+            <div class="im-dialog-main-right-content">
+            </div>
+          </div>
+
+          <div v-else class="im-dialog-main-right">
+            <div class="im-dialog-main-right-bar">
+              <div class="im-dialog-main-right-bar-wrap">
+                {{getTalkToName()}}
                 <span class="iconfont icon-xiala"></span>
               </div>
             </div>
             <div class="im-dialog-main-right-content">
-              <div class="im-dialog-main-right-content-item left">
-                <div class="time">21:55</div>
+              <div
+                v-for="item in currentDialogMessages"
+                :class="setDialogMessageClass(item)"
+              >
+                <div class="time">{{formatTime(item.time)}}</div>
                 <div class="body">
                   <div class="avatar">
-                    <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
-                    <img v-else class="im-avatar im-img-style" width="24" height="24">
+                    <img :src="getAvatarAndClass(item).avatar" :class="getAvatarAndClass(item).className" width="24" height="24"/>
+                    <!--<img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">-->
+                    <!--<img v-else class="im-avatar im-img-style" width="24" height="24">-->
                   </div>
                   <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                    <p class="resend">
-                      <span class="iconfont icon-info"></span>
-                      点击重发
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="im-dialog-main-right-content-item right">
-                <div class="time">21:55</div>
-                <div class="body">
-                  <div class="avatar">
-                    <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
-                    <img v-else class="im-avatar im-img-style" width="24" height="24">
-                  </div>
-                  <div class="message">
-                    <div class="name">sasa</div>
-                    <div class="detail">
-                      加班还是聚餐去啦？
-                    </div>
-                    <p class="resend">
+                    <div class="name">{{getTalkToName()}}</div>
+                    <div class="detail" v-html="convertMsgToHtml(item)"></div>
+                    <p v-if="item.isResend" class="resend">
                       <span class="iconfont icon-info"></span>
                       点击重发
                     </p>
@@ -116,7 +115,7 @@
 </template>
 <script>
   import './index.css'
-  import { getItemFromLocalStorage } from '../../common/utils';
+  import { getItemFromLocalStorage, isEmptyObject, formatShortTime } from '../../common/utils';
   import DepartmentBrowser from "../higherOrder/departmentBrowser/index.vue";
   import FjButton from "../fjUI/packages/button/src/button.vue";
 
@@ -129,6 +128,8 @@
     name: 'im',
     data() {
       return {
+        showTimeFlag: true, //对话框里边显示时间
+        defaultName: '无名',
         message: '',
         departmentBrowserVisible: false,
         dialogVisible: false,
@@ -138,19 +139,83 @@
         content: '', //发送窗口内容
         recentContactList: [], //最近会话列表
         currentDialogMessages: [], //当前会话所有聊天内容
+        timeMap: {}
       }
     },
     created() {
       this.myselfInfo = getItemFromLocalStorage('userInfo');
       this.login();
+
       console.log('myselfInfo ===>', this.myselfInfo);
+
       api.on('im_onMsgNotify', (msg) => {
         console.log('im_onMsgNotify ==>', msg);
+        this.currentDialogMessages.push(msg);
       });
     },
     methods: {
-      contactClick(e, currentItem) {
+      isEmptyObject,
+      convertMsgToHtml(item) {
+        const str = api.convertMsgToHtml(item);
+        console.log('api.convertMsgToHtml(item) -->', str);
+        return str;
+      },
+      getAvatarAndClass(item) {
+        const cls = ['im-avatar'];
+        const avatar = api.getAvatar(item);
 
+        if(!avatar) {
+          cls.push('im-img-style');
+        }
+
+        return { avatar: avatar, className: cls.join(' ') };
+      },
+      setDialogMessageClass(messageInfo) {
+        const rs = ['im-dialog-main-right-content-item'];
+        if(messageInfo.fromAccount === this.myselfInfo._id) {
+          rs.push('right');
+        }else {
+          rs.push('left');
+        }
+
+        return rs.join(' ');
+      },
+      getTalkToName() {
+        const talkTo = this.talkToInfo;
+        return isEmptyObject(talkTo) ? this.defaultName : (talkTo.C2cNick || talkTo.GroupNick || this.defaultName);
+      },
+      formatTime(t) {
+        let str = '';
+        if(new Date().getTime() - t > 1000 * 60 * 20) {
+          str = formatShortTime(new Date(t));
+        }
+
+        if(this.timeMap[str]) {
+          str = ''
+        }else {
+          this.timeMap[str] = true;
+        }
+
+        return str;
+      },
+      closeWindowSession() {
+        this.timeMap = {};
+      },
+      contactClick(e, currentItem) {
+        this.closeWindowSession();
+
+        this.talkToInfo = currentItem;
+
+        api.getHistoryMessage(currentItem.To_Account, api.isGroup(currentItem.Type), (err, messages) => {
+          if(err) {
+            console.error('getHistoryMessage error-->', err);
+            return false;
+          }
+
+          console.log('getHistoryMessage --->', messages);
+
+          this.currentDialogMessages = messages;
+        });
       },
       displayMenu() {
         this.departmentBrowserVisible = true;
@@ -177,6 +242,11 @@
       },
       login() {
         api.login(this.myselfInfo._id, this.myselfInfo.name, this.myselfInfo.photo, (err, rs) => {
+          if(err) {
+            this.$message.error(err);
+            return false;
+          }
+
           this.getRecentContactList();
           this.setProfile();
         });
