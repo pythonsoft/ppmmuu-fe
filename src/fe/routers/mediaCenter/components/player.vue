@@ -288,6 +288,9 @@
       },
       updatePlayerStatus() {
         if (!this.isPlaying) {
+          if (this.currentTime <= this.OUTPOINT && this.currentTime + 1 / this.fps >= this.OUTPOINT) {
+            this.video.currentTime = this.INPOINT;
+          }
           this.play();
           this.isPlaying = true;
           this.moveIndicatorTimer = setInterval(() => {
