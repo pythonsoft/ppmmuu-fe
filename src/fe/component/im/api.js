@@ -506,7 +506,7 @@ api.logout = function logout() {
  * @param cb
  */
 api.sendMessage = function(contactInfo, content, cb) {
-  if (!isEmptyObject(contactInfo)) {
+  if (isEmptyObject(contactInfo)) {
     return cb && cb('你还没有选中好友或者群组，暂不能聊天');
   }
 
@@ -525,13 +525,14 @@ api.sendMessage = function(contactInfo, content, cb) {
 
   let maxLen = 0;
   let err = '';
-  let selType = contactInfo.Type;
+  let selType = '';
   let subType = '';
 
   if(contactInfo.Type === webim.RECENT_CONTACT_TYPE.C2C) {
     info.toName = contactInfo.C2cNick;
     info.friendHeadUrl = contactInfo.C2cImage;
 
+    selType = webim.SESSION_TYPE.C2C;
     subType = webim.C2C_MSG_SUB_TYPE.COMMON;
     maxLen = webim.MSG_MAX_LENGTH.C2C;
     err = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
@@ -539,6 +540,7 @@ api.sendMessage = function(contactInfo, content, cb) {
     info.toName = contactInfo.GroupNick;
     info.friendHeadUrl = contactInfo.GroupImage;
 
+    selType = webim.SESSION_TYPE.GROUP;
     subType = webim.GROUP_MSG_SUB_TYPE.COMMON;
     maxLen = webim.MSG_MAX_LENGTH.GROUP;
     err = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
@@ -556,22 +558,25 @@ api.sendMessage = function(contactInfo, content, cb) {
   let selSess = webim.MsgStore.sessByTypeId(selType, info.toId);
 
   if (!selSess) {
+    console.log('1', selType);
     selSess = new webim.Session(selType, info.toId, info.toName, info.friendHeadUrl, Math.round(new Date().getTime() / 1000), seq);
   }
+
+
   const msg = new webim.Msg(selSess, isSend, seq, random, msgTime, loginInfo.identifier, subType, loginInfo.identifierNick);
 
   let text_obj, face_obj, tmsg, emotionIndex, emotion, restMsgIndex;
   //解析文本和表情
   const expr = /\[[^[\]]{1,3}\]/mg;
-  const emotions = msgtosend.match(expr);
+  const emotions = content.match(expr);
 
   if (!emotions || emotions.length < 1) {
-    text_obj = new webim.Msg.Elem.Text(msgtosend);
+    text_obj = new webim.Msg.Elem.Text(content);
     msg.addText(text_obj);
   } else {
 
     for (let i = 0; i < emotions.length; i++) {
-      tmsg = msgtosend.substring(0, msgtosend.indexOf(emotions[i]));
+      tmsg = content.substring(0, content.indexOf(emotions[i]));
 
       if (tmsg) {
         text_obj = new webim.Msg.Elem.Text(tmsg);
@@ -589,12 +594,12 @@ api.sendMessage = function(contactInfo, content, cb) {
         msg.addText(text_obj);
       }
 
-      restMsgIndex = msgtosend.indexOf(emotions[i]) + emotions[i].length;
-      msgtosend = msgtosend.substring(restMsgIndex);
+      restMsgIndex = content.indexOf(emotions[i]) + emotions[i].length;
+      content = content.substring(restMsgIndex);
     }
 
-    if (msgtosend) {
-      text_obj = new webim.Msg.Elem.Text(msgtosend);
+    if (content) {
+      text_obj = new webim.Msg.Elem.Text(content);
       msg.addText(text_obj);
     }
   }

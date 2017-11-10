@@ -58,7 +58,7 @@
                 <span class="im-dialog-main-right-bar-wrap-tip">找个人聊聊天吧</span>
               </div>
             </div>
-            <div class="im-dialog-main-right-content">
+            <div class="im-dialog-main-right-content" ref="container">
             </div>
           </div>
 
@@ -69,7 +69,7 @@
                 <span class="iconfont icon-xiala"></span>
               </div>
             </div>
-            <div class="im-dialog-main-right-content">
+            <div class="im-dialog-main-right-content" ref="container">
               <div
                 v-for="item in currentDialogMessages"
                 :class="setDialogMessageClass(item)"
@@ -139,7 +139,7 @@
         content: '', //发送窗口内容
         recentContactList: [], //最近会话列表
         currentDialogMessages: [], //当前会话所有聊天内容
-        timeMap: {}
+        timeMap: {},
       }
     },
     created() {
@@ -149,15 +149,17 @@
       console.log('myselfInfo ===>', this.myselfInfo);
 
       api.on('im_onMsgNotify', (msg) => {
-        console.log('im_onMsgNotify ==>', msg);
-        this.currentDialogMessages.push(msg);
+        this.currentDialogMessages = this.currentDialogMessages.concat(msg);
+        this.scrollToBottom();
       });
+
+    },
+    updated() {
     },
     methods: {
       isEmptyObject,
       convertMsgToHtml(item) {
         const str = api.convertMsgToHtml(item);
-        console.log('api.convertMsgToHtml(item) -->', str);
         return str;
       },
       getAvatarAndClass(item) {
@@ -179,6 +181,16 @@
         }
 
         return rs.join(' ');
+      },
+      scrollToBottom() {
+        const container = this.$refs.container;
+
+        if(container) {
+          setTimeout(function() {
+            console.log('scroll to bottom --->', container, container.scrollHeight, container.scrollTop);
+            container.scrollTop = container.scrollHeight;
+          }, 100);
+        }
       },
       getTalkToName() {
         const talkTo = this.talkToInfo;
@@ -212,9 +224,8 @@
             return false;
           }
 
-          console.log('getHistoryMessage --->', messages);
-
           this.currentDialogMessages = messages;
+          this.scrollToBottom();
         });
       },
       displayMenu() {
@@ -233,11 +244,14 @@
         const val = this.content;
         this.content = '';
 
-        api.sendMessage(this.talkToInfo, val.trim(), (err, r) => {
+        api.sendMessage(this.talkToInfo, val.trim(), (err, msg) => {
           if(err) {
             console.log(err);
             return false;
           }
+
+          this.currentDialogMessages.push(msg);
+          this.scrollToBottom();
         });
       },
       login() {
