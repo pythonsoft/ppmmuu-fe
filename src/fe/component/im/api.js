@@ -1,7 +1,7 @@
 import axios from 'axios';
 import bubble from '../higherOrder/bubble/index';
 
-import { merge } from '../../common/utils';
+import { merge, isEmptyObject } from '../../common/utils';
 
 axios.defaults.withCredentials = true;
 
@@ -502,17 +502,20 @@ api.logout = function logout() {
 //webim.GROUP_MSG_SUB_TYPE.REDPACKET-红包消息，优先级最高
 /**
  * 发送消息
- * @param toId 目标ID
- * @param toName 目标名称
- * @param friendHeadUrl 目标头像
+ * @param sessionInfo 会话信息
  * @param content 信息内容
- * @param isGroup 是否为群消息
  * @param cb
  */
-api.sendMessage = function(toId, toName, friendHeadUrl, content, isGroup=false, cb) {
-  if (!selToID) {
+api.sendMessage = function(sessionInfo, content, cb) {
+  if (!isEmptyObject(sessionInfo)) {
     return cb && cb('你还没有选中好友或者群组，暂不能聊天');
   }
+
+  const info = {
+    toId: sessionInfo.To_Account,
+    toName: '',
+    friendHeadUrl: ''
+  };
 
   //获取消息内容
   const msgLen = webim.Tool.getStrBytes(content);
@@ -523,20 +526,25 @@ api.sendMessage = function(toId, toName, friendHeadUrl, content, isGroup=false, 
 
   let maxLen = 0;
   let err = '';
-  let selType = '';
+  let selType = sessionInfo.Type;
   let subType = '';
 
-  if (isGroup) {
-    selType = SESSION_TYPE.GROUP;
-    subType = webim.GROUP_MSG_SUB_TYPE.COMMON;
-    maxLen = webim.MSG_MAX_LENGTH.GROUP;
-    err = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
-  } else {
-    selType = webim.SESSION_TYPE.C2C;
+  if(sessionInfo.Type === webim.SESSION_TYPE.C2C) {
+    info.toName = sessionInfo.C2cNick;
+    info.friendHeadUrl = sessionInfo.C2cImage;
+
     subType = webim.C2C_MSG_SUB_TYPE.COMMON;
     maxLen = webim.MSG_MAX_LENGTH.C2C;
     err = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
+  }else {
+    info.toName = sessionInfo.GroupNick;
+    info.friendHeadUrl = sessionInfo.GroupImage;
+
+    subType = webim.GROUP_MSG_SUB_TYPE.COMMON;
+    maxLen = webim.MSG_MAX_LENGTH.GROUP;
+    err = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
   }
+
   if (msgLen > maxLen) {
     return cb && cb(err);
   }
@@ -546,10 +554,10 @@ api.sendMessage = function(toId, toName, friendHeadUrl, content, isGroup=false, 
   const seq = -1;//消息序列，-1表示sdk自动生成，用于去重
   const isSend = true;//是否为自己发送
 
-  let selSess = webim.MsgStore.sessByTypeId(selType, toId);
+  let selSess = webim.MsgStore.sessByTypeId(selType, info.toId);
 
   if (!selSess) {
-    selSess = new webim.Session(selType, toId, toName, friendHeadUrl, Math.round(new Date().getTime() / 1000), seq);
+    selSess = new webim.Session(selType, info.toId, info.toName, info.friendHeadUrl, Math.round(new Date().getTime() / 1000), seq);
   }
   const msg = new webim.Msg(selSess, isSend, seq, random, msgTime, loginInfo.identifier, subType, loginInfo.identifierNick);
 

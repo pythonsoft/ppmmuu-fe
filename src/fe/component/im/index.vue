@@ -35,13 +35,13 @@
               </div>
             </div>
             <div class="im-main-left-dialog-list">
-              <div v-for="item in recentContactList" class="im-main-left-dialog-list-item active" @click="contactClick">
+              <div v-for="item in recentContactList" class="im-main-left-dialog-list-item active" @click="(e) => contactClick(e, item)">
                 <div class="avatar">
-                  <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
+                  <img v-if="item.C2cImage || item.GroupImage" :src="item.C2cImage || item.GroupImage" class="im-avatar" width="24" height="24">
                   <img v-else class="im-avatar im-img-style" width="24" height="24">
                 </div>
                 <div class="content">
-                  幸福大家庭
+                  {{ item.C2cNick || item.GroupNick || '暂无名称' }}
                 </div>
               </div>
             </div>
@@ -149,7 +149,7 @@
       });
     },
     methods: {
-      contactClick() {
+      contactClick(e, currentItem) {
 
       },
       displayMenu() {
@@ -168,7 +168,7 @@
         const val = this.content;
         this.content = '';
 
-        api.sendMessage(this.talkToInfo._id, this.talkToInfo.name, this.talkToInfo.photo, val.trim(), (err, r) => {
+        api.sendMessage(this.talkToInfo, val.trim(), (err, r) => {
           if(err) {
             console.log(err);
             return false;

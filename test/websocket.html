@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * { padding: 0; margin: 0; outline: none; }
+    .area{ height: 80px; width: 400px; background: #ccc; border: 1px solid #999; }
+  </style>
+</head>
+<body>
+
+<div class="area"></div>
+
+<script src="socket.io.js"></script>
+<script>
+  const socket = io('ws://10.0.15.59:9000',{
+    "transports":['websocket', 'polling']
+  });
+
+  socket.on('connection', function(socket){
+    console.log('a user connected');
+
+    socket.on('message', function(){
+      console.log('user disconnected');
+    });
+
+    socket.send('asdfadfasdfasdfasdfasdfasdfasdfasdf');
+  });
+
+  const ipt = document.querySelector('textarea');
+  ipt.ondragover = function () { return false; };
+
+  // Add drop handler
+  ipt.ondrop = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e = e || window.event;
+    const files = e.dataTransfer.files;
+
+    console.log(files);
+  };
+</script>
+</body>
+</html>
