@@ -78,11 +78,9 @@
                 <div class="body">
                   <div class="avatar">
                     <img :src="getAvatarAndClass(item).avatar" :class="getAvatarAndClass(item).className" width="24" height="24"/>
-                    <!--<img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">-->
-                    <!--<img v-else class="im-avatar im-img-style" width="24" height="24">-->
                   </div>
                   <div class="message">
-                    <div class="name">{{getTalkToName()}}</div>
+                    <div v-if="isGroup(item)" class="name">{{getTalkToName()}}</div>
                     <div class="detail" v-html="convertMsgToHtml(item)"></div>
                     <p v-if="item.isResend" class="resend">
                       <span class="iconfont icon-info"></span>
@@ -212,6 +210,9 @@
       },
       closeWindowSession() {
         this.timeMap = {};
+      },
+      isGroup(item) {
+        return api.isGroup(item.Type);
       },
       contactClick(e, currentItem) {
         this.closeWindowSession();
