@@ -1,7 +1,7 @@
 <template>
   <fj-dialog :title="title" :visible.sync="display" :width="width + 'px'" @close="cancelDialog">
     <template>
-      <div class="ui-department-browser-content" :style="'height: '+ height +'px'">
+      <div v-if="display" class="ui-department-browser-content" :style="'height: '+ height +'px'">
         <panel-view
           :parentSize="{ width: width - 42, height: height }"
           panels="200, #-p0"
@@ -124,7 +124,8 @@
           this.$message.error('没有选中的组织');
           return false;
         }
-        this.$emit('add-users', this.selectedItems);
+        this.$emit('confirm', this.selectedItems);
+        this.$emit('update:visible', false);
         return true;
       },
       handleSelectionChange(val) {
