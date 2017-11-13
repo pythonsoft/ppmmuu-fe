@@ -249,7 +249,8 @@
       },
       updateList() {
         const options = Object.assign({}, this.filterList);
-        options.keyword = this.query.query;
+        const keywordFormat = this.query.query.trim().replace(/ +/g, ',');
+        options.keyword = keywordFormat;
         options.start = (this.currentPage - 1) * this.pageSize;
         options.pageSize = this.pageSize;
         subscribeAPI.esSearch(options, this).then((res) => {

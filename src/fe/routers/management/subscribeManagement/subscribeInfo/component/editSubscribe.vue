@@ -370,7 +370,7 @@
     background-color: #F4F4F4;
   }
 
-  .subscribe-autopush-checkbox {
+  .subscribe-autopush-checkbo {
     margin-right: 10px;
   }
 

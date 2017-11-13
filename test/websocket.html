@@ -11,120 +11,199 @@
 <body>
 
 <div class="area"></div>
+<output id="list"></output>
 
-<script src="socket.io.js"></script>
 <script>
-  // 字符串转为ArrayBuffer对象，参数为字符串
-  function stringToArrayBuffer(str){
-    if(/[\u0080-\uffff]/.test(str)){
-      throw new Error("this needs encoding, like UTF-8");
+  class Transfer {
+    constructor(file){
+      this.socket = new WebSocket('ws://10.0.14.103:9000');
+      this.status = '';
+      const fileSize = file.size;
+      console.log("file len==>", fileSize);
+      this.files = file;
+      this.uuid = '' + new Date().getTime();
+      this.CONFIG_STATUS = {
+        STATUS_CONNECTING:  '0',
+        STATUS_CONNECTED:   '1',
+        STATUS_START:       '2',
+        STATUS_STARTED:     '3',
+        STATUS_TRANSFERING: '4',
+        STATUS_TRANSFERED:  '5',
+        STATUS_STOPING:     '6',
+        STATUS_STOPED:      '7',
+        STATUS_CANCELING:   '8',
+        STATUS_CANCELED:    '9',
+        STATUS_FAIL:        '10',
+        STATUS_RETRANSFER:  '11',
+        STATUS_EXIT:        '13',
+        STATUS_BEATING:     '14'
+
+      };
+      this.payload = {
+        "protocol":"0",
+        "type":"0",
+        "mode":"0",
+        "encrypt":"0",
+        "speed":"0",
+        "transfered":"0",
+        "total": '' + fileSize,
+        "status": "0",
+        "uuid": this.uuid,
+        "ip":"10.0.14.57",
+        "port":"36201",
+        "log":"none",
+        "reserve":"none",
+      }
+
+      this.socket.binaryType = "arraybuffer";
+      const me = this;
+
+      this.socket.onopen = function(){
+        me.onopen();
+      };
+      this.socket.onmessage = function(msg){
+        me.onmessage(msg);
+      }
+
+      this.socket.onerror = function(e){
+        console.log("error===>", e);
+      }
+
+      this.socket.onclose = function(){
+        console.log("server closed===>");
+      }
+      this.prepareTransferSend = this.prepareTransferSend.bind(this);
+      this.sendFile = this.sendFile.bind(this);
+      this.getPayLoad = this.getPayLoad.bind(this);
     }
-    var arr = new Uint8Array(str.length);
-    for(var i=str.length; i--; )
-      arr[i] = str.charCodeAt(i);
-    return arr.buffer;
-  }
-
-  function arrayBufferToString(buffer){
-    var arr = new Uint8Array(buffer);
-    if (!("TextDecoder" in window))
-      alert("Sorry, this browser does not support TextDecoder...");
-
-    var enc = new TextDecoder();
-    var str = enc.decode(arr);
-    if(/[\u0080-\uffff]/.test(str)){
-      throw new Error("this string seems to contain (still encoded) multibytes");
+    onopen(){
+      console.log('connect success');
+      const me = this;
+      me.prepareTransferSend('0');
     }
-    return str;
+    onmessage(msg){
+      console.log("msg", msg);
+      const buffer = msg.data;
+      var msgBuffer = '';
+      let payload = {};
+      console.log("buffer length==>", buffer.byteLength);
+      if(buffer.byteLength > 5){
+        msgBuffer = new Uint8Array(buffer, 5);
+        payload = JSON.parse(this.uint8ArrayToString(msgBuffer));
+      }
+      var dv = new DataView(msg.data);
+      var optcode = dv.getUint8(0);
+      var length = dv.getUint32(1, true);
+      console.log('optcode:%s,length:%s,messageBuffer:%s',optcode,length,JSON.stringify(payload));
+      const status = payload.status;
+      console.log("status==>", status);
+      console.log("status a==>", this.CONFIG_STATUS.STATUS_CONNECTED);
+      switch(status){
+        case this.CONFIG_STATUS.STATUS_CONNECTED:
+          console.log("send start==>");
+          this.prepareTransferSend(this.CONFIG_STATUS.STATUS_START);
+          break;
+        case this.CONFIG_STATUS.STATUS_STARTED:
+          this.sendFile(payload.transfered);
+          break;
+        case this.CONFIG_STATUS.STATUS_TRANSFERING:
+          this.sendFile(payload.transfered);
+          break;
+        case this.CONFIG_STATUS.STATUS_RETRANSFER:
+          this.sendFile(payload.transfered);
+          break;
+      }
+    }
+    prepareTransferSend(status){
+      const options = {
+        "transfered":"0",
+        "status": status,
+      }
+      let message = this.getPayLoad(this.payload, options);
+      let pac = this.getPackage(message, 0);
+      console.log("content==>", pac.byteLength);
+      this.socket.send(pac);
+    }
+    sendFile(start=0){
+      const file = this.file;
+      start = start * 1;
+      if (file.webkitSlice) {
+        var blob = file.webkitSlice(start, start + 256*1024);
+      } else if (file.mozSlice) {
+        var blob = file.mozSlice(start, start + 256*1024);
+      }
+      var reader = new FileReader();
+      const msgStr = reader.readAsBinaryString(blob);
+      let pac = this.getPackage(msgStr, 0);
+      console.log("send file==>", pac);
+      this.socket.send(pac);
+    }
+    getPackage(str, opcode=0){
+      let pack = new ArrayBuffer(262149);
+      const message = this.stringToArrayBuffer(str);
+      const messageArr = new Uint8Array(message);
+      const dv = new Uint8Array(pack);
+      dv[0] = opcode;
+      dv[1] = str.length & 0xff;
+      dv[2] = (str.length & 0xff00) >> 8;
+      dv[3] = (str.length & 0xff0000) >> 16;
+      dv[4] = (str.length & 0xff000000) >> 24;
+      dv.set(messageArr, 5);
+      return dv.buffer;
+    }
+
+    getPayLoad(payload, options){
+      return JSON.stringify(Object.assign(payload, options));
+    }
+
+    stringToArrayBuffer(str){
+      if(/[\u0080-\uffff]/.test(str)){
+        throw new Error("this needs encoding, like UTF-8");
+      }
+      var arr = new Uint8Array(str.length);
+      for(var i=str.length; i--; )
+        arr[i] = str.charCodeAt(i);
+      return arr.buffer;
+    }
+
+    arrayBufferToString(buffer){
+      var arr = new Uint8Array(buffer);
+      if (!("TextDecoder" in window))
+        alert("Sorry, this browser does not support TextDecoder...");
+
+      var enc = new TextDecoder();
+      var str = enc.decode(arr);
+      if(/[\u0080-\uffff]/.test(str)){
+        throw new Error("this string seems to contain (still encoded) multibytes");
+      }
+      return str;
+    }
+
+    uint8ArrayToString(arr){
+      if (!("TextDecoder" in window))
+        alert("Sorry, this browser does not support TextDecoder...");
+
+      var enc = new TextDecoder();
+      var str = enc.decode(arr);
+      if(/[\u0080-\uffff]/.test(str)){
+        throw new Error("this string seems to contain (still encoded) multibytes");
+      }
+      return str;
+    }
   }
 
-  function getPackage(package, str, opcode=0){
-    const message = stringToArrayBuffer(str);
-    const messageArr = new Uint8Array(message);
-//    for(let i = 0; i < message.length; i++){
-//      package[i+4] = message[i];
-//      console.log(package[i+4]);
-//    }
-    const dv = new Uint8Array(package);
-    console.log("length==>", str.length);
-    dv[0] = opcode;
-    dv[1] = str.length & 0xff;
-    dv[2] = (str.length & 0xff00) >> 8;
-    dv[3] = (str.length & 0xff0000) >> 16;
-    dv[4] = (str.length & 0xff000000) >> 24;
-    dv.set(messageArr, 5);
-    console.log(dv[0],dv[1],dv[2],dv[3],dv[4],dv[5],dv[6]);
-    return dv.buffer;
+  function checkBrowserSupportFile(){
+    // Check for the various File API support.
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      // Great success! All the File APIs are supported.
+    } else {
+      alert('The File APIs are not fully supported in this browser.');
+    }
   }
+  checkBrowserSupportFile();
 
-  function getPayLoad(payload, options){
-    return JSON.stringify(Object.assign(payload, options));
-  }
+  const transferArr = [];
 
-  const socket = new WebSocket('ws://10.0.15.59:9000');
-  const payload = {
-    "protocol":"0",
-    "type":"0",
-    "mode":"0",
-    "encrypt":"0",
-    "speed":"0",
-    "transfered":"0",
-    "total": "262149",
-    "status": "0",
-    "uuid": '' + new Date().getTime(),
-    "ip":"10.0.14.57",
-    "port":"36201",
-    "log":"none",
-    "reserve":"none",
-  }
-  socket.binaryType = "arraybuffer";
-  let package = new ArrayBuffer(256*1024 + 5);
-  const options = {
-    "transfered":"0",
-    "total": "262149",
-    "status": "0",
-  }
-
-  socket.onopen = function (){
-    console.log('connect success');
-    let message = getPayLoad(payload, options);
-    package = getPackage(package, message, 0);
-    console.log("content==>", package.byteLength);
-    socket.send(package);
-    //socket.send(package);
-  }
-
-  socket.onmessage = function (msg){
-    console.log("msg", msg.data);
-//    var dv = new DataView(msg.data);
-//    var optcode = dv.getUint8(0);
-//    var length = dv.getUint32(1);
-//    var messageBuffer = dv.byteOffset(5).buffer;
-
-    console.log('server says:', optcode);
-  }
-
-  socket.onerror = function(e){
-    console.log("error===>", e);
-  }
-
-  socket.onclose = function(){
-    console.log("server closed===>");
-  }
-
-//  socket.on('open', function(socket){
-//    console.log('a user connected');
-//
-//    socket.on('message', function(){
-//      console.log('user disconnected');
-//    });
-//
-//    socket.on('disconnect', function(){
-//      console.log('user disconnected');
-//    });
-//
-//    socket.send('asdfadfasdfasdfasdfasdfasdfasdfasdf');
-//  });
 
   const ipt = document.querySelector('.area');
   ipt.ondragover = function () { return false; };
@@ -135,8 +214,15 @@
     e.preventDefault();
     e = e || window.event;
     const files = e.dataTransfer.files;
-
-    console.log(files);
+    var output = [];
+    for (var i = 0, f; f = files[i]; i++) {
+      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+          f.size, ' bytes, last modified: ',
+          f.lastModifiedDate.toLocaleDateString(), '</li>');
+      const transfer = new Transfer(f);
+      transferArr.push(transfer);
+    }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
   };
 </script>
 </body>
