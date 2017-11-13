@@ -669,7 +669,9 @@ api.setProfile = function setProfilePortrait(profile, cb) {
     }
   ];
 
-  webim.setProfilePortrait({ 'ProfileItem': profile_item}, () => {
+  console.log('profile -->', profile_item);
+
+  webim.setProfilePortrait({ 'ProfileItem': profile_item }, () => {
     return cb && cb(null, 'ok');
   }, (err) => {
     return cb && cb(err);

@@ -162,7 +162,7 @@
       ></media-right>
     </template>
 
-    <im></im>
+    <!--<im></im>-->
   </layout-three-column>
 </template>
 <script>
@@ -194,7 +194,7 @@
   import gridAndList from './gridAndList';
   import mediaRight from './right';
 
-  import im from '../../component/im/index';
+//  import im from '../../component/im/index';
 
   const api = require('../../api/media');
   const userAPI = require('../../api/user');
@@ -205,7 +205,7 @@
       'media-right': mediaRight,
       'grid-list-view': gridAndList,
       Pagination,
-      im
+//      im
     },
     data() {
       return {
