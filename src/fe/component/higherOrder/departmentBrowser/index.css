@@ -39,3 +39,19 @@
 .ui-department-browser-content .layout-panel-slide-vertical-bar {
   border-color: #CED9E5;
 }
+
+.status-danger,
+.status-success {
+  text-align: center;
+  display: inline-block;
+  width: 48px;
+  line-height: 20px;
+  border-radius: 2px;
+  color: #fff;
+}
+.status-danger {
+  background-color: #FF3366;
+}
+.status-success {
+  background-color: #2EC4B6;
+}

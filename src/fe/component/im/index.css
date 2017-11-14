@@ -211,6 +211,12 @@
   overflow: hidden;
 }
 
+.im-avatar-group {
+  height: 16px;
+  width: 16px;
+  position: absolute;
+}
+
 .im-dialog-main-right{
   position: relative;
   height: 100%;
