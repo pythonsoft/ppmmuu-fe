@@ -46,6 +46,12 @@
         { text: '路径', index: 'storagePath', route: 'storagePath' },
         { text: '策略', index: 'storageTactics', route: 'storageTactics' }
       ] },
+    { title: '入库管理',
+      index: 'libraryManager',
+      children: [
+        { text: '入库模板', index: 'libraryTemplate', route: 'libraryTemplate' },
+      ]
+    },
     { title: '任务管理',
       index: 'taskManager',
       children: [

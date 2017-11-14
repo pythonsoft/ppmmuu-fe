@@ -60,6 +60,8 @@ const SubscribeType = resolve => require.ensure([], () => resolve(require('./man
 const AuditDownload = resolve => require.ensure([], () => resolve(require('./management/audit/download')), 'auditManager');
 const AuditEmpower = resolve => require.ensure([], () => resolve(require('./management/audit/empower')), 'auditEmpower');
 
+const LibraryTemplate = resolve => require.ensure([], () => resolve(require('./management/library/template')), 'libraryTemplate');
+
 export default [{
   path: '/',
   component: Home,
@@ -89,7 +91,8 @@ export default [{
         { path: 'subscribeInfo', component: SubscribeInfo, meta: { title: '订阅信息' }, name: 'subscribeInfo' },
         { path: 'subscribeType', component: SubscribeType, meta: { title: '类型管理' }, name: 'subscribeType' },
         { path: 'auditDownload', component: AuditDownload, meta: { title: '下载审核' }, name: 'auditDownload' },
-        { path: 'auditEmpower', component: AuditEmpower, meta: { title: '下载审核' }, name: 'auditEmpower' }
+        { path: 'auditEmpower', component: AuditEmpower, meta: { title: '下载审核' }, name: 'auditEmpower' },
+        { path: 'libraryTemplate', component: LibraryTemplate, meta: { title: '入库模板' }, name: 'libraryTemplate' }
       ]
     },
     {

@@ -5,7 +5,7 @@ const config = {};
 
 config.baseDomain = 'localhost:8080';
 
-config.baseURL = `http://${baseDomain}`;
+config.baseURL = `http://${config.baseDomain}`;
 // config.baseURL = 'http://10.0.16.125:8080';
 
 // config.streamURL = 'http://localhost:8080';

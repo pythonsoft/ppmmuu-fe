@@ -155,8 +155,7 @@
       FjInput,
       FjDialog,
       FjButton,
-      DepartmentBrowser
-    },
+      DepartmentBrowser},
     name: 'im',
     data() {
       return {
@@ -179,15 +178,15 @@
     },
     created() {
       this.myselfInfo = getItemFromLocalStorage('userInfo');
-//      this.login();
-//
-//      console.log('myselfInfo ===>', this.myselfInfo);
-//
-//      api.on('im_onMsgNotify', (msg) => {
-//        console.log('im_onMsgNotify --->', msg);
-//        this.currentDialogMessages = this.currentDialogMessages.concat(msg);
-//        this.scrollToBottom();
-//      });
+      this.login();
+
+      console.log('myselfInfo ===>', this.myselfInfo);
+
+      api.on('im_onMsgNotify', (msg) => {
+        console.log('im_onMsgNotify --->', msg);
+        this.currentDialogMessages = this.currentDialogMessages.concat(msg);
+        this.scrollToBottom();
+      });
     },
     updated() {
     },
