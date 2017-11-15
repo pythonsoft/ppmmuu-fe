@@ -18,9 +18,16 @@
     constructor(file){
       this.socket = new WebSocket('ws://10.0.14.103:9000');
       this.status = '';
-      const fileSize = file.size;
+      let fileSize = file.size;
       console.log("file len==>", fileSize);
-      this.files = file;
+      this.file = file;
+      this.fileSize = fileSize;
+      this.stopped = false;
+      this.sendFileInterval = '';
+      this.sendFileTimeout = 50;
+      this.beatInterval = '';
+      this.beatTimeout = 100;
+      this.transfered = 0;
       this.uuid = '' + new Date().getTime();
       this.CONFIG_STATUS = {
         STATUS_CONNECTING:  '0',
@@ -67,14 +74,26 @@
 
       this.socket.onerror = function(e){
         console.log("error===>", e);
+        me.clearAllInterval();
       }
 
       this.socket.onclose = function(){
         console.log("server closed===>");
+        me.clearAllInterval();
       }
       this.prepareTransferSend = this.prepareTransferSend.bind(this);
       this.sendFile = this.sendFile.bind(this);
       this.getPayLoad = this.getPayLoad.bind(this);
+      this.clearAllInterval = this.clearAllInterval.bind(this);
+    }
+    clearAllInterval(){
+      this.stopped = true;
+      if(this.sendFileInterval){
+        clearInterval(this.sendFileInterval);
+      }
+      if(this.beatInterval){
+        clearInterval(this.beatInterval);
+      }
     }
     onopen(){
       console.log('connect success');
@@ -86,60 +105,97 @@
       const buffer = msg.data;
       var msgBuffer = '';
       let payload = {};
-      console.log("buffer length==>", buffer.byteLength);
-      if(buffer.byteLength > 5){
-        msgBuffer = new Uint8Array(buffer, 5);
-        payload = JSON.parse(this.uint8ArrayToString(msgBuffer));
-      }
       var dv = new DataView(msg.data);
       var optcode = dv.getUint8(0);
       var length = dv.getUint32(1, true);
-      console.log('optcode:%s,length:%s,messageBuffer:%s',optcode,length,JSON.stringify(payload));
+      console.log("buffer length==>", buffer.byteLength);
+      if(buffer.byteLength > 5){
+        msgBuffer = buffer.slice(5, length + 5);
+        payload = JSON.parse(this.arrayBufferToString(msgBuffer));
+      }
       const status = payload.status;
-      console.log("status==>", status);
-      console.log("status a==>", this.CONFIG_STATUS.STATUS_CONNECTED);
+      //this.transfered = payload.transfered * 1;
+      console.log("receive status==>", status);
       switch(status){
         case this.CONFIG_STATUS.STATUS_CONNECTED:
           console.log("send start==>");
           this.prepareTransferSend(this.CONFIG_STATUS.STATUS_START);
           break;
         case this.CONFIG_STATUS.STATUS_STARTED:
-          this.sendFile(payload.transfered);
+          console.log(" start set intval ==>");
+          this.stopped = false;
+          this.sendFile();
+          //this.sendFileInterval = setInterval(this.sendFile, this.sendFileTimeout);
+          this.beatInterval = setInterval(this.prepareTransferSend, this.beatTimeout, this.CONFIG_STATUS.STATUS_BEATING);
           break;
         case this.CONFIG_STATUS.STATUS_TRANSFERING:
-          this.sendFile(payload.transfered);
+          if(payload.transfered * 1 >= this.fileSize){
+            console.log("send stopping");
+            this.prepareTransferSend(this.CONFIG_STATUS.STATUS_STOPING);
+          }
+          break;
+        case this.CONFIG_STATUS.STATUS_TRANSFERED:
+          console.log("server says: transfered");
+          this.clearAllInterval();
           break;
         case this.CONFIG_STATUS.STATUS_RETRANSFER:
-          this.sendFile(payload.transfered);
+          console.log(" restart set intval ==>");
+          this.stopped = false;
+          this.transfered = payload.transfered;
+          this.sendFile();
+          //this.sendFileInterval = setInterval(this.sendFile, this.sendFileTimeout);
+          this.beatInterval = setInterval(this.prepareTransferSend, this.beatTimeout, this.CONFIG_STATUS.STATUS_BEATING);
+          break;
+        case this.CONFIG_STATUS.STATUS_STOPED:
+          console.log("stopped!");
+          this.clearAllInterval();
+          break;
+        case this.CONFIG_STATUS.STATUS_CANCELED:
+          this.clearAllInterval();
           break;
       }
     }
     prepareTransferSend(status){
       const options = {
-        "transfered":"0",
+        "transfered":"" + this.transfered,
         "status": status,
       }
       let message = this.getPayLoad(this.payload, options);
       let pac = this.getPackage(message, 0);
-      console.log("content==>", pac.byteLength);
+      console.log("send payload==>", message);
       this.socket.send(pac);
     }
-    sendFile(start=0){
+    sendFile(){
       const file = this.file;
-      start = start * 1;
-      if (file.webkitSlice) {
-        var blob = file.webkitSlice(start, start + 256*1024);
-      } else if (file.mozSlice) {
-        var blob = file.mozSlice(start, start + 256*1024);
+      let start = this.transfered;
+      let leftLen = this.fileSize - start;
+      if(leftLen <= 0){
+        console.log("send completed!");
+        return;
       }
+      if(this.stopped){
+        console.log('send file stopped');
+      }
+      let stop = leftLen > 256*1024 ? start + 256*1024 : start + leftLen;
+      var blob = file.slice(start, stop);
+      console.log("blob==>", typeof blob, blob);
       var reader = new FileReader();
-      const msgStr = reader.readAsBinaryString(blob);
-      let pac = this.getPackage(msgStr, 0);
-      console.log("send file==>", pac);
-      this.socket.send(pac);
+      reader.readAsArrayBuffer(blob);
+      const me = this;
+      reader.onload = function(e){
+        me.transfered += stop - start;
+        let pac = me.getFilePackage(reader.result, 1);
+        console.log("send file==>", pac);
+        me.socket.send(pac);
+        setTimeout(me.sendFile, me.sendFileTimeout);
+      }
+      reader.onerror = function(e){  //读取失败的时候重新执行一次
+        console.log("read file error==>", e);
+        setTimeout(me.sendFile, me.sendFileTimeout);
+      }
     }
     getPackage(str, opcode=0){
-      let pack = new ArrayBuffer(262149);
+      let pack = new ArrayBuffer(5 + str.length);
       const message = this.stringToArrayBuffer(str);
       const messageArr = new Uint8Array(message);
       const dv = new Uint8Array(pack);
@@ -148,6 +204,23 @@
       dv[2] = (str.length & 0xff00) >> 8;
       dv[3] = (str.length & 0xff0000) >> 16;
       dv[4] = (str.length & 0xff000000) >> 24;
+      console.log(dv[0], dv[1], dv[2], dv[3],dv[4]);
+      dv.set(messageArr, 5);
+      return dv.buffer;
+    }
+
+    getFilePackage(arr, opcode=0){
+      let pack = new ArrayBuffer(5 + arr.byteLength);
+      const message = arr;
+      const messageArr = new Uint8Array(message);
+      const length = arr.byteLength;
+      const dv = new Uint8Array(pack);
+      dv[0] = opcode;
+      dv[1] = length & 0xff;
+      dv[2] = (length & 0xff00) >> 8;
+      dv[3] = (length & 0xff0000) >> 16;
+      dv[4] = (length & 0xff000000) >> 24;
+      console.log(dv[0], dv[1], dv[2], dv[3],dv[4]);
       dv.set(messageArr, 5);
       return dv.buffer;
     }
@@ -176,6 +249,7 @@
       if(/[\u0080-\uffff]/.test(str)){
         throw new Error("this string seems to contain (still encoded) multibytes");
       }
+      console.log("receive str==>", str);
       return str;
     }
 
