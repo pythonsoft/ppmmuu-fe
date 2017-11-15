@@ -371,7 +371,7 @@
     background-color: #F4F4F4;
   }
 
-  .subscribe-autopush-checkbo {
+  .subscribe-autopush-checkbox {
     margin-right: 10px;
   }
 
