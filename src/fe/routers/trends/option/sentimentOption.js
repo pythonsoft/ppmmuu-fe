@@ -1,68 +1,91 @@
-export const sentimentOption = {
-    title: {
-        text: '舆情观点',
-        textStyle: {
-            fontSize: '12',
-            fontWeight: 'normal',
-            color: '#2A3E52',
-            align: 'left'
-        }
-    },
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
-    },
-    series: [
-        {
-            name:'访问来源',
-            type:'pie',
-            selectedMode: 'single',
-            radius: [0, '30%'],
+export const convertOpinionData = function(data) {
+  data.forEach(function(item) {
+    item.name = item.title;
+    item.value = item.people;
+  });
+  return data;
+};
+export const convertSentimentData = function(data) {
+  const sentiments = ['正面', '中立', '负面'];
+  const res = [];
+  sentiments.forEach(function(sentiment, i) {
+    res.push({ name: sentiment, value: data[i]});
+  });
+  return res;
+}
 
-            label: {
-                normal: {
-                    position: 'inner'
-                }
-            },
-            labelLine: {
-                normal: {
-                    show: false
-                }
-            },
-            data:[
-                {value:335, name:'直达'},
-                {value:679, name:'营销广告'},
-                {value:1548, name:'搜索引擎'}
-            ]
-        },
-        {
-            name:'访问来源',
-            type:'pie',
-            radius: ['40%', '55%'],
-            label: {
-                normal: {
-                    formatter: ' {b|{b}：} {per|{d}%}  ',
-                    backgroundColor: '#EBF3FB',
-                    borderRadius: 4,
-                    padding: 2,
-                    rich: {
-                        b: {
-                            fontSize: 12,
-                            lineHeight: 17
-                        }
-                    }
-                }
-            },
-            data:[
-                {value:335, name:'直达'},
-                {value:310, name:'邮件营销'},
-                {value:234, name:'联盟广告'},
-                {value:135, name:'视频广告'},
-                {value:1048, name:'百度'},
-                {value:251, name:'谷歌'},
-                {value:147, name:'必应'},
-                {value:102, name:'其他'}
-            ]
+export const sentimentOption = {
+  title: {
+    text: '舆情观点',
+    textStyle: {
+      fontSize: '12',
+      fontWeight: 'normal',
+      color: '#2A3E52',
+      align: 'left'
+    }
+  },
+  tooltip: {
+    trigger: 'item',
+    backgroundColor: 'rgba(42, 62, 82, .8)',
+    formatter: "{a}: {b} <br/> {c} ({d}%)"
+  },
+  series: [
+    {
+      name:'情感',
+      type:'pie',
+      radius: [0, '30%'],
+
+      label: {
+        normal: {
+          position: 'inner',
+          formatter: function(params) {
+            const data = params.data;
+            return data.value > 0 ? data.name : '';
+          }
         }
-    ]
+      },
+      labelLine: {
+        normal: {
+          show: false
+        }
+      },
+      data:[]
+    },
+    {
+      name:'观点',
+      type:'pie',
+      selectedMode: 'single',
+      radius: ['40%', '55%'],
+      label: {
+        normal: {
+          formatter: function(params) {
+            const data = params.data;
+            let title = data.title.slice(0, 10);
+            if (data.title.length > 10) {
+              title += '...';
+            }
+            return `${title}  ${params.percent}%`;
+          },
+          color: '#4C637B',
+          backgroundColor: '#EBF3FB',
+          borderRadius: 4,
+          padding: [2, 5],
+          rich: {
+            b: {
+              fontSize: 12,
+              lineHeight: 17
+            }
+          }
+        }
+      },
+      labelLine: {
+        normal: {
+          lineStyle: {
+            color: '#CED9E5'
+          }
+        }
+      },
+      data:[]
+    }
+  ]
 };

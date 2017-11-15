@@ -13,15 +13,20 @@
   height: 354px;
   padding: 16px 20px 20px;
   background: #fff;
+  overflow-y: auto;
 }
 .topic-box-header {
-  margin-bottom: 30px;
+  margin-bottom: 23px;
+}
+.topic-box-header h3 {
+  display: inline-block;
 }
 .article-box {
   width: 546px;
-  height: 642px;
+  height: 742px;
   padding: 0 20px;
   background: #fff;
+  overflow: auto;
 }
 .geo-box {
   width: 546px;
@@ -29,7 +34,7 @@
   padding: 16px 20px 20px;
   background: #fff;
   overflow-y: auto;
-  overflow-y: overlay;
+  /*overflow-y: overlay;*/
 }
 .graph-box {
   width: 546px;
@@ -39,7 +44,7 @@
 }
 .spread-path-box {
   width: 546px;
-  height: 281px;
+  height: 381px;
   padding: 16px 20px 20px;
   background: #fff;
 }
@@ -102,19 +107,29 @@
   height: 14px;
   line-height: 14px;
   color: #4C637B;
+  cursor: pointer;
 }
-.topic-list-item .icon-rise {
+
+.topic-name:hover,
+.topic-name:active {
+  color: #38B1EB;
+}
+.topic-name.active {
+  color: #38B1EB;
+  font-weight: bold;
+}
+.topic-list-item .icon-fall {
   font-size: 12px;
   color: #1AAD19;
   padding-right: 5px;
 }
-.topic-list-item .icon-fall {
+.topic-list-item .icon-rise {
   font-size: 12px;
   color: #D80400;
   padding-right: 5px;
 }
 .article-list-item {
-  height: 114px;
+  margin-bottom: 14px;
 }
 .article-source-image {
   float: left;
@@ -123,12 +138,20 @@
   margin-right: 26px;
   border-radius: 50%;
   overflow: hidden;
+  background-color: #E3EAF3;
 }
 
 .article-title {
+  display: inline-block;
   margin-bottom: 6px;
   color: #4C637B;
   font-weight: bold;
+}
+.article-title:hover {
+  color: #38B1EB;
+}
+.article-title:active {
+  color: #38B1EB;
 }
 .article-abstract {
   color: #4C637B;
@@ -153,7 +176,7 @@
   color: #38B1EB;
 }
 .geo-article-list {
-  margin-top: 32px;
+  margin-top: 15px;
 }
 .geo-article-list li {
   margin-bottom: 28px;
@@ -164,13 +187,31 @@
   font-weight: bold;
   color: #4C637B;
 }
+.geo-article-title:hover {
+  color: #38B1EB;
+}
+.geo-article-title:active {
+  color: #38B1EB;
+}
 .geo-article-time {
   float: right;
   vertical-align: top;
   color: #9FB3CA;
 }
+.timeline-title {
+  position: relative;
+  margin-left: 23px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #4C637B;
+}
 .timeline-date {
-  float: left;
+  margin-left: 23px;
+  color: #4C637B;
+}
+.timeline-total {
+  margin-left: 17px;
   color: #4C637B;
 }
 .timeline-fold-btn {
@@ -185,12 +226,17 @@
 }
 .timeline-article-list {
   margin-left: 106px;
-  margin-top: 17px;
+  padding-bottom: 16px;
   position: relative;
 }
 .timeline-article-title {
+  display: block;
   font-weight: bold;
   color: #4C637B;
+}
+.timeline-article-title:hover,
+.timeline-article-title:active {
+  color: #38B1EB;
 }
 .timeline-article-info {
   font-size: 12px;
@@ -200,8 +246,8 @@
 .timeline-article-list:after {
   content: '';
   position: absolute;
-  top: -10px;
-  left: -25px;
+  top: -18px;
+  left: -104px;
   width: 5px;
   height: 5px;
   border: 1px solid #CED9E5;
@@ -211,14 +257,30 @@
 .timeline-article-list:before {
   content: '';
   position: absolute;
-  top: -8px;
+  top: -16px;
   bottom: -15px;
-  left: -23px;
+  left: -102px;
   width: 0;
   border-left: 1px solid #CED9E5;
 }
+.timeline-title:before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  bottom: -28px;
+  left: -19px;
+  width: 0;
+  border-left: 1px solid #CED9E5;
+}
+.timeline-title-icon {
+  position: absolute;
+  top: 0;
+  left: -25px;
+  font-size: 14px;
+  color: #9FB3CA;
+}
 .timeline-article-item {
-  margin-bottom: 8px;
+  margin-top: 8px;
 }
 .timeline-view-more {
   display: inline-block;
@@ -239,4 +301,18 @@
 .sentiment-chart-box {
   width: 100%;
   height: 100%;
+}
+.topic-search-input {
+  display: inline-block;
+  width: 168px;
+  margin-left: 26px;
+}
+.input-search-icon:hover {
+  background-color: #38B1EB;
+  color: #fff;
+}
+.empty-box {
+  width: 100%;
+  text-align: center;
+
 }

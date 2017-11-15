@@ -29,7 +29,7 @@ body{ -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; f
 
 .clearfix:before, .clearfix:after{ overflow: hidden; visibility: hidden; content: " "; display: table; clear: both; }
 
-a,a:visited{color: #bfcbd9;}
+/*a,a:visited{color: #bfcbd9;}*/
 
 i{ font-style: normal; }
 

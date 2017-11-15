@@ -1,85 +1,78 @@
+const legend = ['新闻','百度','微博','微信','论坛','博客'];
+export const getTrendSeries = function (data = {}) {
+  const res = [];
+  const item = {
+    type:'line',
+    stack: '总量',
+    areaStyle: {normal: {}}
+  };
+  for (let i = 0; i < legend.length; i++) {
+    const name = legend[i];
+    item.name = name;
+    item.data = data[name] ? data[name].latest : getEmptyData();
+    res.push(Object.assign({}, item));
+  }
+  return res;
+};
+
+const getHours = function() {
+  const hours = [];
+  for (let i = 0; i < 6; i++) {
+    const start = i * 4;
+    const hour = start < 10 ? `0${start}:00-0${start+3}:59` : `${start}:00-${start+3}:59`;
+    hours.push(hour);
+  }
+  return hours;
+};
+const getEmptyData = function() {
+  const data = [];
+  for (let i = 0; i < 7; i++) {
+    data.push(0);
+  }
+  return data;
+};
+
 export const spreadTrendOption = {
-    title: {
-        text: '传播趋势分析',
-        textStyle: {
-            fontSize: '12',
-            fontWeight: 'normal',
-            color: '#2A3E52',
-            align: 'left'
-        }
-    },
-    tooltip : {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'cross',
-            label: {
-                backgroundColor: '#6a7985'
-            }
-        }
-    },
-    legend: {
-        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎'],
-        right: 0
-    },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis : [
-        {
-            type : 'category',
-            boundaryGap : false,
-            data : ['周一','周二','周三','周四','周五','周六','周日']
-        }
-    ],
-    yAxis : [
-        {
-            type : 'value'
-        }
-    ],
-    series : [
-        {
-            name:'邮件营销',
-            type:'line',
-            stack: '总量',
-            areaStyle: {normal: {}},
-            data:[120, 132, 101, 134, 90, 230, 210]
-        },
-        {
-            name:'联盟广告',
-            type:'line',
-            stack: '总量',
-            areaStyle: {normal: {}},
-            data:[220, 182, 191, 234, 290, 330, 310]
-        },
-        {
-            name:'视频广告',
-            type:'line',
-            stack: '总量',
-            areaStyle: {normal: {}},
-            data:[150, 232, 201, 154, 190, 330, 410]
-        },
-        {
-            name:'直接访问',
-            type:'line',
-            stack: '总量',
-            areaStyle: {normal: {}},
-            data:[320, 332, 301, 334, 390, 330, 320]
-        },
-        {
-            name:'搜索引擎',
-            type:'line',
-            stack: '总量',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'top'
-                }
-            },
-            areaStyle: {normal: {}},
-            data:[820, 932, 901, 934, 1290, 1330, 1320]
-        }
-    ]
+  title: {
+    text: '传播趋势分析',
+    textStyle: {
+      fontSize: '12',
+      fontWeight: 'normal',
+      color: '#2A3E52',
+      align: 'left'
+    }
+  },
+  tooltip : {
+    trigger: 'axis',
+    backgroundColor: 'rgba(42, 62, 82, .8)',
+    axisPointer: {
+      type: 'cross',
+      label: {
+        backgroundColor: '#6a7985'
+      }
+    }
+  },
+  legend: {
+    data: legend,
+    right: 0
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis : [
+    {
+      type : 'category',
+      boundaryGap : false,
+      data : getHours()
+    }
+  ],
+  yAxis : [
+    {
+      type : 'value'
+    }
+  ],
+  series : getTrendSeries()
 };
