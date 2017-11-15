@@ -1,504 +1,28 @@
-import axios from 'axios';
 import bubble from '../higherOrder/bubble/index';
-
 import { merge, isEmptyObject } from '../../common/utils';
+import io from 'socket.io-client';
 
-axios.defaults.withCredentials = true;
-
-axios.interceptors.request.use((config) => {
-    // Do something before request is sent
-    if (config.method === 'get') {
-      config.params = config.params || {};
-      config.params.t = new Date().getTime();
-    } else if (config.method === 'post') {
-      config.data = config.data || {};
-      config.data.t = new Date().getTime();
-    }
-
-    return config;
-  }, error =>
-    // Do something with request error
-    Promise.reject(error)
-);
+const global = require('../../global');
 
 const api = {};
 
-//腾讯云通讯接口
+const chat = io(`ws://${global.baseDomain}/chat`,{
+  "transports":['websocket']
+});
 
-//帐号模式，0-表示独立模式，1-表示托管模式
-const accountMode = 0;
+chat.on('connect', function() {
+  console.log('a user connected');
 
-//官方 demo appid,需要开发者自己修改（托管模式）
-const sdkAppID = 1400047308;
-const accountType = 18694;
-
-const AdminAcount = 'xuyawen';
-const selType = webim.SESSION_TYPE.C2C; //当前聊天类型
-const selToID = null; //当前选中聊天id（当聊天类型为私聊时，该值为好友帐号，否则为群号）
-const selSess = null; //当前聊天会话对象
-const recentSessMap = {}; //保存最近会话列表
-const reqRecentSessCount = 50; //每次请求的最近会话条数，业务可以自定义
-
-//默认好友头像
-const friendHeadUrl = 'img/friend.jpg'; //仅demo使用，用于没有设置过头像的好友
-//默认群头像
-const groupHeadUrl = 'img/group.jpg'; //仅demo使用，用于没有设置过群头像的情况
-
-//存放c2c或者群信息（c2c用户：c2c用户id，昵称，头像；群：群id，群名称，群头像）
-const infoMap = {}; //初始化时，可以先拉取我的好友和我的群组信息
-const maxNameLen = 12; //我的好友或群组列表中名称显示最大长度，仅demo用得到
-const reqMsgCount = 15; //每次请求的历史消息(c2c获取群)条数，仅demo用得到
-const pageSize = 15; //表格的每页条数，bootstrap table 分页时用到
-const totalCount = 200; //每次接口请求的条数，bootstrap table 分页时用到
-const emotionFlag = false; //是否打开过表情选择框
-const curPlayAudio = null; //当前正在播放的audio对象
-const getPrePageC2CHistroyMsgInfoMap = {}; //保留下一次拉取好友历史消息的信息
-const getPrePageGroupHistroyMsgInfoMap = {}; //保留下一次拉取群历史消息的信息
-const defaultSelGroupId = null; //登录默认选中的群id，选填，仅demo用得到
-
-//解析文本消息元素
-function convertTextMsgToHtml(content) {
-  return content.getText();
-}
-
-//解析表情消息元素
-function convertFaceMsgToHtml(content) {
-  const index = content.getIndex();
-  const data = content.getData();
-  const emotion = webim.Emotions[index];
-  let url = null;
-
-  if(emotion && emotion[1]){
-    url = emotion[1];
-  }
-
-  return url ? "<img src='" + url + "'/>" : data;
-}
-
-//解析图片消息元素
-function convertImageMsgToHtml(content) {
-  const smallImage = content.getImage(webim.IMAGE_TYPE.SMALL); //小图
-  let bigImage = content.getImage(webim.IMAGE_TYPE.LARGE); //大图
-  let oriImage = content.getImage(webim.IMAGE_TYPE.ORIGIN); //原图
-
-  if (!bigImage) {
-    bigImage = smallImage;
-  }
-
-  if (!oriImage) {
-    oriImage = smallImage;
-  }
-
-  return `<img src="${smallImage.getUrl()}" style="cursor: hand" id="${content.getImageId()}" bigImgUrl="${bigImage.getUrl()}" onclick="imgClick(this)"/>`;
-}
-
-//解析语音消息元素
-function convertSoundMsgToHtml(content) {
-  const second = content.getSecond();//获取语音时长
-  const downUrl = content.getDownUrl();
-
-  if (webim.BROWSER_INFO.type === 'ie' && parseInt(webim.BROWSER_INFO.ver) <= 8) {
-    return '[这是一条语音消息]demo暂不支持ie8(含)以下浏览器播放语音,语音URL:' + downUrl;
-  }
-
-  return `<audio src="${downUrl}" controls="controls" preload="none"></audio>`;
-}
-
-//解析文件消息元素
-function convertFileMsgToHtml(content) {
-  const fileSize = Math.round(content.getSize() / 1024);
-  return `<a href="${content.getDownUrl()}" title="点击下载文件"><i class="glyphicon glyphicon-file">&nbsp;${content.getName}(${fileSize} KB)</i></a>`;
-}
-
-//解析位置消息元素
-function convertLocationMsgToHtml(content) {
-  return `经度=${content.getLongitude()},纬度=${content.getLatitude()},描述=${content.getDesc()}`;
-}
-
-//解析自定义消息元素
-function convertCustomMsgToHtml(content) {
-  return `data="${content.getData()}", desc="${content.getDesc()}", ext="${content.getExt()}"`;
-}
-
-//解析群提示消息元素
-function convertGroupTipMsgToHtml(content) {
-  const WEB_IM_GROUP_TIP_MAX_USER_COUNT = 10;
-  const maxIndex = WEB_IM_GROUP_TIP_MAX_USER_COUNT - 1;
-  let text ="";
-  let opType,opUserId,userIdList;
-
-  opType=content.getOpType();//群提示消息类型（操作类型）
-  opUserId=content.getOpUserId();//操作人id
-
-  switch (opType) {
-    case webim.GROUP_TIP_TYPE.JOIN://加入群
-      userIdList=content.getUserIdList();
-      //text += opUserId + "邀请了";
-      for (let m in userIdList) {
-        text += userIdList[m] + ",";
-        if (userIdList.length > WEB_IM_GROUP_TIP_MAX_USER_COUNT && m === maxIndex) {
-          text += "等" + userIdList.length + "人";
-          break;
-        }
-      }
-      text += "加入该群";
-      break;
-    case webim.GROUP_TIP_TYPE.QUIT://退出群
-      text += opUserId + "主动退出该群";
-      break;
-    case webim.GROUP_TIP_TYPE.KICK://踢出群
-      text += opUserId + "将";
-      userIdList=content.getUserIdList();
-      for (let m in userIdList) {
-        text += userIdList[m] + ",";
-        if (userIdList.length > WEB_IM_GROUP_TIP_MAX_USER_COUNT && m === maxIndex) {
-          text += "等" + userIdList.length + "人";
-          break;
-        }
-      }
-      text += "踢出该群";
-      break;
-    case webim.GROUP_TIP_TYPE.SET_ADMIN://设置管理员
-      text += opUserId + "将";
-      userIdList=content.getUserIdList();
-      for (let m in userIdList) {
-        text += userIdList[m] + ",";
-        if (userIdList.length > WEB_IM_GROUP_TIP_MAX_USER_COUNT && m === maxIndex) {
-          text += "等" + userIdList.length + "人";
-          break;
-        }
-      }
-      text += "设为管理员";
-      break;
-    case webim.GROUP_TIP_TYPE.CANCEL_ADMIN://取消管理员
-      text += opUserId + "取消";
-      userIdList=content.getUserIdList();
-      for (let m in userIdList) {
-        text += userIdList[m] + ",";
-        if (userIdList.length > WEB_IM_GROUP_TIP_MAX_USER_COUNT && m === maxIndex) {
-          text += "等" + userIdList.length + "人";
-          break;
-        }
-      }
-      text += "的管理员资格";
-      break;
-
-    case webim.GROUP_TIP_TYPE.MODIFY_GROUP_INFO://群资料变更
-      text += opUserId + "修改了群资料：";
-      const groupInfoList = content.getGroupInfoList();
-      let type,value;
-
-      for (let m in groupInfoList) {
-        type = groupInfoList[m].getType();
-        value = groupInfoList[m].getValue();
-
-        switch (type) {
-          case webim.GROUP_TIP_MODIFY_GROUP_INFO_TYPE.FACE_URL:
-            text += "群头像为" + value + "; ";
-            break;
-          case webim.GROUP_TIP_MODIFY_GROUP_INFO_TYPE.NAME:
-            text += "群名称为" + value + "; ";
-            break;
-          case webim.GROUP_TIP_MODIFY_GROUP_INFO_TYPE.OWNER:
-            text += "群主为" + value + "; ";
-            break;
-          case webim.GROUP_TIP_MODIFY_GROUP_INFO_TYPE.NOTIFICATION:
-            text += "群公告为" + value + "; ";
-            break;
-          case webim.GROUP_TIP_MODIFY_GROUP_INFO_TYPE.INTRODUCTION:
-            text += "群简介为" + value + "; ";
-            break;
-          default:
-            text += "未知信息为:type=" + type + ",value=" + value + "; ";
-            break;
-        }
-      }
-      break;
-
-    case webim.GROUP_TIP_TYPE.MODIFY_MEMBER_INFO: //群成员资料变更(禁言时间)
-      text += opUserId + "修改了群成员资料:";
-      const memberInfoList = content.getMemberInfoList();
-      let userId,shutupTime;
-
-      for (let m in memberInfoList) {
-        userId = memberInfoList[m].getUserId();
-        shutupTime = memberInfoList[m].getShutupTime();
-        text += userId + ": ";
-        if (shutupTime !== null && shutupTime !== undefined) {
-          if (shutupTime === 0) {
-            text += "取消禁言; ";
-          } else {
-            text += "禁言" + shutupTime + "秒; ";
-          }
-        } else {
-          text += " shutupTime为空";
-        }
-        if (memberInfoList.length > WEB_IM_GROUP_TIP_MAX_USER_COUNT && m === maxIndex) {
-          text += "等" + memberInfoList.length + "人";
-          break;
-        }
-      }
-      break;
-    default:
-      text += "未知群提示消息类型：type=" + opType;
-      break;
-  }
-  return text;
-}
-
-//把消息转换成Html
-function convertMsgtoHtml(msg) {
-  let html = "", elems, elem, type, content;
-  elems = msg.getElems();//获取消息包含的元素数组
-  for (let i in elems) {
-    elem = elems[i];
-    type = elem.getType();//获取元素类型
-    content = elem.getContent();//获取元素对象
-    switch (type) {
-      case webim.MSG_ELEMENT_TYPE.TEXT:
-        html += convertTextMsgToHtml(content);
-        break;
-      case webim.MSG_ELEMENT_TYPE.FACE:
-        html += convertFaceMsgToHtml(content);
-        break;
-      case webim.MSG_ELEMENT_TYPE.IMAGE:
-        html += convertImageMsgToHtml(content);
-        break;
-      case webim.MSG_ELEMENT_TYPE.SOUND:
-        html += convertSoundMsgToHtml(content);
-        break;
-      case webim.MSG_ELEMENT_TYPE.FILE:
-        html += convertFileMsgToHtml(content);
-        break;
-      case webim.MSG_ELEMENT_TYPE.LOCATION://暂不支持地理位置
-        //html += convertLocationMsgToHtml(content);
-        break;
-      case webim.MSG_ELEMENT_TYPE.CUSTOM:
-        html += convertCustomMsgToHtml(content);
-        break;
-      case webim.MSG_ELEMENT_TYPE.GROUP_TIP:
-        html += convertGroupTipMsgToHtml(content);
-        break;
-      default:
-        webim.Log.error('未知消息元素类型: elemType=' + type);
-        break;
-    }
-  }
-  return html;
-}
-
-//监听（多终端同步）群系统消息方法，方法都定义在receive_group_system_msg.js文件中
-//注意每个数字代表的含义，比如，
-//1表示监听申请加群消息，2表示监听申请加群被同意消息，3表示监听申请加群被拒绝消息
-const onGroupSystemNotifys = {
-  "1": onApplyJoinGroupRequestNotify, //申请加群请求（只有管理员会收到）
-  "2": onApplyJoinGroupAcceptNotify, //申请加群被同意（只有申请人能够收到）
-  "3": onApplyJoinGroupRefuseNotify, //申请加群被拒绝（只有申请人能够收到）
-  "4": onKickedGroupNotify, //被管理员踢出群(只有被踢者接收到)
-  "5": onDestoryGroupNotify, //群被解散(全员接收)
-  "6": onCreateGroupNotify, //创建群(创建者接收)
-  "7": onInvitedJoinGroupNotify, //邀请加群(被邀请者接收)
-  "8": onQuitGroupNotify, //主动退群(主动退出者接收)
-  "9": onSetedGroupAdminNotify, //设置管理员(被设置者接收)
-  "10": onCanceledGroupAdminNotify, //取消管理员(被取消者接收)
-  "11": onRevokeGroupNotify, //群已被回收(全员接收)
-  "15": onReadedSyncGroupNotify, //群消息已读同步通知
-  "255": onCustomGroupNotify, //用户自定义通知(默认全员接收)
-  "12":onInvitedJoinGroupNotifyRequest//邀请加群(被邀请者接收,接收者需要同意)
-};
-
-//监听好友系统通知函数对象，方法都定义在receive_friend_system_msg.js文件中
-const onFriendSystemNotifys = {
-  "1": onFriendAddNotify, //好友表增加
-  "2": onFriendDeleteNotify, //好友表删除
-  "3": onPendencyAddNotify, //未决增加
-  "4": onPendencyDeleteNotify, //未决删除
-  "5": onBlackListAddNotify, //黑名单增加
-  "6": onBlackListDeleteNotify //黑名单删除
-};
-
-const onC2cEventNotifys = {
-  "92": onMsgReadedNotify, //消息已读通知,
-  "96" : onMultipleDeviceKickedOut
-};
-
-//监听资料系统通知函数对象，方法都定义在receive_profile_system_msg.js文件中
-const onProfileSystemNotifys = {
-  "1": onProfileModifyNotify //资料修改
-};
-
-//监听连接状态回调变化事件
-const onConnNotify = function(resp) {
-  let info = null;
-  switch (resp.ErrorCode) {
-    case webim.CONNECTION_STATUS.ON:
-      webim.Log.warn('建立连接成功: ' + resp.ErrorInfo);
-      break;
-    case webim.CONNECTION_STATUS.OFF:
-      info = '连接已断开，无法收到新消息，请检查下你的网络是否正常: ' + resp.ErrorInfo;
-      // alert(info);
-      webim.Log.warn(info);
-      break;
-    case webim.CONNECTION_STATUS.RECONNECT:
-      info = '连接状态恢复正常: ' + resp.ErrorInfo;
-      // alert(info);
-      webim.Log.warn(info);
-      break;
-    default:
-      webim.Log.error('未知连接状态: =' + resp.ErrorInfo);
-      break;
-  }
-};
-
-//IE9(含)以下浏览器用到的jsonp回调函数
-const jsonpCallback = function(rspData) {
-  webim.setJsonpLastRspData(rspData);
-}
-//监听新消息(私聊，普通群(非直播聊天室)消息，全员推送消息)事件，必填
-const onMsgNotify = function(newMsgList) {
-  bubble.emit('im_onMsgNotify', newMsgList);
-};
-const onBigGroupMsgNotify = function() {};
-const onGroupInfoChangeNotify = function() {};
-const onKickedEventCall = function() {};
-const onAppliedDownloadUrl = function() {};
-const onFriendAddNotify = function() {};
-const onFriendDeleteNotify = function() {};
-const onPendencyAddNotify = function() {};
-const onBlackListAddNotify = function() {};
-const onPendencyDeleteNotify = function() {};
-const onBlackListDeleteNotify = function() {};
-const onMsgReadedNotify = function() {};
-const onMultipleDeviceKickedOut = function() {};
-
-const onApplyJoinGroupRequestNotify = function() {};
-const onApplyJoinGroupAcceptNotify = function() {};
-const onApplyJoinGroupRefuseNotify = function() {};
-const onKickedGroupNotify = function() {};
-const onDestoryGroupNotify = function() {};
-const onCreateGroupNotify = function() {};
-const onInvitedJoinGroupNotify = function() {};
-const onQuitGroupNotify = function() {};
-const onSetedGroupAdminNotify = function() {};
-const onCanceledGroupAdminNotify = function() {};
-const onRevokeGroupNotify = function() {};
-const onReadedSyncGroupNotify = function() {};
-const onCustomGroupNotify = function() {};
-const onInvitedJoinGroupNotifyRequest = function() {};
-
-const onProfileModifyNotify = function() {};
-
-//监听事件
-const listeners = {
-  "onConnNotify": onConnNotify, //监听连接状态回调变化事件,必填
-  "jsonpCallback": jsonpCallback, //IE9(含)以下浏览器用到的jsonp回调函数，
-  "onMsgNotify": onMsgNotify, //监听新消息(私聊，普通群(非直播聊天室)消息，全员推送消息)事件，必填
-  "onBigGroupMsgNotify": onBigGroupMsgNotify, //监听新消息(直播聊天室)事件，直播场景下必填
-  "onGroupSystemNotifys": onGroupSystemNotifys, //监听（多终端同步）群系统消息事件，如果不需要监听，可不填
-  "onGroupInfoChangeNotify": onGroupInfoChangeNotify, //监听群资料变化事件，选填
-  "onFriendSystemNotifys": onFriendSystemNotifys, //监听好友系统通知事件，选填
-  "onProfileSystemNotifys": onProfileSystemNotifys, //监听资料系统（自己或好友）通知事件，选填
-  "onKickedEventCall": onKickedEventCall, //被其他登录实例踢下线
-  "onC2cEventNotifys": onC2cEventNotifys, //监听C2C系统消息通道
-  "onAppliedDownloadUrl": onAppliedDownloadUrl //申请文件/音频下载地址的回调
-};
-
-//初始化时，其他对象，选填
-const options = {
-  'isAccessFormalEnv': true, //是否访问正式环境，默认访问正式，选填
-  'isLogOn': false //是否开启控制台打印日志,默认开启，选填
-};
-
-// const msgflow = document.getElementsByClassName("msgflow")[0];
-// const bindScrollHistoryEvent = {
-//   init: function() {
-//     msgflow.onscroll = function() {
-//       if (msgflow.scrollTop == 0) {
-//         msgflow.scrollTop = 10;
-//         if (selType == webim.SESSION_TYPE.C2C) {
-//           getPrePageC2CHistoryMsgs();
-//         } else {
-//           getPrePageGroupHistoryMsgs();
-//         }
-//
-//       }
-//     }
-//   },
-//   reset: function() {
-//     msgflow.onscroll = null;
-//   }
-// };
-
-api.timaccounts = function (data) {
-  return new Promise((resolve, reject) => {
-    axios.post('http://182.61.30.36/api/timaccounts', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        return resolve(res);
-      }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      reject(error);
-    });
-  });
-};
-
-//当前用户身份
-const loginInfo = {
-  sdkAppID: sdkAppID, //用户所属应用id,必填
-  identifier: '', //当前用户ID,必须是否字符串类型，必填
-  accountType: accountType, //用户所属应用帐号类型，必填
-  userSig: '', //当前用户身份凭证，必须是字符串类型，必填
-  identifierNick: null, //当前用户昵称，不用填写，登录接口会返回用户的昵称，如果没有设置，则返回用户的id
-  headurl: 'img/me.jpg' //当前用户默认头像，选填，如果设置过头像，则可以通过拉取个人资料接口来得到头像信息
-};
-
-api.login = function(userId, userName, headurl, cb) {
-
-  api.timaccounts({
-    username: userId,
-    displayname: userName
-  }).then((res) => {
-
-    const data = res.data;
-
-    loginInfo.identifier = userId;
-    loginInfo.userSig = data.usersig;
-    loginInfo.headurl = headurl;
-    loginInfo.identifierNick = userName;
-
-    webim.login(loginInfo, listeners, options, (resp) => {
-        return cb && cb(null, loginInfo);
-      }, (err) => {
-        return cb && cb(err.ErrorInfo);
-      }
-    );
-
-  }).catch((err) => {
-    return cb && cb(err);
+  chat.on('login', (rs) => {
+    console.log('rs ===>', rs);
   });
 
-};
+  chat.on('getRecentContactList', (rs) => {
+    console.log('rs')
+  })
 
-api.logout = function logout() {
-  if (loginInfo.identifier) {
-    webim.logout(() => {
-      loginInfo.identifier = null;
-      loginInfo.userSig = null;
-    });
-  } else {
-    alert('未登录');
-  }
-};
+});
 
-//webim.GROUP_MSG_SUB_TYPE.COMMON-普通消息,
-//webim.GROUP_MSG_SUB_TYPE.LOVEMSG-点赞消息，优先级最低
-//webim.GROUP_MSG_SUB_TYPE.TIP-提示消息(不支持发送，用于区分群消息子类型)，
-//webim.GROUP_MSG_SUB_TYPE.REDPACKET-红包消息，优先级最高
 /**
  * 发送消息
  * @param sessionInfo 会话信息
@@ -613,15 +137,7 @@ api.sendMessage = function(contactInfo, content, cb) {
 
 //获取最近的会话
 api.getRecentContactList = function(cb) {
-  webim.getRecentContactList({
-    'Count': 50 //最近的会话数 ,最大为100, 50个为最大免费上限
-  }, (resp) => {
-    return cb && cb(null, resp);
-    //业务处理
-  }, (resp) => {
-    //错误回调
-    return cb && cb(resp);
-  });
+
 };
 
 //设置个人资料
@@ -691,42 +207,62 @@ api.setProfile = function setProfilePortrait(profile, cb) {
  * @returns {*}
  */
 api.createGroup = function createGroup(info, cb) {
-  const groupInfo = merge({
-    'GroupId': '',
-    'Owner_Account': loginInfo.identifier,
-    'Type': 'Private',
-    'Name': '',
-    'FaceUrl': '',
-    'Notification': '',
-    'Introduction': '',
-    'MemberList': [],
-    'ApplyJoinOption': 'FreeAccess' //DisableApply表示禁止任何人申请加入；NeedPermission表示需要群主或管理员审批；FreeAccess表示允许无需审批自由加入群组。
-  }, info);
+  imAPI.addDialog({
+    name: info.Name,
+    type: 'GROUP',
+    members: info.Members.join(','),
+  }).then((resp) => {
 
-  if (!groupInfo.Name) {
-    return cb && cb('请输入群组名称');
-  }
+    const groupInfo = merge({
+      'GroupId': resp.data,
+      'Owner_Account': loginInfo.identifier,
+      'Type': 'Public',
+      'Name': info.Name,
+      'FaceUrl': '',
+      'Notification': '',
+      'Introduction': '',
+      'MemberList': [], //{  "Member_Account": "xxxx" }
+      'ApplyJoinOption': 'FreeAccess' //DisableApply表示禁止任何人申请加入；NeedPermission表示需要群主或管理员审批；FreeAccess表示允许无需审批自由加入群组。
+    }, info);
 
-  if (webim.Tool.getStrBytes(groupInfo.Name) > 30) {
-    return cb && cb('您输入的群组名称超出限制(最长10个汉字)');
-  }
+    groupInfo.MemberList = info.Members;
 
-  if (webim.Tool.getStrBytes(groupInfo.Notification) > 150) {
-    return cb && cb('您输入的群组公告超出限制(最长50个汉字)');
-  }
+    if (!groupInfo.Name) {
+      return cb && cb('请输入群组名称');
+    }
 
-  if (webim.Tool.getStrBytes(groupInfo.Introduction) > 120) {
-    return cb && cb('您输入的群组简介超出限制(最长40个汉字)');
-  }
+    if (webim.Tool.getStrBytes(groupInfo.Name) > 30) {
+      groupInfo.Name = groupInfo.Name.slice(0, 5) + '...';
+      return cb && cb('您输入的群组名称超出限制(最长10个汉字)');
+    }
 
-  webim.createGroup(groupInfo, () => {
-      return cb && cb(null, '创建群成功');
+    if (webim.Tool.getStrBytes(groupInfo.Notification) > 150) {
+      return cb && cb('您输入的群组公告超出限制(最长50个汉字)');
+    }
+
+    if (webim.Tool.getStrBytes(groupInfo.Introduction) > 120) {
+      return cb && cb('您输入的群组简介超出限制(最长40个汉字)');
+    }
+
+    webim.createGroup(groupInfo, () => {
       //读取我的群组列表
       // getJoinedGroupListHigh(getGroupsCallbackOK);
+      const msg =`${info.CreatorName}创建了群`;
+      api.sendMessage({
+        To_Account: groupInfo.GroupId,
+        Type: webim.RECENT_CONTACT_TYPE.GROUP,
+        GroupNick: groupInfo.Name,
+        GroupImage: '',
+      }, msg, (err, r) => {
+        return cb && cb(null, groupInfo.GroupId);
+      });
     }, (err) => {
       return cb && cb(err.ErrorInfo);
-    }
-  );
+    });
+
+  }).catch((err) => {
+    return cb && cb(err);
+  });
 };
 
 //获取我的群组
@@ -828,117 +364,5 @@ api.getGroupInfo = function getGroupInfo(id, cb) {
     return cb && cb(err.ErrorInfo);
   });
 };
-
-const getC2CHistoryMessage = function getC2CHistoryMessage(toId, cb) {
-  //获取最新的c2c历史消息,用于切换好友聊天，重新拉取好友的聊天消息
-  if(!toId) {
-    return cb && cb('请输入好友Id, 以便获取历史消息.');
-  }
-
-  const lastMsgTime = 0; // 第一次拉取好友历史消息时，必须传0
-  const msgKey = '';
-  const options = {
-    'Peer_Account': toId, //好友帐号
-    'MaxCnt': reqMsgCount, //拉取消息条数
-    'LastMsgTime': lastMsgTime, //最近的消息时间，即从这个时间点向前拉取历史消息
-    'MsgKey': msgKey
-  };
-
-  webim.getC2CHistoryMsgs(options, (resp) => {
-    const complete = resp.Complete;//是否还有历史消息可以拉取，1-表示没有，0-表示有
-    const retMsgCount = resp.MsgCount; //返回的消息条数，小于或等于请求的消息条数，小于的时候，说明没有历史消息可拉取了
-    const messages = resp.MsgList;
-
-    if (messages.length === 0) {
-      return cb && cb(null, messages);
-    }
-
-    getPrePageC2CHistroyMsgInfoMap[selToID] = {//保留服务器返回的最近消息时间和消息Key,用于下次向前拉取历史消息
-      'LastMsgTime': resp.LastMsgTime,
-      'MsgKey': resp.MsgKey
-    };
-
-    return cb && cb(null, messages);
-
-  }, (err) => {
-      return cb && cb(err);
-  });
-};
-
-const getGroupHistoryMessage = function getGroupHistoryMessage(toId, cb) {
-  //获取最新的群历史消息,用于切换群组聊天时，重新拉取群组的聊天消息
-  if(!toId) {
-    return cb && cb('请输入群组的Id, 以便获取群历史消息.');
-  }
-
-  api.getGroupInfo(toId, function (err, resp) {
-    if(err) {
-      return cb && cb(err);
-    }
-
-    //拉取最新的群历史消息
-    const options = {
-      'GroupId': toId,
-      'ReqMsgSeq': resp.GroupInfo[0].NextMsgSeq - 1,
-      'ReqMsgNumber': reqMsgCount
-    };
-
-    if (options.ReqMsgSeq === null || options.ReqMsgSeq === undefined || options.ReqMsgSeq <= 0) {
-      return cb && cb(null, []); //该群还没有历史消息
-    }
-
-    webim.syncGroupMsgs(options, (msgList) => {
-      if (msgList.length === 0) {
-        return cb && cb(null, msgList); //该群没有历史消息了
-      }
-
-      getPrePageGroupHistroyMsgInfoMap[selToID] = {
-        "ReqMsgSeq": msgList[msgList.length - 1].MsgSeq - 1
-      };
-
-      return cb && cb(null, msgList);
-
-    }, (err) => {
-      return cb && cb(err.ErrorInfo);
-    });
-  });
-};
-
-api.isGroup = function(t, type = webim.RECENT_CONTACT_TYPE.GROUP) {
-  let isGroup = false;
-
-  if(t === type) {
-    isGroup = true;
-  }
-
-  return isGroup;
-};
-
-api.getAvatar = function(contactInfo) {
-  let headUrl = '';
-
-  if(api.isGroup(contactInfo.Type)) {
-    headUrl = contactInfo.GroupImage;
-  }else {
-    headUrl = contactInfo.C2cImage;
-  }
-
-  return headUrl;
-};
-
-api.getHistoryMessage = function getHistoryMessage(toId, isGroup, cb) {
-  if(isGroup) {
-    getGroupHistoryMessage(toId, cb);
-  }else {
-    getC2CHistoryMessage(toId, cb);
-  }
-};
-
-api.convertMsgToHtml = function(msg) {
-  return convertMsgtoHtml(msg);
-};
-
-api.on = bubble.on;
-api.off = bubble.off;
 
 module.exports = api;

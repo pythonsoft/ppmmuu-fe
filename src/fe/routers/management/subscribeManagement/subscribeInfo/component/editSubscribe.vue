@@ -1,8 +1,8 @@
 <template>
   <fj-slide-dialog
-          :title="title"
-          :visible.sync="dialogVisible"
-          @close="close">
+    :title="title"
+    :visible.sync="dialogVisible"
+    @close="close">
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="110px">
       <fj-form-item label="公司名称" prop="companyName">
         <fj-input v-model="formData.companyName" icon="icon-company" @focus="addCompanyDialogVisible=true" @on-icon-click="addCompanyDialogVisible=true" v-if="type === 'add'"></fj-input>
@@ -11,10 +11,10 @@
       <fj-form-item label="订阅类型" prop="subscribeType">
         <fj-select placeholder="请选择" v-model="formData.subscribeType" multiple v-if="status !== STATUS.EXPIRED">
           <fj-option
-                  v-for="item in SUBSCRIBE_TYPE"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.key">
+            v-for="item in SUBSCRIBE_TYPE"
+            :key="item.value"
+            :label="item.label"
+            :value="item.key">
           </fj-option>
         </fj-select>
         <div class="subscribe-type-tag" v-else><fj-tag v-for="tag in formData.subscribeType" :key="tag">{{getLabelByValue(tag, SUBSCRIBE_TYPE)}}</fj-tag></div>
@@ -28,19 +28,19 @@
       <fj-form-item label="使用期限" prop="periodOfUse">
         <fj-select placeholder="请选择" v-model="formData.periodOfUse" :disabled="status === STATUS.EXPIRED">
           <fj-option
-                  v-for="item in PERIOD_OF_USE"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+            v-for="item in PERIOD_OF_USE"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
           </fj-option>
         </fj-select>
       </fj-form-item>
       <fj-form-item label="开始时间" prop="startTime">
         <fj-date-picker
-                type="datetime"
-                placeholder="请选择开始时间"
-                v-model="formData.startTime"
-                v-if="this.status == STATUS.UNUSED || this.type === 'add'"
+          type="datetime"
+          placeholder="请选择开始时间"
+          v-model="formData.startTime"
+          v-if="this.status == STATUS.UNUSED || this.type === 'add'"
         ></fj-date-picker>
         <fj-input :value="formatTime(formData.startTime)" :disabled="true" icon="icon-date" v-else></fj-input>
       </fj-form-item>
@@ -54,9 +54,10 @@
       </fj-form-item>
       <fj-form-item label="转码模版">
         <transcode-template-list
-                :data="formData.transcodeTemplates"
-                @add-template="addTemplate"
-                @delete-template="deleteTemplate"></transcode-template-list>
+          :data="formData.transcodeTemplates"
+          @add-template="addTemplate"
+          @delete-template="deleteTemplate"
+        ></transcode-template-list>
       </fj-form-item>
       <fj-form-item label="转码脚本">
         <fj-input type="textarea" :rows="7" v-model="formData.transcodeTemplateSelector"></fj-input>
@@ -68,14 +69,14 @@
       <fj-button type="primary" :loading="isBtnLoading" @click="submitForm" v-if="status !== STATUS.EXPIRED">保存</fj-button>
     </div>
     <search-add-company
-            :visible.sync="addCompanyDialogVisible"
-            @add-owner="addOwner"
-            :searchOwner="searchOwner"
-            @search-user-api="searchOwnerClick"
-            title="添加公司">
+      :visible.sync="addCompanyDialogVisible"
+      @add-owner="addOwner"
+      :searchOwner="searchOwner"
+      @search-user-api="searchOwnerClick"
+      title="添加公司">
     </search-add-company>
     <transcode-script-dialog-view
-            :visible.sync="transcodeScriptDialogVisible"
+      :visible.sync="transcodeScriptDialogVisible"
     ></transcode-script-dialog-view>
   </fj-slide-dialog>
 </template>

@@ -1,0 +1,27 @@
+.layout-four-row-search-item{
+  float: left;
+  margin-left: 10px;
+}
+
+.layout-btn-mini-margin {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.layout-btn-margin {
+  margin-left: 18px;
+  font-size: 12px;
+}
+.library-radio-item{
+  padding: 4px 0;
+}
+
+.library-group-input {
+  float: left;
+  width: 215px;
+  margin-right: 10px;
+}
+
+.library-dialog-footer{
+  text-align: right;
+}

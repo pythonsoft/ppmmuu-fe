@@ -31,6 +31,7 @@
     "cookie-parser": "^1.4.3",
     "pug": "^2.0.0-rc.2",
     "serve-favicon": "^2.4.5",
+    "socket.io-client": "^2.0.4",
     "vue": "^2.3.4",
     "vue-lazyload": "^1.0.6",
     "vue-router": "^2.7.0"
