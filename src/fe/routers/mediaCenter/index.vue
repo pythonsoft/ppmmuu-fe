@@ -390,12 +390,10 @@
         }
         this.searchResult = searchNotice;
 
-        const keywordFormat = this.keyword.trim().replace(/ +/g, ',');
-
         const obj = {
           f_str_187: me.houseNo,
           publish_status: 1,
-          full_text: keywordFormat
+          full_text: this.keyword
         };
 
         formatMust(must, obj);
@@ -413,7 +411,7 @@
             const item = {
               match: {}
             };
-            formatMust(options.should, { name: keywordFormat });
+            formatMust(options.should, { name: this.keyword });
           }
         } else {
           if (!options.sort.length) {

@@ -26,7 +26,7 @@
       this.sendFileInterval = '';
       this.sendFileTimeout = 50;
       this.beatInterval = '';
-      this.beatTimeout = 100;
+      this.beatTimeout = 1000;
       this.transfered = 0;
       this.uuid = '' + new Date().getTime();
       this.CONFIG_STATUS = {
@@ -131,6 +131,7 @@
         case this.CONFIG_STATUS.STATUS_TRANSFERING:
           if(payload.transfered * 1 >= this.fileSize){
             console.log("send stopping");
+            this.clearAllInterval();
             this.prepareTransferSend(this.CONFIG_STATUS.STATUS_STOPING);
           }
           break;
