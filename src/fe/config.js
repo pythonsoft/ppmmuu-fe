@@ -2,6 +2,7 @@
  * Created by steven on 2017/8/4.
  */
 import axios from 'axios';
+
 const global = require('./global');
 
 axios.defaults.withCredentials = true;
