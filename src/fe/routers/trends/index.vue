@@ -136,25 +136,38 @@
       </div>
       <div class="event-timeline-box board">
         <h3>事件脉络</h3>
-        <div v-for="event in timelineData">
+        <div v-for="(event, eventIndex) in timelineData">
           <h4 class="timeline-title">
             {{ event.name }}
             <i class="iconfont icon-clock timeline-title-icon"></i>
           </h4>
 
-          <template v-for="date in event.dateList">
-          <span class="timeline-date">{{ date }}</span>
-          <span class="timeline-total">热门文章共{{ event.mailuo[date].length }}篇</span>
-          <!-- <span class="timeline-fold-btn">收起 <i class="iconfont icon-arrow-right icon-fold"></i></span> -->
-          <ul class="timeline-article-list">
-            <li class="timeline-article-item" v-for="article in event.mailuo[date]">
-              <a :href="article.url" target="_blank" class="timeline-article-title">{{ article.title }}</a>
-              <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
-            </li>
-            <!-- <li class="timeline-article-item">
-              <span class="timeline-view-more">加载更多</span>
-            </li> -->
-          </ul>
+          <template v-for="(date, index) in event.dateList">
+            <span class="timeline-date">{{ date }}</span>
+            <span class="timeline-total">热门文章共{{ event.mailuo[date].length }}篇</span>
+            <!-- <span
+              class="timeline-fold-btn"
+              @click="foldView(eventIndex, date)"
+              v-show="event.showArticleLength[date].length>3 && event.showArticleLength[date].show > 3">
+              收起
+              <i class="iconfont icon-arrow-right icon-fold"></i>
+            </span> -->
+            <span
+              class="timeline-fold-btn"
+              @click="foldView(eventIndex, date)"
+              >
+              收起
+              <i class="iconfont icon-arrow-right icon-fold"></i>
+            </span>
+            <ul class="timeline-article-list">
+              <li class="timeline-article-item" v-for="article in event.mailuo[date].slice(0, event.showArticleLength[date].show)">
+                <a :href="article.url" target="_blank" class="timeline-article-title">{{ article.title }}</a>
+                <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
+              </li>
+              <li class="timeline-article-item" v-show="event.showArticleLength[date].show < event.showArticleLength[date].length">
+                <span class="timeline-view-more" @click="showMoreView(eventIndex, date)">加载更多</span>
+              </li>
+            </ul>
           </template>
         </div>
       </div>
@@ -197,7 +210,7 @@
   // import 'echarts/lib/component/toolbox';
 
   import 'echarts/map/js/china';
-  import './umpBlue';
+  import '../../static/umpBlue';
   import './index.css';
   import BigdataAPI from './api';
   import { geoOption, convertGeoData } from './option/geoOption';
@@ -208,7 +221,7 @@
   const MEDIA_TYPE = [
     { label: '热门报道', name: '热门报道' },
     { label: '新闻', name: '新闻' },
-    { label: '百度', name: '百度' },
+    { label: '百度', name: '网页' },
     { label: '微博', name: '微博' },
     { label: '微信', name: '微信' },
     { label: '论坛', name: '论坛' },
@@ -281,6 +294,16 @@
       }
     },
     methods: {
+      foldView(eventIndex, date) {
+        const dateObj = this.timelineData[eventIndex].showArticleLength[date];
+        dateObj.show = 0;
+        this.timelineData[eventIndex].showArticleLength[date] = Object.assign({}, dateObj);
+      },
+      showMoreView(eventIndex, date) {
+        const dateObj = this.timelineData[eventIndex].showArticleLength[date];
+        dateObj.show = dateObj.show + 6 > dateObj.length ? dateObj.length : dateObj.show + 6;
+        this.timelineData[eventIndex].showArticleLength[date] = Object.assign({}, dateObj);
+      },
       selectKeyword(keyword) {
         this.keyword = keyword;
       },
@@ -358,6 +381,13 @@
               return timeB - timeA;
             });
             event.dateList = dateList;
+            const lengthObj = {};
+            dateList.forEach(function(date) {
+              const length = event.mailuo[date].length;
+              const show = length > 3 ? 3 : length;
+              lengthObj[date] = { length, show };
+            });
+            event.showArticleLength = lengthObj;
           });
           this.timelineData = data;
         }).catch((error) => {

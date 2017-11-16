@@ -1,10 +1,17 @@
-const legend = ['新闻','百度','微博','微信','论坛','博客'];
+const legend = ['新闻', '百度', '微博', '微信', '论坛', '博客'];
+const getEmptyData = function () {
+  const data = [];
+  for (let i = 0; i < 7; i++) {
+    data.push(0);
+  }
+  return data;
+};
 export const getTrendSeries = function (data = {}) {
   const res = [];
   const item = {
-    type:'line',
+    type: 'line',
     stack: '总量',
-    areaStyle: {normal: {}}
+    areaStyle: { normal: {} }
   };
   for (let i = 0; i < legend.length; i++) {
     const name = legend[i];
@@ -15,21 +22,14 @@ export const getTrendSeries = function (data = {}) {
   return res;
 };
 
-const getHours = function() {
+const getHours = function () {
   const hours = [];
   for (let i = 0; i < 6; i++) {
     const start = i * 4;
-    const hour = start < 10 ? `0${start}:00-0${start+3}:59` : `${start}:00-${start+3}:59`;
+    const hour = start < 10 ? `0${start}:00-0${start + 3}:59` : `${start}:00-${start + 3}:59`;
     hours.push(hour);
   }
   return hours;
-};
-const getEmptyData = function() {
-  const data = [];
-  for (let i = 0; i < 7; i++) {
-    data.push(0);
-  }
-  return data;
 };
 
 export const spreadTrendOption = {
@@ -42,13 +42,16 @@ export const spreadTrendOption = {
       align: 'left'
     }
   },
-  tooltip : {
+  tooltip: {
     trigger: 'axis',
+    textStyle: {
+      fontSize: 12
+    },
     backgroundColor: 'rgba(42, 62, 82, .8)',
     axisPointer: {
       type: 'cross',
       label: {
-        backgroundColor: '#6a7985'
+        backgroundColor: 'rgba(42, 62, 82, .8)'
       }
     }
   },
@@ -62,17 +65,17 @@ export const spreadTrendOption = {
     bottom: '3%',
     containLabel: true
   },
-  xAxis : [
+  xAxis: [
     {
-      type : 'category',
-      boundaryGap : false,
-      data : getHours()
+      type: 'category',
+      boundaryGap: false,
+      data: getHours()
     }
   ],
-  yAxis : [
+  yAxis: [
     {
-      type : 'value'
+      type: 'value'
     }
   ],
-  series : getTrendSeries()
+  series: getTrendSeries()
 };

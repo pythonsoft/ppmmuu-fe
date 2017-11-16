@@ -17,9 +17,12 @@ export const geoOption = {
   backgroundColor: '#fff',
   tooltip: {
     trigger: 'item',
+    textStyle: {
+      fontSize: 12
+    },
     backgroundColor: 'rgba(42, 62, 82, .8)',
-    formatter: function (params) {
-      return params.name + '<br/>热门报道共' + params.value[2] + '篇';
+    formatter(params) {
+      return `${params.name}<br/>热门报道共${params.value[2]}篇`;
     }
   },
   geo: {
@@ -36,7 +39,7 @@ export const geoOption = {
         borderColor: '#fff'
       },
       emphasis: {
-        areaColor: '#EBF3FB'
+        areaColor: '#E3EAF3'
       }
     }
   },
@@ -46,7 +49,7 @@ export const geoOption = {
       type: 'scatter',
       coordinateSystem: 'geo',
       data: [],
-      symbolSize: function (val) {
+      symbolSize(val) {
         // return val[2] < 10 ? val[2] * 5 : val[2] * 2;
         return val[2] * 2;
       },
@@ -60,8 +63,8 @@ export const geoOption = {
       },
       itemStyle: {
         normal: {
-        color: '#38B1EB'
-      },
+          color: '#38B1EB'
+        },
         emphasis: {
           borderColor: '#fff',
           borderWidth: 1
@@ -69,33 +72,33 @@ export const geoOption = {
       }
     },
     {
-    name: 'Top 3',
-    type: 'effectScatter',
-    coordinateSystem: 'geo',
-    data: [],
-    symbolSize: function (val) {
-      return val[2] * 2;
-    },
-    showEffectOn: 'render',
-    rippleEffect: {
-    brushType: 'stroke'
-    },
-    hoverAnimation: true,
-    label: {
-    normal: {
-      formatter: '{b}',
-      position: 'right',
-      show: true
+      name: 'Top 3',
+      type: 'effectScatter',
+      coordinateSystem: 'geo',
+      data: [],
+      symbolSize(val) {
+        return val[2] * 2;
+      },
+      showEffectOn: 'render',
+      rippleEffect: {
+        brushType: 'stroke'
+      },
+      hoverAnimation: true,
+      label: {
+        normal: {
+          formatter: '{b}',
+          position: 'right',
+          show: true
+        }
+      },
+      itemStyle: {
+        normal: {
+          color: '#38B1EB',
+          shadowBlur: 10,
+          shadowColor: '#38B1EB'
+        }
+      },
+      zlevel: 1
     }
-    },
-    itemStyle: {
-    normal: {
-      color: '#38B1EB',
-      shadowBlur: 10,
-      shadowColor: '#38B1EB'
-    }
-    },
-    zlevel: 1
-  }
   ]
 };

@@ -1,18 +1,18 @@
-export const convertOpinionData = function(data) {
-  data.forEach(function(item) {
+export const convertOpinionData = function (data) {
+  data.forEach((item) => {
     item.name = item.title;
     item.value = item.people;
   });
   return data;
 };
-export const convertSentimentData = function(data) {
+export const convertSentimentData = function (data) {
   const sentiments = ['正面', '中立', '负面'];
   const res = [];
-  sentiments.forEach(function(sentiment, i) {
-    res.push({ name: sentiment, value: data[i]});
+  sentiments.forEach((sentiment, i) => {
+    res.push({ name: sentiment, value: data[i] });
   });
   return res;
-}
+};
 
 export const sentimentOption = {
   title: {
@@ -26,19 +26,21 @@ export const sentimentOption = {
   },
   tooltip: {
     trigger: 'item',
+    textStyle: {
+      fontSize: 12
+    },
     backgroundColor: 'rgba(42, 62, 82, .8)',
-    formatter: "{a}: {b} <br/> {c} ({d}%)"
+    formatter: '{a}: {b} <br/> {c} ({d}%)'
   },
   series: [
     {
-      name:'情感',
-      type:'pie',
+      name: '情感',
+      type: 'pie',
       radius: [0, '30%'],
-
       label: {
         normal: {
           position: 'inner',
-          formatter: function(params) {
+          formatter(params) {
             const data = params.data;
             return data.value > 0 ? data.name : '';
           }
@@ -49,16 +51,16 @@ export const sentimentOption = {
           show: false
         }
       },
-      data:[]
+      data: []
     },
     {
-      name:'观点',
-      type:'pie',
+      name: '观点',
+      type: 'pie',
       selectedMode: 'single',
       radius: ['40%', '55%'],
       label: {
         normal: {
-          formatter: function(params) {
+          formatter(params) {
             const data = params.data;
             let title = data.title.slice(0, 10);
             if (data.title.length > 10) {
@@ -85,7 +87,7 @@ export const sentimentOption = {
           }
         }
       },
-      data:[]
+      data: []
     }
   ]
 };
