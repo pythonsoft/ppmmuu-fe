@@ -22,7 +22,28 @@ axiosInstance.interceptors.request.use((config) => {
   Promise.reject(error)
 );
 
-api.getRealtimeBuzz = function (data, scope) {
+api.getKeywordStatus = function(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axiosInstance.get('/search/bigdata', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+api.getRealtimeBuzz = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeBuzz/bd', data).then((response) => {
@@ -43,7 +64,28 @@ api.getRealtimeBuzz = function (data, scope) {
     });
   });
 };
-api.getRealtimeFlowNews = function (data, scope) {
+api.getRealtimeBuzzWb = function(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axiosInstance.get('/realtimeBuzz/wb', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+api.getRealtimeFlowNews = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/news', data).then((response) => {

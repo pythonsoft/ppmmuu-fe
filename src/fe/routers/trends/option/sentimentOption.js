@@ -37,6 +37,7 @@ export const sentimentOption = {
       name: '情感',
       type: 'pie',
       radius: [0, '30%'],
+      stillShowZeroSum: false,
       label: {
         normal: {
           position: 'inner',
@@ -58,6 +59,7 @@ export const sentimentOption = {
       type: 'pie',
       selectedMode: 'single',
       radius: ['40%', '55%'],
+      stillShowZeroSum: false,
       label: {
         normal: {
           formatter(params) {
