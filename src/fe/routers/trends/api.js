@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use((config) => {
   Promise.reject(error)
 );
 
-api.getRealtimeBuzz = function(data, scope) {
+api.getRealtimeBuzz = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeBuzz/bd', data).then((response) => {
@@ -43,7 +43,7 @@ api.getRealtimeBuzz = function(data, scope) {
     });
   });
 };
-api.getRealtimeFlowNews = function(data, scope) {
+api.getRealtimeFlowNews = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/news', data).then((response) => {
@@ -64,7 +64,7 @@ api.getRealtimeFlowNews = function(data, scope) {
     });
   });
 };
-api.getRealtimeFlowGeo = function(data, scope) {
+api.getRealtimeFlowGeo = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/geo', data).then((response) => {
@@ -85,7 +85,7 @@ api.getRealtimeFlowGeo = function(data, scope) {
     });
   });
 };
-api.getRealtimeFlowTrends = function(data, scope) {
+api.getRealtimeFlowTrends = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/trends', data).then((response) => {
@@ -106,7 +106,7 @@ api.getRealtimeFlowTrends = function(data, scope) {
     });
   });
 };
-api.getRealtimeFlowTimeline = function(data, scope) {
+api.getRealtimeFlowTimeline = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/timeline', data).then((response) => {
@@ -127,7 +127,7 @@ api.getRealtimeFlowTimeline = function(data, scope) {
     });
   });
 };
-api.getRealtimeFlowSpread = function(data, scope) {
+api.getRealtimeFlowSpread = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/spread', data).then((response) => {
@@ -148,7 +148,7 @@ api.getRealtimeFlowSpread = function(data, scope) {
     });
   });
 };
-api.getRealtimeFlowOpinion = function(data, scope) {
+api.getRealtimeFlowOpinion = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/opinion', data).then((response) => {
