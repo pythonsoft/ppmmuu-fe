@@ -30,7 +30,7 @@
       </div>
     </template>
     <template slot="table">
-      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+      <fj-table highlightKey="id" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" label="状态">
           <template scope="props">
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>

@@ -31,15 +31,18 @@
       </div>
     </template>
     <template slot="table">
-      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+      <fj-table highlightKey="id" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" align="center" label="状态">
           <template scope="props">
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="tasklist" width="120" label="进度">
-          <template scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist) }}</template>
+        <fj-table-column prop="tasklist" width="80" label="进度">
+          <template scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).total }}</template>
+        </fj-table-column>
+        <fj-table-column prop="tasklist" width="140" label="当前流程">
+          <template scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).current }}</template>
         </fj-table-column>
         <fj-table-column prop="processType" width="80" label="任务类型"></fj-table-column>
         <fj-table-column prop="userName" width="120" label="用户名">
@@ -137,48 +140,7 @@
       this.runTimer = false;
     },
     methods: {
-      formatTaskList(currentStep, taskList) {
-        const arr = [];
-        const len = taskList.length;
-        let task = null;
-        let percent = 0;
-
-        if(len === 0) {
-          arr.push('100%');
-        }else {
-          const temp = [];
-          let str = '';
-
-          percent = 1 / len;
-          task = taskList[currentStep];
-
-          if(task) {
-
-          }
-
-          for(let i = 0, len = taskList.len; i < len; i++) {
-            if(currentStep === i) {
-              str = `- ${task.taskName} ${task.position}`
-            }
-            temp.push(task.position);
-          }
-
-          if(currentStep !== len) {
-            console.log(task.taskName, percent, currentStep, (percent * (currentStep + 1) + (percent * task.position / 100)));
-
-            if(task.position !== 100) {
-              arr.push((percent * (currentStep + 1) + (percent * task.position / 100)) * 100 + '%');
-            }else {
-              arr.push((percent * (currentStep + 1) * 100 + '%'));
-            }
-            arr.push(`(${task.taskName} ${task.position} ) %`);
-          }else {
-            arr.push('100%');
-          }
-        }
-
-        return arr.join('');
-      },
+      formatTaskList: utils.formatTaskList,
       handleClickSearch() {
         this.listTask();
       },
