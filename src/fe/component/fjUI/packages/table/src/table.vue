@@ -47,6 +47,10 @@
       theme: {
         type: String,
         default: 'normal'
+      },
+      autoClearSelection: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
@@ -129,7 +133,7 @@
     watch: {
       data(val) {
         this.store.states.data = val;
-        this.clearSelection();
+        if (this.autoClearSelection) this.clearSelection();
       }
     },
     methods: {

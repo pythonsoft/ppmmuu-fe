@@ -9,7 +9,7 @@ export default {
               || this.store.states.selection.indexOf(row) > -1;
             if (this.highlightKey && this.store.states.currentRow) {
               isCurrentRow = row[this.highlightKey] === this.store.states.currentRow[this.highlightKey]
-              || this.store.states.selection.indexOf(row) > -1;
+              || this.store.states.selection.indexOf(row[this.highlightKey]) > -1;
             }
             if (this.highlight && isCurrentRow) {
               className = className ? `${className} fj-current-row` : 'fj-current-row';
