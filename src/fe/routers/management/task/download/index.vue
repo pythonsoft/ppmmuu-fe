@@ -38,14 +38,17 @@
           </template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="tasklist" width="120" label="进度">
+          <template scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist) }}</template>
+        </fj-table-column>
         <fj-table-column prop="processType" width="80" label="任务类型"></fj-table-column>
         <fj-table-column prop="userName" width="120" label="用户名">
           <template scope="props">{{ props.row.userName || '-' }}</template>
         </fj-table-column>
-        <fj-table-column prop="createTime" width="160"label="创建时间">
+        <fj-table-column prop="createTime" width="140"label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="lastModify" width="160" label="修改时间">
+        <fj-table-column prop="lastModify" width="140" label="修改时间">
           <template scope="props">{{ props.row.lastModify | formatTime }}</template>
         </fj-table-column>
       </fj-table>
@@ -134,6 +137,48 @@
       this.runTimer = false;
     },
     methods: {
+      formatTaskList(currentStep, taskList) {
+        const arr = [];
+        const len = taskList.length;
+        let task = null;
+        let percent = 0;
+
+        if(len === 0) {
+          arr.push('100%');
+        }else {
+          const temp = [];
+          let str = '';
+
+          percent = 1 / len;
+          task = taskList[currentStep];
+
+          if(task) {
+
+          }
+
+          for(let i = 0, len = taskList.len; i < len; i++) {
+            if(currentStep === i) {
+              str = `- ${task.taskName} ${task.position}`
+            }
+            temp.push(task.position);
+          }
+
+          if(currentStep !== len) {
+            console.log(task.taskName, percent, currentStep, (percent * (currentStep + 1) + (percent * task.position / 100)));
+
+            if(task.position !== 100) {
+              arr.push((percent * (currentStep + 1) + (percent * task.position / 100)) * 100 + '%');
+            }else {
+              arr.push((percent * (currentStep + 1) * 100 + '%'));
+            }
+            arr.push(`(${task.taskName} ${task.position} ) %`);
+          }else {
+            arr.push('100%');
+          }
+        }
+
+        return arr.join('');
+      },
       handleClickSearch() {
         this.listTask();
       },
