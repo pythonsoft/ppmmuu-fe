@@ -1,12 +1,31 @@
 const api = {};
-const axios = require('../../config');
+// const axios = require('../../config');
+import axios from 'axios';
 
-axios.defaults.baseURL = 'http://182.61.54.108:9999/api/v1/bigdata';
+const axiosInstance = axios.create({
+  baseURL: 'http://182.61.54.108:9999/api/v1/bigdata',
+  withCredentials: true
+});
+axiosInstance.interceptors.request.use((config) => {
+  // Do something before request is sent
+  if (config.method === 'get') {
+    config.params = config.params || {};
+    config.params.t = new Date().getTime();
+  } else if (config.method === 'post') {
+    config.data = config.data || {};
+    config.data.t = new Date().getTime();
+  }
+
+  return config;
+}, error =>
+  // Do something with request error
+  Promise.reject(error)
+);
 
 api.getRealtimeBuzz = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/realtimeBuzz/bd', data).then((response) => {
+    axiosInstance.get('/realtimeBuzz/bd', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -27,7 +46,7 @@ api.getRealtimeBuzz = function(data, scope) {
 api.getRealtimeFlowNews = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/realtimeFlow/news', data).then((response) => {
+    axiosInstance.get('/realtimeFlow/news', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -48,7 +67,7 @@ api.getRealtimeFlowNews = function(data, scope) {
 api.getRealtimeFlowGeo = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/realtimeFlow/geo', data).then((response) => {
+    axiosInstance.get('/realtimeFlow/geo', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -69,7 +88,7 @@ api.getRealtimeFlowGeo = function(data, scope) {
 api.getRealtimeFlowTrends = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/realtimeFlow/trends', data).then((response) => {
+    axiosInstance.get('/realtimeFlow/trends', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -90,7 +109,7 @@ api.getRealtimeFlowTrends = function(data, scope) {
 api.getRealtimeFlowTimeline = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/realtimeFlow/timeline', data).then((response) => {
+    axiosInstance.get('/realtimeFlow/timeline', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -111,7 +130,7 @@ api.getRealtimeFlowTimeline = function(data, scope) {
 api.getRealtimeFlowSpread = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/realtimeFlow/spread', data).then((response) => {
+    axiosInstance.get('/realtimeFlow/spread', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -132,7 +151,7 @@ api.getRealtimeFlowSpread = function(data, scope) {
 api.getRealtimeFlowOpinion = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/realtimeFlow/opinion', data).then((response) => {
+    axiosInstance.get('/realtimeFlow/opinion', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
