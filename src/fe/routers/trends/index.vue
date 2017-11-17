@@ -311,7 +311,7 @@
         this.keyword = this.customKeyword;
       },
       updateArticleList(reqData) {
-        reqData.keyword = '演员许敬义病逝';
+        reqData.keyword = '';
         BigdataAPI.getRealtimeFlowNews({ params: reqData })
         .then((response) => {
           this.articleList = response.data.map(function(item) {
@@ -324,7 +324,7 @@
         });
       },
       updateGeoData(reqData) {
-        reqData.keyword = '演员许敬义病逝';
+        reqData.keyword = '';
         this.geoChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowGeo({ params: reqData })
         .then((response) => {
@@ -358,7 +358,7 @@
         });
       },
       updateTrends(reqData) {
-        reqData.keyword = '全国文明城市公布';
+        reqData.keyword = '';
         this.spreadTrendChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowTrends({ params: reqData })
         .then((response) => {
@@ -369,7 +369,7 @@
         });
       },
       updateTimeline(reqData) {
-        reqData.keyword = '意大利无缘世界杯';
+        reqData.keyword = '';
         BigdataAPI.getRealtimeFlowTimeline({ params: reqData })
         .then((response) => {
           const data = response.data;
@@ -394,7 +394,7 @@
         });
       },
       updateSpreadPathData(reqData) {
-        reqData.keyword = '全国文明城市公布';
+        reqData.keyword = '';
         this.spreadPathChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowSpread({ params: reqData })
         .then((response) => {
@@ -407,7 +407,7 @@
         });
       },
       updateOpinion(reqData) {
-        reqData.keyword = '意大利无缘世界杯';
+        reqData.keyword = '';
         this.sentimentChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowOpinion({ params: reqData })
         .then((response) => {
