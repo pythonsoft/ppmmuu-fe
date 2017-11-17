@@ -1,6 +1,6 @@
 .trends-wrapper {
   width: 100%;
-  height: 100%;
+  /*height: 100%;*/
   background: #FBFCFD;
   min-width: 1836px;
 }
@@ -45,10 +45,18 @@
   background: #fff;
 }
 .spread-path-box {
+  position: relative;
   width: 546px;
   height: 381px;
   padding: 16px 20px 20px;
   background: #fff;
+}
+.spread-path-box .empty-box,
+.event-timeline-box .empty-box,
+.sentiment-box .empty-box {
+  position: absolute;
+  top: 50px;
+  left: 0;
 }
 .spread-trend-box {
   width: 626px;
@@ -57,6 +65,7 @@
   background: #fff;
 }
 .event-timeline-box {
+  position: relative;
   width: 626px;
   height: 370px;
   padding: 16px 20px 20px;
@@ -67,6 +76,7 @@
   margin-bottom: 30px;
 }
 .sentiment-box {
+  position: relative;
   width: 626px;
   height: 381px;
   padding: 16px 20px 20px;
@@ -106,6 +116,7 @@
   color: #9FB3CA;
 }
 .topic-name {
+  display: inline-block;
   height: 14px;
   line-height: 14px;
   color: #4C637B;
@@ -134,13 +145,21 @@
   margin-bottom: 14px;
 }
 .article-source-image {
+  position: relative;
   float: left;
   width: 42px;
   height: 42px;
   margin-right: 26px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #E3EAF3;
+  background-color: #ECF3FA;
+}
+.article-source-image img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
 }
 
 .article-title {
