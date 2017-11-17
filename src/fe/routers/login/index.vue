@@ -80,13 +80,10 @@
       },
       isLogin() {
         const me = this;
-        try {
-          const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
-          const index = getDefaultPageIndex(showMenuIndex);
-          this.$router.push({name: index});
-        }catch(e) {
-
-        }
+        api.getUserAuth()
+          .then(() => {
+            window.location.href = '/mediaCenter';
+          }).catch(() => {});
       },
       login() {
         const me = this;
