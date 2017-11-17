@@ -4,7 +4,7 @@
       <div class="topic-box board">
         <div class="topic-box-header">
           <h3>精选话题</h3>
-          <div class="topic-search-input">
+          <!-- <div class="topic-search-input">
             <fj-input
               placeholder="搜索其他话题"
               v-model="customKeyword"
@@ -15,7 +15,7 @@
               size="small"
               @on-icon-click="changeKeyword"
             ></fj-input>
-          </div>
+          </div> -->
         </div>
         <div class="topic-box-content clearfix">
           <div class="topic-list">
@@ -26,6 +26,7 @@
                 <div :style="{ overflow: 'hidden' }">
                   <span class="count"><i :class="['iconfont', item.riseOrFall > 0 ? 'icon-rise' : 'icon-fall']"></i>{{ item.trends }}</span>
                   <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
+                  <i :style="{ width: '12px' }" class="iconfont fj-icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe674;</i>
                 </div>
               </li>
             </ul>
@@ -33,39 +34,11 @@
           <div class="topic-list">
             <h4 class="topic-list-title">新浪微博</h4>
             <ul>
-              <li class="topic-list-item clearfix">
-                <span class="num-top">1</span>
+              <li class="topic-list-item clearfix" v-for="(item, ranking) in realtimeBuzzWb">
+                <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
                 <div :style="{ overflow: 'hidden' }">
-                  <span class="count">48856</span>
-                  <p class="topic-name">贝加尔湖现死海豹</p>
-                </div>
-              </li>
-              <li class="topic-list-item clearfix">
-                <span class="num-normal">2</span>
-                <div :style="{ overflow: 'hidden' }">
-                  <span class="count">48856</span>
-                  <p class="topic-name">贝加尔湖现死海豹</p>
-                </div>
-              </li>
-              <li class="topic-list-item clearfix">
-                <span class="num-normal">3</span>
-                <div :style="{ overflow: 'hidden' }">
-                  <span class="count">48856</span>
-                  <p class="topic-name">贝加尔湖现死海豹</p>
-                </div>
-              </li>
-              <li class="topic-list-item clearfix">
-                <span class="num-normal">4</span>
-                <div :style="{ overflow: 'hidden' }">
-                  <span class="count">48856</span>
-                  <p class="topic-name">贝加尔湖现死海豹</p>
-                </div>
-              </li>
-              <li class="topic-list-item clearfix">
-                <span class="num-normal">5</span>
-                <div :style="{ overflow: 'hidden' }">
-                  <span class="count">48856</span>
-                  <p class="topic-name">贝加尔湖现死海豹</p>
+                  <span class="count">{{ item.reads }}</span>
+                  <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
                 </div>
               </li>
             </ul>
@@ -82,7 +55,8 @@
             <ul v-show="articleList.length > 0">
               <li v-for="item in articleList" class="article-list-item">
                 <div class="article-source-image">
-                  <img v-if="item.favicon" src="" width="42" height="42">
+                  <img :src="getFaviconBgImg(tab.label)" width="42">
+                  <img :ref="item.source" :src="getFavicon(item.source)" :width="getFaviconWidth(item.source)">
                 </div>
                 <div :style="{ overflow: 'hidden' }">
                   <a :href="item.url" target="_blank" class="article-title" v-html="item.title"></a>
@@ -128,6 +102,7 @@
       </div>
       <div class="spread-path-box board">
         <div class="spread-path-chart-box" ref="spreadPathChart"></div>
+        <div class="empty-box" v-show="showEmptySpreadPath">没有数据</div>
       </div>
     </div>
     <div class="scrum-stage">
@@ -136,6 +111,7 @@
       </div>
       <div class="event-timeline-box board">
         <h3>事件脉络</h3>
+        <div class="empty-box" v-show="timelineData.length === 0">没有数据</div>
         <div v-for="(event, eventIndex) in timelineData">
           <h4 class="timeline-title">
             {{ event.name }}
@@ -172,7 +148,9 @@
         </div>
       </div>
       <div class="sentiment-box board">
-        <div class="sentiment-chart-box" ref="sentimentChart"></div>
+        <div class="sentiment-chart-box" ref="sentimentChart">
+        </div>
+        <div class="empty-box" v-show="showEmptySentiment">没有数据</div>
       </div>
     </div>
   </div>
@@ -243,12 +221,16 @@
         keyword: '',
         customKeyword: '',
         realtimeBuzzBd: [],
+        realtimeBuzzWb: [],
         articleList: [],
         areaList: [],
         activeArea: '',
         areaNewsData: {},
         sentimentObj: {},
-        timelineData: []
+        timelineData: [],
+        showEmptySentiment: false,
+        showEmptySpreadPath: false,
+        runningKeywords: []
       };
     },
     created() {
@@ -260,6 +242,12 @@
           }
         }).catch((error) => {
         });
+      BigdataAPI.getRealtimeBuzzWb({ params: { size: 30 } })
+        .then((response) => {
+          this.realtimeBuzzWb = response.data;
+        }).catch((error) => {
+        });
+      this.refreshKeywordsStatus();
     },
     mounted() {
       this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue');
@@ -279,12 +267,19 @@
     },
     watch: {
       keyword(v) {
-        this.updateArticleList({ media_type: this.activeMediaType, keyword: v });
-        this.updateGeoData({ history: this.activeHistoryType, keyword: v });
-        this.updateTrends({ keyword: v });
-        this.updateTimeline({ keyword: v });
-        this.updateSpreadPathData({ keyword: v });
-        this.updateOpinion({ keyword: v });
+        BigdataAPI.getKeywordStatus({ params: { keywords: v } })
+        .then((response) => {
+          if (response.data[0].status === 'ok') {
+            this.updateAll(v);
+          } else {
+            if(this.runningKeywords.indexOf(v) < 0) {
+              this.runningKeywords.push(v);
+            } else {
+              this.$message.warning('话题正在分析中...');
+            }
+          }
+        }).catch((error) => {
+        });
       },
       activeMediaType(v) {
         this.updateArticleList({ media_type: v, keyword: this.keyword });
@@ -294,6 +289,48 @@
       }
     },
     methods: {
+      refreshKeywordsStatus() {
+        if (this.runningKeywords.length > 0) {
+          BigdataAPI.getKeywordStatus({ params: { keywords: this.runningKeywords.join(',') } })
+          .then((response) => {
+            const responseData = response.data;
+            responseData.forEach((item) => {
+              if (item.status === 'ok') {
+                const index = this.runningKeywords.indexOf(item.keyword);
+                this.runningKeywords.splice(index, 1);
+              }
+            });
+          }).catch((error) => {
+          });
+        }
+        setTimeout(() => {
+          this.refreshKeywordsStatus();
+        }, 30000);
+      },
+      getFaviconBgImg(name) {
+        return `/static/picture/${name}.png`;
+      },
+      getFavicon(source) {
+        return `/static/picture/${source}.jpg`;
+      },
+      getFaviconWidth(name) {
+        let width = 42;
+        let height = 42;
+        if (this.$refs[name]) {
+          if (this.$refs[name].constructor === Array && this.$refs[name].length > 0) {
+            width = this.$refs[name][0].naturalWidth;
+            height = this.$refs[name][0].naturalHeight;
+          } else {
+            width = this.$refs[name].naturalWidth;
+            height = this.$refs[name].naturalHeight;
+          }
+        }
+        if (!width || !height) return 42;
+        if (width >= height) {
+          return 42;
+        }
+        return 42 * width / height;
+      },
       foldView(eventIndex, date) {
         const dateObj = this.timelineData[eventIndex].showArticleLength[date];
         dateObj.show = 0;
@@ -310,8 +347,16 @@
       changeKeyword() {
         this.keyword = this.customKeyword;
       },
+      updateAll(v) {
+        this.updateArticleList({ media_type: this.activeMediaType, keyword: v });
+        this.updateGeoData({ history: this.activeHistoryType, keyword: v });
+        this.updateTrends({ keyword: v });
+        this.updateTimeline({ keyword: v });
+        this.updateSpreadPathData({ keyword: v });
+        this.updateOpinion({ keyword: v });
+      },
       updateArticleList(reqData) {
-        reqData.keyword = '';
+        // reqData.keyword = '';
         BigdataAPI.getRealtimeFlowNews({ params: reqData })
         .then((response) => {
           this.articleList = response.data.map(function(item) {
@@ -324,7 +369,7 @@
         });
       },
       updateGeoData(reqData) {
-        reqData.keyword = '';
+        // reqData.keyword = '';
         this.geoChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowGeo({ params: reqData })
         .then((response) => {
@@ -355,10 +400,11 @@
             ? this.areaList[0].name
             : '';
         }).catch((error) => {
+          this.geoChart.hideLoading();
         });
       },
       updateTrends(reqData) {
-        reqData.keyword = '';
+        // reqData.keyword = '';
         this.spreadTrendChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowTrends({ params: reqData })
         .then((response) => {
@@ -366,10 +412,11 @@
           this.spreadTrendChart.hideLoading();
           this.spreadTrendChart.setOption({ series: getTrendSeries(resData) });
         }).catch((error) => {
+          this.spreadTrendChart.hideLoading();
         });
       },
       updateTimeline(reqData) {
-        reqData.keyword = '';
+        // reqData.keyword = '';
         BigdataAPI.getRealtimeFlowTimeline({ params: reqData })
         .then((response) => {
           const data = response.data;
@@ -394,35 +441,49 @@
         });
       },
       updateSpreadPathData(reqData) {
-        reqData.keyword = '';
+        // reqData.keyword = '';
         this.spreadPathChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowSpread({ params: reqData })
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          newOption.series = [{ data: convertGraph(resData.content_graph).nodes, edges: resData.content_graph.links }];
+          if (resData.constructor === Array && resData.length === 0) {
+            this.showEmptySpreadPath = true;
+            newOption.series = [{ data: [], edges: [] }];
+          } else {
+            this.showEmptySpreadPath = false;
+            newOption.series = [{ data: convertGraph(resData.content_graph).nodes, edges: resData.content_graph.links }];
+          }
           this.spreadPathChart.hideLoading();
           this.spreadPathChart.setOption(newOption);
         }).catch((error) => {
+          this.spreadPathChart.hideLoading();
         });
       },
       updateOpinion(reqData) {
-        reqData.keyword = '';
+        // reqData.keyword = '';
         this.sentimentChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowOpinion({ params: reqData })
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          newOption.series = [{ data: convertSentimentData(resData.total) }, { data: convertOpinionData(resData.opinions) }];
+          if (resData.constructor === Array && resData.length === 0) {
+            this.showEmptySentiment = true;
+            newOption.series = [{ data: [] }, { data: [] }];
+            this.sentimentObj = {};
+          } else {
+            this.showEmptySentiment = false;
+            newOption.series = [{ data: convertSentimentData(resData.total) }, { data: convertOpinionData(resData.opinions) }];
+            const sentimentObj = { total: resData.total };
+            resData.opinions.forEach(function(opinion) {
+              sentimentObj[opinion.title] = opinion.sentiment;
+            });
+            this.sentimentObj = sentimentObj;
+          }
           this.sentimentChart.hideLoading();
           this.sentimentChart.setOption(newOption);
-          const sentimentObj = { total: resData.total };
-          resData.opinions.forEach(function(opinion) {
-            sentimentObj[opinion.title] = opinion.sentiment;
-          });
-          this.sentimentObj = sentimentObj;
-
         }).catch((error) => {
+          this.sentimentChart.hideLoading();
         });
       },
       updateSentiment(params) {
