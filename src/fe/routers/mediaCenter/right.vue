@@ -525,6 +525,7 @@
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: templateInfo._id,
+          source: this.videoInfo.from_where || '1'
         };
 
         if(transferParams) {
