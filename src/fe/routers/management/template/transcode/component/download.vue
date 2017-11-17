@@ -16,7 +16,7 @@
             <div class="template-transcode-watermark" v-if="item.field==='watermarkFile'">
               <upload-img
                 :maxSize="4"
-                :imgPath="formData[item.field]"
+                :imgPath="watermarkUrl"
                 @img-change="imgChange"></upload-img>
             </div>
             <fj-input v-model="formData[item.field]" v-else></fj-input>
@@ -33,9 +33,11 @@
 <script>
   import '../index.css';
   import UploadImg from './uploadImg';
+  import { formatQuery } from '../../../../../common/utils';
 
   const api = require('../../../../../api/job');
   const config = require('../config');
+  const templateApi = require('../../../../../api/template')
 
   export default {
     name: 'templateDownloadForm',
@@ -50,6 +52,9 @@
       if (this.type !== 'add') {
         this.initParam();
         this.formData = Object.assign({}, this.formData, this.templateInfo);
+        if(this.templateInfo.watermarkFile && this.templateInfo.watermarkFile !== 'null'){
+          this.watermarkUrl = templateApi.getWatermark(formatQuery(this.templateInfo.watermarkFile));
+        }
       }else{
         this.initParam();
       }
@@ -59,6 +64,7 @@
         fields: config.fields,
         formData: config.getFormData(),
         isBtnLoading: false,
+        watermarkUrl: '',
         rules: config.getFormRules()
       };
     },
@@ -115,9 +121,7 @@
       },
       imgChange(cover) {
         this.formData['watermarkFile'] = cover;
-      },
-      uploadApi() {
-
+        this.watermarkUrl = templateApi.getWatermark(formatQuery(cover));
       }
     }
   };

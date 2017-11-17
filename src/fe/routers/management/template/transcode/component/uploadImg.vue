@@ -14,13 +14,12 @@
       <div><span class="iconfont icon-shangchuan"></span></div>
       <div class="upload-text">点击更改</div>
     </div>
-    <input id="shelf-img-input" ref="fileBtn" accept="image/png,image/jpeg,image/bmp" class="shelf-upload-img-input" @change='chooseImg' type="file">
+    <input id="shelf-img-input" ref="fileBtn" accept="image/png,image/jpeg,image/bmp,image/tga" class="shelf-upload-img-input" @change='chooseImg' type="file">
     <div class="upload-description">＊支持JPG、PNG格式，图片尺寸宽640高360px，大小在5M以内</div>
   </div>
 </template>
 <script>
   const api = require('../../../../../api/upload');
-  const templateApi =require('../../../../../api/template')
 
   export default {
     name: 'uploadImg',
@@ -44,10 +43,11 @@
     mounted() {
     },
     created() {
+      this.path = this.imgPath;
     },
     watch: {
       imgPath(val) {
-        this.path = templateApi.getWatermark(val);
+        this.path = val;
       }
     },
     methods: {
@@ -86,9 +86,8 @@
         this.isLoading = true;
         api.uploadWatermark(param, config)
           .then((res) => {
-            me.path = res.statusInfo.message;
             me.isLoading = false;
-            me.$emit('img-change', me.path);
+            me.$emit('img-change', res.statusInfo.message);
           })
           .catch((error) => {
             this.isLoading = false;

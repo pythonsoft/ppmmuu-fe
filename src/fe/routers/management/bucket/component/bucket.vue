@@ -140,6 +140,8 @@
       },
       handleClickSearch() {
         const me = this;
+        me.formData.page = me.page;
+        me.formData.pageSize = me.pageSize;
         api.listBucket({ params: me.formData }, me)
           .then((res) => {
             me.tableData = res.data.docs;
@@ -223,7 +225,7 @@
       },
       pageChange(val) {
         this.page = val;
-      //        this.listEngine();
+        this.handleClickSearch();
       }
     }
   };

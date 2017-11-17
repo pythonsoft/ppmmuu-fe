@@ -11,7 +11,7 @@
 <script>
   import menu from './menu';
   import root from './root';
-  import { getChildMenuByIndex, getItemFromLocalStorage } from '../common/utils';
+  import { getChildMenuByIndex, getItemFromLocalStorage, getDefaultPageIndex } from '../common/utils';
 
   export default {
     name: 'home',
@@ -27,7 +27,8 @@
       this.showMenuIndex = showMenuIndex.length? normalMenu.concat(getChildMenuByIndex('', false, me)) : normalMenu;
 
       if (window.location.pathname === '/') {
-        this.$router.push({ name: 'mediaCenter' });
+        const index = getDefaultPageIndex(showMenuIndex);
+        this.$router.push({name: index});
       }
     },
     data() {
