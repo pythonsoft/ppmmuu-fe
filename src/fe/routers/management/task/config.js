@@ -9,7 +9,8 @@ config.CURRENT_STEP = {
   generateIndex: { text: '帧索引创建', value: 'generateIndex', key: 'generateIndex' },
   divideFile: { text: '文件分割', value: 'divideFile', key: 'divideFile' },
   transcoding: { text: '转码', value: 'transcoding', key: 'transcoding' },
-  mergeFile: { text: '文件合并', value: 'mergeFile', key: 'mergeFile' }
+  mergeFile: { text: '文件合并', value: 'mergeFile', key: 'mergeFile' },
+  combineSubtitle: { text: '字幕', value: 'combineSubtitle', key: 'combineSubtitle' }
 };
 
 // created, //创建 dealing, //处理中 error,//错误 complete //完成

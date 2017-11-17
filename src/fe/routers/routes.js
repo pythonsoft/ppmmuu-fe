@@ -25,6 +25,7 @@ const SearchHistory = resolve => require.ensure([], () => resolve(require('./per
 const Feedback = resolve => require.ensure([], () => resolve(require('./personalCenter/feedback/index')), 'feedback');
 const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
 
+const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 const MovieEditor = resolve => require.ensure([], () => resolve(require('./movieEditor')), 'movieEditor');
 const Catalog = resolve => require.ensure([], () => resolve(require('./library/catalog')), 'catalog');
@@ -167,6 +168,13 @@ export default [{
       meta: { title: '媒体库' },
       children: [],
       name: 'mediaCenter'
+    },
+    {
+      path: 'trends',
+      component: Trends,
+      meta: { title: '舆情' },
+      children: [],
+      name: 'trends'
     },
     {
       path: 'movieEditor/:objectId?',
