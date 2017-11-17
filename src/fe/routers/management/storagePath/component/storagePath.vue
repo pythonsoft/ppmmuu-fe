@@ -152,6 +152,8 @@
         if (this.bucket && this.bucket._id) {
           me.formData.bucketId = this.bucket._id;
         }
+        me.formData.page = me.page;
+        me.formData.pageSize = me.pageSize;
         api.listPath({ params: me.formData }, me)
           .then((res) => {
             me.tableData = res.data.docs;
@@ -229,7 +231,7 @@
       },
       pageChange(val) {
         this.page = val;
-        //        this.listEngine();
+        this.handleClickSearch();
       }
     }
   };

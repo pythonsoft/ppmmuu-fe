@@ -6,6 +6,7 @@
   <style>
     * { padding: 0; margin: 0; outline: none; }
     .area{ height: 80px; width: 400px; background: #ccc; border: 1px solid #999; }
+    .control { color: #ff3f4e; height: 36px; width: 80px; text-align: center;}
   </style>
 </head>
 <body>
@@ -13,22 +14,26 @@
 <div class="area"></div>
 <output id="list"></output>
 
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
 <script>
   class Transfer {
-    constructor(file){
-      this.socket = new WebSocket('ws://10.0.14.103:9000');
+    constructor(file, uuid){
+      this.socket = new WebSocket('ws://10.0.15.59:9000');
       this.status = '';
+      this.button = '';
+      this.control = false;
       let fileSize = file.size;
       console.log("file len==>", fileSize);
       this.file = file;
       this.fileSize = fileSize;
       this.stopped = false;
       this.sendFileInterval = '';
-      this.sendFileTimeout = 50;
+      this.sendFileTimeout = 10;
       this.beatInterval = '';
       this.beatTimeout = 1000;
       this.transfered = 0;
-      this.uuid = '' + new Date().getTime();
+      this.uuid = '' + uuid;
       this.CONFIG_STATUS = {
         STATUS_CONNECTING:  '0',
         STATUS_CONNECTED:   '1',
@@ -49,7 +54,7 @@
       this.payload = {
         "protocol":"0",
         "type":"0",
-        "mode":"0",
+        "mode":"1",
         "encrypt":"0",
         "speed":"0",
         "transfered":"0",
@@ -98,7 +103,7 @@
     onopen(){
       console.log('connect success');
       const me = this;
-      me.prepareTransferSend('0');
+      me.start();
     }
     onmessage(msg){
       console.log("msg", msg);
@@ -119,7 +124,13 @@
       switch(status){
         case this.CONFIG_STATUS.STATUS_CONNECTED:
           console.log("send start==>");
+          this.transfered = payload.transfered * 1;
           this.prepareTransferSend(this.CONFIG_STATUS.STATUS_START);
+          if(this.control && this.button){
+            this.button.text('停止');
+            this.button.attr('disabled', false);
+            this.control = false;
+          }
           break;
         case this.CONFIG_STATUS.STATUS_STARTED:
           console.log(" start set intval ==>");
@@ -131,7 +142,8 @@
         case this.CONFIG_STATUS.STATUS_TRANSFERING:
           if(payload.transfered * 1 >= this.fileSize){
             console.log("send stopping");
-            this.clearAllInterval();
+            this.button.text('已完成');
+            this.button.attr('disabled', true);
             this.prepareTransferSend(this.CONFIG_STATUS.STATUS_STOPING);
           }
           break;
@@ -149,12 +161,30 @@
           break;
         case this.CONFIG_STATUS.STATUS_STOPED:
           console.log("stopped!");
+          if(this.control && this.button){
+            this.button.text('开始');
+            this.button.attr('disabled', false);
+            this.control = false;
+          }
           this.clearAllInterval();
           break;
         case this.CONFIG_STATUS.STATUS_CANCELED:
           this.clearAllInterval();
           break;
       }
+    }
+    stop(button){
+      this.button = button;
+      this.control = true;
+      console.log("pause send stopping");
+      this.prepareTransferSend(this.CONFIG_STATUS.STATUS_STOPING);
+    }
+    start(button){
+      this.button = button;
+      this.control = true;
+      console.log("starting");
+      this.stopped = false;
+      this.prepareTransferSend('0');
     }
     prepareTransferSend(status){
       const options = {
@@ -176,6 +206,7 @@
       }
       if(this.stopped){
         console.log('send file stopped');
+        return;
       }
       let stop = leftLen > 256*1024 ? start + 256*1024 : start + leftLen;
       var blob = file.slice(start, stop);
@@ -277,7 +308,7 @@
   }
   checkBrowserSupportFile();
 
-  const transferArr = [];
+  const transferObj = [];
 
 
   const ipt = document.querySelector('.area');
@@ -291,14 +322,69 @@
     const files = e.dataTransfer.files;
     var output = [];
     for (var i = 0, f; f = files[i]; i++) {
+      const uuid = new Date().getTime() + '';
+      const button = '<button class="control" data-id="' + uuid + '"' + '>停止</button>'
       output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
           f.size, ' bytes, last modified: ',
-          f.lastModifiedDate.toLocaleDateString(), '</li>');
-      const transfer = new Transfer(f);
-      transferArr.push(transfer);
+          f.lastModifiedDate.toLocaleDateString(), button, '</li>');
+      const transfer = new Transfer(f, uuid);
+      transferObj[uuid] = transfer;
     }
     document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
   };
+
+  $(document).on('click', '.control', function(){
+    const me = $(this);
+    const uuid = me.attr('data-id');
+    console.log('uuid==>', uuid);
+    const transfer = transferObj[uuid];
+    if(!transfer){
+      alert('这个传输任务不存在');
+    }
+    if(me.text() == '停止'){
+      me.text() == '停止中....';
+      me.attr('disabled', true);
+      transfer.stop(me);
+    }else if(me.text() == '开始'){
+      me.text('开始中...');
+      me.attr('disabled', true);
+      transfer.start(me);
+    }
+  })
+
+  function onInitFs(fs) {
+    console.log(fs.root);
+
+    fs.root.getFile('log.txt', {create: true}, function(fileEntry) {
+
+      // Create a FileWriter object for our FileEntry (log.txt).
+      fileEntry.createWriter(function(fileWriter) {
+
+        fileWriter.onwriteend = function(e) {
+          console.log('Write completed.');
+        };
+
+        fileWriter.onerror = function(e) {
+          console.log('Write failed: ' + e.toString());
+        };
+
+        // Create a new Blob and write it to log.txt.
+        var bb = new Blob(['asfasfasf']); // Note: window.WebKitBlobBuilder in Chrome 12.
+        fileWriter.write(bb);
+
+      }, errorHandler);
+
+    }, errorHandler);
+
+  }
+
+  window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+
+  console.log("temp==>", window.TEMPORARY);
+  window.requestFileSystem(window.TEMPORARY, 1024*1024, onInitFs, errorHandler);
+  function errorHandler(e){
+    console.log("error", e);
+  }
 </script>
 </body>
 </html>

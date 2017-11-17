@@ -151,6 +151,8 @@
         if (this.source) {
           me.formData.sourceId = this.source._id;
         }
+        me.formData.page = me.page;
+        me.formData.pageSize = me.pageSize;
         api.listTactics({ params: me.formData }, me)
           .then((res) => {
             me.tableData = res.data.docs;
@@ -233,7 +235,7 @@
       },
       pageChange(val) {
         this.page = val;
-        //        this.listEngine();
+        this.handleClickSearch();
       }
     }
   };

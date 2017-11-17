@@ -9,7 +9,7 @@
 | data | 显示的数据 | array | - | - | ✅ |
 | empty-text | 空数据时显示的文本内容，也可以通过slot="empty"设置 | string | - | 暂无数据 | ✅ |
 | theme | 主题样式 | string | normal, dark | normal | ✅ |
-
+| autoClearSelection | 当数据刷新时，是否清空用户选择 | boolean | - | true | ✅ |
 
 ### table-column attributes
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  | 实现 |

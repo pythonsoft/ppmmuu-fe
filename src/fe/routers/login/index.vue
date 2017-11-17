@@ -41,8 +41,7 @@
 </template>
 <script>
   import './login.css';
-  import { getCookie } from '../../common/utils';
-  import config from '../../config';
+  import { getDefaultPageIndex } from '../../common/utils';
 
   const api = require('../../api/user');
 
@@ -81,10 +80,13 @@
       },
       isLogin() {
         const me = this;
-        api.getUserAuth()
-          .then(() => {
-            window.location.href = '/mediaCenter';
-          }).catch(() => {});
+        try {
+          const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
+          const index = getDefaultPageIndex(showMenuIndex);
+          this.$router.push({name: index});
+        }catch(e) {
+
+        }
       },
       login() {
         const me = this;
@@ -95,7 +97,7 @@
         api.postUserLogin(this.userInfo)
           .then((res) => {
             me.$message.success('登陆成功!');
-            const index = res.data.menu.indexOf('management') !== -1 ? 'management' : 'mediaCenter';
+            const index = getDefaultPageIndex(res.data.menu);
             localStorage.setItem('menu', JSON.stringify(res.data.menu));
             localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
             me.$router.push({ name: index });

@@ -630,4 +630,13 @@ utils.formatShortTime = function (time) {
   return utils.formatTime(new Date(t), formatString);
 };
 
+utils.getDefaultPageIndex = function getDefaultPageIndex(menu) {
+  for (let i = 0, len = menu.length; i < len; i++) {
+    if (menu[i].index === 'trends') {
+      return 'trends';
+    }
+  }
+  return 'subscriptions';
+};
+
 module.exports = utils;

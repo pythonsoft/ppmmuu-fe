@@ -71,7 +71,7 @@
     },
     data() {
       return {
-        menu: menu,
+        menu: [],
         defaultRoute: '/',
         display: false,
         userInfo: {
