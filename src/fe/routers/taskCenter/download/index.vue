@@ -44,6 +44,9 @@
           </template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="tasklist" width="80" label="进度">
+          <template scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).total }}</template>
+        </fj-table-column>
         <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
@@ -144,6 +147,7 @@
       this.runTimer = false;
     },
     methods: {
+      formatTaskList: utils.formatTaskList,
       updateStatus() {
         const keys = Object.keys(this.status);
         for (let i = 0; i < keys.length; i++) {

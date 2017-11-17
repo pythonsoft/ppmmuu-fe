@@ -639,4 +639,31 @@ utils.getDefaultPageIndex = function getDefaultPageIndex(menu) {
   return 'subscriptions';
 };
 
+utils.formatTaskList = function (currentStep, taskList) {
+  const len = taskList.length;
+  let task = null;
+  let percent = 0;
+  let rs = 1;
+  let str = '-';
+
+  if(len !== 0) {
+    percent = 1 / len;
+    task = taskList[currentStep];
+
+    if(task) {
+      rs = 0;
+
+      for(let i = 0, l = taskList.length; i < l; i++) {
+        if(currentStep === i) {
+          str = `${task.taskName} ${task.position} %`;
+        }
+        rs = rs + percent * (taskList[i].position / 100);
+      }
+
+    }
+  }
+
+  return { total: rs * 100 + '%', current: str };
+};
+
 module.exports = utils;

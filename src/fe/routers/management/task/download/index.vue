@@ -31,21 +31,27 @@
       </div>
     </template>
     <template slot="table">
-      <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
+      <fj-table highlightKey="id" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" align="center" label="状态">
           <template scope="props">
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
+        <fj-table-column prop="tasklist" width="80" label="进度">
+          <template scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).total }}</template>
+        </fj-table-column>
+        <fj-table-column prop="tasklist" width="140" label="当前流程">
+          <template scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).current }}</template>
+        </fj-table-column>
         <fj-table-column prop="processType" width="80" label="任务类型"></fj-table-column>
         <fj-table-column prop="userName" width="120" label="用户名">
           <template scope="props">{{ props.row.userName || '-' }}</template>
         </fj-table-column>
-        <fj-table-column prop="createTime" width="160"label="创建时间">
+        <fj-table-column prop="createTime" width="140"label="创建时间">
           <template scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="lastModify" width="160" label="修改时间">
+        <fj-table-column prop="lastModify" width="140" label="修改时间">
           <template scope="props">{{ props.row.lastModify | formatTime }}</template>
         </fj-table-column>
       </fj-table>
@@ -134,6 +140,7 @@
       this.runTimer = false;
     },
     methods: {
+      formatTaskList: utils.formatTaskList,
       handleClickSearch() {
         this.listTask();
       },
