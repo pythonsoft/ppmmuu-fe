@@ -163,7 +163,6 @@
   const shelfApi = require('../../api/shelves');
 
   const config = require('./config');
-  const taskConfig = require('../management/task/config');
 
   export default {
     name: 'right',
@@ -373,6 +372,7 @@
           output: this.basic.OUTPOINT,
           duration: this.basic.OUTPOINT - this.basic.INPOINT,
           fileTypeId: this.fileInfo.FILETYPEID,
+          fromWhere: this.videoInfo.from_where || '1'
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
@@ -403,6 +403,7 @@
           output: this.basic.OUTPOINT,
           duration: this.basic.OUTPOINT - this.basic.INPOINT,
           fileTypeId: this.fileInfo.FILETYPEID,
+          fromWhere: this.videoInfo.from_where || '1'
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
