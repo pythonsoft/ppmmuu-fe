@@ -410,6 +410,11 @@ utils.formatContent = function formatContent(content) {
   return content;
 };
 
+utils.removeAllHTMLTag = function removeAllHTMLTag(str) {
+  const reg = /<[^>]*>|<\/[^>]*>/gm;
+  return str.replace(reg, "");
+};
+
 utils.getStringLength = function getStringLength(str) {
   const len = str.length;
 
