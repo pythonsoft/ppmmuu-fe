@@ -21,8 +21,8 @@
           <div class="topic-list">
             <h4 class="topic-list-title">百度热搜</h4>
             <ul>
-              <li class="topic-list-item clearfix" v-for="item in realtimeBuzzBd">
-                <span :class="[item.ranking < 4 ? 'num-top' : 'num-normal']">{{ item.ranking }}</span>
+              <li class="topic-list-item clearfix" v-for="(item, ranking) in realtimeBuzzBd">
+                <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
                 <div :style="{ overflow: 'hidden' }">
                   <span class="count"><i :class="['iconfont', item.riseOrFall > 0 ? 'icon-rise' : 'icon-fall']"></i>{{ item.trends }}</span>
                   <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
