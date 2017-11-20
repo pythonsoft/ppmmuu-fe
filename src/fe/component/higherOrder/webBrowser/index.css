@@ -1,0 +1,47 @@
+.web-browser{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  background: #fff;
+}
+.web-browser-content{
+  height: 100%;
+  width: 100%;
+}
+
+.web-browser-back,.web-browser-close{
+  color: #38B1EB;
+  float: left;
+  height: 63px;
+  width: 24px;
+  line-height: 63px;
+  cursor: default;
+}
+.web-browser-back:hover,.web-browser-close:hover {
+  color: #2A3E52;
+}
+
+.web-browser-close{
+  float: right;
+  font-size: 20px;
+  width: 63px;
+  text-align: center;
+}
+
+.web-browser-content iframe{
+  height: 100%;
+  width: 100%;
+}
+
+.web-browser .layout-two-row-title-content {
+  top: 63px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+}
+

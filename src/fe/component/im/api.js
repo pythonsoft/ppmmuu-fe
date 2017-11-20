@@ -18,8 +18,14 @@ chat.on('connect', () => {
   });
 
   chat.on('getRecentContactList', (rs) => {
-    console.log('rs');
+    console.log('getRecentContactList ---', rs);
   });
+
+  chat.on('test', (rs) => {
+    console.log('test rs ====>', rs);
+  });
+
+  api.getRecentContactList();
 });
 
 /**
@@ -136,7 +142,8 @@ api.sendMessage = function (contactInfo, content, cb) {
 
 // 获取最近的会话
 api.getRecentContactList = function (cb) {
-
+  chat.emit('getRecentContactList', { page: 1, pageSize: 30 })
+  chat.emit('test', { v:12 })
 };
 
 // 设置个人资料

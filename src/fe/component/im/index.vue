@@ -188,6 +188,8 @@
 //        this.currentDialogMessages = this.currentDialogMessages.concat(msg);
 //        this.scrollToBottom();
 //      });
+
+
     },
     updated() {
     },
