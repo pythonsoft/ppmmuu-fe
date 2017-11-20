@@ -189,7 +189,9 @@
 //        this.scrollToBottom();
 //      });
 
-
+      api.getRecentContactList(1, function(rs) {
+        console.log('getRecentContactList -->', rs);
+      })
     },
     updated() {
     },
