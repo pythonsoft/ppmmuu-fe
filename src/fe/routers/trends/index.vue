@@ -39,6 +39,7 @@
                 <div :style="{ overflow: 'hidden' }">
                   <span class="count">{{ item.reads }}</span>
                   <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
+                  <i :style="{ width: '12px' }" class="iconfont fj-icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe674;</i>
                 </div>
               </li>
             </ul>
