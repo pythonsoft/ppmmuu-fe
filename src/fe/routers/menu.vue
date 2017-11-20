@@ -50,7 +50,7 @@
   const api = require('../api/user');
 
   const menu = [
-    { text: '舆情', index: 'trends', route: '/trends', icon: 'icon-media-library' },
+    { text: '舆情', index: 'trends', route: '/trends', icon: 'icon-yuqing' },
     { text: '媒体库', index: 'mediaCenter', route: '/mediaCenter', icon: 'icon-media-library' },
     { text: '入库', index: 'library', route: '/library', icon: 'icon-library' },
     { text: '上架', index: 'shelf', route: '/shelf', icon: 'icon-shangjia' },
