@@ -4,6 +4,7 @@
 const config = {};
 
 config.baseDomain = 'localhost:8080';
+// config.baseDomain = '10.0.16.101:8080';
 
 config.baseURL = `http://${config.baseDomain}`;
 // config.baseURL = 'http://10.0.16.125:8080';
