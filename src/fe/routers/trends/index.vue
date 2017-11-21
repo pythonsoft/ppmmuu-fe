@@ -464,7 +464,7 @@
         });
       },
       updateSpreadPathData(reqData) {
-        // reqData.keyword = '';
+        // reqData.keyword = '致我们单纯的小美好';
         this.spreadPathChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowSpread({ params: reqData })
         .then((response) => {
