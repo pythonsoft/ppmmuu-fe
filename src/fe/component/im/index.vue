@@ -179,21 +179,24 @@
     },
     created() {
       this.myselfInfo = getItemFromLocalStorage('userInfo');
-//      this.login();
-//
-//      console.log('myselfInfo ===>', this.myselfInfo);
-//
-//      api.on('im_onMsgNotify', (msg) => {
-//        console.log('im_onMsgNotify --->', msg);
-//        this.currentDialogMessages = this.currentDialogMessages.concat(msg);
-//        this.scrollToBottom();
-//      });
 
-      api.getRecentContactList(1, function(rs) {
-        console.log('getRecentContactList -->', rs);
-      })
+      api.connect(err => {
+        if(err) {
+          this.$message.error(err);
+          return false;
+        }
+
+        api.events.onMessage((msg) => {
+          this.currentDialogMessages = this.currentDialogMessages.concat(msg);
+          this.scrollToBottom();
+        });
+
+        this.getRecentContactList();
+      });
+
     },
     updated() {
+
     },
     methods: {
       groupNameDialogCancel() {
@@ -210,17 +213,13 @@
         const items = this.departmentBrowserResult;
         const len = items.length;
 
-        const info = {
-          Name: this.groupName,
-          Members: [this.myselfInfo._id],
-          CreatorName: this.myselfInfo.name
-        };
+        const members = [];
 
         for(let i = 0; i < len; i++) {
-          info.Members.push(items[i]._id);
+          members.push(items[i]._id);
         }
 
-        api.createGroup(info, (err, newGroupId) => {
+        api.createGroup(this.groupName, members.join(','), (err, newGroupId) => {
           if(err) {
             this.$message.error(err);
             return false;
@@ -334,7 +333,7 @@
         }
 
         if(len === 1) {
-
+          console.log('departmentBrowserConfirm -->', items);
         }else if(len > 1) {
           this.groupNameDialogVisible = true;
         }
@@ -353,26 +352,14 @@
           this.scrollToBottom();
         });
       },
-      login() {
-        api.login(this.myselfInfo._id, this.myselfInfo.name, this.myselfInfo.photo, (err, rs) => {
-          if(err) {
-            this.$message.error(err);
-            return false;
-          }
-
-          this.getRecentContactList();
-          this.setProfile();
-        });
-      },
       getRecentContactList() {
-        api.getRecentContactList((err, rs) => {
+        api.getRecentContactList(1, (err, rs) => {
           if(err) {
             this.$message.error(err);
             return false;
           }
 
-          this.recentContactList = rs;
-          console.log('recentContactList -->', this.recentContactList);
+          this.recentContactList = rs.docs;
         });
       },
       setProfile() {
