@@ -495,7 +495,8 @@
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          if (resData.constructor === Array && resData.length === 0) {
+          // if (resData.constructor === Array && resData.length === 0) {
+          if (!resData.content_graph) {
             this.showEmptySpreadPath = true;
             newOption.series = [{ data: [], edges: [] }];
           } else {
@@ -515,7 +516,8 @@
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          if (resData.constructor === Array && resData.length === 0) {
+          // if (resData.constructor === Array && resData.length === 0) {
+          if (resData.opinions) {
             this.showEmptySentiment = true;
             newOption.series = [{ data: [] }, { data: [] }];
             this.sentimentObj = {};
