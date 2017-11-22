@@ -49,7 +49,7 @@
             </panel-view>
           </template>
           <template slot="1" scope="props">
-            <div :style="{ width: '100%', height: '100%', overflow: 'auto' }" ref="rightContent">
+            <div :style="{ width: '100%', height: '100%', overflow: 'auto', position: 'absolute' }" ref="rightContent">
               <div class="catalogRightContent" v-if="currentCatalogId">
                 <h3>填写编目内容</h3>
                 <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="100px">
@@ -220,9 +220,6 @@
           ],
           airTime: [
             { required: true, message: '请输入首播日期'}
-          ],
-          pigeonhole: [
-            { required: true, message: '请选择是否归档'}
           ]
         },
         catalogList: [],

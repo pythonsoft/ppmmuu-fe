@@ -392,7 +392,7 @@
 
         const obj = {
           house_num: me.houseNo,
-          publish_status: 1,
+          //publish_status: 1,
           full_text: this.keyword,
           from_where: 3
         };

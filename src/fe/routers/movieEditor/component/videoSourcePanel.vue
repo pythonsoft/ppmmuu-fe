@@ -318,8 +318,6 @@
 
           this.videoSource = url;
         }, this);
-
-        this.getDetail(id);
       },
       getFile(id) {
 
@@ -714,7 +712,7 @@
           return {};
         }
 
-        if(this.fromWhere === this.FROM_WHERE.UMP){
+        if(this.fromWhere*1 === this.FROM_WHERE.UMP){
           for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
             for (let i = 0, len = files.length; i < len; i++) {
               if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {
