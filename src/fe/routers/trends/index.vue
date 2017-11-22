@@ -263,7 +263,7 @@
       };
     },
     created() {
-      BigdataAPI.getRealtimeBuzz({ params: { size: 30 } })
+      BigdataAPI.getRealtimeBuzz()
         .then((response) => {
           this.realtimeBuzzBd = response.data;
           if (this.realtimeBuzzBd.length > 0) {
@@ -271,7 +271,7 @@
           }
         }).catch((error) => {
         });
-      BigdataAPI.getRealtimeBuzzWb({ params: { size: 30 } })
+      BigdataAPI.getRealtimeBuzzWb()
         .then((response) => {
           this.realtimeBuzzWb = response.data;
         }).catch((error) => {
