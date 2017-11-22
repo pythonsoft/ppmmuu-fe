@@ -219,7 +219,7 @@
           members.push(items[i]._id);
         }
 
-        api.createGroup(this.groupName, members.join(','), (err, newGroupId) => {
+        api.createGroup(this.groupName, members.join(','), (err, info) => {
           if(err) {
             this.$message.error(err);
             return false;
@@ -230,9 +230,7 @@
           this.groupNameDialogVisible = false;
           this.groupName = '';
 
-          setTimeout(function() {
-            me.getRecentContactList();
-          }, 2000);
+          me.getRecentContactList();
         });
       },
       isEmptyObject,
@@ -333,7 +331,16 @@
         }
 
         if(len === 1) {
-          console.log('departmentBrowserConfirm -->', items);
+          const info = items[0];
+          console.log('-->', items);
+          api.addFriend(info._id, info.name, info.photo, (err, doc) => {
+            if(err) {
+              this.$message.error(err);
+              return false;
+            }
+
+            this.getRecentContactList();
+          });
         }else if(len > 1) {
           this.groupNameDialogVisible = true;
         }

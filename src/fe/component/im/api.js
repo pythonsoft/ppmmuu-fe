@@ -161,7 +161,7 @@ api.createSession = function (name, members, cb) {
   callback_store.on('createSession', {
     name: name,
     type: members.indexOf(',') === -1 ? SESSION_TYPE.C2C : SESSION_TYPE.GROUP,
-    members: [members, meInfo._id].join('')
+    members: [members, meInfo._id].join(',')
   }, cb);
 };
 
