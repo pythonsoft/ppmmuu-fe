@@ -25,7 +25,7 @@ axiosInstance.interceptors.request.use((config) => {
 api.getKeywordStatus = function(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axiosInstance.get('/search/bigdata', data).then((response) => {
+    axiosInstance.get('/search/bigdata/status', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
