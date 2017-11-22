@@ -1,168 +1,182 @@
 <template>
-  <div class="trends-wrapper clearfix">
-    <div class="scrum-stage">
-      <div class="topic-box board">
-        <div class="topic-box-header">
-          <h3>精选话题</h3>
-          <!-- <div class="topic-search-input">
-            <fj-input
-              placeholder="搜索其他话题"
-              v-model="customKeyword"
-              @change="()=>{}"
-              @keydown.native.enter.prevent="changeKeyword"
-              icon="icon-search input-search-icon"
-              theme="fill"
-              size="small"
-              @on-icon-click="changeKeyword"
-            ></fj-input>
-          </div> -->
-        </div>
-        <div class="topic-box-content clearfix">
-          <div class="topic-list">
-            <h4 class="topic-list-title">百度热搜</h4>
-            <ul>
-              <li class="topic-list-item clearfix" v-for="(item, ranking) in realtimeBuzzBd">
-                <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
-                <div :style="{ overflow: 'hidden' }">
-                  <span class="count"><i :class="['iconfont', item.riseOrFall > 0 ? 'icon-rise' : 'icon-fall']"></i>{{ item.trends }}</span>
-                  <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
-                  <i :style="{ width: '12px' }" class="iconfont fj-icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe674;</i>
-                </div>
-              </li>
-            </ul>
+  <div class="trends-main clearfix">
+    <div class="vertical-margin-bar"></div>
+    <div class="trends-wrapper clearfix">
+      <div class="scrum-stage">
+        <div class="horizontal-margin-bar"></div>
+        <div class="topic-box board">
+          <div class="topic-box-header">
+            <h3>精选话题</h3>
+            <!-- <div class="topic-search-input">
+              <fj-input
+                placeholder="搜索其他话题"
+                v-model="customKeyword"
+                @change="()=>{}"
+                @keydown.native.enter.prevent="changeKeyword"
+                icon="icon-search input-search-icon"
+                theme="fill"
+                size="small"
+                @on-icon-click="changeKeyword"
+              ></fj-input>
+            </div> -->
           </div>
-          <div class="topic-list">
-            <h4 class="topic-list-title">新浪微博</h4>
-            <ul>
-              <li class="topic-list-item clearfix" v-for="(item, ranking) in realtimeBuzzWb">
-                <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
-                <div :style="{ overflow: 'hidden' }">
-                  <span class="count">{{ item.reads }}</span>
-                  <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
-                  <i :style="{ width: '12px' }" class="iconfont fj-icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe674;</i>
-                </div>
-              </li>
-            </ul>
+          <div class="topic-box-content clearfix">
+            <div class="topic-list">
+              <h4 class="topic-list-title">百度热搜</h4>
+              <ul>
+                <li class="topic-list-item clearfix" v-for="(item, ranking) in realtimeBuzzBd">
+                  <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
+                  <div :style="{ overflow: 'hidden' }">
+                    <span class="count"><i :class="['iconfont', item.riseOrFall > 0 ? 'icon-rise' : 'icon-fall']"></i>{{ item.trends }}</span>
+                    <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
+                    <i :style="{ width: '12px' }" class="iconfont fj-icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe674;</i>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="topic-list">
+              <h4 class="topic-list-title">新浪微博</h4>
+              <ul>
+                <li class="topic-list-item clearfix" v-for="(item, ranking) in realtimeBuzzWb">
+                  <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
+                  <div :style="{ overflow: 'hidden' }">
+                    <span class="count">{{ item.reads }}</span>
+                    <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
+                    <i :style="{ width: '12px' }" class="iconfont fj-icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe674;</i>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="article-box board">
-        <fj-tabs v-model="activeMediaType">
-          <fj-tab-pane
-            v-for="tab in MEDIA_TYPE"
-            :label="tab.label"
-            :name="tab.name"
-            :key="tab.name">
-            <ul v-show="articleList.length > 0">
-              <li v-for="item in articleList" class="article-list-item">
-                <div class="article-source-image">
-                  <img :src="getFaviconBgImg(tab.label)" width="42">
-                  <img :ref="item.source" :src="getFavicon(item.source)" :width="getFaviconWidth(item.source)">
-                </div>
-                <div :style="{ overflow: 'hidden' }">
-                  <!--<a :href="item.url" target="_blank" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>-->
-                  <a href="javascript:;" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
-                  <p class="article-abstract" v-html="item.summary"></p>
-                  <span class="article-info">{{ `${item.source}  ${item.datetime}` }}</span>
-                </div>
-              </li>
-            </ul>
-            <div class="empty-box" v-show="articleList.length === 0">没有数据</div>
-          </fj-tab-pane>
-        </fj-tabs>
-      </div>
-    </div>
-    <div class="scrum-stage">
-      <div class="geo-box board">
-        <h3>地域风向标</h3>
-        <div class="geo-chart-box" ref="geoChart"></div>
-        <div class="geo-news-box">
-          <fj-tabs v-model="activeHistoryType">
+        <div class="board-horizontal-margin-bar"></div>
+        <div class="article-box board">
+          <fj-tabs v-model="activeMediaType">
             <fj-tab-pane
-              v-for="tab in HISTORY_TYPE"
+              v-for="tab in MEDIA_TYPE"
               :label="tab.label"
               :name="tab.name"
-              :key="tab.label + tab.name">
-              <ul class="geo-list clearfix">
-                <li
-                  v-for="area in areaList"
-                  :class="{ 'geo-item-on' : activeArea === area.name }"
-                  @click="activeArea = area.name">
-                  {{ area.name }}
+              :key="tab.name">
+              <ul v-show="articleList.length > 0">
+                <li v-for="item in articleList" class="article-list-item">
+                  <div class="article-source-image">
+                    <img :src="getFaviconBgImg(tab.label)" width="42">
+                    <img :ref="item.source" :src="getFavicon(item.source)" :width="getFaviconWidth(item.source)">
+                  </div>
+                  <div :style="{ overflow: 'hidden' }">
+                    <!--<a :href="item.url" target="_blank" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>-->
+                    <a href="javascript:;" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
+                    <p class="article-abstract" v-html="item.summary"></p>
+                    <span class="article-info">{{ `${item.source}  ${item.datetime}` }}</span>
+                  </div>
                 </li>
               </ul>
-              <ul class="geo-article-list" v-if="areaNewsData[activeArea]">
-                <li v-for="item in areaNewsData[activeArea].news" class="clearfix">
-                  <!--<a class="geo-article-title" v-html="item.title" :href="item.url" target="_blank"></a>-->
-                  <a href="javascript:;" class="geo-article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
-                  <span class="geo-article-time">{{ item.datetime }}</span>
-                </li>
-              </ul>
-              <div class="empty-box" v-show="!areaNewsData[activeArea] || areaNewsData[activeArea].news.length === 0">没有数据</div>
+              <div class="empty-box" v-show="articleList.length === 0">没有数据</div>
             </fj-tab-pane>
           </fj-tabs>
         </div>
       </div>
-      <div class="spread-path-box board">
-        <div class="spread-path-chart-box" ref="spreadPathChart"></div>
-        <div class="empty-box" v-show="showEmptySpreadPath">没有数据</div>
+      <div class="stage-vertical-margin-bar"></div>
+      <div class="scrum-stage">
+        <div class="horizontal-margin-bar"></div>
+        <div class="geo-box board" ref="geoBox">
+          <h3>地域风向标</h3>
+          <div class="geo-chart-box" ref="geoChart"></div>
+          <div class="geo-news-box">
+            <fj-tabs v-model="activeHistoryType">
+              <fj-tab-pane
+                v-for="tab in HISTORY_TYPE"
+                :label="tab.label"
+                :name="tab.name"
+                :key="tab.label + tab.name">
+                <ul class="geo-list clearfix">
+                  <li
+                    v-for="area in areaList"
+                    :class="{ 'geo-item-on' : activeArea === area.name }"
+                    @click="activeArea = area.name">
+                    {{ area.name }}
+                  </li>
+                </ul>
+                <ul class="geo-article-list" v-if="areaNewsData[activeArea]">
+                  <li v-for="item in areaNewsData[activeArea].news" class="clearfix">
+                    <!--<a class="geo-article-title" v-html="item.title" :href="item.url" target="_blank"></a>-->
+                    <a href="javascript:;" class="geo-article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
+                    <span class="geo-article-time">{{ item.datetime }}</span>
+                  </li>
+                </ul>
+                <div class="empty-box" v-show="!areaNewsData[activeArea] || areaNewsData[activeArea].news.length === 0">没有数据</div>
+              </fj-tab-pane>
+            </fj-tabs>
+          </div>
+        </div>
+        <div class="board-horizontal-margin-bar"></div>
+        <div class="spread-path-box board">
+          <div class="spread-path-chart-box" ref="spreadPathChart"></div>
+          <div class="empty-box" v-show="showEmptySpreadPath">没有数据</div>
+        </div>
       </div>
-    </div>
-    <div class="scrum-stage">
-      <div class="spread-trend-box board">
-        <div class="spread-trend-chart-box" ref="spreadTrendChart"></div>
-      </div>
-      <div class="event-timeline-box board">
-        <h3>事件脉络</h3>
-        <div class="empty-box" v-show="timelineData.length === 0">没有数据</div>
-        <div v-for="(event, eventIndex) in timelineData">
-          <h4 class="timeline-title">
-            {{ event.name }}
-            <i class="iconfont icon-clock timeline-title-icon"></i>
-          </h4>
+      <div class="stage-vertical-margin-bar"></div>
+      <div class="scrum-stage-l">
+        <div class="horizontal-margin-bar"></div>
+        <div class="spread-trend-box board">
+          <div class="spread-trend-chart-box" ref="spreadTrendChart"></div>
+        </div>
+        <div class="board-horizontal-margin-bar"></div>
+        <div class="event-timeline-box board">
+          <h3>事件脉络</h3>
+          <div class="empty-box" v-show="timelineData.length === 0">没有数据</div>
+          <div v-for="(event, eventIndex) in timelineData">
+            <h4 class="timeline-title">
+              {{ event.name }}
+              <i class="iconfont icon-clock timeline-title-icon"></i>
+            </h4>
 
-          <template v-for="(date, index) in event.dateList">
-            <span class="timeline-date">{{ date }}</span>
-            <span class="timeline-total">热门文章共{{ event.mailuo[date].length }}篇</span>
-            <!-- <span
-              class="timeline-fold-btn"
-              @click="foldView(eventIndex, date)"
-              v-show="event.showArticleLength[date].length>3 && event.showArticleLength[date].show > 3">
-              收起
-              <i class="iconfont icon-arrow-right icon-fold"></i>
-            </span> -->
-            <span
-              class="timeline-fold-btn"
-              @click="foldView(eventIndex, date)"
-              >
-              收起
-              <i class="iconfont icon-arrow-right icon-fold"></i>
-            </span>
-            <ul class="timeline-article-list">
-              <li class="timeline-article-item" v-for="article in event.mailuo[date].slice(0, event.showArticleLength[date].show)">
-                <!--<a :href="article.url" target="_blank" class="timeline-article-title" @click="showWebBrowser(article)">{{ article.title }}</a>-->
-                <a href="javascript:;" class="timeline-article-title" @click="showWebBrowser(article.title, article.url)">{{ article.title }}</a>
-                <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
-              </li>
-              <li class="timeline-article-item" v-show="event.showArticleLength[date].show < event.showArticleLength[date].length">
-                <span class="timeline-view-more" @click="showMoreView(eventIndex, date)">加载更多</span>
-              </li>
-            </ul>
-          </template>
+            <template v-for="(date, index) in event.dateList">
+              <span class="timeline-date">{{ date }}</span>
+              <span class="timeline-total">热门文章共{{ event.mailuo[date].length }}篇</span>
+              <!-- <span
+                class="timeline-fold-btn"
+                @click="foldView(eventIndex, date)"
+                v-show="event.showArticleLength[date].length>3 && event.showArticleLength[date].show > 3">
+                收起
+                <i class="iconfont icon-arrow-right icon-fold"></i>
+              </span> -->
+              <span
+                class="timeline-fold-btn"
+                @click="foldView(eventIndex, date)"
+                >
+                收起
+                <i class="iconfont icon-arrow-right icon-fold"></i>
+              </span>
+              <ul class="timeline-article-list">
+                <li class="timeline-article-item" v-for="article in event.mailuo[date].slice(0, event.showArticleLength[date].show)">
+                  <!--<a :href="article.url" target="_blank" class="timeline-article-title" @click="showWebBrowser(article)">{{ article.title }}</a>-->
+                  <a href="javascript:;" class="timeline-article-title" @click="showWebBrowser(article.title, article.url)">{{ article.title }}</a>
+                  <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
+                </li>
+                <li class="timeline-article-item" v-show="event.showArticleLength[date].show < event.showArticleLength[date].length">
+                  <span class="timeline-view-more" @click="showMoreView(eventIndex, date)">加载更多</span>
+                </li>
+              </ul>
+            </template>
+          </div>
+        </div>
+        <div class="board-horizontal-margin-bar"></div>
+        <div class="sentiment-box board">
+          <div class="sentiment-chart-box" ref="sentimentChart">
+          </div>
+          <div class="empty-box" v-show="showEmptySentiment">没有数据</div>
         </div>
       </div>
-      <div class="sentiment-box board">
-        <div class="sentiment-chart-box" ref="sentimentChart">
-        </div>
-        <div class="empty-box" v-show="showEmptySentiment">没有数据</div>
-      </div>
+      <div class="horizontal-margin-bar"></div>
+      <web-browser
+        :visible.sync="webBrowserVisible"
+        :title="webBrowserTitle"
+        :url="webBrowserUrl"
+        @close="webBrowserClose"
+      ></web-browser>
     </div>
-    <web-browser
-      :visible.sync="webBrowserVisible"
-      :title="webBrowserTitle"
-      :url="webBrowserUrl"
-      @close="webBrowserClose"
-    ></web-browser>
+    <div class="vertical-margin-bar"></div>
   </div>
 </template>
 <script>
@@ -245,7 +259,7 @@
         runningKeywords: [],
         webBrowserVisible: false,
         webBrowserTitle: '',
-        webBrowserUrl: '',
+        webBrowserUrl: ''
       };
     },
     created() {
@@ -265,7 +279,10 @@
       this.refreshKeywordsStatus();
     },
     mounted() {
-      this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue');
+      const geoChartWidth = this.$refs.geoBox.getBoundingClientRect().width;
+      const geoChartHeight = 2 * geoChartWidth / 3;
+
+      this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue', { height: geoChartHeight });
       this.geoChart.setOption(geoOption);
 
       this.spreadPathChart = echarts.init(this.$refs.spreadPathChart, 'umpBlue');
@@ -278,6 +295,14 @@
       this.sentimentChart.setOption(sentimentOption);
       this.sentimentChart.on('pieselectchanged', (params)=> {
         this.updateSentiment(params);
+      });
+      window.addEventListener('resize', () => {
+        const geoChartWidth = this.$refs.geoBox.getBoundingClientRect().width;
+        const geoChartHeight = 2 * geoChartWidth / 3;
+        this.geoChart.resize({ height: geoChartHeight });
+        this.spreadPathChart.resize();
+        this.spreadTrendChart.resize();
+        this.sentimentChart.resize();
       });
     },
     watch: {
@@ -464,7 +489,7 @@
         });
       },
       updateSpreadPathData(reqData) {
-        // reqData.keyword = '';
+        // reqData.keyword = '致我们单纯的小美好';
         this.spreadPathChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowSpread({ params: reqData })
         .then((response) => {
