@@ -58,15 +58,19 @@ export const spreadPathOption = {
         },
         formatter(params) {
           let content = '';
-          if (params.data && params.data.content) {
-            const length = params.data.content.length;
-            let index = 0;
-            while (index <= length && length > 0) {
-              content += `${params.data.content.slice(index, index + 20)}\n`;
-              index += 20;
+          const data = params.data;
+          if (data && data.content) {
+            const strArr = data.content.replace(/\n+/g, '<br/>').split('<br/>');
+            for (let i = 0; i < strArr.length; i++) {
+              const length = strArr[i].length;
+              let index = 0;
+              while (index < length && length > 0) {
+                content += `${strArr[i].slice(index, index + 20)}\n`;
+                index += 20;
+              }
             }
           }
-          return `{content|${content}}{border|} \n${params.data.user_name} \n粉丝数：${params.data.followers_count} \n转发数：${params.data.retweet_count}`;
+          return `{content|${content}}{border|} \n${data.user_name} \n粉丝数：${data.followers_count} \n转发数：${data.retweet_count}`;
         }
       }
     },
@@ -74,9 +78,9 @@ export const spreadPathOption = {
     data: [],
     force: {
       // initLayout: 'circular'
-      // repulsion: 20,
+      repulsion: 40,
       edgeLength: 80,
-      repulsion: 100
+      // repulsion: 100
       // gravity: 0.2
     },
     edges: [],

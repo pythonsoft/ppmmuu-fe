@@ -21,8 +21,8 @@
           <div class="topic-list">
             <h4 class="topic-list-title">百度热搜</h4>
             <ul>
-              <li class="topic-list-item clearfix" v-for="item in realtimeBuzzBd">
-                <span :class="[item.ranking < 4 ? 'num-top' : 'num-normal']">{{ item.ranking }}</span>
+              <li class="topic-list-item clearfix" v-for="(item, ranking) in realtimeBuzzBd">
+                <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
                 <div :style="{ overflow: 'hidden' }">
                   <span class="count"><i :class="['iconfont', item.riseOrFall > 0 ? 'icon-rise' : 'icon-fall']"></i>{{ item.trends }}</span>
                   <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
@@ -39,6 +39,7 @@
                 <div :style="{ overflow: 'hidden' }">
                   <span class="count">{{ item.reads }}</span>
                   <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="selectKeyword(item.keyword)">{{ item.keyword }}</p>
+                  <i :style="{ width: '12px' }" class="iconfont fj-icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe674;</i>
                 </div>
               </li>
             </ul>
@@ -59,7 +60,8 @@
                   <img :ref="item.source" :src="getFavicon(item.source)" :width="getFaviconWidth(item.source)">
                 </div>
                 <div :style="{ overflow: 'hidden' }">
-                  <a :href="item.url" target="_blank" class="article-title" v-html="item.title"></a>
+                  <!--<a :href="item.url" target="_blank" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>-->
+                  <a href="javascript:;" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
                   <p class="article-abstract" v-html="item.summary"></p>
                   <span class="article-info">{{ `${item.source}  ${item.datetime}` }}</span>
                 </div>
@@ -91,7 +93,8 @@
               </ul>
               <ul class="geo-article-list" v-if="areaNewsData[activeArea]">
                 <li v-for="item in areaNewsData[activeArea].news" class="clearfix">
-                  <a class="geo-article-title" v-html="item.title" :href="item.url" target="_blank"></a>
+                  <!--<a class="geo-article-title" v-html="item.title" :href="item.url" target="_blank"></a>-->
+                  <a href="javascript:;" class="geo-article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
                   <span class="geo-article-time">{{ item.datetime }}</span>
                 </li>
               </ul>
@@ -137,7 +140,8 @@
             </span>
             <ul class="timeline-article-list">
               <li class="timeline-article-item" v-for="article in event.mailuo[date].slice(0, event.showArticleLength[date].show)">
-                <a :href="article.url" target="_blank" class="timeline-article-title">{{ article.title }}</a>
+                <!--<a :href="article.url" target="_blank" class="timeline-article-title" @click="showWebBrowser(article)">{{ article.title }}</a>-->
+                <a href="javascript:;" class="timeline-article-title" @click="showWebBrowser(article.title, article.url)">{{ article.title }}</a>
                 <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
               </li>
               <li class="timeline-article-item" v-show="event.showArticleLength[date].show < event.showArticleLength[date].length">
@@ -153,6 +157,12 @@
         <div class="empty-box" v-show="showEmptySentiment">没有数据</div>
       </div>
     </div>
+    <web-browser
+      :visible.sync="webBrowserVisible"
+      :title="webBrowserTitle"
+      :url="webBrowserUrl"
+      @close="webBrowserClose"
+    ></web-browser>
   </div>
 </template>
 <script>
@@ -195,6 +205,7 @@
   import { spreadPathOption, convertGraph } from './option/spreadPathOption';
   import { spreadTrendOption, getTrendSeries } from './option/spreadTrendOption';
   import { sentimentOption, convertOpinionData, convertSentimentData } from './option/sentimentOption';
+  import WebBrowser from "../../component/higherOrder/webBrowser/index.vue";
 
   const MEDIA_TYPE = [
     { label: '热门报道', name: '热门报道' },
@@ -212,6 +223,7 @@
   ];
 
   export default {
+    components: {WebBrowser},
     data() {
       return {
         MEDIA_TYPE: MEDIA_TYPE,
@@ -230,7 +242,10 @@
         timelineData: [],
         showEmptySentiment: false,
         showEmptySpreadPath: false,
-        runningKeywords: []
+        runningKeywords: [],
+        webBrowserVisible: false,
+        webBrowserTitle: '',
+        webBrowserUrl: '',
       };
     },
     created() {
@@ -289,6 +304,14 @@
       }
     },
     methods: {
+      webBrowserClose() {
+        this.webBrowserVisible = false;
+      },
+      showWebBrowser(title, url) {
+        this.webBrowserVisible = true;
+        this.webBrowserTitle = title;
+        this.webBrowserUrl = url;
+      },
       refreshKeywordsStatus() {
         if (this.runningKeywords.length > 0) {
           BigdataAPI.getKeywordStatus({ params: { keywords: this.runningKeywords.join(',') } })
@@ -441,7 +464,7 @@
         });
       },
       updateSpreadPathData(reqData) {
-        // reqData.keyword = '';
+        // reqData.keyword = '致我们单纯的小美好';
         this.spreadPathChart.showLoading({ color: '#38B1EB' });
         BigdataAPI.getRealtimeFlowSpread({ params: reqData })
         .then((response) => {
