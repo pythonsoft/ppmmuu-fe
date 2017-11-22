@@ -23,7 +23,7 @@
     created() {
       const me = this;
       const showMenuIndex = getItemFromLocalStorage('menu', me);
-      const normalMenu = ['mediaCenter', 'taskCenter', 'personalCenter'];
+      const normalMenu = ['taskCenter', 'personalCenter'];
       this.showMenuIndex = showMenuIndex.length? normalMenu.concat(getChildMenuByIndex('', false, me)) : normalMenu;
 
       if (window.location.pathname === '/') {

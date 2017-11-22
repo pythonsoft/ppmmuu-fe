@@ -466,8 +466,8 @@ function formatSRTTime(timeStr = '00:00:00,00', fps = 25) {
   return seconds;
 }
 
-utils.getSRT = function (objectId, cb, scope, fps = 25) {
-  mediaAPI.xml2srt({ params: { objectid: objectId } }, scope).then((res) => {
+utils.getSRT = function (objectId, fromWhere, cb, scope, fps = 25) {
+  mediaAPI.xml2srt({ params: { objectid: objectId, fromWhere: fromWhere } }, scope).then((res) => {
     const tempArr = res.data.split('\n\n');
     tempArr.pop();
     const data = tempArr.map((str) => {
@@ -492,46 +492,48 @@ function formatFileExtToMp4(fileName) {
   return name;
 }
 
-utils.getStreamURL = function getStreamURL(objectId, cb, scope) {
-  mediaAPI.getStream({ params: { objectid: objectId } }, scope).then((res) => {
+utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
+  mediaAPI.getStream({ params: { objectid: objectId, fromWhere: fromWhere } }, scope).then((res) => {
     let dateString = res.result.UNCPATH || '';
     let fileName = res.result.FILENAME || '';
 
     if (dateString) {
       dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
 
-      if (dateString.length === 1) {
-        dateString = dateString[0].replace(/\\/g, '\/');
+      if(dateString) {
+        if (dateString.length === 1) {
+          dateString = dateString[0].replace(/\\/g, '\/');
+        }
+
+        const dateArray = dateString.split('/');
+        const year = dateArray[1] * 1;
+        const month = dateArray[2] * 1;
+        const day = dateArray[3] * 1;
+        let playPath = '/u';
+
+        // 2012/9/18
+
+        if (year < 2012) {
+          playPath = '/y';
+          fileName = formatFileExtToMp4(fileName);
+        } else if (year === 2012 || (year === 2013 && month <= 2 && day <= 28)) {
+          playPath = '/w';
+          fileName = formatFileExtToMp4(fileName);
+        }
+
+        const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;
+
+        // if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
+        //   if (t % 2 === 0) {
+        //     url = '/static/video/test.mp4';
+        //   } else {
+        //     url = '/static/video/test_1.mp4';
+        //   }
+        //
+        //   t++;
+        // }
+        cb && cb(null, url, res);
       }
-
-      const dateArray = dateString.split('/');
-      const year = dateArray[1] * 1;
-      const month = dateArray[2] * 1;
-      const day = dateArray[3] * 1;
-      let playPath = '/u';
-
-      // 2012/9/18
-
-      if (year < 2012) {
-        playPath = '/y';
-        fileName = formatFileExtToMp4(fileName);
-      } else if (year === 2012 || (year === 2013 && month <= 2 && day <= 28)) {
-        playPath = '/w';
-        fileName = formatFileExtToMp4(fileName);
-      }
-
-      const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;
-
-      // if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {
-      //   if (t % 2 === 0) {
-      //     url = '/static/video/test.mp4';
-      //   } else {
-      //     url = '/static/video/test_1.mp4';
-      //   }
-      //
-      //   t++;
-      // }
-      cb && cb(null, url, res);
     }
   }).catch((error) => {
     cb && cb(error);
@@ -636,7 +638,7 @@ utils.getDefaultPageIndex = function getDefaultPageIndex(menu) {
       return 'trends';
     }
   }
-  return 'subscriptions';
+  return 'personalCenter';
 };
 
 utils.formatTaskList = function (currentStep, taskList) {
@@ -646,24 +648,23 @@ utils.formatTaskList = function (currentStep, taskList) {
   let rs = 1;
   let str = '-';
 
-  if(len !== 0) {
+  if (len !== 0) {
     percent = 1 / len;
     task = taskList[currentStep];
 
-    if(task) {
+    if (task) {
       rs = 0;
 
-      for(let i = 0, l = taskList.length; i < l; i++) {
-        if(currentStep === i) {
+      for (let i = 0, l = taskList.length; i < l; i++) {
+        if (currentStep === i) {
           str = `${task.taskName} ${task.position} %`;
         }
-        rs = rs + percent * (taskList[i].position / 100);
+        rs += percent * (taskList[i].position / 100);
       }
-
     }
   }
 
-  return { total: rs * 100 + '%', current: str };
+  return { total: `${rs * 100}%`, current: str };
 };
 
 module.exports = utils;

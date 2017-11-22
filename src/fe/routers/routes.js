@@ -110,7 +110,7 @@ export default [{
           meta: { title: '观看历史' },
           name: 'history',
           children: [
-            { path: 'watch/:objectId', component: Watch, name: 'historyWatch' }
+            { path: 'watch/:objectId/:fromWhere', component: Watch, name: 'historyWatch' }
           ] },
         { path: 'searchHistory', component: SearchHistory, meta: { title: '检索历史' }, name: 'searchHistory' },
         { path: 'feedback', component: Feedback, meta: { title: '意见反馈' }, name: 'feedback' }
@@ -158,7 +158,7 @@ export default [{
         { path: 'personal_catalog_task_doing', component: PersonalCatalogTask, meta: { title: '编目中' }, name: 'personal_catalog_task_doing' },
         { path: 'personal_catalog_task_submitted', component: PersonalCatalogTask, meta: { title: '已提交' }, name: 'personal_catalog_task_submitted' },
         { path: 'personal_catalog_task_deleted', component: PersonalCatalogTask, meta: { title: '已删除' }, name: 'personal_catalog_task_deleted' },
-        { path: 'catalog/:objectId/:taskId', component: Catalog, name: 'catalog', meta: { title: '编目' } }
+        { path: 'catalog/:objectId/:taskId/:fromWhere', component: Catalog, name: 'catalog', meta: { title: '编目' } }
       ],
       name: 'library'
     },
@@ -177,7 +177,7 @@ export default [{
       name: 'trends'
     },
     {
-      path: 'movieEditor/:objectId?',
+      path: 'movieEditor/:objectId/:fromWhere',
       component: MovieEditor,
       name: 'movieEditor',
       meta: { title: '剪辑' }

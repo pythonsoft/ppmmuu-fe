@@ -69,6 +69,22 @@ config.IVIDEO_EDIT_FILE_TYPE_ID = [
   'E2255D0F-2E98-4F93-B389-6542C8685B76'
 ];
 
+config.FROM_WHERE = {
+  HK: 1,
+  DAYANG: 2,
+  UMP: 3
+};
+
+config.UMP_FILETYPE = {
+  ORIGINAL: '0', // 源文件
+  LOW_BIT_VIDEO: '1', // 低码流
+  SUBTITLE: '2', // 字幕
+  THUMB: '3', // 缩略图
+  OTHER: '4' // 其它
+};
+
+config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4'];
+
 method.getTextByValue = function (v, st) {
   return utils.getTextByValue(config, v, st) || {};
 };
@@ -149,10 +165,10 @@ method.getSearchNotice = function getSearchNotice(configs) {
 
 const ORDER_OPTIONS = [
   { value: 'order1', label: '关联度排序', sort: '' },
-  { value: 'order2', label: '新闻时间由远到近', sort: 'asc', key: 'f_date_162' },
-  { value: 'order3', label: '新闻时间由近到远', sort: 'desc', key: 'f_date_162' },
-  { value: 'order4', label: '首播时间由近到远', sort: 'desc', key: 'f_date_36' },
-  { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'f_date_36' }
+  { value: 'order2', label: '新闻时间由远到近', sort: 'asc', key: 'news_data' },
+  { value: 'order3', label: '新闻时间由近到远', sort: 'desc', key: 'news_data' },
+  { value: 'order4', label: '首播时间由近到远', sort: 'desc', key: 'airdata' },
+  { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'airdata' }
 ];
 
 // 从哪个接口拿的数据
@@ -162,9 +178,9 @@ const FROM_WHERE = {
 };
 
 
-const HHIGHLIGHT_FIELDS1 = 'name,program_name_cn,program_name_en,f_str_03,f_str_187,from_where,full_text';
-const HHIGHLIGHT_FIELDS2 = 'program_type,name,program_name_cn,program_name_en,f_str_03,f_str_187,from_where';
-const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_cn,hd_flag,program_name_en,last_modify,f_str_03,f_str_187,f_date_162,f_str_01,from_where,full_text,publish_time,rootid';
+const HHIGHLIGHT_FIELDS1 = 'name,program_name_en,program_name_cn,content,content_introduction,house_num,from_where,full_text';
+const HHIGHLIGHT_FIELDS2 = 'name,program_type,program_name_cn,program_name_en,content,content_introduction,house_num,from_where,full_text';
+const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,program_name,from_where,full_text,publish_time,rootid';
 
 method.ORDER_OPTIONS = ORDER_OPTIONS;
 method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;

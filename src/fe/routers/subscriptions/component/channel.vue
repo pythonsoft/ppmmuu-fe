@@ -104,8 +104,8 @@
       };
     },
     methods: {
-      linkToWatch(_id) {
-        this.$emit('update-router', { name: 'subscriptions', query: { _id: _id } });
+      linkToWatch(item) {
+        this.$emit('update-router', { name: 'subscriptions', query: { _id: item._id } });
       },
       showDownloadList(fileInfo) {
         this.fileInfo = fileInfo;

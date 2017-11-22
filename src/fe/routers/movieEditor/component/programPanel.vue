@@ -188,7 +188,8 @@
         return false;
       },
       getStream(id) {
-        getStreamURL(id, (err, url) => {
+        const fromWhere = this.$route.params.fromWhere || 1;
+        getStreamURL(id, fromWhere, (err, url) => {
           if (err) {
             this.$message.error(err);
             return;

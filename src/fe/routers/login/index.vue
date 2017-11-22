@@ -80,13 +80,12 @@
       },
       isLogin() {
         const me = this;
-        try {
-          const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
-          const index = getDefaultPageIndex(showMenuIndex);
-          this.$router.push({name: index});
-        }catch(e) {
-
-        }
+        api.getUserAuth()
+            .then(() => {
+              const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
+              const index = getDefaultPageIndex(showMenuIndex);
+              this.$router.push({name: index});
+            }).catch(() => {});
       },
       login() {
         const me = this;

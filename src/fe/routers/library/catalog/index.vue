@@ -49,27 +49,18 @@
             </panel-view>
           </template>
           <template slot="1" scope="props">
-            <div :style="{ width: '100%', height: '100%', overflow: 'auto' }">
+            <div :style="{ width: '100%', height: '100%', overflow: 'auto' }" ref="rightContent">
               <div class="catalogRightContent" v-if="currentCatalogId">
                 <h3>填写编目内容</h3>
-                <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="78px">
+                <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="100px">
                   <fj-form-item label="名称(中文)" prop="chineseName">
                     <fj-input v-model="formData.chineseName"></fj-input>
                   </fj-form-item>
                   <fj-form-item label="名称(英文)" prop="englishName">
                     <fj-input v-model="formData.englishName"></fj-input>
                   </fj-form-item>
-                  <fj-form-item label="所属部门">
-                    <fj-input v-model="formData.departmentName" :disabled="true"></fj-input>
-                  </fj-form-item>
                   <fj-form-item label="编目人">
                     <fj-input v-model="formData.ownerName" :disabled="true"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="类型" prop="type">
-                    <fj-input v-model="formData.type"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="版本" prop="version">
-                    <fj-input v-model="formData.version"></fj-input>
                   </fj-form-item>
                   <fj-form-item label="人物" prop="keyman">
                     <fj-input v-model="formData.keyman"></fj-input>
@@ -80,6 +71,39 @@
                   <fj-form-item label="语言" prop="language">
                     <fj-input v-model="formData.language"></fj-input>
                   </fj-form-item>
+                  <template v-for="select in selectFields">
+                    <fj-form-item :label="select.label" :prop="select.key" :key="select.key">
+                      <fj-select v-model="formData[select.key]" size="small" clearable>
+                        <fj-option
+                                v-for="item in select.items"
+                                :key="item.value"
+                                :value="item.value"
+                                :label="item.label"></fj-option>
+                      </fj-select>
+                    </fj-form-item>
+                  </template>
+                  <template v-for="dateField in dateFields">
+                    <fj-form-item :label="dateField.label" :prop="dateField.key">
+                      <fj-date-picker :type="dateField.type"
+                                      placeholder="请选择日期"
+                                      v-model="formData[dateField.key]"
+                                      :parent-el="parentEl">
+                      </fj-date-picker>
+                    </fj-form-item>
+                  </template>
+                  <template v-for="radioField in radioFields">
+                    <fj-form-item :label="radioField.label" :prop="radioField.key">
+                      <div class="clearfix">
+                        <fj-radio-group v-model="formData[radioField.key]">
+                           <template v-for="item in radioField.items">
+                             <div class="catalog-checkbox">
+                               <fj-radio :label="item.value">{{item.label}}</fj-radio>
+                             </div>
+                           </template>
+                        </fj-radio-group>
+                      </div>
+                    </fj-form-item>
+                  </template>
                   <fj-form-item label="内容" prop="content">
                     <fj-input type="textarea" :rows="5" v-model="formData.content"></fj-input>
                   </fj-form-item>
@@ -110,6 +134,10 @@
   import VideoSourcePanel from '../../movieEditor/component/videoSourcePanel';
   import PanelView from '../../../component/layout/panel';
   import { isVideoType, transformSecondsToStr } from '../../../common/utils';
+  import { selectFields, dateFields, radioFields} from '../config';
+  import FjDatePicker from "../../../component/fjUI/packages/datePicker/src/datePicker.vue";
+  import FjFormItem from "../../../component/fjUI/packages/form/src/formItem.vue";
+
   const libraryAPI = require('../../../api/library');
 
   export default {
@@ -129,7 +157,17 @@
           keyman: '',
           duration: '',
           language: '',
-          content: ''
+          content: '',
+          ccid: '',
+          newsType: '',
+          occurCountry: '',
+          version: '',
+          madeLocation: '',
+          resourceDepartment: '',
+          newsTime: '',
+          airTime: '',
+          hdFlag: '',
+          pigeonhole: ''
         },
         currentCatalogId: '',
         currentCatalogType: '',
@@ -158,6 +196,33 @@
           ],
           content: [
             { required: true, message: '请输入内容' }
+          ],
+          ccid: [
+            { required: true, message: '请选择编目类'}
+          ],
+          newsType: [
+            { required: true, message: '请选择新闻类型'}
+          ],
+          occurCountry: [
+            { required: true, message: '请选择事发国家'}
+          ],
+          version: [
+            { required: true, message: '请选择版本'}
+          ],
+          madeLocation: [
+            { required: true, message: '请选择制作地点'}
+          ],
+          resourceDepartment: [
+            { required: true, message: '请选择编目类'}
+          ],
+          newsTime: [
+            { required: true, message: '请输入新闻日期'}
+          ],
+          airTime: [
+            { required: true, message: '请输入首播日期'}
+          ],
+          pigeonhole: [
+            { required: true, message: '请选择是否归档'}
           ]
         },
         catalogList: [],
@@ -168,7 +233,11 @@
         editStatusDialogTitle: '',
         editStatusFn: () => {},
         taskId: '',
-        objectId: ''
+        objectId: '',
+        selectFields: selectFields,
+        dateFields: dateFields,
+        radioFields: radioFields,
+        parentEl: ''
       };
     },
     created() {
@@ -183,6 +252,7 @@
       if (this.$route.params.taskId) {
         this.taskId = this.$route.params.taskId;
       }
+      this.parentEl = this.$refs.rightContent;
     },
     mounted() {
       this.updateSize();
@@ -372,6 +442,8 @@
       }
     },
     components: {
+      FjFormItem,
+      FjDatePicker,
       VideoSourcePanel,
       PanelView
     }

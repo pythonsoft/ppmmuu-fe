@@ -302,7 +302,7 @@
         this.viewType = t;
         this.fl = FILETR_FIELDS;
         if (t === 'list') {
-          this.fl += ',f_str_03,f_str_187,f_str_314'; // f_str_314 资源所属部门，f_str_187 houseNo
+          this.fl += ',resource_location'; // f_str_314 资源所属部门，f_str_187 houseNo
         }
       },
       viewTypeSelect(type) {
@@ -358,8 +358,8 @@
         this.listType = 'normal';
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        const f_date_162 = getTimeRange(this.datetimerange1, 'f_date_162'); // 新聞日期
-        const f_date_36 = getTimeRange(this.datetimerange2, 'f_date_36'); // 首播日期
+        const f_date_162 = getTimeRange(this.datetimerange1, 'news_data'); // 新聞日期
+        const f_date_36 = getTimeRange(this.datetimerange2, 'airdata'); // 首播日期
         const options = {
           source: this.fl,
           match: [],
@@ -391,9 +391,10 @@
         this.searchResult = searchNotice;
 
         const obj = {
-          f_str_187: me.houseNo,
+          house_num: me.houseNo,
           publish_status: 1,
-          full_text: this.keyword
+          full_text: this.keyword,
+          from_where: 3
         };
 
         formatMust(must, obj);
@@ -455,7 +456,7 @@
           pageSize: this.pageSize
         };
         const obj = {
-          f_str_187: me.houseNo,
+          house_num: me.houseNo,
           publish_status: 1
         };
         formatMust(options.match, obj);
