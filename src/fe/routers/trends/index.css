@@ -1,18 +1,52 @@
-.trends-wrapper {
+.trends-main {
   width: 100%;
-  /*height: 100%;*/
+  height: 100%;
   background: #FBFCFD;
-  min-width: 1836px;
+}
+.vertical-margin-bar {
+  float: left;
+  width: 3%;
+  height: 100%;
+}
+.stage-vertical-margin-bar {
+  float: left;
+  width: 1%;
+  height: 100%;
+}
+.trends-wrapper {
+  float: left;
+  width: 94%;
+  height: 100%;
+  background: #FBFCFD;
+  /*min-width: 1836px;*/
+  overflow: hidden;
+}
+.horizontal-margin-bar {
+  width: 100%;
+  height: 3%;
+}
+.board-horizontal-margin-bar {
+  width: 100%;
+  height: 2%;
 }
 .scrum-stage {
   float: left;
+  width: 31%;
+  height: 100%;
+}
+.scrum-stage-l {
+  float: left;
+  width: 36%;
+  height: 100%;
 }
 .board {
-  margin: 20px 10px;
+  /*margin: 20px 10px;*/
 }
 .topic-box {
-  width: 546px;
-  height: 354px;
+  /*width: 546px;*/
+  /*height: 354px;*/
+  width: 100%;
+  height: 33%;
   padding: 16px 20px 20px;
   background: #fff;
   overflow-y: auto;
@@ -24,30 +58,30 @@
   display: inline-block;
 }
 .article-box {
-  width: 546px;
-  height: 742px;
+  /*width: 546px;*/
+  /*height: 742px;*/
+  width: 100%;
+  height: 59%;
   padding: 0 20px;
   background: #fff;
   overflow: auto;
 }
 .geo-box {
-  width: 546px;
-  height: 715px;
+  /*width: 546px;*/
+  /*height: 715px;*/
+  width: 100%;
+  height: 66%;
   padding: 16px 20px 20px;
   background: #fff;
   overflow-y: auto;
   /*overflow-y: overlay;*/
 }
-.graph-box {
-  width: 546px;
-  height: 281px;
-  padding: 16px 20px 20px;
-  background: #fff;
-}
 .spread-path-box {
   position: relative;
-  width: 546px;
-  height: 381px;
+  /*width: 546px;*/
+  /*height: 381px;*/
+  width: 100%;
+  height: 26%;
   padding: 16px 20px 20px;
   background: #fff;
 }
@@ -59,15 +93,19 @@
   left: 0;
 }
 .spread-trend-box {
-  width: 626px;
-  height: 325px;
+  /*width: 626px;*/
+  /*height: 325px;*/
+  width: 100%;
+  height: 30%;
   padding: 16px 20px 20px;
   background: #fff;
 }
 .event-timeline-box {
   position: relative;
-  width: 626px;
-  height: 370px;
+  /*width: 626px;*/
+  /*height: 370px;*/
+  width: 100%;
+  height: 34%;
   padding: 16px 20px 20px;
   background: #fff;
   overflow-y: auto;
@@ -77,8 +115,10 @@
 }
 .sentiment-box {
   position: relative;
-  width: 626px;
-  height: 381px;
+  /*width: 626px;*/
+  /*height: 381px;*/
+  width: 100%;
+  height: 26%;
   padding: 16px 20px 20px;
   background: #fff;
 }
@@ -182,7 +222,7 @@
   color: #9FB3CA;
 }
 .geo-chart-box {
-  height: 416px;
+  /*height: 416px;*/
   width: 100%;
 }
 .geo-list li {
