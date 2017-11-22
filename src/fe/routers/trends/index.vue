@@ -263,7 +263,7 @@
       };
     },
     created() {
-      BigdataAPI.getRealtimeBuzz({ params: { size: 30 } })
+      BigdataAPI.getRealtimeBuzz()
         .then((response) => {
           this.realtimeBuzzBd = response.data;
           if (this.realtimeBuzzBd.length > 0) {
@@ -271,7 +271,7 @@
           }
         }).catch((error) => {
         });
-      BigdataAPI.getRealtimeBuzzWb({ params: { size: 30 } })
+      BigdataAPI.getRealtimeBuzzWb()
         .then((response) => {
           this.realtimeBuzzWb = response.data;
         }).catch((error) => {
@@ -495,7 +495,8 @@
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          if (resData.constructor === Array && resData.length === 0) {
+          // if (resData.constructor === Array && resData.length === 0) {
+          if (!resData.content_graph) {
             this.showEmptySpreadPath = true;
             newOption.series = [{ data: [], edges: [] }];
           } else {
@@ -515,7 +516,8 @@
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          if (resData.constructor === Array && resData.length === 0) {
+          // if (resData.constructor === Array && resData.length === 0) {
+          if (resData.opinions) {
             this.showEmptySentiment = true;
             newOption.series = [{ data: [] }, { data: [] }];
             this.sentimentObj = {};
