@@ -111,13 +111,13 @@
         this.fileInfo = fileInfo;
         this.downloadDialogDisplay = true;
       },
-      downloadListConfirm(templateInfo) {
-        this.templateInfo = templateInfo || {};
-        if (!isEmptyObject(templateInfo)) {
-          this.download();
+      downloadListConfirm(rs, type) {
+        if (!isEmptyObject(rs)) {
+          this.download(rs, type);
         }
       },
-      download() {
+      download(rs, type) {
+        const templateInfo = rs[type];
         const me = this;
 
         const param = {
@@ -126,7 +126,7 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id,
+          templateId: templateInfo._id,
           fromWhere: this.fileInfo.fromWhere || 1,
           fileId: this.fileInfo._id
         };

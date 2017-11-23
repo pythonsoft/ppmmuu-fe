@@ -240,10 +240,9 @@
           this.url = url;
         }, this);
       },
-      downloadListConfirm(templateInfo) {
-        this.templateInfo = templateInfo || {};
-        if (!isEmptyObject(templateInfo)) {
-          this.download();
+      downloadListConfirm(rs, type) {
+        if (!isEmptyObject(rs)) {
+          this.download(rs, type);
         }
       },
       getDefaultFileInfo() {
@@ -282,20 +281,19 @@
           this.fileInfo = this.getDefaultFileInfo();
         }
 
-        console.log(this.fileInfo);
-
         if(isEmptyObject(this.fileInfo)) {
           this.$message.error('当前没有视频可以下载，下载其它信息可以到文件信息中选取下载');
           return;
         }
         this.downloadDialogDisplay = true;
       },
-      download() {
+      download(rs, type) {
         if (isEmptyObject(this.streamInfo)) {
           return false;
         }
 
         const me = this;
+        const templateInfo = rs[type];
 
         const param = {
           objectid: this.fileInfo.OBJECTID,
@@ -303,7 +301,7 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID || '',
-          templateId: this.templateInfo._id,
+          templateId: templateInfo._id,
           fromWhere: this.fromWhere,
           fileId: this.fileInfo._id || ''
         };
