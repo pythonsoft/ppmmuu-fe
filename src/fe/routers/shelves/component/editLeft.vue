@@ -164,7 +164,7 @@
       },
       screenshot() {
         this.screenshotURL = this.createImage();
-        this.screenshotTitle = this.shelfInfo.name + transformSecondsToStr(this.currentTime);
+        this.screenshotTitle = this.shelfInfo.name + transformSecondsToStr(this.currentTime) + '.png';
         this.imageDialogVisible = true;
       },
       createImage() {
