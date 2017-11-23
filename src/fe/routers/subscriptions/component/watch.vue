@@ -3,7 +3,7 @@
     <div class="mainBox">
       <div class="leftBox" ref="leftBox" :style="{ right: rightboxWidth }">
         <div class="leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
-          <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
+          <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big" :fromWhere="fromWhere"></player>
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="name"></div>
             <ul class="video-title-bar">
@@ -105,7 +105,10 @@
         templateInfo: {},
         fileInfo: {},
         downloadDialogDisplay: false,
-        parentEl: null
+        parentEl: null,
+        fromWhere: 1,
+        FROM_WHERE: config.getConfig('FROM_WHERE'),
+        UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE')
       };
     },
     watch: {
@@ -150,8 +153,8 @@
         this.fileInfo = fileInfo;
         this.downloadDialogDisplay = true;
       },
-      currentItemChange(_id) {
-        this.$emit('update-router', { name: 'subscriptions', query: { _id: _id } });
+      currentItemChange(item) {
+        this.$emit('update-router', { name: 'subscriptions', query: { _id: item._id } });
       },
       foldedOrExpandRightBox() {
         if (this.rightBoxStatus === 'expand') {
@@ -216,16 +219,18 @@
           const data = res.data;
           this.objectId = data.objectId;
           this.name = data.name;
-          this.getStream(this.objectId);
+          this.fromWhere = data.fromWhere || 1;
+          this.getStream(this.objectId, this.fromWhere);
           this.updateList();
           this.program = data.details;
+          this.files = data.files;
 
         }).catch((error) => {
           this.$message.error(error);
         });
       },
-      getStream(id) {
-        getStreamURL(id, (err, url, rs) => {
+      getStream(id, fromWhere) {
+        getStreamURL(id, fromWhere, (err, url, rs) => {
           if (err) {
             this.$message.error(err);
             return;
@@ -235,24 +240,33 @@
           this.url = url;
         }, this);
       },
-      downloadListConfirm(templateInfo) {
-        this.templateInfo = templateInfo || {};
-        if (!isEmptyObject(templateInfo)) {
-          this.download();
+      downloadListConfirm(rs, type) {
+        if (!isEmptyObject(rs)) {
+          this.download(rs, type);
         }
       },
       getDefaultFileInfo() {
-        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
         const files = this.files;
+        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
 
-        if(files.length === 0) {
+        if (files.length === 0) {
           return {};
         }
 
-        for(let i = 0, len = files.length; i < len; i++) {
-          for(let j = 0, l = ft.length; j < l; j++) {
-            if(files[i].FILETYPEID === ft[j]) {
-              return files[i];
+        if(this.fromWhere*1 === this.FROM_WHERE.UMP){
+          for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {
+                return files[i];
+              }
+            }
+          }
+        }else {
+          for (let j = 0, l = ft.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].FILETYPEID === ft[j]) {
+                return files[i];
+              }
             }
           }
         }
@@ -273,20 +287,23 @@
         }
         this.downloadDialogDisplay = true;
       },
-      download() {
+      download(rs, type) {
         if (isEmptyObject(this.streamInfo)) {
           return false;
         }
 
         const me = this;
+        const templateInfo = rs[type];
 
         const param = {
           objectid: this.fileInfo.OBJECTID,
           inpoint: this.fileInfo.INPOINT,
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
-          filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id
+          filetypeid: this.fileInfo.FILETYPEID || '',
+          templateId: templateInfo._id,
+          fromWhere: this.fromWhere,
+          fileId: this.fileInfo._id || ''
         };
 
         jobAPI.download(param).then((res) => {

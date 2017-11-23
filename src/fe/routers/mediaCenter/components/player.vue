@@ -64,6 +64,10 @@
           };
         }
       },
+      fromWhere: {
+        type: Number,
+        default: 1
+      },
       height: Number,
       width: Number,
       fps: {
@@ -242,7 +246,7 @@
         this.tooltipTime = 0;
       },
       getSRTArr(id) {
-        getSRT(id, (err, data, res) => {
+        getSRT(id, this.fromWhere, (err, data, res) => {
           if (err) {
             return;
           }

@@ -117,30 +117,25 @@
         editorDetails: {},
         activeTabName: 'tab2',
         videoId: '',
-        FILE_TYPE_MAP: FILE_TYPE_MAP
+        FILE_TYPE_MAP: FILE_TYPE_MAP,
+        fromWhere: ''
       };
     },
     watch: {
       id(val) {
         if (this.visible) {
           this.getShelfDetail();
-          this.getDetail();
-          this.getStream();
         }
       },
       objectId(val) {
         if (this.visible) {
           this.getShelfDetail();
-          this.getDetail();
-          this.getStream();
         }
       },
       visible(val) {
         if (!val) return;
         if (this.objectId) {
           this.getShelfDetail();
-          this.getDetail();
-          this.getStream();
         }
       }
     },
@@ -160,7 +155,7 @@
         this.$set(this.programDetails, key, newInfo);
       },
       getStream() {
-        getStreamURL(this.objectId, (err, url, res) => {
+        getStreamURL(this.objectId, this.fromWhere, (err, url, res) => {
           if (err) {
             console.log('err', err);
             return;
@@ -175,6 +170,7 @@
         shelfAPI.getShelfDetail(formatQuery({_id: me.id }, true))
           .then((res)=>{
             const editorInfo = res.data.editorInfo || {};
+            me.fromWhere = res.data.fromWhere || 1;
             me.editorDetails['subscribeName'] = {
               cn: '节目名称',
               value: editorInfo['name'] || ''
@@ -195,6 +191,8 @@
               cn: '封面',
               value: editorInfo['cover']
             };
+            me.getDetail();
+            me.getStream();
           })
           .catch((error)=>{
             me.showErrorInfo(error);
@@ -202,7 +200,7 @@
       },
       getDetail() {
         const me = this;
-        api.getObject(formatQuery({ objectid: me.objectId }, true))
+        api.getObject(formatQuery({ objectid: me.objectId, fromWhere: me.fromWhere }, true))
           .then((res)=>{
             const data = res.data.result.detail.program;
             const programNOObj = {

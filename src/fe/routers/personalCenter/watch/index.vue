@@ -9,7 +9,7 @@
     <div class="mainBox">
       <div class="leftBox" ref="leftBox" :style="{ right: rightboxWidth }">
         <div class="leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
-          <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big"></player>
+          <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" :fromWhere="fromWhere" mode="big"></player>
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="streamInfo.FILENAME"></div>
             <ul class="video-title-bar">
@@ -125,6 +125,7 @@
         activeTabName: 'tab1',
         files: [],
         objectId: '',
+        fromWhere: '',
         poster: '',
         playerWidth: playerMinWidth,
         playerHeight: playerMinHeight,
@@ -171,13 +172,14 @@
       formatContent,
       refresh() {
         this.objectId = this.$route.params.objectId;
+        this.fromWhere = this.$route.params.fromWhere;
         this.getDetail();
         this.getStream(this.objectId);
         this.poster = getThumb({ id: this.objectId });
         this.updateHistoryList();
       },
       currentItemChange(item) {
-        this.$router.push({ name: 'historyWatch', params: { objectId: item.id } });
+        this.$router.push({ name: 'historyWatch', params: { objectId: item.id, fromWhere: item.from_where } });
       },
       foldedOrExpandRightBox() {
         if (this.rightBoxStatus === 'expand') {
@@ -218,7 +220,7 @@
           });
       },
       getDetail() {
-        mediaAPI.getObject({ params: { objectid: this.objectId } }).then((res) => {
+        mediaAPI.getObject({ params: { objectid: this.objectId, fromWhere: this.fromWhere } }).then((res) => {
           this.program = res.data.result.detail.program;
           this.files = res.data.result.files;
           delete this.program.OBJECTID;
@@ -227,7 +229,7 @@
         });
       },
       getStream(id) {
-        getStreamURL(id, (err, url, rs) => {
+        getStreamURL(id, this.fromWhere, (err, url, rs) => {
           if (err) {
             this.$message.error(err);
             return;
@@ -308,7 +310,9 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id
+          templateId: this.templateInfo._id,
+          fromWhere: this.fromWhere,
+          fileId: this.fileInfo._id
         };
 
         jobAPI.download(param).then((res) => {
@@ -331,7 +335,7 @@
         };
         ivideoAPI.createItem(reqData)
           .then((response) => {
-            this.$router.push({ name: 'movieEditor', params: { objectId: this.objectId } });
+            this.$router.push({ name: 'movieEditor', params: { objectId: this.objectId, fromWhere: this.fromWhere } });
           })
           .catch((error) => {
             this.$message.error(error);

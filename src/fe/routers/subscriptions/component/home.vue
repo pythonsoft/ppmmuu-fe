@@ -67,22 +67,21 @@
         this.fileInfo = fileInfo;
         this.downloadDialogDisplay = true;
       },
-      downloadListConfirm(templateInfo) {
-        this.templateInfo = templateInfo || {};
-        if (!isEmptyObject(templateInfo)) {
-          this.download();
+      downloadListConfirm(rs, type) {
+        if (!isEmptyObject(rs)) {
+          this.download(rs, type);
         }
       },
-      download() {
+      download(rs, type) {
         const me = this;
-
+        const templateInfo = rs[type];
         const param = {
           objectid: this.fileInfo.OBJECTID,
           inpoint: this.fileInfo.INPOINT,
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id
+          templateId: templateInfo._id
         };
 
         jobAPI.download(param).then((res) => {
@@ -128,8 +127,8 @@
           query: { channel: channelId, channel_name: channelName }
         });
       },
-      linkToWatch(_id) {
-        this.$emit('update-router', { name: 'subscriptions', query: { _id: _id } });
+      linkToWatch(item) {
+        this.$emit('update-router', { name: 'subscriptions', query: { _id: item._id } });
       }
     },
     components: {

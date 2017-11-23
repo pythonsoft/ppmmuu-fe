@@ -13,7 +13,7 @@
         </fj-select>
       </div>
       <div class="permission-search-item">
-        <fj-input placeholder="请输入权限名" v-model="name" size="small"></fj-input>
+        <fj-input placeholder="输入名字或权限组" v-model="name" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
       </div>
       <div class="permission-search-item">
         <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
@@ -26,8 +26,10 @@
       <template slot="table">
         <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
           <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-          <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
-          <fj-table-column prop="name" label="名称" ></fj-table-column>
+          <fj-table-column prop="status" label="状态" width="120"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
+          <fj-table-column prop="name" label="名称"></fj-table-column>
+          <fj-table-column prop="path" label="路径"></fj-table-column>
+          <fj-table-column prop="groupIndex" label="权限组" width="200"></fj-table-column>
           <fj-table-column prop="description" label="描述"></fj-table-column>
         </fj-table>
       </template>

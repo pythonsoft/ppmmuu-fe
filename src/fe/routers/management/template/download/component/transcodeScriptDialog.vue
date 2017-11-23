@@ -19,15 +19,18 @@
         <li>
           <div class="title">3、脚本最终结果需进行如下赋值</div>
           <pre>
-            result = ?
+            result = ['Transcode_mxf','MP4_720P']; //同时支持多个转码模板,如果只有一个可以写成result='MP4_720P';
           </pre>
         </li>
         <li>
           <div class="title">4、示例</div>
           <pre>
-      if(fileInfo.ext === '.mxf') {
-            result = transcodeTemplates.Transcode_mxf.id;
-          }
+result = [];
+if(fileInfo.ext === '.mxf') {
+      result.push(transcodeTemplates.Transcode_mxf.id);
+}
+result.push(transcodeTemplates.MP4_720P.id);
+result.push(transcodeTemplates.xxxxyy.id);
           </pre>
         </li>
       </ul>
