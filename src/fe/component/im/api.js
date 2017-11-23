@@ -60,8 +60,9 @@ callback_store.exec = function (cid, rs) {
 
 //开始连接服务器
 api.connect = function(cb) {
-  chat = io(`ws://${global.baseDomain}/chat`, {
-    transports: ['websocket']
+  chat = io(`ws://${global.socketDomain}/chat`, {
+    transports: ['websocket'],
+    query: { 'im-key': 'ump' }
   });
 
   chat.on('connect', () => {
