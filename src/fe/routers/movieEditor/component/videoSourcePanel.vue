@@ -683,7 +683,7 @@
       },
       screenshot() {
         this.screenshotURL = this.createImage();
-        this.screenshotTitle = (this.title || this.videoInfo.FILENAME) + transformSecondsToStr(this.currentTime - this.videoInfo.INPOINT);
+        this.screenshotTitle = (this.title || this.videoInfo.FILENAME) + transformSecondsToStr(this.currentTime - this.videoInfo.INPOINT) + '.png';
         this.imageDialogVisible = true;
       },
       createImage() {
