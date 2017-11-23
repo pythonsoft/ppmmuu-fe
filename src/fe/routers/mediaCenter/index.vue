@@ -48,7 +48,7 @@
           <template v-for="config in searchSelectConfigs">
             <div class="media-category">
               <h4>{{config.label}}</h4>
-              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable>
+              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable multiple>
                 <fj-option
                   v-for="item in config.items"
                   :key="item.key"
@@ -348,7 +348,11 @@
       getSeachConfigs() {
         const me = this;
         api.getSearchConfig().then((res) => {
-          me.searchSelectConfigs = res.data.searchSelectConfigs;
+          const searchSelectConfigs = res.data.searchSelectConfigs;
+          for(let i = 0; i < searchSelectConfigs.length; i++){
+            searchSelectConfigs[i].selected = [];
+          }
+          me.searchSelectConfigs = searchSelectConfigs;
           me.searchRadioboxConfigs = res.data.searchRadioboxConfigs;
         }).catch((error) => {
           me.$message.error(error);

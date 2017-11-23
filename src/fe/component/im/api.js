@@ -7,11 +7,11 @@ const api = {};
 
 let index = 0;
 const callback_store = {};
-const getIndex = function() {
-  return (++index) + '';
+const getIndex = function () {
+  return `${++index}`;
 };
 
-callback_store.on = function(name, params, fn) {
+callback_store.on = function (name, params, fn) {
   const inx = getIndex();
 
   callback_store[inx] = fn;
@@ -22,13 +22,13 @@ callback_store.on = function(name, params, fn) {
   return inx;
 };
 
-callback_store.off = function(index) {
+callback_store.off = function (index) {
   delete callback_store[index];
 };
 
 callback_store.exec = function (cid, rs) {
   const fn = callback_store[cid];
-  if(fn) {
+  if (fn) {
     fn && fn(rs);
     callback_store.off(rs.cid);
   }
@@ -73,9 +73,9 @@ chat.on('connect', () => {
     console.log('disconnect ===>', rs);
   });
 
-  for(let k in api) {
+  for (const k in api) {
     chat.on(k, (rs) => {
-      if(!rs) {
+      if (!rs) {
         console.error('result is null', rs);
         return false;
       }
@@ -83,14 +83,13 @@ chat.on('connect', () => {
       const data = JSON.parse(rs);
       const cid = data.cid;
 
-      if(cid) {
+      if (cid) {
         callback_store.exec(cid, data);
-      }else {
+      } else {
         console.error('result cid is null', rs);
       }
     });
   }
-
 });
 
 module.exports = api;

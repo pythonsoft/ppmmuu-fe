@@ -412,7 +412,7 @@ utils.formatContent = function formatContent(content) {
 
 utils.removeAllHTMLTag = function removeAllHTMLTag(str) {
   const reg = /<[^>]*>|<\/[^>]*>/gm;
-  return str.replace(reg, "");
+  return str.replace(reg, '');
 };
 
 utils.getStringLength = function getStringLength(str) {
@@ -505,7 +505,7 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
     if (dateString) {
       dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
 
-      if(dateString) {
+      if (dateString) {
         if (dateString.length === 1) {
           dateString = dateString[0].replace(/\\/g, '\/');
         }

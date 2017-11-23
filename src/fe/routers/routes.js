@@ -3,6 +3,7 @@ import Home from './home';
 const Login = resolve => require.ensure([], () => resolve(require('./login/index')), 'login');
 const Management = resolve => require.ensure([], () => resolve(require('./management/index')), 'management');
 const Role = resolve => require.ensure([], () => resolve(require('./management/role/index')), 'role');
+const PermissionGroup = resolve => require.ensure([], () => resolve(require('./management/permissionGroup/index')), 'permissionGroup');
 const Permission = resolve => require.ensure([], () => resolve(require('./management/permission/index')), 'permission');
 const Configuration = resolve => require.ensure([], () => resolve(require('./management/configuration/index')), 'configuration');
 const Engine = resolve => require.ensure([], () => resolve(require('./management/engine/index')), 'engine');
@@ -77,6 +78,7 @@ export default [{
       children: [
         { path: 'account', component: Account, meta: { title: '账户' }, name: 'account' },
         { path: 'role', component: Role, meta: { title: '角色' }, name: 'role' },
+        { path: 'permissionGroup', component: PermissionGroup, meta: { title: '权限组' }, name: 'permissionGroup' },
         { path: 'permission', component: Permission, meta: { title: '权限' }, name: 'permission' },
         { path: 'engine', component: Engine, meta: { title: '引擎管理' }, name: 'engine' },
         { path: 'bucket', component: Bucket, meta: { title: '存储区' }, name: 'bucket' },
