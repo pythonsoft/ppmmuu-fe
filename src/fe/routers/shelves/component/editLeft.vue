@@ -3,7 +3,7 @@
     <div class="edit-left-video">
       <div v-if="url" class="edit-left-video-wrap">
         <div class="edit-left-video-content" id="video" ref="video">
-          <player :videoId="videoId" :height="526" :url="url" :streamInfo="streamInfo" ref="player"></player>
+          <player :videoId="videoId" :height="526" :url="url" :streamInfo="streamInfo" ref="player" :fromWhere="shelfInfo.fromWhere"></player>
         </div>
         <div class="media-video-title-wrap">
           <div class="media-video-title" v-html="shelfInfo.name"></div>
@@ -133,7 +133,7 @@
       },
       getObject(){
         const me = this;
-        api.getObject(formatQuery({ objectid: me.videoId }, true))
+        api.getObject(formatQuery({ objectid: me.videoId, fromWhere: me.shelfInfo.fromWhere || 1 }, true))
           .then((res)=>{
             me.programDetails = Object.assign({'programNO': {cn: '节目编号', value: me.shelfInfo.programNO}},res.data.result.detail.program);
             const keys = Object.keys(me.programDetails);
@@ -151,7 +151,7 @@
       getStream() {
         const me = this;
 
-        getStreamURL(me.videoId, (err, url, rs) => {
+        getStreamURL(me.videoId, me.shelfInfo.fromWhere || 1, (err, url, rs) => {
           if (err) {
             me.$message.error(err);
             return;

@@ -24,11 +24,11 @@
           <li>
             <span title="编目类别" class="media-center-list-bar-color-span">{{ item.ccid }}</span>
           </li>
-          <li v-if="item.f_str_187">
-            <span title="HOUSENO" class="media-center-list-bar-color-span">{{ item.f_str_187 }}</span>
+          <li v-if="item.house_num">
+            <span title="HOUSENO" class="media-center-list-bar-color-span">{{ item.house_num }}</span>
           </li>
-          <li v-if="item.f_str_314">
-            <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.f_str_314 }}</span>
+          <li v-if="item.resource_location">
+            <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.resource_location }}</span>
           </li>
           <li>
             <span title="发布时间">{{ formatTime(item.publish_time) || '无发布时间' }}</span>
@@ -67,7 +67,7 @@
     getMediaFormat,
     getMediaFormatStyle,
     getReplaceName,
-    getTitle,
+    getTitle
   } from './common';
   import { isEmptyObject, deepClone, formatSize, getStringLength, formatTime } from '../../common/utils';
 
@@ -114,7 +114,7 @@
       getReplaceName,
       getTitle,
       getDescription(item) {
-        const content = item.full_text;
+        const content = item.content_introduction || item.content || item.full_text;
         const limit = 172;
         return getStringLength(content) > limit ? `${content.slice(0, limit)}...` : content;
       },

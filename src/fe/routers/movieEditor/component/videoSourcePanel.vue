@@ -106,6 +106,7 @@
     data() {
       return {
         files: '',
+        fileId: '',
         fileTypeId: '',
         currentTime: 0,
         clipDuration: 0,
@@ -139,7 +140,10 @@
           INPOINT: 0,
           OUTPOINT: 0
         },
-        loading: true
+        loading: true,
+        fromWhere: '',
+        FROM_WHERE: config.getConfig('FROM_WHERE'),
+        UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE')
       };
     },
     computed: {
@@ -251,6 +255,7 @@
     },
     mounted() {
       const objectId = this.$route.params.objectId;
+      this.fromWhere = this.$route.params.fromWhere;
       if (objectId) {
         this.getStream(objectId);
         this.getSRTArr(objectId);
@@ -292,19 +297,20 @@
         return false;
       },
       getDetail(id) {
-        api.getObject({ params: { objectid: id } }).then((res) => {
+        api.getObject({ params: { objectid: id, fromWhere: this.fromWhere } }).then((res) => {
           const files = res.data.result.files;
           const info = this.getDefaultFileInfo(files);
           info.INPOINT = info.INPOINT / this.fps;
           info.OUTPOINT = info.OUTPOINT / this.fps;
           this.videoInfo = info;
-          this.fileTypeId = this.videoInfo.FILETYPEID;
+          this.fileTypeId = this.videoInfo.FILETYPEID || '';
+          this.fileId = info._id || '';
         }).catch((error) => {
           this.$message.error(error);
         });
       },
       getStream(id) {
-        getStreamURL(id, (err, url, res) => {
+        getStreamURL(id, this.fromWhere, (err, url, res) => {
           if (err) {
             this.$message.error(err);
             return;
@@ -312,14 +318,12 @@
 
           this.videoSource = url;
         }, this);
-
-        this.getDetail(id);
       },
       getFile(id) {
 
       },
       getSRTArr(id) {
-        getSRT(id, (err, data, res) => {
+        getSRT(id, this.fromWhere, (err, data, res) => {
           if (err) {
             return;
           }
@@ -677,7 +681,9 @@
           title: this.title || this.videoInfo.FILENAME,
           range: [this.inTime, this.outTime],
           duration: this.outTime - this.inTime,
-          screenshot: this.inTimeScreenshot
+          screenshot: this.inTimeScreenshot,
+          fromWhere: this.fromWhere,
+          _id: this.fileId
         };
         this.$emit('insert', info);
       },
@@ -700,16 +706,26 @@
         return imageURL;
       },
       getDefaultFileInfo(files) {
-        const ft = mediaConfig.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
+        const ft = config.getConfig('IVIDEO_EDIT_FILE_TYPE_ID');
 
         if (files.length === 0) {
           return {};
         }
 
-        for (let j = 0, l = ft.length; j < l; j++) {
-          for (let i = 0, len = files.length; i < len; i++) {
-            if (files[i].FILETYPEID === ft[j]) {
-              return files[i];
+        if(this.fromWhere*1 === this.FROM_WHERE.UMP){
+          for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {
+                return files[i];
+              }
+            }
+          }
+        }else {
+          for (let j = 0, l = ft.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].FILETYPEID === ft[j]) {
+                return files[i];
+              }
             }
           }
         }

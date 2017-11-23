@@ -79,7 +79,7 @@ export const spreadPathOption = {
     force: {
       // initLayout: 'circular'
       repulsion: 40,
-      edgeLength: 80,
+      edgeLength: 80
       // repulsion: 100
       // gravity: 0.2
     },

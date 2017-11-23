@@ -4,13 +4,14 @@
           :visible.sync="permissionDialogVisible"
           @close="close">
     <div class="manage-search">
-      <fj-input placeholder="输入名字搜索" size="mini" v-model="keyword" icon="icon-search input-search-icon" @on-icon-click="searchPermissionClick" @keydown.native.enter.prevent="searchPermissionClick"></fj-input>
+      <fj-input placeholder="输入名字或权限组搜索" size="mini" v-model="keyword" icon="icon-search input-search-icon" @on-icon-click="searchPermissionClick" @keydown.native.enter.prevent="searchPermissionClick"></fj-input>
     </div>
     <div class="permission-list-table">
       <fj-table :data="permissionListData" name="table2" ref="table2" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20"></fj-table-column>
         <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
+        <fj-table-column prop="groupIndex" label="权限组" ></fj-table-column>
         <fj-table-column prop="description" label="描述" ></fj-table-column>
       </fj-table>
     </div>

@@ -3,7 +3,7 @@
     <div class="media-video">
       <div v-if="url" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
-          <player :videoId="videoId" :height="288" :width="448" :url="url" :streamInfo="streamInfo"></player>
+          <player :videoId="videoId" :height="288" :width="448" :url="url" :streamInfo="streamInfo" :fromWhere="videoInfo.from_where"></player>
         </div>
         <div >
           <div class="media-video-title-wrap">
@@ -198,7 +198,9 @@
         shelfDialogBtnLoading: false,
         videoId: '',
         shelfName: '',
-        programEmpty: false
+        programEmpty: false,
+        FROM_WHERE: config.getConfig('FROM_WHERE'),
+        UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE')
       };
     },
     watch: {
@@ -215,7 +217,9 @@
         this.rootid = val.rootid;
         this.getDetail();
         this.getStream();
-        this.getVideoFragments();
+        if(this.rootid) {
+          this.getVideoFragments();
+        }
       },
       program(val) {
         const keys = Object.keys(val);
@@ -253,7 +257,7 @@
       },
       getDetail() {
         const me = this;
-        api.getObject({ params: { objectid: this.item.id } }).then((res) => {
+        api.getObject({ params: { objectid: this.item.id, fromWhere: this.videoInfo.from_where } }).then((res) => {
           me.program = res.data.result.detail.program;
           me.programEmpty = me.isProgramEmpty();
           me.basic = res.data.result.basic;
@@ -407,7 +411,7 @@
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
-          this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
+          this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id, fromWhere: this.videoInfo.from_where } });
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -415,27 +419,13 @@
       getStream() {
         const me = this;
 
-        getStreamURL(this.item.id, (err, url, rs) => {
+        getStreamURL(this.item.id, this.videoInfo.from_where, (err, url, rs) => {
           if (err) {
             me.$message.error(err);
             return;
           }
-
-
           me.streamInfo = rs.result;
           me.url = url;
-
-//          const index = rs.result.FILENAME.lastIndexOf('.');
-//          const ext = rs.result.FILENAME.slice(index);
-//          if(ext !== '.mp4') {
-//            me.url = '';
-//            me.videoMessage = '暂不支持 ' + ext + '格式的视频播放';
-//          }else {
-//            me.url = url;
-//            me.videoMessage = '';
-//          }
-
-
         }, me);
 
         return false;
@@ -453,10 +443,20 @@
           return {};
         }
 
-        for (let j = 0, l = ft.length; j < l; j++) {
-          for (let i = 0, len = files.length; i < len; i++) {
-            if (files[i].FILETYPEID === ft[j]) {
-              return files[i];
+        if(this.videoInfo.from_where*1 === this.FROM_WHERE.UMP){
+          for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {
+                return files[i];
+              }
+            }
+          }
+        }else {
+          for (let j = 0, l = ft.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].FILETYPEID === ft[j]) {
+                return files[i];
+              }
             }
           }
         }
@@ -475,6 +475,7 @@
         const postData = {
           objectId: me.videoId,
           name: me.shelfName,
+          fromWhere: me.videoInfo.from_where,
           force: force,
         };
         shelfApi.createShelfTask(postData).then((res) => {
@@ -520,13 +521,14 @@
 
         //如果不是打点下载，将inpoint，outpoint设置为'0'
         const param = {
-          objectid: this.fileInfo.OBJECTID,
+          objectid: this.fileInfo.OBJECTID || '',
           inpoint: inpoint,
           outpoint: outpoint,
           filename: this.fileInfo.FILENAME,
-          filetypeid: this.fileInfo.FILETYPEID,
+          filetypeid: this.fileInfo.FILETYPEID || '',
           templateId: templateInfo._id,
-          source: this.videoInfo.from_where || '1'
+          fromWhere: this.videoInfo.from_where || '1',
+          fileId: this.fileInfo._id || ''
         };
 
         if(transferParams) {
