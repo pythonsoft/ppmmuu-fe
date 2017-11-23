@@ -87,35 +87,4 @@
       margin-left: 10px;
       line-height: 100%;
     }
-
-    .permission-btn-mini-margin {
-      margin-left: 6px;
-      font-size: 12px;
-    }
-
-    .permission-table-pagination {
-      margin-top: 30px;
-      text-align: center;
-      height: 28px;
-      line-height: 28px;
-      color: #4C637B;
-    }
-
-    .permission-status-span {
-      font-size: 12px;
-      color: #FFFFFF;
-      width: 48px;
-      height: 20px;
-      line-height: 20px;
-      border-radius: 2px;
-      text-align:center;
-      display: block;
-    }
-    .permission-enable {
-      background: #2EC4B6;
-    }
-
-    .permission-disable {
-      background: #FF3366;
-    }
 </style>
