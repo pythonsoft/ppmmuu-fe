@@ -1,4 +1,4 @@
-import bubble from '../../component/higherOrder/bubble'
+import bubble from '../../component/higherOrder/bubble';
 import { merge, isEmptyObject } from '../../common/utils';
 import io from 'socket.io-client';
 
@@ -7,12 +7,12 @@ const global = require('../../global');
 const CONTACT_TYPE = {
   PERSON: '0', // 人
   NORMAL_GROUP: '1', // 群
-  TRANSFER_BOX: '2', // 传输盒子
+  TRANSFER_BOX: '2' // 传输盒子
 };
 
 const SESSION_TYPE = {
   C2C: '1',
-  GROUP: '2',
+  GROUP: '2'
 };
 
 const api = {};
@@ -21,11 +21,11 @@ let chat = null;
 let meInfo = null;
 let index = 0;
 const callback_store = {};
-const getIndex = function() {
-  return (++index) + '';
+const getIndex = function () {
+  return `${++index}`;
 };
 
-callback_store.on = function(name, params, fn) {
+callback_store.on = function (name, params, fn) {
   const inx = getIndex();
 
   callback_store[inx] = fn;
@@ -36,16 +36,14 @@ callback_store.on = function(name, params, fn) {
   return inx;
 };
 
-callback_store.off = function(index) {
+callback_store.off = function (index) {
   delete callback_store[index];
 };
 
 callback_store.exec = function (cid, rs) {
   const fn = callback_store[cid];
-  if(fn) {
-
-    if(rs.status === '0') {
-
+  if (fn) {
+    if (rs.status === '0') {
       fn && fn(null, rs.data);
       callback_store.off(rs.cid);
 
@@ -58,8 +56,8 @@ callback_store.exec = function (cid, rs) {
   }
 };
 
-//开始连接服务器
-api.connect = function(cb) {
+// 开始连接服务器
+api.connect = function (cb) {
   chat = io(`ws://${global.socketDomain}/chat`, {
     transports: ['websocket'],
     query: { 'im-key': 'ump' }
@@ -77,10 +75,10 @@ api.connect = function(cb) {
     });
 
     chat.on('login', (rs) => {
-      if(rs.status === '0') {
+      if (rs.status === '0') {
         meInfo = rs.data;
         cb(null, rs.data);
-      }else {
+      } else {
         console.error('login error -->', rs.statusInfo.message);
         cb(rs.statusInfo.message);
       }
@@ -90,8 +88,8 @@ api.connect = function(cb) {
       bubble.emit('onMessage', rs);
     });
 
-    for(let k in api) {
-      if(k !== 'events') {
+    for (const k in api) {
+      if (k !== 'events') {
         chat.on(k, (rs) => {
           const cid = rs.cid;
 
@@ -103,7 +101,6 @@ api.connect = function(cb) {
         });
       }
     }
-
   });
 };
 
@@ -131,8 +128,8 @@ api.addFriend = function (id, name, photo, cb) {
     type: CONTACT_TYPE.PERSON
   };
 
-  callback_store.on('addContact', data, err => {
-    if(err) {
+  callback_store.on('addContact', data, (err) => {
+    if (err) {
       return cb && cb(err);
     }
 
@@ -140,7 +137,7 @@ api.addFriend = function (id, name, photo, cb) {
   });
 };
 
-api.createGroup = function(name, members, cb) {
+api.createGroup = function (name, members, cb) {
   api.createSession(name, members, (err, info) => {
     const data = {
       targetId: info._id,
@@ -148,14 +145,14 @@ api.createGroup = function(name, members, cb) {
       type: CONTACT_TYPE.GROUP
     };
 
-    callback_store.on('addContact', data, err => {
-      if(err) {
+    callback_store.on('addContact', data, (err) => {
+      if (err) {
         return cb && cb(err);
       }
 
       return cb && cb(null, info);
     });
-  })
+  });
 };
 
 api.createSession = function (name, members, cb) {
@@ -181,7 +178,7 @@ api.events.onMessage = function (fn) {
   bubble.on('onMessage', fn);
 };
 
-api.events.offMessage = function() {
+api.events.offMessage = function () {
   bubble.off('onMessage');
 };
 
