@@ -526,6 +526,10 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
           fileName = formatFileExtToMp4(fileName);
         }
 
+        if (fromWhere == 3) {
+          playPath = '/h';
+        }
+
         const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;
 
         // if (config.defaults.streamURL === 'http://localhost:8080' || config.defaults.streamURL === 'http://api.szdev.cn') {

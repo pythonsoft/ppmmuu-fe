@@ -1,0 +1,15 @@
+{
+  "apps": [
+    {
+      "name": "ump-fe",
+      "script": "server.js",
+      "cwd": "/home/ump-fe/build",
+      "instances": 2,
+      "exec_mode": "cluster",
+      "error_file": "fe-err.log",
+      "out_file": "fe-out.log",
+      "merge_logs": true,
+      "log_date_format": "YYYY-MM-DD HH:mm Z"
+    }
+  ]
+}
