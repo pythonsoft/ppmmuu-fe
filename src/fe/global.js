@@ -11,6 +11,7 @@ config.baseURL = `http://${config.baseDomain}`;
 
 // config.streamURL = 'http://localhost:8080';
 config.streamURL = 'http://ump-live.phoenixtv.com';
+//config.streamURL = 'http://10.0.15.68:8099';
 
 if (window.location.hostname.indexOf('phoenixtv.com') !== -1) {
   config.baseURL = 'http://ump-api.phoenixtv.com';
