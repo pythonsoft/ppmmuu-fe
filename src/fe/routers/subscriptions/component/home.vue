@@ -81,7 +81,8 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: templateInfo._id
+          templateId: templateInfo._id,
+          fromWhere: this.fileInfo.fromWhere || 1
         };
 
         jobAPI.download(param).then((res) => {
