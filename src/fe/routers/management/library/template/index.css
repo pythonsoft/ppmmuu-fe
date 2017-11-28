@@ -16,12 +16,12 @@
   padding: 4px 0;
 }
 
-.library-group-input {
+.library-dialog-footer{
+  text-align: right;
+}
+
+.library-bucket-input {
   float: left;
   width: 215px;
   margin-right: 10px;
-}
-
-.library-dialog-footer{
-  text-align: right;
 }
