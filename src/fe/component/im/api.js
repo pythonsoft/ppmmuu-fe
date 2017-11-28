@@ -1,5 +1,5 @@
 import bubble from '../../component/higherOrder/bubble'
-import { merge, isEmptyObject } from '../../common/utils';
+import { merge, isEmptyObject, getItemFromLocalStorage } from '../../common/utils';
 import io from 'socket.io-client';
 
 const global = require('../../global');
@@ -69,7 +69,10 @@ callback_store.exec = function (cid, rs) {
 api.connect = function(cb) {
   chat = io(`ws://${global.socketDomain}/chat`, {
     transports: ['websocket'],
-    query: { 'im-key': 'ump' }
+    query: {
+      'im-key': 'ump',
+      'im-ticket':
+    }
   });
 
   chat.on('connect', () => {
