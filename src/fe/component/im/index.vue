@@ -178,11 +178,9 @@
       }
     },
     created() {
+      const token = getItemFromLocalStorage('token');
       this.myselfInfo = getItemFromLocalStorage('userInfo');
-
-
-      console.log('myselfInfo -->', this.myselfInfo);
-      api.connect(err => {
+      api.connect(token, err => {
         if(err) {
           this.$message.error(err);
           return false;
