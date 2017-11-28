@@ -48,7 +48,7 @@
           <template v-for="config in searchSelectConfigs">
             <div class="media-category">
               <h4>{{config.label}}</h4>
-              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" clearable multiple>
+              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="dark" :controlLength="10" clearable multiple>
                 <fj-option
                   v-for="item in config.items"
                   :key="item.key"
