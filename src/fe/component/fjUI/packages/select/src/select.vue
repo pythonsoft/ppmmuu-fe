@@ -13,7 +13,7 @@
         :key="`fj-select-multiple-value-${label}`"
         type="primary"
         :closable="true"
-        @close="(e) => {handleCloseTag(e, label)}">{{ label }}</fj-tag>
+        @close="(e) => {handleCloseTag(e, label)}">{{ getLabel(label) }}</fj-tag>
     </div>
     <fj-input
       v-else
@@ -83,7 +83,11 @@
       value: {
         require: true
       },
-      parentEl: {}
+      parentEl: {},
+      controlLength: {
+        type: Number,
+        default: 0
+      }
     },
     data() {
       return {
@@ -281,6 +285,30 @@
         }
 
         return option;
+      },
+      getLabel(label){
+        if(this.controlLength === 0){
+          return label;
+        }else {
+          const len = label.length;
+
+          let realLength = 0;
+          let charCode = -1;
+
+          for (let i = 0; i < len; i++) {
+            charCode = label.charCodeAt(i);
+            if (charCode >= 0 && charCode <= 128) {
+              realLength += 1;
+            } else {
+              realLength += 2;
+            }
+          }
+          if(realLength > this.controlLength && len > this.controlLength){
+            label = label.substr(0, this.controlLength);
+            label += '...';
+          }
+          return label;
+        }
       }
     },
     watch: {

@@ -17,8 +17,8 @@
   color: var(--tag-color);
   background-color: var(--tag-default-bg-color);
 }
-.fj-tag + .fj-tag {
-  margin-left: 10px;
+.fj-tag {
+  margin-right: 10px;
 }
 
 .fj-tag-primary {

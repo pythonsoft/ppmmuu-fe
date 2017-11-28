@@ -3,8 +3,8 @@
  */
 const config = {};
 
-// config.baseDomain = '10.0.15.101:8080';
 config.baseDomain = 'localhost:8080';
+// config.baseDomain = '10.0.16.101:8080';
 
 config.baseURL = `http://${config.baseDomain}`;
 
