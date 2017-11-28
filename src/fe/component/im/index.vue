@@ -38,15 +38,15 @@
               <div
                 v-if="recentContactList.length !== 0"
                 v-for="item in recentContactList"
-                :class="talkToInfo.ToAccount === item.txSession.ToAccount? 'im-main-left-dialog-list-item active' : 'im-main-left-dialog-list-item'"
+                :class="talkToSession._id === item._id? 'im-main-left-dialog-list-item active' : 'im-main-left-dialog-list-item'"
                 @click="(e) => contactClick(e, item)"
               >
                 <div class="avatar">
-                  <img v-if="item.dialogInfo.members.length === 0" class="im-avatar" width="24" height="24">
-                  <img v-else-if="item.dialogInfo.members.length === 1" :src="item.dialogInfo.members[0].photo || '/static/img/avatar.png'" class="im-avatar" width="24" height="24"/>
+                  <img v-if="item.members.length === 0" class="im-avatar" width="24" height="24">
+                  <img v-else-if="item.members.length === 2" :src="getFriendPhotoFromMembersInC2C(myselfInfo._id, item)" class="im-avatar" width="24" height="24"/>
                   <img
                     v-else
-                    v-for="(member, index) in item.dialogInfo.members.slice(0, 3)"
+                    v-for="(member, index) in item.members.slice(0, 4)"
                     :src="member.photo || '/static/img/avatar.png'"
                     class="im-avatar im-img-style im-avatar-group"
                     width="16" height="16"
@@ -54,13 +54,13 @@
                   >
                 </div>
                 <div class="content">
-                  {{ item.dialogInfo.name || '暂无名称' }}
+                  {{ item.name || '暂无名称' }}
                 </div>
               </div>
             </div>
           </div>
 
-          <div v-if="isEmptyObject(talkToInfo)" class="im-dialog-main-right">
+          <div v-if="isEmptyObject(talkToSession)" class="im-dialog-main-right">
             <div class="im-dialog-main-right-bar">
               <div class="im-dialog-main-right-bar-wrap">
                 <span class="im-dialog-main-right-bar-wrap-tip">找个人聊聊天吧</span>
@@ -73,7 +73,7 @@
           <div v-else class="im-dialog-main-right">
             <div class="im-dialog-main-right-bar">
               <div class="im-dialog-main-right-bar-wrap">
-                {{getTalkToName()}}
+                {{talkToSession.name}}
                 <span class="iconfont icon-xiala"></span>
               </div>
             </div>
@@ -88,7 +88,7 @@
                     <img :src="getAvatarAndClass(item).avatar" :class="getAvatarAndClass(item).className" width="24" height="24"/>
                   </div>
                   <div class="message">
-                    <div v-if="isGroup(item)" class="name">{{getTalkToName()}}</div>
+                    <div v-if="isGroup(item)" class="name">{{talkToSession.name}}</div>
                     <div class="detail" v-html="convertMsgToHtml(item)"></div>
                     <p v-if="item.isResend" class="resend">
                       <span class="iconfont icon-info"></span>
@@ -166,7 +166,7 @@
         departmentBrowserVisible: false,
         dialogVisible: false,
         myselfInfo: {}, // 当前登录用户信息
-        talkToInfo: {}, // 当前聊天对象信息
+        talkToSession: {}, // 当前聊天对象信息
         keyword: '', // 检索用户时的关键词
         content: '', //发送窗口内容
         recentContactList: [], //最近会话列表
@@ -188,9 +188,21 @@
           return false;
         }
 
-        api.events.onMessage((msg) => {
-          this.currentDialogMessages = this.currentDialogMessages.concat(msg);
-          this.scrollToBottom();
+        api.events.onMessage((rs) => {
+          if(rs.status === '0') {
+            console.log('message -->', rs.data);
+            if(rs.data.construct === Array) {
+              this.currentDialogMessages = this.currentDialogMessages.concat(rs.data);
+            }else {
+              this.currentDialogMessages.push(rs.data)
+            }
+
+            this.scrollToBottom();
+          }else {
+            console.error('login error -->', rs.statusInfo.message);
+            this.$message.error(rs.statusInfo.message);
+          }
+
         });
 
         this.getRecentContactList();
@@ -201,6 +213,7 @@
 
     },
     methods: {
+      getFriendPhotoFromMembersInC2C: api.getFriendPhotoFromMembersInC2C,
       groupNameDialogCancel() {
         this.departmentBrowserResult = [];
         this.groupNameDialogVisible = false;
@@ -252,7 +265,8 @@
       },
       setDialogMessageClass(messageInfo) {
         const rs = ['im-dialog-main-right-content-item'];
-        if(messageInfo.fromAccount === this.myselfInfo._id) {
+        console.log('setDialogMessageClass -->', messageInfo);
+        if(messageInfo.from._id === this.myselfInfo._id) {
           rs.push('right');
         }else {
           rs.push('left');
@@ -268,10 +282,6 @@
             container.scrollTop = container.scrollHeight;
           }, 100);
         }
-      },
-      getTalkToName() {
-        const talkTo = this.talkToInfo;
-        return isEmptyObject(talkTo) ? this.defaultName : (talkTo.C2cNick || talkTo.GroupNick || this.defaultName);
       },
       formatTime(t) {
         let str = '';
@@ -298,20 +308,15 @@
       },
       contactClick(e, currentItem) {
         this.closeWindowSession();
+        this.talkToSession = currentItem;
 
-        this.talkToInfo = currentItem.txSession;
-
-        console.log('talk --->', this.talkToInfo, currentItem);
-
-        api.getHistoryMessage(this.talkToInfo.ToAccount, api.isGroup(this.talkToInfo.Type), (err, messages) => {
+        api.listUnReadMessage(this.talkToSession._id, 1, 50, (err, rs) => {
           if(err) {
             console.error('getHistoryMessage error-->', err);
             return false;
           }
 
-          console.log('contactCLICKC messages --->', messages);
-
-          this.currentDialogMessages = messages;
+          this.currentDialogMessages = rs.docs;
           this.scrollToBottom();
         });
       },
@@ -351,7 +356,9 @@
         const val = this.content;
         this.content = '';
 
-        api.sendMessage(this.talkToInfo, val.trim(), (err, msg) => {
+        const ts = this.talkToSession;
+
+        api.sendMessage(ts._id, ts.type, val.trim(), this.myselfInfo._id, ts._id, (err, msg) => {
           if(err) {
             console.log(err);
             return false;

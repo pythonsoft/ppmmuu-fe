@@ -1,5 +1,5 @@
-import bubble from '../../component/higherOrder/bubble';
-import { merge, isEmptyObject } from '../../common/utils';
+import bubble from '../../component/higherOrder/bubble'
+import { merge, isEmptyObject, getItemFromLocalStorage } from '../../common/utils';
 import io from 'socket.io-client';
 
 const global = require('../../global');
@@ -14,6 +14,13 @@ const SESSION_TYPE = {
   C2C: '1',
   GROUP: '2'
 };
+
+const MESSAGE_TYPE = {
+  C2C: '1',
+  GROUP: '2',
+};
+
+const DEFAULT_AVATAR = '/static/img/avatar.png';
 
 const api = {};
 
@@ -155,6 +162,38 @@ api.createGroup = function (name, members, cb) {
   });
 };
 
+const getFriendInfoFromMembers = function (meId, members) {
+  let info = null;
+  const len = members.length;
+
+  for(let i = 0; i < len; i++) {
+    if(meId !== members[i]._id) {
+      info = members[i];
+    }
+  }
+
+  return info;
+};
+
+api.getFriendPhotoFromMembersInC2C = function(meId, sessionInfo) {
+  const members = sessionInfo.members;
+  const len = members.length;
+  let url = '';
+
+  if(len === 0) {
+    return url;
+  }
+
+  if(sessionInfo.type === SESSION_TYPE.C2C) {
+    const info = getFriendInfoFromMembers(meId, members);
+    if(info) {
+      url = info.photo || DEFAULT_AVATAR;
+    }
+  }
+
+  return url;
+};
+
 api.createSession = function (name, members, cb) {
   callback_store.on('createSession', {
     name: name,
@@ -166,7 +205,25 @@ api.createSession = function (name, members, cb) {
 api.addUserToSession = function () {
 };
 
-api.listUnReadMessage = function () {
+api.listUnReadMessage = function (sessionId, page=1, pageSize=50, cb) {
+  callback_store.on('listUnReadMessage', { sessionId, page, pageSize }, cb);
+};
+
+api.sendMessage = function(sessionId, sessionType, content, fromId, toId, cb) {
+  const params = {
+    sessionId,
+    content,
+    fromId, fromType: CONTACT_TYPE.PERSON,
+    toId, toType: CONTACT_TYPE.PERSON,
+    type: MESSAGE_TYPE.C2C
+  };
+
+  if(sessionType !== SESSION_TYPE.C2C) {
+    params.toType = CONTACT_TYPE.NORMAL_GROUP;
+    params.type = MESSAGE_TYPE.GROUP;
+  }
+
+  callback_store.on('message', params, cb);
 };
 
 api.hasRead = function () {
