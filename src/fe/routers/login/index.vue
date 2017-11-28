@@ -99,6 +99,7 @@
             const index = getDefaultPageIndex(res.data.menu);
             localStorage.setItem('menu', JSON.stringify(res.data.menu));
             localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
+            localStorage.setItem('token', JSON.stringify(res.data.token));
             me.$router.push({ name: index });
           })
           .catch((error) => {
