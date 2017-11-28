@@ -249,7 +249,6 @@
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.getSeachConfigs();
       this.getDefaultMedia();
-      console.log('adfadsfasdf ->');
       bubble.on('mediaCenterDefaultViewType', function(v) {
         me.listType = v;
       });
