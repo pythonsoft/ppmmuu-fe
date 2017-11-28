@@ -398,7 +398,7 @@
           house_num: me.houseNo,
           publish_status: 1,
           full_text: this.keyword,
-          from_where: 1
+          from_where: [1,2]
         };
 
         formatMust(must, obj);
@@ -462,7 +462,7 @@
         const obj = {
           house_num: me.houseNo,
           publish_status: 1,
-          from_where: 1
+          from_where: [1,2]
         };
         formatMust(options.match, obj);
         api.esSearch(options, me).then((res) => {
