@@ -13,7 +13,7 @@ deploy_to_68_job:
   tags:
     - test
   only:
-    - master
+    - dev
 
 setup_job:
   stage: setup
@@ -36,4 +36,4 @@ run_node_68:
   tags:
     - test
   only:
-    - master
+    - dev
