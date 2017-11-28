@@ -180,6 +180,8 @@
     created() {
       this.myselfInfo = getItemFromLocalStorage('userInfo');
 
+
+      console.log('myselfInfo -->', this.myselfInfo);
       api.connect(err => {
         if(err) {
           this.$message.error(err);
