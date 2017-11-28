@@ -531,7 +531,7 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
           fileName = formatFileExtToMp4(fileName);
         }
 
-        if (fromWhere == 3) {
+        if (fromWhere === 3) {
           playPath = '/h';
         }
 
