@@ -67,7 +67,10 @@ callback_store.exec = function (cid, rs) {
 api.connect = function (ticket, cb) {
   chat = io(`ws://${global.socketDomain}/chat`, {
     transports: ['websocket'],
-    query: { 'im-key': 'ump', 'im-ticket': ticket }
+    query: {
+      'im-key': 'ump',
+      'im-ticket': ticket
+    }
   });
 
   chat.on('connect', () => {
@@ -227,6 +230,28 @@ api.sendMessage = function(sessionId, sessionType, content, fromId, toId, cb) {
 };
 
 api.hasRead = function () {
+};
+
+api.getAvatar = function(currentSessionInfo, messageInfo) {
+  const members = currentSessionInfo.members;
+  const fromId = messageInfo.from._id;
+  let photo = '';
+
+  for(let i = 0, len = members.length; i < len; i++) {
+    if(members[i]._id === fromId) {
+      photo = members[i].photo;
+    }
+  }
+
+
+  return photo || DEFAULT_AVATAR;
+};
+
+api.SESSION_TYPE = SESSION_TYPE;
+api.MESSAGE_TYPE = MESSAGE_TYPE;
+
+api.convertMsgToHtml = function(messageInfo) {
+  return messageInfo.content;
 };
 
 api.events = {};

@@ -531,8 +531,8 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
           fileName = formatFileExtToMp4(fileName);
         }
 
-        if (fromWhere == 3) {
-          playPath = '/h';
+        if (fromWhere === 3) {
+          playPath = '/moved';
         }
 
         const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;
