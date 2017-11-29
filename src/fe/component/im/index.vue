@@ -253,7 +253,7 @@
       },
       getAvatarAndClass(item) {
         const cls = ['im-avatar'];
-        const avatar = api.getAvatar(item);
+        const avatar = api.getAvatar(this.talkToSession, item);
 
         if(!avatar) {
           cls.push('im-img-style');
@@ -302,7 +302,7 @@
         this.currentDialogMessages = [];
       },
       isGroup(item) {
-        return api.isGroup(item.Type);
+        return item.type === api.MESSAGE_TYPE.GROUP;
       },
       contactClick(e, currentItem) {
         this.closeWindowSession();
