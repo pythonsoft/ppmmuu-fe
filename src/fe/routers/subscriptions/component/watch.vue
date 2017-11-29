@@ -194,6 +194,7 @@
       updateList() {
         const options = {};
         options.keyword = this.name;
+        options.isRelated = true;
         options.start = 0;
         options.pageSize = 13;
         subscribeAPI.esSearch(options, this).then((res) => {
