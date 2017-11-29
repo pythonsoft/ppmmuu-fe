@@ -67,7 +67,10 @@ callback_store.exec = function (cid, rs) {
 api.connect = function (ticket, cb) {
   chat = io(`ws://${global.socketDomain}/chat`, {
     transports: ['websocket'],
-    query: { 'im-key': 'ump', 'im-ticket': ticket }
+    query: {
+      'im-key': 'ump',
+      'im-ticket': ticket
+    }
   });
 
   chat.on('connect', () => {

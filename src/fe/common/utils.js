@@ -532,7 +532,7 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
         }
 
         if (fromWhere === 3) {
-          playPath = '/h';
+          playPath = '/moved';
         }
 
         const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;

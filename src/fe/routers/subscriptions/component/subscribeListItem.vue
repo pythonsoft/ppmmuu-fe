@@ -64,7 +64,7 @@
 
   Vue.use(VueLazyload, {
     preLoad: 1.3,
-    error: '/img/photoBreak.png',
+    error: '/static/source/photoBreak.png',
     attempt: 1
   });
 
