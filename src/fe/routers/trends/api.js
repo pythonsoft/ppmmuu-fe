@@ -22,10 +22,10 @@ axiosInstance.interceptors.request.use((config) => {
   Promise.reject(error)
 );
 
-api.getKeywordStatus = function(data, scope) {
+api.getKeywordStatus = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axiosInstance.get('/search/bigdata', data).then((response) => {
+    axiosInstance.get('/search/bigdata/status', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -43,7 +43,7 @@ api.getKeywordStatus = function(data, scope) {
     });
   });
 };
-api.getRealtimeBuzz = function(data, scope) {
+api.getRealtimeBuzz = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeBuzz/bd', data).then((response) => {
@@ -64,7 +64,7 @@ api.getRealtimeBuzz = function(data, scope) {
     });
   });
 };
-api.getRealtimeBuzzWb = function(data, scope) {
+api.getRealtimeBuzzWb = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeBuzz/wb', data).then((response) => {
@@ -85,7 +85,7 @@ api.getRealtimeBuzzWb = function(data, scope) {
     });
   });
 };
-api.getRealtimeFlowNews = function(data, scope) {
+api.getRealtimeFlowNews = function (data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axiosInstance.get('/realtimeFlow/news', data).then((response) => {

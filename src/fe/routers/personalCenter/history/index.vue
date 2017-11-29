@@ -85,7 +85,7 @@
           });
       },
       currentItemChange(item) {
-        this.$router.push({ name: 'historyWatch', params: { objectId: item.id } });
+        this.$router.push({ name: 'historyWatch', params: { objectId: item.id, fromWhere: item.from_where } });
       },
       deleteItem(item) {
         const id = item._id;

@@ -36,6 +36,7 @@
       children: [
         { text: '账户', index: 'account', route: 'account' },
         { text: '角色', index: 'role', route: 'role' },
+        { text: '权限组', index: 'permissionGroup', route: 'permissionGroup' },
         { text: '权限', index: 'permission', route: 'permission' }
       ] },
     { text: '引擎管理', index: 'engine', route: 'engine' },

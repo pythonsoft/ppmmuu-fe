@@ -10,6 +10,7 @@
         <fj-table-column type="selection" width="20" v-if="!readonly"></fj-table-column>
         <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
+        <fj-table-column prop="groupIndex" label="权限组" ></fj-table-column>
         <fj-table-column prop="action" label="行为"></fj-table-column>
       </fj-table>
     </div>

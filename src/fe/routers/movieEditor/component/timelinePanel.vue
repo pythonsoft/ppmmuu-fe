@@ -151,7 +151,8 @@
           filetypeid: item.filetypeid,
           templateId: templateInfo._id,
           ownerName: item.ownerName,
-          source: item.fromWhere || '1',
+          fromWhere: item.fromWhere || 1,
+          fileId: item._id
         };
 
         if(transferParams) {

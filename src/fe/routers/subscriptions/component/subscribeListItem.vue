@@ -1,5 +1,5 @@
 <template>
-  <li v-if="item && listType === 'grid'" @click="linkToWatchFn(item._id)">
+  <li v-if="item && listType === 'grid'" @click="linkToWatchFn(item)">
     <div class="iconfont icon-phoenixtv subscribe-grid-image">
       <img class="subscribe-thumb" v-lazy="item.poster" >
       <div class="subscribe-list-item-overlay">
@@ -64,7 +64,7 @@
 
   Vue.use(VueLazyload, {
     preLoad: 1.3,
-    error: '/img/photoBreak.png',
+    error: '/static/source/photoBreak.png',
     attempt: 1
   });
 

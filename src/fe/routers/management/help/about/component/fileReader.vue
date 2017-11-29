@@ -64,7 +64,7 @@
       readFile() {
         const me = this;
         api.readFile({
-          params: { id: this.packageInfo._id, filePath: 'config.json' }
+          params: { id: this.packageInfo._id, filePath: 'version.json' }
         }, me).then((res) => {
           me.content = formatContent(res.data);
         }).catch((error) => {

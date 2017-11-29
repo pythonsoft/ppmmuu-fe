@@ -119,7 +119,7 @@
         if (!this.selectedItem._id) return;
         this.$router.push({
           name: 'catalog',
-          params: { objectId: this.selectedItem.objectId, taskId: this.selectedItem._id }
+          params: { objectId: this.selectedItem.objectId, taskId: this.selectedItem._id, fromWhere: 3 }
         });
       },
       showEditStatusDialog(type) {

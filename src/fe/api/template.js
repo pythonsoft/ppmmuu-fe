@@ -265,8 +265,8 @@ api.updateGroupUser = function updateGroupUser(data, scope) {
   });
 };
 
-api.getWatermark = function getWatermark(id) {
-  return `${axios.defaults.baseURL}/template/getWatermark?objectid=${id}`;
+api.getWatermark = function getWatermark(id, fromWhere) {
+  return axios.defaults.baseURL + '/template/getWatermark?objectid=' + id + '&fromWhere=' + fromWhere;
 };
 
 module.exports = api;

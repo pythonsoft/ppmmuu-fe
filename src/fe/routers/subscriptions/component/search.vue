@@ -172,17 +172,18 @@
         });
       },
       showDownloadList(fileInfo) {
+        console.log("afasf");
         this.fileInfo = fileInfo;
         this.downloadDialogDisplay = true;
       },
-      downloadListConfirm(templateInfo) {
-        this.templateInfo = templateInfo || {};
-        if (!isEmptyObject(templateInfo)) {
-          this.download();
+      downloadListConfirm(rs, type) {
+        if (!isEmptyObject(rs)) {
+          this.download(rs, type);
         }
       },
-      download() {
+      download(rs, type) {
         const me = this;
+        const templateInfo = rs[type];
 
         const param = {
           objectid: this.fileInfo.OBJECTID,
@@ -190,7 +191,7 @@
           outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
-          templateId: this.templateInfo._id
+          templateId: templateInfo._id
         };
 
         jobAPI.download(param).then((res) => {
