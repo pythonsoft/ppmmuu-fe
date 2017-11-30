@@ -415,7 +415,7 @@
             const item = {
               match: {}
             };
-            formatMust(options.should, { name: this.keyword });
+            formatMust(options.should, { full_name: this.keyword });
           }
         } else {
           if (!options.sort.length) {
