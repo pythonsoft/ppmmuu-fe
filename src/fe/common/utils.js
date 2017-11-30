@@ -512,10 +512,8 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
     //   let playPath = '/mnt/transcoding/moved/2017/11/24/PMELOOP10_77/transcoding_PMELOOP10_77.mp4';
     //   return cb && cb(null, `${config.defaults.streamURL}${playPath}`, res);
     // }
-
     if (dateString) {
       dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
-
       if (dateString) {
         if (dateString.length === 1) {
           dateString = dateString[0].replace(/\\/g, '\/');
@@ -528,7 +526,6 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
         let playPath = '/u';
 
         // 2012/9/18
-
         if (year < 2012) {
           playPath = '/y';
           fileName = formatFileExtToMp4(fileName);
@@ -540,6 +537,7 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
         if (fromWhere !== utils.FROM_WHERE.MAM && fromWhere !== utils.FROM_WHERE.DAYANG) {
           playPath = res.result.mapPath;
         }
+
 
         const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;
 
