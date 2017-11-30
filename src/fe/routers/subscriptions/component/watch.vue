@@ -59,6 +59,7 @@
     isEmptyObject,
     formatQuery,
     formatTime,
+    FROM_WHERE
   } from '../../../common/utils';
   import GridListView from './gridAndList';
   import MoreView from '../../mediaCenter/moreView';
@@ -106,7 +107,7 @@
         fileInfo: {},
         downloadDialogDisplay: false,
         parentEl: null,
-        fromWhere: 1,
+        fromWhere: FROM_WHERE.MAM,
         FROM_WHERE: config.getConfig('FROM_WHERE'),
         UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE')
       };
@@ -220,7 +221,7 @@
           const data = res.data;
           this.objectId = data.objectId;
           this.name = data.name;
-          this.fromWhere = data.fromWhere || 1;
+          this.fromWhere = data.fromWhere || FROM_WHERE.MAM;
           this.getStream(this.objectId, this.fromWhere);
           this.updateList();
           this.program = data.details;
@@ -254,7 +255,7 @@
           return {};
         }
 
-        if(this.fromWhere*1 === this.FROM_WHERE.UMP){
+        if(this.fromWhere === this.FROM_WHERE.MAM){
           for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
             for (let i = 0, len = files.length; i < len; i++) {
               if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {

@@ -3,6 +3,12 @@ const utils = {};
 const mediaAPI = require('../api/media');
 const config = require('../config');
 
+utils.FROM_WHERE = {
+  MAM: 'MAM',
+  DAYANG: 'DAYANG',
+  HK_RUKU: 'HK_RUKU'
+};
+
 utils.fillupZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
@@ -531,8 +537,8 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
           fileName = formatFileExtToMp4(fileName);
         }
 
-        if (fromWhere === 3) {
-          playPath = '/moved';
+        if (fromWhere !== utils.FROM_WHERE.MAM && fromWhere !== utils.FROM_WHERE.DAYANG) {
+          playPath = res.result.mapPath;
         }
 
         const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;
