@@ -74,7 +74,7 @@
 </template>
 <script>
   import config from '../../management/task/config';
-  import jobAPI from '../../../api/job';
+  import jobAPI from '../../../api/user';
 
   export default {
     props: {
