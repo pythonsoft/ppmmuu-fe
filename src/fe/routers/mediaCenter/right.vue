@@ -148,7 +148,8 @@
     formatDuration,
     formatContent,
     getStreamURL,
-    formatTime
+    formatTime,
+    FROM_WHERE
   } from '../../common/utils';
   import moreView from './moreView';
   import SourceMenuDialog from './components/sourceMenuDialog';
@@ -376,7 +377,7 @@
           output: this.basic.OUTPOINT,
           duration: this.basic.OUTPOINT - this.basic.INPOINT,
           fileTypeId: this.fileInfo.FILETYPEID,
-          fromWhere: this.videoInfo.from_where || '1'
+          fromWhere: this.videoInfo.from_where || FROM_WHERE.MAM
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
@@ -407,7 +408,7 @@
           output: this.basic.OUTPOINT,
           duration: this.basic.OUTPOINT - this.basic.INPOINT,
           fileTypeId: this.fileInfo.FILETYPEID,
-          fromWhere: this.videoInfo.from_where || '1'
+          fromWhere: this.videoInfo.from_where || FROM_WHERE.MAM
         };
 
         ivideoAPI.createItem(reqData).then((response) => {
@@ -527,7 +528,7 @@
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID || '',
           templateId: templateInfo._id,
-          fromWhere: this.videoInfo.from_where || '1',
+          fromWhere: this.videoInfo.from_where || FROM_WHERE.MAM,
           fileId: this.fileInfo._id || ''
         };
 

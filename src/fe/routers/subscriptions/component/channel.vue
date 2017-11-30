@@ -42,7 +42,8 @@
   import DownloadListView from '../../management/template/download/component/downloadDialog';
   import {
     isEmptyObject,
-    formatQuery
+    formatQuery,
+    FROM_WHERE
   } from '../../../common/utils';
 
   const jobAPI = require('../../../api/job');
@@ -127,7 +128,7 @@
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: templateInfo._id,
-          fromWhere: this.fileInfo.fromWhere || 1,
+          fromWhere: this.fileInfo.fromWhere || FROM_WHERE.MAM,
           fileId: this.fileInfo._id
         };
 

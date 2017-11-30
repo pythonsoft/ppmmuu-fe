@@ -65,8 +65,8 @@
         }
       },
       fromWhere: {
-        type: Number,
-        default: 1
+        type: String,
+        default: 'MAM'
       },
       height: Number,
       width: Number,
