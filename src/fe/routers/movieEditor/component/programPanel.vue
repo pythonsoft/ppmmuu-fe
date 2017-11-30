@@ -52,7 +52,7 @@
   </div>
 </template>
 <script>
-  import { transformSecondsToStr, getStreamURL } from '../../../common/utils';
+  import { transformSecondsToStr, getStreamURL, FROM_WHERE } from '../../../common/utils';
 
   export default {
     props: {
@@ -188,7 +188,7 @@
         return false;
       },
       getStream(id) {
-        const fromWhere = this.$route.params.fromWhere || 1;
+        const fromWhere = this.$route.params.fromWhere || FROM_WHERE.MAM;
         getStreamURL(id, fromWhere, (err, url) => {
           if (err) {
             this.$message.error(err);

@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-  import { transformSecondsToStr, isEmptyObject } from '../../../common/utils';
+  import { transformSecondsToStr, isEmptyObject, FROM_WHERE } from '../../../common/utils';
   import DownloadListView from '../../management/template/download/component/downloadDialog';
   import jobAPI from '../../../api/job';
 
@@ -151,7 +151,7 @@
           filetypeid: item.filetypeid,
           templateId: templateInfo._id,
           ownerName: item.ownerName,
-          fromWhere: item.fromWhere || 1,
+          fromWhere: item.fromWhere || FROM_WHERE.MAM,
           fileId: item._id
         };
 
