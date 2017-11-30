@@ -266,7 +266,7 @@ api.updateGroupUser = function updateGroupUser(data, scope) {
 };
 
 api.getWatermark = function getWatermark(id, fromWhere) {
-  return axios.defaults.baseURL + '/template/getWatermark?objectid=' + id + '&fromWhere=' + fromWhere;
+  return axios.defaults.baseURL + '/template/getWatermark?objectid=' + id + '&fromWhere=' + fromWhere + '&t=' + new Date().getTime();
 };
 
 module.exports = api;
