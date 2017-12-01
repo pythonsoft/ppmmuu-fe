@@ -659,7 +659,7 @@ utils.getDefaultPageIndex = function getDefaultPageIndex(menu) {
   return 'personalCenter';
 };
 
-utils.formatTaskList = function (currentStep, taskList) {
+utils.formatTaskList = function (currentStep, taskList = []) {
   const len = taskList.length;
   let task = null;
   let percent = 0;
@@ -682,7 +682,7 @@ utils.formatTaskList = function (currentStep, taskList) {
     }
   }
 
-  return { total: `${rs * 100}%`, current: str };
+  return { total: `${(rs * 100).toFixed(2)}%`, current: str };
 };
 
 module.exports = utils;

@@ -261,6 +261,7 @@
       // },
       downloadListConfirm(templateInfo) {
         this.templateInfo = templateInfo || {};
+        console.log(this.templateInfo);
         if (!isEmptyObject(templateInfo)) {
           this.download();
         }
