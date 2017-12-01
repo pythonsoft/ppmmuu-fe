@@ -52,6 +52,7 @@
                     width="16" height="16"
                     :style="index === 0 ? 'top: 0; left: 0; z-index: 1;' : index === 1 ? 'top: 0; left: 8px; z-index: 2;' : 'top: 8px; left: 4px; z-index: 3;' "
                   >
+                  <div class="im-item-message-circle" v-if="item._hasUnreadMessage"></div>
                 </div>
                 <div class="content">
                   {{ getNameFromMembers(myselfInfo._id, item) }}
@@ -372,6 +373,10 @@
           if(err) {
             this.$message.error(err);
             return false;
+          }
+
+          for(let i = 0, len = rs.docs.length; i < len; i++) {
+            rs.docs[i]._hasUnreadMessage = false;
           }
 
           this.recentContactList = rs.docs;

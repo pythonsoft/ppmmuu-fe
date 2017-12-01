@@ -162,7 +162,7 @@
       ></media-right>
     </template>
 
-    <im></im>
+    <!--<im></im>-->
   </layout-three-column>
 </template>
 <script>
