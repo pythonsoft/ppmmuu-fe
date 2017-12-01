@@ -1,0 +1,199 @@
+  .page-wrap {
+    position: relative;
+    padding-top: 45px;
+    padding-bottom: 55px;
+    /*flex-grow: 1;*/
+    background: #F8FAFB;
+    /*overflow-y: auto;*/
+  }
+  .topic-box-header {
+    height: 49px;
+    line-height: 49px;
+    padding: 0 15px;
+  }
+  .topic-box-header h3 {
+    flex: 1;
+    font-size: 17px;
+    font-weight: bold;
+    color: #333333;
+  }
+  .topic-box-content {
+    background: #fff;
+    padding: 15px;
+  }
+  .topic-list-tab-item {
+    float: left;
+    font-size: 15px;
+    color: #AAAAAA;
+    margin-right: 17.5px;
+    transition-duration: .3s;
+  }
+  .topic-list-tab-item.active {
+    color: #333;
+  }
+  .topic-list-item{
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+  .num-top {
+    display: block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    background: #38B1EB;
+  }
+  .count {
+    font-size: 14px;
+    color: #AAAAAA;
+  }
+  .topic-name {
+    flex: 1;
+    margin: 0 10px;
+    font-size: 15px;
+    color: #333333;
+  }
+  .topic-name.active {
+    color: #38B1EB;
+  }
+  .spread-trend-chart-box,
+  .spread-path-chart-box,
+  .sentiment-chart-box {
+    width: 100%;
+    background-color: #fff !important;
+  }
+  .empty-box {
+    padding: 15px;
+    background: #fff;
+    text-align: center;
+  }
+  .article-list-item {
+    padding: 15px;
+    background-color: #fff;
+    background-image: linear-gradient(0deg,#E2E2E2,#E2E2E2 50%,transparent 0);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .event-timeline-item {
+    background-color: #fff;
+    background-image: linear-gradient(0deg,#E2E2E2,#E2E2E2 50%,transparent 0);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .article-title {
+    display: block;
+    font-size: 15px;
+    padding-bottom: 8px;
+    color: #333333;
+    /*background-image: linear-gradient(0deg,#E2E2E2,#E2E2E2 50%,transparent 0);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;*/
+  }
+  .timeline-title {
+    padding: 15px;
+    font-size: 17px;
+    color: #333333;
+    background-image: linear-gradient(0deg,#E2E2E2,#E2E2E2 50%,transparent 0);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .article-abstract {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #767676;
+  }
+  .article-footer {
+    display: flex;
+    align-items: center;
+  }
+  .article-info {
+    flex: 1;
+    font-size: 12px;
+    color: #AAAAAA;
+  }
+  .article-source-image {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #ECF3FA;
+  }
+  .article-source-image img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+  .article-view-more {
+    display: block;
+    /*padding: 2px 7px;*/
+    /*background: #EBF3FB;*/
+    border-radius: 4px;
+    color: #38B1EB;
+    margin-top: 15px;
+    font-size: 12px;
+  }
+  .timeline-date,
+  .timeline-total {
+    font-size: 12px;
+    color: #767676;
+  }
+  .timeline-article-info {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #959595;
+  }
+  .timeline-item {
+    padding: 15px;
+    background-image: linear-gradient(0deg,#E2E2E2,#E2E2E2 50%,transparent 0);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .timeline-expand-btn {
+    float: right;
+    font-size: 12px;
+    color: #AAAAAA;
+  }
+  .timeline-expand-btn .iconfont {
+    font-size: 12px;
+  }
+  .timeline-article-list {
+    padding-left: 25px;
+  }
+  .timeline-article-item {
+    padding: 10px 0;
+    /*background-color: #F8FAFB;*/
+    background-image: linear-gradient(0deg,#E2E2E2,#E2E2E2 50%,transparent 0);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .timeline-article-title {
+    display: block;
+    font-size: 14px;
+    color: #767676;
+  }
+  .icon-loading {
+    margin-right: 5px;
+    font-size: 15px;
+    color: #AAAAAA;
+    display: inline-block;
+    animation: rotate 1s linear infinite;
+  }
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
