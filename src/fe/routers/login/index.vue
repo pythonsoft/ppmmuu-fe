@@ -95,7 +95,7 @@
 
         api.postUserLogin(this.userInfo)
           .then((res) => {
-            me.$message.success('登陆成功!');
+            me.$message.success('登录成功!');
             const index = getDefaultPageIndex(res.data.menu);
             localStorage.setItem('menu', JSON.stringify(res.data.menu));
             localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
