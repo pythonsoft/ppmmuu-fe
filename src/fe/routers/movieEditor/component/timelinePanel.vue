@@ -8,7 +8,7 @@
         <div class="player-control-tooltip">删除</div>
       </div>
       <div class="player-control-item-wrap">
-        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, sequences)}" v-clickoutside="handleCloseMenu">
+        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" ref="downloadBtn" @click="(e)=>{mountDropdownMenu(e, sequences)}" v-clickoutside="handleCloseMenu">
           <i class="iconfont icon-video-download"></i>
         </div>
         <div class="player-control-tooltip">下载</div>

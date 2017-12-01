@@ -13,7 +13,7 @@
   border: 1px solid #38B1EB;
 }
 .active-panel {
-  z-index: 11;
+  z-index: 101;
 }
 .video-source-title {
   position: absolute;
