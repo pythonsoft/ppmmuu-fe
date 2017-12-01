@@ -198,7 +198,6 @@
 
             this.scrollToBottom();
           }else {
-            console.error('login error -->', rs.statusInfo.message);
             this.$message.error(rs.statusInfo.message);
           }
 
