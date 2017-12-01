@@ -65,6 +65,10 @@ callback_store.exec = function (cid, rs) {
 
 // 开始连接服务器
 api.connect = function (ticket, cb) {
+  if(meInfo) {
+    return cb && cb();
+  }
+
   chat = io(`ws://${global.socketDomain}/chat`, {
     transports: ['websocket'],
     query: {
@@ -195,6 +199,16 @@ api.getFriendPhotoFromMembersInC2C = function (meId, sessionInfo) {
   }
 
   return url;
+};
+
+api.getNameFromMembers = function(meId, sessionInfo) {
+  let name = sessionInfo.name || '暂无名称';
+
+  if (sessionInfo.type === SESSION_TYPE.C2C) {
+    name = getFriendInfoFromMembers(meId, sessionInfo.members).name;
+  }
+
+  return name;
 };
 
 api.createSession = function (name, members, cb) {
