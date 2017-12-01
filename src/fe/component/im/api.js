@@ -197,6 +197,16 @@ api.getFriendPhotoFromMembersInC2C = function (meId, sessionInfo) {
   return url;
 };
 
+api.getNameFromMembers = function(meId, sessionInfo) {
+  let name = sessionInfo.name || '暂无名称';
+
+  if (sessionInfo.type === SESSION_TYPE.C2C) {
+    name = getFriendInfoFromMembers(meId, sessionInfo.members).name;
+  }
+
+  return name;
+};
+
 api.createSession = function (name, members, cb) {
   callback_store.on('createSession', {
     name: name,
