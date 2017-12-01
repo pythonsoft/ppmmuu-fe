@@ -23,13 +23,13 @@
       <div class="personal-information-base-right">
         <fj-form :model="userInfo" ref="form" label-width="80px">
           <fj-form-item label="所属组织" prop="company.name">
-            <fj-input v-model="userInfo.company.name" :readonly="true"></fj-input>
+            <fj-input v-model="userInfo.company.name" :disabled="true"></fj-input>
           </fj-form-item>
           <fj-form-item label="所属部门" prop="department.name">
-            <fj-input v-model="userInfo.department.name" :readonly="true"></fj-input>
+            <fj-input v-model="userInfo.department.name" :disabled="true"></fj-input>
           </fj-form-item>
           <fj-form-item label="所属小组" prop="team.name">
-            <fj-input v-model="userInfo.team.name" :readonly="true"></fj-input>
+            <fj-input v-model="userInfo.team.name" :disabled="true"></fj-input>
           </fj-form-item>
         </fj-form>
       </div>
@@ -42,7 +42,7 @@
             <fj-input v-model="userInfo.phone" ></fj-input>
           </fj-form-item>
           <fj-form-item label="邮箱" prop="email">
-            <fj-input v-model="userInfo.email" ></fj-input>
+            <fj-input v-model="userInfo.email" :disabled="true"></fj-input>
           </fj-form-item>
         </fj-form>
         <div class="personal-information-operation">
