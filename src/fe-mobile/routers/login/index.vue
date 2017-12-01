@@ -72,6 +72,7 @@
           .then((res) => {
             this.disabled = false;
             localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
+            localStorage.setItem('jwtToken', JSON.stringify(res.data.jwtToken));
             this.$router.push({ name: 'trends' });
           })
           .catch((error) => {
