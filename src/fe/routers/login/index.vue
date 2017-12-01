@@ -100,6 +100,7 @@
             localStorage.setItem('menu', JSON.stringify(res.data.menu));
             localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
             localStorage.setItem('token', JSON.stringify(res.data.token));
+            localStorage.setItem('jwtToken', JSON.stringify(res.data.jwtToken));
             me.$router.push({ name: index });
           })
           .catch((error) => {

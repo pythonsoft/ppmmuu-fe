@@ -204,6 +204,6 @@ export default [{
   path: '/login',
   component: Login,
   name: 'login',
-  meta: { title: '登录' }
+  meta: { title: '凤凰卫视全媒体平台' }
 }
 ];

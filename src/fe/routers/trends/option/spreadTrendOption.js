@@ -26,7 +26,14 @@ const getHours = function () {
   const hours = [];
   for (let i = 0; i < 6; i++) {
     const start = i * 4;
-    const hour = start < 10 ? `0${start}:00-0${start + 3}:59` : `${start}:00-${start + 3}:59`;
+    let hour = '';
+    if (start + 3 < 10) {
+      hour = `0${start}:00-0${start + 3}:59`;
+    } else if (start < 10 && start + 3 > 10) {
+      hour = `0${start}:00-${start + 3}:59`;
+    } else {
+      hour = `${start}:00-${start + 3}:59`;
+    }
     hours.push(hour);
   }
   return hours;

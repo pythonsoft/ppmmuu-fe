@@ -163,8 +163,8 @@
       handleCurrentChange(current) {
         this.table.currentRowInfo = current;
         this.isDisabled = false;
-        this.stopDisable = !common.isTaskCanStop(current.status);
-        this.restartDisable = !common.isTaskCanRestart(current.status);
+        this.stopDisable = !common.isDownloadTaskCanStop(current.status);
+        this.restartDisable = !common.isDownloadTaskCanRestart(current.status);
       },
       getStatus(v) {
         return config.getConfig('DOWNLOAD_STATUS', v);

@@ -30,6 +30,7 @@ config.STATUS = {
 
 config.TASK_STATUS = {
   all: { text: '全部', value: '', key: 'all' },
+  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' },
   created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
   dealing: { text: '处理中', value: 'dealing', key: 'dealing', css: 'task-status-base task-status-dealing' },
   stopping: { text: '停止中', value: 'stopping', key: 'stopping', css: 'task-status-base task-status-dealing' },
@@ -38,7 +39,6 @@ config.TASK_STATUS = {
   error: { text: '错误', value: 'error', key: 'error', css: 'task-status-base task-status-error' },
   complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' },
   delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' },
-  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' }
 };
 
 // 下载任务状态

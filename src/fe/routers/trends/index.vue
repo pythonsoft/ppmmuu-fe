@@ -259,7 +259,8 @@
         runningKeywords: [],
         webBrowserVisible: false,
         webBrowserTitle: '',
-        webBrowserUrl: ''
+        webBrowserUrl: '',
+        timeoutID: null
       };
     },
     created() {
@@ -304,6 +305,11 @@
         this.spreadTrendChart.resize();
         this.sentimentChart.resize();
       });
+    },
+    beforeDestroy() {
+      if (this.timeoutID) {
+        clearTimeout(this.timeoutID);
+      }
     },
     watch: {
       keyword(v) {
@@ -351,7 +357,7 @@
           }).catch((error) => {
           });
         }
-        setTimeout(() => {
+        this.timeoutID = setTimeout(() => {
           this.refreshKeywordsStatus();
         }, 30000);
       },
@@ -517,7 +523,7 @@
           const resData = response.data;
           const newOption = {};
           // if (resData.constructor === Array && resData.length === 0) {
-          if (resData.opinions) {
+          if (!resData.opinions) {
             this.showEmptySentiment = true;
             newOption.series = [{ data: [] }, { data: [] }];
             this.sentimentObj = {};

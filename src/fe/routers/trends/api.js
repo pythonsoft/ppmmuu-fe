@@ -1,11 +1,19 @@
 const api = {};
 // const axios = require('../../config');
+import { getItemFromLocalStorage } from '../../common/utils';
+
 import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: 'http://182.61.54.108:9999/api/v1/bigdata',
-  withCredentials: true
+  withCredentials: true,
+  headers: {
+    common: {
+      'Authorization': 'JWT ' + getItemFromLocalStorage('jwtToken')
+    }
+  }
 });
+
 axiosInstance.interceptors.request.use((config) => {
   // Do something before request is sent
   if (config.method === 'get') {

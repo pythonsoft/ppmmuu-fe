@@ -27,7 +27,7 @@ export const geoOption = {
   },
   geo: {
     map: 'china',
-    roam: true,
+    roam: false,
     label: {
       emphasis: {
         show: false

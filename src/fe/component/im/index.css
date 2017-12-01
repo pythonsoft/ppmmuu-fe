@@ -415,3 +415,15 @@
   border: 1px solid #CDD9E5;
   padding: 6px 14px;
 }
+
+.im-item-message-circle{
+  height: 8px;
+  width: 8px;
+  text-align: center;
+  position: absolute;
+  background: #FF3366;
+  color: #000;
+  right: -4px;
+  top: 0px;
+  border-radius: 50%;
+}
