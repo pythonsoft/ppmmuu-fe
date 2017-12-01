@@ -261,7 +261,6 @@
       // },
       downloadListConfirm(templateInfo) {
         this.templateInfo = templateInfo || {};
-        console.log(this.templateInfo);
         if (!isEmptyObject(templateInfo)) {
           this.download();
         }
@@ -287,7 +286,6 @@
       prepareDownload(fileInfo) {
         if(fileInfo) {
           this.fileInfo = fileInfo;
-          console.log(this.fileInfo);
         }else {
           this.fileInfo = this.getDefaultFileInfo();
         }
