@@ -1,0 +1,8 @@
+.fj-toast-fade-enter-active, .fj-toast-fade-leave-active {
+  opacity: 1;
+  transition: opacity .3s;
+}
+.fj-toast-fade-enter, .fj-toast-fade-leave-to {
+  opacity: 0;
+}
+
