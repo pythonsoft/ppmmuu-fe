@@ -346,13 +346,18 @@ utils.formatTime = function (date, format = 'YYYY-MM-DD HH:mm:ss') {
  * @param duration 毫秒
  * @returns {string}
  */
-utils.formatDuration = function formatDuration(duration) {
+utils.formatDuration = function formatDuration(duration, needMiniSeconds = false) {
   const hours = Math.floor(duration / (60 * 60 * 1000));
   duration %= (60 * 60 * 1000);
   const minutes = Math.floor(duration / (60 * 1000));
   duration %= 60 * 1000;
   const seconds = Math.floor(duration / 1000);
-  return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
+  duration %= 1000;
+  if(needMiniSeconds && duration !== 0){
+    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}.${Math.round(duration)}`;
+  }else {
+    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
+  }
 };
 
 utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="task-list-controller-wrap">
+    <div class="task-list-controller-wrap" ref="controlMenu">
       <div class="player-control-item-wrap">
         <div class="player-control-item" @click="handleDeleteSequence" :class="{'disabled-control-item': isDisabledControl}">
           <i class="iconfont icon-delete"></i>
@@ -8,7 +8,7 @@
         <div class="player-control-tooltip">删除</div>
       </div>
       <div class="player-control-item-wrap">
-        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" @click="downloadDialogDisplay=true">
+        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, sequences)}" v-clickoutside="handleCloseMenu">
           <i class="iconfont icon-video-download"></i>
         </div>
         <div class="player-control-tooltip">下载</div>
@@ -25,8 +25,12 @@
   </div>
 </template>
 <script>
-  import { transformSecondsToStr, isEmptyObject, FROM_WHERE } from '../../../common/utils';
+  import Vue from 'vue';
+  import { transformSecondsToStr, isEmptyObject, FROM_WHERE, formatDuration } from '../../../common/utils';
   import DownloadListView from '../../management/template/download/component/downloadDialog';
+  import DropDownMenu from './dropdownMenu.vue';
+  import Clickoutside from '../../../component/fjUI/utils/clickoutside';
+  import { getPosition } from '../../../component/fjUI/utils/position';
   import jobAPI from '../../../api/job';
 
   const TIMELINE_CONFIG = {
@@ -102,6 +106,7 @@
       },
       theme(val) {
         this.TIMELINE_CONFIG = val === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
+        this.isDark = val === 'dark' ? true : false;
       }
     },
     data() {
@@ -110,6 +115,7 @@
         currentSequenceIndex: 0,
         dpr: 1,
         downloadDialogDisplay: false,
+        command: ''
       };
     },
     computed: {
@@ -125,16 +131,80 @@
     },
     mounted() {
       this.TIMELINE_CONFIG = this.theme === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
+      this.isDark = this.theme === 'dark' ? true : false;
       this.timeline = this.$refs.timeline;
       this.ctx = this.timeline.getContext('2d');
       this.resize(this.size);
       this.dpr = window.devicePixelRatio;
+      this.parentEl = this.$refs.controlMenu;
     },
     methods: {
       downloadListConfirm(rs, type) {
         if (!isEmptyObject(rs)) {
-          this.download(rs, type);
+          if(this.command === 'all') {
+            this.multiDownload(rs, type);
+          }else{
+            this.download(rs, type);
+          }
         }
+      },
+      multiDownload(rs, type) {
+        const me = this;
+        const items = this.sequences;
+        if(!items || items.length === 0){
+          return;
+        }
+        const templateInfo = rs[type];
+        const transferParams = rs[type + '_info'];
+
+        const param = {
+          objectid: items[0].objectId,
+          filename: items[0].title,
+          templateId: templateInfo._id,
+          ownerName: items[0].ownerName,
+          fromWhere: items[0].fromWhere || FROM_WHERE.MAM,
+          fileInfo: [],
+          downloadParams: []
+        };
+
+        const downloadItem = {
+          objectid: items[0].objectId,
+          inpoint: 0,
+          outpoint: 0,
+          filename: items[0].title,
+          filetypeid: items[0].filetypeid,
+          destination: '',
+          targetname: ''
+        }
+        param.downloadParams.push(downloadItem);
+
+        const fileItem = {
+          fileId: items[0]._id,
+          startTime: [],
+          endTime: [],
+        }
+        for(let i = 0, len = items.length; i < len; i++){
+          const item = items[i];
+          fileItem.startTime.push(formatDuration(item.range[0] * 1000, true));
+          fileItem.endTime.push(formatDuration(item.range[1] * 1000, true));
+        }
+        param.fileInfo.push(fileItem);
+
+        if(transferParams) {
+          param.receiverId = transferParams.acceptor._id;
+          param.receiverType = transferParams.acceptor.targetType;
+        }
+
+        jobAPI.multiDownload(param).then((res) => {
+          if(res.data === 'audit'){
+            me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
+          }else {
+            me.$message.success('正在下载文件，请到"任务"查看详细情况');
+          }        }).catch((error) => {
+          this.$message.error(error);
+        });
+
+        return false;
       },
       download(rs, type) {
         const me = this;
@@ -301,7 +371,61 @@
         if (this.sequences.length === 0 || this.currentSequenceIndex < 0) return;
         this.sequences.splice(this.currentSequenceIndex, 1);
         this.currentSequenceIndex = 0;
+      },
+      mountDropdownMenu(e, files) {
+        this.dropdownMenu = new Vue(DropDownMenu).$mount();
+        document.body.appendChild(this.dropdownMenu.$el);
+        const parentEl = this.parentEl || document.body;
+        parentEl.addEventListener('scroll', this.updateMenuPosition);
+        this.updateMenuPosition();
+        const menus = [
+          { command: 'single', key: 'single', name: '逐条下载'},
+          { command: 'all', key: 'all', name: '合并下载'},
+        ];
+        this.dropdownMenu.menus = menus;
+        this.dropdownMenu.isDark = this.isDark;
+        this.dropdownMenu.$on('item-click', this.handleItemClick);
+      },
+      handleItemClick(item, command) {
+        this.command = command;
+        this.downloadDialogDisplay = true;
+        this.unmountDropdownMenu();
+      },
+      handleCloseMenu(target) {
+        if (this.dropdownMenu && this.dropdownMenu.$el.contains(target)) return;
+        this.unmountDropdownMenu();
+      },
+      unmountDropdownMenu() {
+        if (this.dropdownMenu) {
+          document.body.removeChild(this.dropdownMenu.$el);
+          const parentEl = this.parentEl || document.body;
+          parentEl.removeEventListener('scroll', this.updateMenuPosition);
+          this.dropdownMenu = null;
+        }
+      },
+      updateMenuPosition() {
+        if (this.dropdownMenu) {
+          const position = this.getDropdownMenu();
+          this.dropdownMenu.menuStyle = {
+            top: `${position.top + 30}px`,
+            left: `${position.left - 144}px`,
+            minWidth: '166px'
+          };
+        }
+      },
+      getDropdownMenu() {
+        const downloadBtnPosition = getPosition(this.$refs.downloadBtn);
+        const position = { top: downloadBtnPosition.y, left: downloadBtnPosition.x };
+        const parentElScrollTop = this.parentEl ? this.parentEl.scrollTop : 0;
+        position.top = position.top - parentElScrollTop;
+        return position;
+      },
+    },
+    beforDestroy() {
+      if (this.dropdownMenu) {
+        this.unmountDropdownMenu();
       }
-    }
+    },
+    directives: { Clickoutside }
   };
 </script>
