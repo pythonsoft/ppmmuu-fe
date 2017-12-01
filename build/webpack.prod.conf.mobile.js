@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var merge = require('webpack-merge');
-var baseWebpackConfig = require('./webpack.base.conf');
+var baseWebpackConfig = require('./webpack.base.conf.mobile');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -33,7 +33,6 @@ module.exports = merge(baseWebpackConfig, {
       filename: config.build.index,
       template: 'index-mobile.html',
       inject: true,
-      chunksSortMode: 'dependency',
       minify: {
         collapseWhitespace: true
       }
@@ -46,12 +45,12 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         from: path.resolve(__dirname, '../src/fe/static'),
-        to: path.resolve(__dirname, '../dist/public/static'),
+        to: path.resolve(__dirname, '../dist/mobile/public/static'),
         ignore: ['.*']
       },
       {
         from: path.resolve(__dirname, '../src/fe/public'),
-        to: path.resolve(__dirname, '../dist/public'),
+        to: path.resolve(__dirname, '../dist/mobile/public'),
         ignore: ['.*']
       }
     ])
