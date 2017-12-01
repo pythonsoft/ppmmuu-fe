@@ -54,7 +54,7 @@
                   >
                 </div>
                 <div class="content">
-                  {{ item.name || '暂无名称' }}
+                  {{ getNameFromMembers(myselfInfo._id, item) }}
                 </div>
               </div>
             </div>
@@ -212,6 +212,7 @@
     },
     methods: {
       getFriendPhotoFromMembersInC2C: api.getFriendPhotoFromMembersInC2C,
+      getNameFromMembers: api.getNameFromMembers,
       groupNameDialogCancel() {
         this.departmentBrowserResult = [];
         this.groupNameDialogVisible = false;
