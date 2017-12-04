@@ -156,39 +156,54 @@
         }
         const templateInfo = rs[type];
         const transferParams = rs[type + '_info'];
+        const itemsObj = {};
+        const objectIds = [];
+
+        for(let i = 0, len = items.length; i < len; i++){
+          const item = items[i];
+          if(itemsObj[item.objectId]){
+            itemsObj[item.objectId].push(item);
+          }else{
+            objectIds.push(item.objectId);
+            itemsObj[item.objectId] = [];
+            itemsObj[item.objectId].push(item);
+          }
+        }
 
         const param = {
-          objectid: items[0].objectId,
+          objectid: objectIds.join(','),
           filename: items[0].title,
           templateId: templateInfo._id,
-          ownerName: items[0].ownerName,
           fromWhere: items[0].fromWhere || FROM_WHERE.MAM,
           fileInfo: [],
           downloadParams: []
         };
 
-        const downloadItem = {
-          objectid: items[0].objectId,
-          inpoint: 0,
-          outpoint: 0,
-          filename: items[0].title,
-          filetypeid: items[0].filetypeid,
-          destination: '',
-          targetname: ''
-        }
-        param.downloadParams.push(downloadItem);
+        for(let key in itemsObj) {
+          const itemsArr = itemsObj[key];
+          const downloadItem = {
+            objectid: itemsArr[0].objectId,
+            inpoint: 0,
+            outpoint: 0,
+            filename: itemsArr[0].title,
+            filetypeid: itemsArr[0].filetypeid,
+            destination: '',
+            targetname: ''
+          }
+          param.downloadParams.push(downloadItem);
 
-        const fileItem = {
-          fileId: items[0]._id,
-          startTime: [],
-          endTime: [],
+          const fileItem = {
+            fileId: itemsArr[0]._id,
+            startTime: [],
+            endTime: [],
+          }
+          for (let i = 0, len = itemsArr.length; i < len; i++) {
+            const item = itemsArr[i];
+            fileItem.startTime.push(formatDuration(item.range[0] * 1000, true));
+            fileItem.endTime.push(formatDuration(item.range[1] * 1000, true));
+          }
+          param.fileInfo.push(fileItem);
         }
-        for(let i = 0, len = items.length; i < len; i++){
-          const item = items[i];
-          fileItem.startTime.push(formatDuration(item.range[0] * 1000, true));
-          fileItem.endTime.push(formatDuration(item.range[1] * 1000, true));
-        }
-        param.fileInfo.push(fileItem);
 
         if(transferParams) {
           param.receiverId = transferParams.acceptor._id;
