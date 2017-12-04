@@ -23,7 +23,7 @@
     background: #FFFFFF;
     border: 1px solid #CED9E5;
     border-radius: 2px;
-    z-index: 200;
+    z-index: 201;
     color: #2A3E52;
   }
   .dropdown-menu:after {

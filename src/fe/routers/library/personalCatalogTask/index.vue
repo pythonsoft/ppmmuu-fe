@@ -117,9 +117,10 @@
     methods: {
       showCatalog() {
         if (!this.selectedItem._id) return;
+        const fromWhere = this.selectedItem.fromWhere || 'HK_RUKU';
         this.$router.push({
           name: 'catalog',
-          params: { objectId: this.selectedItem.objectId, taskId: this.selectedItem._id, fromWhere: 3 }
+          params: { objectId: this.selectedItem.objectId, taskId: this.selectedItem._id, fromWhere: fromWhere }
         });
       },
       showEditStatusDialog(type) {

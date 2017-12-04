@@ -68,7 +68,8 @@
     formatContent,
     getStreamURL,
     formatTime,
-    formatQuery
+    formatQuery,
+    FROM_WHERE
   } from '../../../common/utils';
   import { SUBSCRIBE_TYPE } from '../config';
   import Player from '../../mediaCenter/components/player';
@@ -170,7 +171,7 @@
         shelfAPI.getShelfDetail(formatQuery({_id: me.id }, true))
           .then((res)=>{
             const editorInfo = res.data.editorInfo || {};
-            me.fromWhere = res.data.fromWhere || 1;
+            me.fromWhere = res.data.fromWhere || FROM_WHERE.MAM;
             me.editorDetails['subscribeName'] = {
               cn: '节目名称',
               value: editorInfo['name'] || ''

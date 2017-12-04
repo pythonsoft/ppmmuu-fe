@@ -3,6 +3,12 @@ const utils = {};
 const mediaAPI = require('../api/media');
 const config = require('../config');
 
+utils.FROM_WHERE = {
+  MAM: 'MAM',
+  DAYANG: 'DAYANG',
+  HK_RUKU: 'HK_RUKU'
+};
+
 utils.fillupZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
@@ -340,13 +346,18 @@ utils.formatTime = function (date, format = 'YYYY-MM-DD HH:mm:ss') {
  * @param duration 毫秒
  * @returns {string}
  */
-utils.formatDuration = function formatDuration(duration) {
+utils.formatDuration = function formatDuration(duration, needMiniSeconds = false) {
   const hours = Math.floor(duration / (60 * 60 * 1000));
   duration %= (60 * 60 * 1000);
   const minutes = Math.floor(duration / (60 * 1000));
   duration %= 60 * 1000;
   const seconds = Math.floor(duration / 1000);
-  return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
+  duration %= 1000;
+  if(needMiniSeconds && duration !== 0){
+    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}.${Math.round(duration)}`;
+  }else {
+    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
+  }
 };
 
 utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {
@@ -506,10 +517,8 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
     //   let playPath = '/mnt/transcoding/moved/2017/11/24/PMELOOP10_77/transcoding_PMELOOP10_77.mp4';
     //   return cb && cb(null, `${config.defaults.streamURL}${playPath}`, res);
     // }
-
     if (dateString) {
       dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
-
       if (dateString) {
         if (dateString.length === 1) {
           dateString = dateString[0].replace(/\\/g, '\/');
@@ -522,7 +531,6 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
         let playPath = '/u';
 
         // 2012/9/18
-
         if (year < 2012) {
           playPath = '/y';
           fileName = formatFileExtToMp4(fileName);
@@ -531,9 +539,10 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
           fileName = formatFileExtToMp4(fileName);
         }
 
-        if (fromWhere === 3) {
-          playPath = '/moved';
+        if (fromWhere !== utils.FROM_WHERE.MAM && fromWhere !== utils.FROM_WHERE.DAYANG) {
+          playPath = res.result.mapPath;
         }
+
 
         const url = `${config.defaults.streamURL}${playPath}${dateString}/${fileName}`;
 
@@ -655,7 +664,7 @@ utils.getDefaultPageIndex = function getDefaultPageIndex(menu) {
   return 'personalCenter';
 };
 
-utils.formatTaskList = function (currentStep, taskList) {
+utils.formatTaskList = function (currentStep, taskList = []) {
   const len = taskList.length;
   let task = null;
   let percent = 0;
@@ -678,7 +687,7 @@ utils.formatTaskList = function (currentStep, taskList) {
     }
   }
 
-  return { total: `${rs * 100}%`, current: str };
+  return { total: `${(rs * 100).toFixed(2)}%`, current: str };
 };
 
 module.exports = utils;

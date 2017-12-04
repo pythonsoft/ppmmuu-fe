@@ -286,7 +286,6 @@
       prepareDownload(fileInfo) {
         if(fileInfo) {
           this.fileInfo = fileInfo;
-          console.log(this.fileInfo);
         }else {
           this.fileInfo = this.getDefaultFileInfo();
         }

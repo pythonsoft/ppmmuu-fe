@@ -59,7 +59,8 @@
     getStreamURL,
     formatTime,
     formatQuery,
-    transformSecondsToStr
+    transformSecondsToStr,
+    FROM_WHERE
   } from '../../../common/utils';
   import Player from '../../mediaCenter/components/player';
   import { getPosition } from '../../../component/fjUI/utils/position';
@@ -133,7 +134,7 @@
       },
       getObject(){
         const me = this;
-        api.getObject(formatQuery({ objectid: me.videoId, fromWhere: me.shelfInfo.fromWhere || 1 }, true))
+        api.getObject(formatQuery({ objectid: me.videoId, fromWhere: me.shelfInfo.fromWhere || FROM_WHERE.MAM }, true))
           .then((res)=>{
             me.programDetails = Object.assign({'programNO': {cn: '节目编号', value: me.shelfInfo.programNO}},res.data.result.detail.program);
             const keys = Object.keys(me.programDetails);
@@ -151,7 +152,7 @@
       getStream() {
         const me = this;
 
-        getStreamURL(me.videoId, me.shelfInfo.fromWhere || 1, (err, url, rs) => {
+        getStreamURL(me.videoId, me.shelfInfo.fromWhere || FROM_WHERE.MAM, (err, url, rs) => {
           if (err) {
             me.$message.error(err);
             return;

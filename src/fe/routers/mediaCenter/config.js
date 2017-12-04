@@ -69,11 +69,7 @@ config.IVIDEO_EDIT_FILE_TYPE_ID = [
   'E2255D0F-2E98-4F93-B389-6542C8685B76'
 ];
 
-config.FROM_WHERE = {
-  HK: 1,
-  DAYANG: 2,
-  UMP: 3
-};
+config.FROM_WHERE = utils.FROM_WHERE;
 
 config.UMP_FILETYPE = {
   ORIGINAL: '0', // 源文件
