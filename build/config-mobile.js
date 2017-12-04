@@ -1,11 +1,11 @@
 var path = require('path');
 module.exports = {
   build: {
-    port: 8001,
+    port: 8000,
     assetsPublicPath: '/',
-    assetsRoot: path.resolve(__dirname, '../dist', 'public'),
+    assetsRoot: path.resolve(__dirname, '../dist/mobile', 'public'),
     assetsSubDirectory: 'static',
-    index: path.resolve(__dirname, '../dist', 'public', 'index.html')
+    index: path.resolve(__dirname, '../dist/mobile', 'public', 'index.html')
   },
   dev: {
     port: 8001,
