@@ -22,7 +22,7 @@ module.exports = merge(baseWebpackConfig, {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new OptimizeCSSPlugin({}),
+    // new OptimizeCSSPlugin({}),
     new UglifyJsPlugin({
       compress: {
         warnings: false
