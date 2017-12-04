@@ -4,12 +4,18 @@ import { getItemFromLocalStorage } from '../../common/utils';
 
 import axios from 'axios';
 
+const jswToken = getItemFromLocalStorage('jwtToken');
+
+if(!jswToken) {
+  window.location.href = '/login';
+}
+
 const axiosInstance = axios.create({
   baseURL: 'http://182.61.54.108:9999/api/v1/bigdata',
   withCredentials: true,
   headers: {
     common: {
-      'Authorization': 'JWT ' + getItemFromLocalStorage('jwtToken')
+      'Authorization': 'JWT ' + jswToken
     }
   }
 });
