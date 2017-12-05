@@ -31,7 +31,8 @@ const install = function (vue, options = {}) {
   components.forEach((component) => {
     vue.component(component.name, component);
   });
-  vue.$toast = vue.prototype.$toast = Toast;
+  vue.$toast = Toast;
+  vue.prototype.$toast = Toast;
 };
 
 if (typeof window !== 'undefined' && window.Vue) {

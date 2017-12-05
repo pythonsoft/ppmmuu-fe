@@ -219,7 +219,11 @@
         });
       },
       getDetail() {
-        mediaAPI.getObject({ params: { objectid: this.objectId, fromWhere: this.fromWhere } }).then((res) => {
+        const params = {
+          objectid: this.objectId,
+          fromWhere: this.fromWhere
+        };
+        mediaAPI.getObject({ params: params }).then((res) => {
           this.program = res.data.result.detail.program;
           this.files = res.data.result.files;
           this.basic = res.data.result.basic;

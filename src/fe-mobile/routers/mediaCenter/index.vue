@@ -169,7 +169,10 @@
         });
       },
       linkToWatch(item) {
-        this.$router.push({ name: 'watch', params: { objectId: item.id, fromWhere: item.from_where } });
+        this.$router.push({
+          name: 'watch',
+          params: { objectId: item.id, fromWhere: item.from_where }
+        });
       },
       linkToCategory(name) {
         this.$router.push({ name: 'mediaCenter', params: { program_type: name } });

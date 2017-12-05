@@ -147,10 +147,23 @@
   import umpBlue from './umpBlue.json';
 
   import './index.css';
-  import { geoOption, convertGeoData } from '../../../fe/routers/trends/option/geoOption';
-  import { spreadTrendOption, getTrendSeries } from '../../../fe/routers/trends/option/spreadTrendOption';
-  import { spreadPathOption, convertGraph } from '../../../fe/routers/trends/option/spreadPathOption';
-  import { sentimentOption, convertOpinionData, convertSentimentData } from '../../../fe/routers/trends/option/sentimentOption';
+  import {
+    geoOption,
+    convertGeoData
+  } from '../../../fe/routers/trends/option/geoOption';
+  import {
+    spreadTrendOption,
+    getTrendSeries
+  } from '../../../fe/routers/trends/option/spreadTrendOption';
+  import {
+    spreadPathOption,
+    convertGraph
+  } from '../../../fe/routers/trends/option/spreadPathOption';
+  import {
+    sentimentOption,
+    convertOpinionData,
+    convertSentimentData
+  } from '../../../fe/routers/trends/option/sentimentOption';
   import BigdataAPI from '../../../fe/routers/trends/api';
 
   export default {
@@ -213,17 +226,28 @@
       this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue', { height: chartHeight });
       this.geoChart.setOption(geoOption);
 
-      this.spreadPathChart = echarts.init(this.$refs.spreadPathChart, 'umpBlue', { height: chartHeight });
+      this.spreadPathChart = echarts.init(
+        this.$refs.spreadPathChart,
+        'umpBlue',
+        { height: chartHeight }
+      );
       spreadPathOption.title = {};
       this.spreadPathChart.setOption(spreadPathOption);
 
-      this.spreadTrendChart = echarts.init(this.$refs.spreadTrendChart, 'umpBlue', { height: chartHeight });
+      this.spreadTrendChart = echarts.init(
+        this.$refs.spreadTrendChart,
+        'umpBlue',
+        { height: chartHeight }
+      );
       spreadTrendOption.title = {};
       spreadTrendOption.legend.right = 'auto';
       this.spreadTrendChart.setOption(spreadTrendOption);
 
-
-      this.sentimentChart = echarts.init(this.$refs.sentimentChart, 'umpBlue', { height: chartHeight });
+      this.sentimentChart = echarts.init(
+        this.$refs.sentimentChart,
+        'umpBlue',
+        { height: chartHeight }
+      );
       sentimentOption.title = {};
       this.sentimentChart.setOption(sentimentOption);
       this.sentimentChart.on('pieselectchanged', (params)=> {
@@ -326,7 +350,10 @@
             newOption.series = [{ data: [], edges: [] }];
           } else {
             this.showEmptySpreadPath = false;
-            newOption.series = [{ data: convertGraph(resData.content_graph).nodes, edges: resData.content_graph.links }];
+            newOption.series = [{
+              data: convertGraph(resData.content_graph).nodes,
+              edges: resData.content_graph.links
+            }];
           }
           this.spreadPathChart.hideLoading();
           this.spreadPathChart.setOption(newOption);
@@ -346,7 +373,10 @@
             this.sentimentObj = {};
           } else {
             this.showEmptySentiment = false;
-            newOption.series = [{ data: convertSentimentData(resData.total) }, { data: convertOpinionData(resData.opinions) }];
+            newOption.series = [
+              { data: convertSentimentData(resData.total) },
+              { data: convertOpinionData(resData.opinions) }
+            ];
             const sentimentObj = { total: resData.total };
             resData.opinions.forEach(function(opinion) {
               sentimentObj[opinion.title] = opinion.sentiment;
@@ -414,7 +444,8 @@
               ? showArticleLength[currentDate].length
               : showArticleLength[currentDate].show + 6;
 
-            // this.timelineData[eventIndex].showArticleLength[date] = Object.assign({}, showArticleLength[currentDate]);
+            // this.timelineData[eventIndex].showArticleLength[date] =
+            // Object.assign({}, showArticleLength[currentDate]);
           }
         });
       },
