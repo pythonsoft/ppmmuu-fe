@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import Tabbar from './packages/tabbar';
 import TabItem from './packages/tabItem';
 import Header from './packages/header';
@@ -8,7 +9,6 @@ import Button from './packages/button';
 import Cell from './packages/cell';
 import Card from './packages/card';
 import Toast from './packages/toast';
-import SearchBar from './packages/searchBar';
 import InputItem from './packages/inputItem';
 import DatetimePicker from './packages/datetimePicker';
 import './index.css';
@@ -23,7 +23,6 @@ const components = [
   TabContainerItem,
   Cell,
   Card,
-  SearchBar,
   InputItem,
   DatetimePicker
 ];
@@ -51,9 +50,7 @@ const FjUI = {
   Cell,
   Card,
   Toast,
-  SearchBar,
   InputItem,
   DatetimePicker
 };
-
-export default FjUI;
+Vue.use(FjUI);

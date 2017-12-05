@@ -21,6 +21,33 @@ module.exports = merge(baseWebpackConfig, {
     chunkFilename: path.join(config.dev.assetsSubDirectory, '/js/[name].[id].js')
   },
   devtool: '#cheap-module-eval-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader'
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: function() {
+                return [
+                  require('postcss-import'),
+                  require('autoprefixer'),
+                  require('postcss-custom-properties')
+                ]
+              }
+            }
+          }
+        ]
+      },
+    ]
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),

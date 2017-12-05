@@ -5,6 +5,7 @@ module.exports = {
     assetsPublicPath: '/',
     assetsRoot: path.resolve(__dirname, '../dist/mobile', 'public'),
     assetsSubDirectory: 'static',
+    fjUIPath: path.resolve(__dirname, '../src/fe-mobile', 'component', 'fjUI'),
     index: path.resolve(__dirname, '../dist/mobile', 'public', 'index.html')
   },
   dev: {

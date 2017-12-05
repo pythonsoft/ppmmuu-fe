@@ -1,0 +1,100 @@
+.fj-card {
+  float: left;
+  width: 100%;
+  padding-left: 3px;
+  padding-bottom: 19px;
+  background: #fff;
+}
+.fj-card-thumb {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.fj-card-thumb-mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.fj-card-video-duration {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  padding: 0 2px;
+  background: rgba(0,0,0,.5);
+  font-size: 12px;
+  color: #fff;
+}
+.fj-card-delete-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 33px;
+  height: 33px;
+  line-height: 33px;
+  color: #fff;
+  font-size: 12px;
+  background: rgba(0,0,0,.5);
+  text-align: center;
+}
+.fj-card-video-definition {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 1px 2px;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 2px;
+  color: #fff;
+  text-align: center;
+}
+.fj-card-pic {
+  width: 100%;
+}
+.fj-card-title {
+  padding-left: 5px;
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fj-card-title em {
+  font-style: normal;
+}
+.fj-card-title.highlight em {
+  color: #FF3366;
+}
+.fj-card-desc {
+  display: block;
+  padding-left: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #959595;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+._4k {
+  background: #F4AC32;
+}
+
+._1080P {
+  background: #D0021B;
+}
+
+._720P {
+  background: #9353DE;
+}
+
+._480P {
+  background: #1497D6;
+}
+
+._240P {
+  background: #2EC4B6;
+}

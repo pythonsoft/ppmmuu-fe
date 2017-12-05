@@ -122,9 +122,30 @@
   </div>
 </template>
 <script>
-  import echarts from 'echarts';
-  import 'echarts/map/js/china';
-  import '../../../fe/static/umpBlue';
+  import echarts from 'echarts/lib/echarts';
+  import 'echarts/lib/component/tooltip';
+  import 'echarts/lib/chart/line';
+  import 'echarts/lib/chart/pie';
+  import 'echarts/lib/chart/scatter';
+  import 'echarts/lib/chart/effectScatter';
+  import 'echarts/lib/chart/graph';
+
+  import 'echarts/lib/component/grid';
+  import 'echarts/lib/component/tooltip';
+  import 'echarts/lib/component/axisPointer';
+  import 'echarts/lib/component/geo';
+
+  import 'echarts/lib/component/title';
+
+  import 'echarts/lib/component/dataZoom';
+
+  import 'echarts/lib/component/markPoint';
+  import 'echarts/lib/component/markLine';
+  import 'echarts/lib/component/markArea';
+
+  // import 'echarts/map/js/china';
+  import umpBlue from './umpBlue.json';
+
   import './index.css';
   import { geoOption, convertGeoData } from '../../../fe/routers/trends/option/geoOption';
   import { spreadTrendOption, getTrendSeries } from '../../../fe/routers/trends/option/spreadTrendOption';
@@ -188,6 +209,8 @@
       const chartWidth = this.$refs.geoChart.getBoundingClientRect().width;
       const chartHeight = 2 * chartWidth / 3;
 
+      const umpBlueTheme = JSON.parse(umpBlue);
+      echarts.registerTheme('umpBlue', umpBlueTheme);
       this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue', { height: chartHeight });
       this.geoChart.setOption(geoOption);
 
