@@ -5,7 +5,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 var config = require('./config-mobile');
 var AssetsPlugin = require('assets-webpack-plugin');
-
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var baseWebpackConfig = require('./webpack.base.conf.mobile');
 
 // ......
@@ -49,6 +49,7 @@ module.exports = merge(baseWebpackConfig, {
     ]
   },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({

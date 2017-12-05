@@ -7,6 +7,7 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var config = require('./config-mobile');
 
 module.exports = merge(baseWebpackConfig, {
@@ -45,6 +46,7 @@ module.exports = merge(baseWebpackConfig, {
     ]
   },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
