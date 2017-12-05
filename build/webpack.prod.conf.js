@@ -40,6 +40,11 @@ module.exports = merge(baseWebpackConfig, {
     }),
     new CopyWebpackPlugin([
       {
+        from: path.resolve(__dirname, '../pm2.json'),
+        to: path.resolve(__dirname, '../dist'),
+        ignore: ['.*']
+      },
+      {
         from: path.resolve(__dirname, '../src/server'),
         to: path.resolve(__dirname, '../dist'),
         ignore: ['.*']
