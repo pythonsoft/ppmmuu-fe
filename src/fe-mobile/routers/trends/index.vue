@@ -143,7 +143,7 @@
   import 'echarts/lib/component/markLine';
   import 'echarts/lib/component/markArea';
 
-  // import 'echarts/map/js/china';
+  import 'echarts/map/js/china';
   import umpBlue from './umpBlue.json';
 
   import './index.css';
@@ -209,8 +209,7 @@
       const chartWidth = this.$refs.geoChart.getBoundingClientRect().width;
       const chartHeight = 2 * chartWidth / 3;
 
-      const umpBlueTheme = JSON.parse(umpBlue);
-      echarts.registerTheme('umpBlue', umpBlueTheme);
+      echarts.registerTheme('umpBlue', umpBlue);
       this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue', { height: chartHeight });
       this.geoChart.setOption(geoOption);
 
