@@ -11,9 +11,3 @@
     }
   };
 </script>
-<style>
-  .fj-tab-container-item {
-    width: 100%;
-    flex-shrink: 0;
-  }
-</style>

@@ -19,4 +19,4 @@ const DatetimePicker = function (options = {}) {
   instance.vm.visible = true;
   instances.push(instance);
   return instance.vm;
-}
+};
