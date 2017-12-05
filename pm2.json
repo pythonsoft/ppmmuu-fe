@@ -3,7 +3,7 @@
     {
       "name": "ump-fe",
       "script": "server.js",
-      "cwd": "/home/ump-fe/build",
+      "cwd": "/home/gitlab-runner/UMP-FE/dist",
       "instances": 2,
       "exec_mode": "cluster",
       "error_file": "fe-err.log",
