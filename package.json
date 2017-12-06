@@ -23,6 +23,7 @@
     "deploy": "cross-env NODE_ENV=development nohup node build/dev-server.js &",
     "update": "npm install --registry=https://registry.npm.taobao.org",
     "lint": "eslint --ext .js,.vue src/fe || exit 0",
+    "lint:mobile": "eslint --ext .js,.vue src/fe-mobile || exit 0",
     "lint:fix": "eslint --ext .js,.vue src/fe --fix|| exit 0"
   },
   "author": "phoenixtv-fe",
@@ -68,7 +69,7 @@
     "eslint-plugin-vue": "^3.13.0",
     "eventsource-polyfill": "^0.9.6",
     "express": "^4.15.3",
-    "extract-text-webpack-plugin": "^3.0.0",
+    "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^0.11.2",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.29.0",
@@ -85,6 +86,7 @@
     "vue-loader": "^13.0.0",
     "vue-template-compiler": "^2.3.4",
     "webpack": "^3.0.0",
+    "webpack-bundle-analyzer": "^2.9.1",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-hot-middleware": "^2.18.1",
     "webpack-merge": "^4.1.0"

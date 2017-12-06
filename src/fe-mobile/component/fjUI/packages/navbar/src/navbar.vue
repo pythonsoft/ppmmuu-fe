@@ -9,11 +9,3 @@
     }
   };
 </script>
-<style>
-  .fj-navbar {
-    display: flex;
-    margin-bottom: 16px;
-    text-align: center;
-    background-color: #FFFFFF;
-  }
-</style>

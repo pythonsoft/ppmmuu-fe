@@ -6,6 +6,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var config = require('./config-mobile');
 
 module.exports = merge(baseWebpackConfig, {
@@ -16,16 +18,48 @@ module.exports = merge(baseWebpackConfig, {
     chunkFilename: path.join(config.build.assetsSubDirectory, '/js/[name].[chunkhash].js')
   },
   devtool: '#source-map',
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader'
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: function() {
+                  return [
+                    require('postcss-import'),
+                    require('autoprefixer'),
+                    require('postcss-custom-properties')
+                  ]
+                }
+              }
+            }
+          ]
+        })
+      },
+    ]
+  },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    // new OptimizeCSSPlugin({}),
+    new ExtractTextPlugin(path.join(config.build.assetsSubDirectory, '/css/[name].[contenthash].css')),
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: { zindex: false }
+    }),
     new UglifyJsPlugin({
       compress: {
-        warnings: false
+        warnings: false,
+        drop_console: true
       },
       sourceMap: true
     }),

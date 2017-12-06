@@ -86,9 +86,11 @@
   }
   .progress-btn {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 17px;
+    left: 18px;
+    /*transform: translate(-50%, -50%);*/
+    width: 15px;
+    height: 15px;
     font-size: 14px;
     color: #CED9E5;
     z-index: 1;

@@ -43,28 +43,3 @@
     }
   };
 </script>
-<style>
-  .fj-input-item .fj-cell-title {
-    flex: none;
-    width: 105px;
-  }
-  .fj-input-item .fj-cell-value {
-    display: flex;
-    flex: 1;
-  }
-  .fj-input {
-    flex: 1;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    outline: 0;
-    text-align: right;
-    line-height: 1.4;
-    color: #333333;
-  }
-  .fj-input::placeholder {
-    color: #CED9E5;
-  }
-</style>
