@@ -143,6 +143,9 @@
         if (val) {
           this.listUsableTemplate();
         }
+      },
+      '$route.params.objectId'(val) {
+        this.refresh();
       }
     },
     mounted() {
@@ -202,7 +205,7 @@
         mediaAPI.esSearch(options).then((res) => {
           this.items = res.data.docs;
         }).catch((error) => {
-          console.log('error', error);
+          // console.log('error', error);
         });
       },
       getStream() {
