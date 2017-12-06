@@ -4,6 +4,7 @@ var merge = require('webpack-merge');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 var config = require('./config');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var AssetsPlugin = require('assets-webpack-plugin');
 
 var baseWebpackConfig = require('./webpack.base.conf');
@@ -22,6 +23,7 @@ module.exports = merge(baseWebpackConfig, {
   },
   devtool: '#cheap-module-eval-source-map',
   plugins: [
+    new BundleAnalyzerPlugin({ analyzerPort: 8889 }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
