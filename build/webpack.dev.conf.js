@@ -23,7 +23,7 @@ module.exports = merge(baseWebpackConfig, {
   },
   devtool: '#cheap-module-eval-source-map',
   plugins: [
-    new BundleAnalyzerPlugin({ analyzerPort: 8889 }),
+    // new BundleAnalyzerPlugin({ analyzerPort: 8889 }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({

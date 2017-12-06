@@ -18,7 +18,7 @@ module.exports = merge(baseWebpackConfig, {
   },
   devtool: '#source-map',
   plugins: [
-    new BundleAnalyzerPlugin({ analyzerPort: 8889 }),
+    // new BundleAnalyzerPlugin({ analyzerPort: 8889 }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
