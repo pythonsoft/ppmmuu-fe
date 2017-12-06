@@ -9,9 +9,3 @@
     }
   };
 </script>
-<style>
-  .fj-tab-container {
-    /*overflow: hidden;*/
-    display: flex;
-  }
-</style>

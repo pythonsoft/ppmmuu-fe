@@ -1,12 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import FjUI from './component/fjUI';
 import './css/base.css';
 import routes from './routers/routes';
 import { formatTime } from '../fe/common/utils';
 
 Vue.use(VueRouter);
-Vue.use(FjUI);
 Vue.filter('formatTime', formatTime);
 
 const router = new VueRouter({
