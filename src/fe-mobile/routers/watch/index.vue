@@ -7,6 +7,7 @@
     <player
       :poster="getThumb({ id: objectId, from_where: fromWhere })"
       :url="url"
+      :videoId="objectId"
       :streamInfo="streamInfo"></player>
     <fj-navbar v-model="navIndex">
       <fj-tab-item id="nav1">
