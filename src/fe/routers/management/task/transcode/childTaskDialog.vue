@@ -35,7 +35,7 @@
       </fj-table-column>
       <fj-table-column prop="_path" width="220" label="路径">
         <template scope="props">
-          <div class="task-wrap">{{ props.row._path }}</div>
+          <div class="task-slide-dialog-item-word-break">{{ props.row._path }}</div>
         </template>
       </fj-table-column>
       <fj-table-column prop="_totalTime" label="时长"></fj-table-column>
