@@ -151,7 +151,7 @@
     color: #fff;
     background: transparent;
     font-size: 17px;
-    line-height: 1;
+    line-height: 30px;
   }
   .login-input.password {
     font-size: 15px;

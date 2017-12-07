@@ -61,13 +61,13 @@
       </ul>
       <div class="empty-box" v-show="articleList.length === 0">没有数据</div>
     </div>
-    <div class="topic-box board">
+    <!-- <div class="topic-box board">
       <div class="topic-box-header">
         <h3>传播路径分析</h3>
       </div>
       <div class="spread-path-chart-box" ref="spreadPathChart"></div>
       <div class="empty-box" v-show="showEmptySpreadPath">没有数据</div>
-    </div>
+    </div> -->
     <div class="topic-box board">
       <div class="topic-box-header">
         <h3>事件脉络</h3>
@@ -226,13 +226,13 @@
       this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue', { height: chartHeight });
       this.geoChart.setOption(geoOption);
 
-      this.spreadPathChart = echarts.init(
-        this.$refs.spreadPathChart,
-        'umpBlue',
-        { height: chartHeight }
-      );
-      spreadPathOption.title = {};
-      this.spreadPathChart.setOption(spreadPathOption);
+      // this.spreadPathChart = echarts.init(
+      //   this.$refs.spreadPathChart,
+      //   'umpBlue',
+      //   { height: chartHeight }
+      // );
+      // spreadPathOption.title = {};
+      // this.spreadPathChart.setOption(spreadPathOption);
 
       this.spreadTrendChart = echarts.init(
         this.$refs.spreadTrendChart,
@@ -307,7 +307,7 @@
         this.updateGeoData({ history: this.activeHistoryType, keyword: v });
         this.updateTrends({ keyword: v });
         this.updateTimeline({ keyword: v });
-        this.updateSpreadPathData({ keyword: v });
+        // this.updateSpreadPathData({ keyword: v });
         this.updateOpinion({ keyword: v });
       },
       updateGeoData(reqData) {
