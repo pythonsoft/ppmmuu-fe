@@ -13,7 +13,7 @@
           <li class="topic-list-item" v-for="(item, ranking) in realtimeBuzzBd">
             <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
             <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="keyword = item.keyword">{{ item.keyword }}</p>
-            <i :style="{ width: '12px' }" class="iconfont icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe69a;</i>
+            <i :style="{ width: '12px' }" class="iconfont topic-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe69a;</i>
             <span class="count">{{ item.trends }}</span>
           </li>
         </ul>
