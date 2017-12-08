@@ -209,7 +209,7 @@
           this.filename = rs.result.FILENAME;
           this.updateList();
           this.url = url;
-        });
+        }, this);
       },
       getDetail() {
         const params = {
