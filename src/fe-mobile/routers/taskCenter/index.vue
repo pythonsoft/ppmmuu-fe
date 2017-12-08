@@ -77,6 +77,8 @@
       this.runTimer = true;
       if (this.$route.params.type) {
         this.navIndex = this.$route.params.type;
+      } else {
+        this.updateStatus();
       }
       this.autoRefreshList();
     },
@@ -85,8 +87,8 @@
     },
     watch: {
       navIndex(val) {
-        this.$router.push({ name: 'taskCenter', params: { type: val } });
         this.updateStatus();
+        this.$router.push({ name: 'taskCenter', params: { type: val } });
       },
       currentPage(val) {
         if (this.navIndex.indexOf('task_download_audit') > -1) {
