@@ -27,9 +27,8 @@ run_node_68:
   script:
     - cd /home/gitlab-runner/UMP-FE && sed -i -re "s/(^\s*axios\.defaults\.baseURL)\s*=.*/\1='http:\/\/api\.szdev\.cn'/" src/fe/config.js
     - npm run build
-    - cd dist
-    - pm2 kill
-    - pm2 startOrReload pm2.json
+    - cd
+    - pm2 startOrReload ~/UMP-FE/dist/pm2.json
 
   environment:
     name: test
