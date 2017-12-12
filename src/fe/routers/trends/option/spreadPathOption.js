@@ -1,58 +1,67 @@
 export const convertGraph = function (data, maxSourceNodeCount = 10, maxTargetNodeCount = 40) {
-  const links = data.links;
-  const sourceNodes = {};
-  // 提取source节点id作为key值，与之关联的target节点id构成的数组作为value
-  links.forEach((link)=> {
-    const source = link.source;
-    if (sourceNodes[source] === undefined) {
-      sourceNodes[source] = [link.target];
-    } else {
-      sourceNodes[source].push(link.target);
-    }
-  });
+  // const originalLinks = data.links;
+  // const sourceNodes = {};
+  // // 提取source节点id作为key值，与之关联的link构成的数组作为value
+  // originalLinks.forEach((link)=> {
+  //   const source = link.source;
+  //   if (sourceNodes[source] === undefined) {
+  //     sourceNodes[source] = [link];
+  //   } else {
+  //     sourceNodes[source].push(link);
+  //   }
+  // });
 
-  const sourceIds = Object.keys(sourceNodes);
+  // const sourceIds = Object.keys(sourceNodes);
 
-  const originalNodes = data.nodes;
-  // 将所有node节点按影响力进行排序
-  originalNodes.sort((a, b)=> {
-    return b.impact_force - a.impact_force;
-  });
+  // const originalNodes = data.nodes;
+  // // 将所有node节点按影响力进行排序
+  // originalNodes.sort((a, b)=> {
+  //   return b.impact_force - a.impact_force;
+  // });
 
-  let targetCount = 0;
-  let hasSourceTargetArr = [];
-  let sourceCount = 0;
-  const nodes = [];
-  const nodeCount = originalNodes.length;
+  // let targetCount = 0;
+  // let hasSourceTargetArr = [];
+  // let links = [];
+  // let sourceCount = 0;
+  // const nodes = [];
+  // const nodeCount = originalNodes.length;
+  // const currentIds = [];
 
-  // 依据maxSourceNodeCount提取source节点，并构造由这些源节点的目标节点组成的数组
-  for (let i = 0; i < nodeCount; i++) {
-    if (sourceCount === maxSourceNodeCount) break;
-    const node = originalNodes[i];
-    if (sourceIds.indexOf(node.id) > -1) {
-      nodes.push(node);
-      sourceCount += 1;
-      hasSourceTargetArr = hasSourceTargetArr.concat(sourceNodes[node.id]);
-    }
-  }
-  // 依据maxTargetNodeCount提取target节点
-  for (let i = 0; i < nodeCount; i++) {
-    if (targetCount === maxTargetNodeCount) break;
-    const node = originalNodes[i];
-    if(hasSourceTargetArr.indexOf(node.id) > -1) {
-      nodes.push(node);
-      targetCount += 1;
-    }
-  }
+  // // 依据maxSourceNodeCount提取source节点，并构造由这些源节点的目标节点组成的数组
+  // for (let i = 0; i < nodeCount; i++) {
+  //   if (sourceCount === maxSourceNodeCount) break;
+  //   const node = originalNodes[i];
+  //   if (sourceIds.indexOf(node.id) > -1 && currentIds.indexOf(node.id) === -1) {
+  //     nodes.push(node);
+  //     currentIds.push(node.id);
+  //     sourceCount += 1;
+  //     const tempLinks = sourceNodes[node.id].map((link) => {
+  //       return link.target;
+  //     });
+  //     hasSourceTargetArr = hasSourceTargetArr.concat(tempLinks);
+  //     links = links.concat(sourceNodes[node.id]);
+  //   }
+  // }
+  // // 依据maxTargetNodeCount提取target节点
+  // for (let i = 0; i < nodeCount; i++) {
+  //   if (targetCount === maxTargetNodeCount) break;
+  //   const node = originalNodes[i];
+  //   if(hasSourceTargetArr.indexOf(node.id) > -1 && currentIds.indexOf(node.id) === -1) {
+  //     nodes.push(node);
+  //     currentIds.push(node.id);
+  //     targetCount += 1;
+  //   }
+  // }
 
-  nodes.forEach((node) => {
+  data.nodes.forEach((node) => {
     node.value = node.impact_force;
     node.name = node.id;
     node.symbol = `image://${node.image_url}`;
     // node.symbolSize = node.impact_force;
     node.symbolSize = node.user_type === 'BigV' ? 32 : 24;
   });
-  data.nodes = nodes;
+  // data.nodes = nodes;
+  // data.links = links;
   return data;
 };
 
