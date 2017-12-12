@@ -181,7 +181,7 @@
 }
 
 .media-center-list-bar{
-  height: 18px;
+  /*height: 18px;*/
   line-height: 18px;
   overflow: auto;
 }

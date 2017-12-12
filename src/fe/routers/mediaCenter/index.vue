@@ -114,12 +114,12 @@
               ></grid-list-view>
             </div>
           </div>
-          <template v-else>
-            <div class="media-center-result-bar">
+          <div :style="{ padding: '0 26px'}" v-else>
+            <div class="media-center-result-bar clearfix">
               <span class="media-center-result-count">
                 {{searchResult}}
               </span>
-              <div class="media-center-view-bar">
+              <div :class="['media-center-view-bar', {'media-center-view-bar-left': listWidth === MIN_LIST_WIDTH}]">
                 <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
                 --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
                 --><div class="order-select">
@@ -150,7 +150,7 @@
             <div class="media-pagination" v-if="items.length > 1">
               <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></pagination>
             </div>
-          </template>
+          </div>
         </div>
       </div>
     </template>
@@ -199,6 +199,8 @@
   const api = require('../../api/media');
   const userAPI = require('../../api/user');
 
+  const MIN_LIST_WIDTH = 448;
+
   export default {
     components: {
       'layout-three-column': threeColumn,
@@ -225,6 +227,7 @@
         items: [],
         offsetWidth: 0,
         offsetHeight: 0,
+        MIN_LIST_WIDTH: MIN_LIST_WIDTH,
         listWidth: 0,
         itemSize: { width: 198, height: 180 },
         timeId: '',
@@ -255,6 +258,7 @@
     },
     mounted() {
       this.selectParentEl = this.$refs.mediaLeft;
+      if (this.$refs.mediaCenter.offsetWidth < MIN_LIST_WIDTH) this.listWidth = MIN_LIST_WIDTH;
     },
     watch: {
       orderVal(val) {
@@ -329,7 +333,8 @@
         me.timer = setTimeout(() => {
           me.offsetWidth = me.$refs.mediaCenter.offsetWidth - 26 * 2;
           me.offsetHeight = document.body.clientHeight - 53;
-          me.listWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
+          let tempListWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
+          me.listWidth = tempListWidth < MIN_LIST_WIDTH ? MIN_LIST_WIDTH : tempListWidth;
           const pageSize = (me.offsetWidth / me.itemSize.width | 0) *
             (me.offsetHeight / me.itemSize.height | 0);
           me.pageSize = pageSize < 20 ? 20 : pageSize;
