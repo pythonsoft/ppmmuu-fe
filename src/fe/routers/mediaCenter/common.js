@@ -57,9 +57,13 @@ const common = {
     }]
     for(let i = 0, len = timeConfig.length; i < len; i++){
       const temp = timeConfig[i];
-      if(item[temp.key]){
-        temp.value = utils.formatTime(item[temp.key]);
-        return temp;
+      const t = item[temp.key];
+      if(t){
+        const compareDate = new Date('1900-01-01');
+        if(new Date(t) > compareDate) {
+          temp.value = utils.formatTime(t);
+          return temp;
+        }
       }
     }
     return {key: '', name: '', value: ''};
