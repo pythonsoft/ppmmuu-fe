@@ -48,7 +48,7 @@
           <template v-for="config in searchSelectConfigs">
             <div class="media-category">
               <h4>{{config.label}}</h4>
-              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="dark" :controlLength="10" clearable multiple>
+              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" :controlLength="10" clearable multiple>
                 <fj-option
                   v-for="item in config.items"
                   :key="item.key"
@@ -364,6 +364,7 @@
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const f_date_162 = getTimeRange(this.datetimerange1, 'news_data'); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2, 'airdata'); // 首播日期
+        console.log(this.fl);
         const options = {
           source: this.fl,
           match: [],
