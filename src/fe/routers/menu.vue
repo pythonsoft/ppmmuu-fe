@@ -88,6 +88,7 @@
     },
     watch: {
       '$route'(to, from) {
+        this.defaultRoute = this.getActiveRoute(to.path, 1);
       }
     },
     methods: {
