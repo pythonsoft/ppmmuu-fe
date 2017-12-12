@@ -182,6 +182,7 @@
 }
 .fj-select-inner-multiple .fj-tag + .fj-tag {
   margin-right: 5px;
-git .fj-select-small .fj-select-inner-multiple .fj-select-placeholder {
+}
+.fj-select-small .fj-select-inner-multiple .fj-select-placeholder {
   line-height: 20px;
 }
