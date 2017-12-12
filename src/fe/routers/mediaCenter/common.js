@@ -36,6 +36,33 @@ const common = {
   },
   getDescription(item) {
     return item.content_introduction || item.content || common.getTitle(item);
+  },
+  formatShowTime(item) {
+    const timeConfig = [{
+      key: 'news_data',
+      name: '新闻时间',
+      value: ''
+    },{
+      key: 'airdata',
+      name: '首播时间',
+      value: ''
+    },{
+      key: 'publish_time',
+      name: '发布时间',
+      value: ''
+    },{
+      key: 'last_modify',
+      name: '入库时间',
+      value: ''
+    }]
+    for(let i = 0, len = timeConfig.length; i < len; i++){
+      const temp = timeConfig[i];
+      if(item[temp.key]){
+        temp.value = utils.formatTime(item[temp.key]);
+        return temp;
+      }
+    }
+    return {key: '', name: '', value: ''};
   }
 };
 
