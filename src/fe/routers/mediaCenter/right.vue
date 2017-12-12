@@ -259,7 +259,11 @@
       getDetail() {
         const me = this;
         api.getObject({ params: { objectid: this.item.id, fromWhere: this.videoInfo.from_where } }).then((res) => {
-          me.program = res.data.result.detail.program;
+          const detail = res.data.result.detail;
+          me.program = detail.program;
+          if (isEmptyObject(detail.program)) {
+            me.program = detail.sequence;
+          }
           me.programEmpty = me.isProgramEmpty();
           me.basic = res.data.result.basic;
           me.files = res.data.result.files;
