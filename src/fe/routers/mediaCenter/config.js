@@ -176,7 +176,7 @@ const FROM_WHERE = {
 
 const HHIGHLIGHT_FIELDS1 = 'name,program_name_en,program_name_cn,content,content_introduction,house_num,from_where,full_text';
 const HHIGHLIGHT_FIELDS2 = 'name,program_type,program_name_cn,program_name_en,content,content_introduction,house_num,from_where,full_text';
-const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,program_name,from_where,full_text,publish_time,rootid';
+const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,airdata,publish_time,program_name,from_where,full_text,rootid';
 
 method.ORDER_OPTIONS = ORDER_OPTIONS;
 method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;
