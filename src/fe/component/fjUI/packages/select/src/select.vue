@@ -3,7 +3,7 @@
     <div
       v-if="multiple"
       ref="multipleReference"
-      :class="[`fj-select-inner-${theme}`, visible ? `active` : '']"
+      :class="['fj-select-inner-multiple', `fj-select-inner-${theme}`, visible ? `active` : '']"
       @click="visible = true">
       <i class="fj-input-icon iconfont" :class="iconClass" @click.stop="handleIconClick"></i>
       <span v-if="selectedLabel.length === 0" class="fj-select-placeholder">{{ placeholder }}</span>
@@ -11,7 +11,7 @@
         v-else
         v-for="label in selectedLabel"
         :key="`fj-select-multiple-value-${label}`"
-        type="primary"
+        type="default"
         :closable="true"
         @close="(e) => {handleCloseTag(e, label)}">{{ getLabel(label) }}</fj-tag>
     </div>

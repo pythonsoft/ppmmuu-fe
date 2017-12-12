@@ -85,7 +85,10 @@
           return { width: 0, height: 0 };
         }
       },
-      theme: String
+      theme: {
+        type: String,
+        default: 'stroke'
+      }
     },
     data() {
       return {
