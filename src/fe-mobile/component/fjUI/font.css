@@ -14,7 +14,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-shuaxin:before { content: "\e69a"; }
+.icon-loading:before { content: "\e69a"; }
 
 .icon-clock:before { content: "\e6a3"; }
 

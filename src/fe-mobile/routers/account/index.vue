@@ -60,7 +60,7 @@
           });
       },
       submit() {
-        userAPI.postUserUpdate(this.userInfo)
+        userAPI.postUserUpdate(this.userInfo, this)
           .then((res) => {
             this.$toast.success('保存成功!');
           })

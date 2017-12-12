@@ -1,5 +1,5 @@
 <template>
-  <div class="root">
+  <div :class="['root', {'ShowSearchCondition': isShowSearchCondition}]">
     <fj-header
       title="凤凰卫视全媒体平台"
       v-model="tempKeyword"
@@ -158,15 +158,7 @@
       this.MENU = MENU;
       this.tabIndex = this.getActiveRoute(this.$route.path, 1);
       this.getSeachConfigs();
-      if (this.$route.name === 'mediaCenter') {
-        const keyword = this.$route.query.keyword;
-        if (keyword) {
-          this.tempKeyword = keyword;
-          this.headerContentType = 'searchInput';
-          this.handleSearch();
-          this.getSearchHistory();
-        }
-      }
+
       if (this.$route.meta.hideTabbar) {
         this.hideTabbar = true;
       } else {
@@ -204,6 +196,10 @@
       tabIndex(val) {
         if (val !== this.$route.name) {
           this.$router.push({ name: val });
+        }
+        if (val !== 'mediaCenter') {
+          this.headerContentType = 'default';
+          this.handleReset();
         }
       },
       '$route' (to, from) {
@@ -255,13 +251,16 @@
         } else {
           this.isShowSearchCondition = false;
           this.handleReset();
-          if (!isEmptyObject(this.searchOptions)) {
-            this.$router.push({ name: 'mediaCenter' });
-            this.searchOptions = {};
-            this.tempKeyword = '';
-            this.keyword = '';
-          }
+          this.searchOptions = {};
+          this.$router.go(-1);
+          // if (!isEmptyObject(this.searchOptions)) {
+          //   this.$router.push({ name: 'mediaCenter' });
+          //   this.searchOptions = {};
+          //   this.tempKeyword = '';
+          //   this.keyword = '';
+          // }
         }
+        this.headerContentType = type;
       },
       getSeachConfigs() {
         mediaAPI.getSearchConfig().then((res) => {
@@ -282,8 +281,39 @@
             item.tempSelected = item.selected;
             return item;
           });
+          this.initSearchQuery();
         }).catch((error) => {
         });
+      },
+      initSearchQuery() {
+        if (this.$route.name === 'mediaCenter') {
+          // const keyword = this.$route.query.keyword;
+          // if (keyword) {
+          //   this.tempKeyword = keyword;
+          //   this.headerContentType = 'searchInput';
+          //   this.handleSearch();
+          //   this.getSearchHistory();
+          // }
+          let search_query = this.$route.query.search_query;
+          if (search_query) {
+            this.headerContentType = 'searchInput';
+            search_query = JSON.parse(search_query);
+            this.tempKeyword = search_query.keyword;
+            this.tempOrderVal = search_query.orderVal;
+            this.datetimerange1 = { start: search_query.datetimerange1[0], end: search_query.datetimerange1[1] };
+            this.datetimerange2 = { start: search_query.datetimerange2[0], end: search_query.datetimerange2[1] };
+            const selectValue = search_query.selectValue;
+            const radioValue = search_query.radioValue;
+            this.searchSelectConfigs.forEach(function(item) {
+              item.tempSelected = selectValue[item.key] || [];
+            });
+            this.searchRadioboxConfigs.forEach(function(item) {
+              item.tempSelected = radioValue[item.key] || '';
+            });
+            this.handleSearch();
+            this.getSearchHistory();
+          }
+        }
       },
       getSearchHistory() {
         mediaAPI.getSearchHistory().then((res) => {
@@ -314,13 +344,21 @@
           });
       },
       handleReset() {
-        this.tempKeyword = this.keyword;
-        this.tempOrderVal = this.orderVal;
+        // this.tempKeyword = this.keyword;
+        // this.tempOrderVal = this.orderVal;
+        // this.searchSelectConfigs.forEach(function(item) {
+        //   item.tempSelected = item.selected.slice();
+        // });
+        // this.searchRadioboxConfigs.forEach(function(item) {
+        //   item.tempSelected = item.selected;
+        // });
+        this.tempKeyword = '';
+        this.tempOrderVal = 'order1';
         this.searchSelectConfigs.forEach(function(item) {
-          item.tempSelected = item.selected.slice();
+          item.tempSelected = [];
         });
         this.searchRadioboxConfigs.forEach(function(item) {
-          item.tempSelected = item.selected;
+          item.tempSelected = '';
         });
         this.datetimerange1 = { start: null, end: null };
         this.datetimerange2 = { start: null, end: null };
@@ -329,12 +367,26 @@
         this.isShowSearchCondition = false;
         this.keyword = this.tempKeyword;
         this.orderVal = this.tempOrderVal;
+
+        const selectValue = {};
+        const radioValue = {};
         this.searchSelectConfigs.forEach(function(item) {
+          selectValue[item.key] = item.tempSelected.slice();
           item.selected = item.tempSelected.slice();
         });
         this.searchRadioboxConfigs.forEach(function(item) {
+          radioValue[item.key] = item.tempSelected;
           item.selected = item.tempSelected;
         });
+
+        const search_query = {
+          keyword: this.keyword,
+          orderVal: this.orderVal,
+          selectValue: selectValue,
+          radioValue: radioValue,
+          datetimerange1: [this.datetimerange1.start, this.datetimerange2.end],
+          datetimerange2: [this.datetimerange2.start, this.datetimerange2.end]
+        };
         const options = {
           source: FILETR_FIELDS,
           match: [],
@@ -402,7 +454,8 @@
           }
         }
         this.searchOptions = options;
-        this.linkToMediaSearch(this.keyword);
+
+        this.linkToMediaSearch(search_query);
 
         // mediaAPI.esSearch(options).then((res) => {
         //   // me.items = res.data.docs;
@@ -412,8 +465,8 @@
         //   // me.$message.error(error);
         // });
       },
-      linkToMediaSearch(name) {
-        this.$router.push({ name: 'mediaCenter', query: { keyword: name } });
+      linkToMediaSearch(options) {
+        this.$router.push({ name: 'mediaCenter', params: { program_type: 'searchResult' }, query: { search_query: JSON.stringify(options) } });
       },
     }
   };

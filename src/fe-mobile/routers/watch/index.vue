@@ -4,19 +4,11 @@
       <i class="iconfont icon-arrow-left icon-return" @click="back"></i>
       <h3 class="watch-title has-return-btn">{{ filename }}</h3>
     </div>
-    <video
-      @contextmenu.prevent="()=>{return false;}"
-      class="player"
-      :style="{height: `${videoHeight}px`}"
-      :src="url"
-      :poster="getThumb({ id: this.objectId })"
-      ref="video"
-      crossorigin="anonymous"
-      preload="auto"
-      webkit-playsinline
-      playsinline
-      controls
-      ></video>
+    <player
+      :poster="getThumb({ id: objectId, from_where: fromWhere })"
+      :url="url"
+      :videoId="objectId"
+      :streamInfo="streamInfo"></player>
     <fj-navbar v-model="navIndex">
       <fj-tab-item id="nav1">
         概述
@@ -108,6 +100,7 @@
     getConfig
   } from '../../../fe/routers/mediaCenter/config';
   import ActionSheet from './actionSheet';
+  import Player from './player';
   import './index.css';
 
   const taskConfig = require('../../../fe/routers/management/task/config');
@@ -121,7 +114,6 @@
         url: '',
         streamInfo: {},
         objectId: '',
-        videoHeight: 0,
         program: {},
         fileInfo: {},
         currentRow: {},
@@ -143,14 +135,15 @@
         if (val) {
           this.listUsableTemplate();
         }
+      },
+      '$route.params.objectId'(val) {
+        this.refresh();
       }
     },
     mounted() {
       if (this.$route.params.objectId) {
         this.refresh();
       }
-      const videoWidth = this.$refs.video.getBoundingClientRect().width;
-      this.videoHeight = videoWidth * 2 / 3;
     },
     methods: {
       getTitle,
@@ -202,7 +195,7 @@
         mediaAPI.esSearch(options).then((res) => {
           this.items = res.data.docs;
         }).catch((error) => {
-          console.log('error', error);
+          // console.log('error', error);
         });
       },
       getStream() {
@@ -216,7 +209,7 @@
           this.filename = rs.result.FILENAME;
           this.updateList();
           this.url = url;
-        });
+        }, this);
       },
       getDetail() {
         const params = {
@@ -371,7 +364,8 @@
       }
     },
     components: {
-      ActionSheet
+      ActionSheet,
+      Player
     }
   };
 </script>

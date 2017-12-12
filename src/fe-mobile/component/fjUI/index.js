@@ -9,6 +9,7 @@ import Button from './packages/button';
 import Cell from './packages/cell';
 import Card from './packages/card';
 import Toast from './packages/toast';
+import Progress from './packages/progress';
 import InputItem from './packages/inputItem';
 import DatetimePicker from './packages/datetimePicker';
 import './index.css';
@@ -32,7 +33,9 @@ const install = function (vue, options = {}) {
     vue.component(component.name, component);
   });
   vue.$toast = Toast;
+  vue.$progress = Progress;
   vue.prototype.$toast = Toast;
+  vue.prototype.$progress = Progress;
 };
 
 if (typeof window !== 'undefined' && window.Vue) {
@@ -52,6 +55,7 @@ const FjUI = {
   Card,
   Toast,
   InputItem,
-  DatetimePicker
+  DatetimePicker,
+  Progress
 };
 Vue.use(FjUI);

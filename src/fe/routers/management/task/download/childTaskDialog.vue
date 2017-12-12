@@ -29,7 +29,11 @@
           <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
         </template>
       </fj-table-column>
-      <fj-table-column prop="filePath" width="220" label="路径"></fj-table-column>
+      <fj-table-column prop="filePath" label="路径">
+        <template scope="props">
+          <span class="task-slide-dialog-item-word-break">{{ props.row.filePath }}</span>
+        </template>
+      </fj-table-column>
       <fj-table-column prop="position" width="80" label="进度(%)" align="center"></fj-table-column>
       <fj-table-column prop="createTime" width="140" align="center" label="创建时间">
         <template scope="props">{{ parentInfo.createTime | formatTime }}</template>
@@ -71,9 +75,11 @@
           this.listChildTask();
           this.runTimer = true;
           this.autoRefreshList();
+          this.formatParentInfoMap(this.parentInfo);
         } else {
           this.tableData = [];
           this.childTaskData = [];
+          this.parentInfoMap = [];
           this.runTimer = false;
         }
       }
@@ -85,6 +91,7 @@
         width: '740px',
 
         tableData: [],
+        parentInfoMap: [],
 
         stopBtn: {
           disabled: true,
@@ -119,6 +126,15 @@
       this.resetBtnStatus();
     },
     methods: {
+      formatParentInfoMap(info) {
+        const arr = [];
+
+        for(let k in info) {
+          arr.push({ key: k, value: JSON.stringify(info[k]) });
+        }
+
+        this.parentInfoMap = arr;
+      },
       resetBtnStatus() {
         this.stopBtn = {
           disabled: true,

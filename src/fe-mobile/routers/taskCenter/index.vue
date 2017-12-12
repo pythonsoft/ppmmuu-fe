@@ -77,6 +77,7 @@
       this.runTimer = true;
       if (this.$route.params.type) {
         this.navIndex = this.$route.params.type;
+        this.updateStatus();
       } else {
         this.updateStatus();
       }
@@ -142,7 +143,7 @@
           pageSize: this.pageSize,
           status: 1
         };
-        userAPI.listMyAuditJob({ params: param })
+        userAPI.listMyAuditJob({ params: param }, this)
           .then((res) => {
             this.loadListBtnText = '加载更多';
             const data = res.data;
@@ -154,7 +155,7 @@
             this.$toast.error(error);
           });
       },
-      listTask(notNeedProcess, completeFn) {
+      listTask(notNeedProcess = false, completeFn) {
         const param = {
           page: 1,
           pageSize: this.pageSize * this.currentPage,
@@ -169,7 +170,7 @@
           param.currentStep = this.formData.currentStep;
         }
         if (this.navIndex.indexOf('task_download_audit') < 0) {
-          userAPI.listJob({ params: param }).then((res) => {
+          userAPI.listJob({ params: param }, notNeedProcess ? null : this).then((res) => {
             this.loadListBtnText = '加载更多';
             this.tableData = res.data.docs;
             this.total = res.data.total;

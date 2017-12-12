@@ -1,8 +1,12 @@
 const api = require('../../api/media');
 const utils = require('../../common/utils');
+const global = require('../../global');
 
 const common = {
   getThumb(item) {
+    if(item.getIcon) {
+      return `${global.baseURL}${item.getIcon}`;
+    }
     return api.getIcon(item.id, item.from_where);
   },
   getDuration(item) {
@@ -13,10 +17,10 @@ const common = {
       className = 'media-center-color-span';
     }
 
-    return className + (item.hd_flag === 0 ? ' _720P' : ' _1080P');
+    return className + (item.hd_flag === 0 ? ' _SD' : ' _HD');
   },
   getMediaFormat(item) {
-    return item.hd_flag === 0 ? '720P' : '1080P';
+    return item.hd_flag === 0 ? 'SD' : 'HD';
   },
   getReplaceName(item) {
     let name = common.getTitle(item);

@@ -41,7 +41,7 @@
           page: this.currentPage,
           pageSize: this.pageSize
         };
-        userAPI.getSearchHistory({ params: data })
+        userAPI.getSearchHistory({ params: data }, this)
           .then((response) => {
             this.loadListBtnText = '加载更多';
             const responseData = response.data;

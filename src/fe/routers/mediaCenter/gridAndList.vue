@@ -337,12 +337,12 @@
   background: #F4AC32;
 }
 
-._1080P {
+._HD {
   color: #fff;
   background: #D0021B;
 }
 
-._720P {
+._SD {
   color: #fff;
   background: #9353DE;
 }
