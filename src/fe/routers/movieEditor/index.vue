@@ -7,7 +7,7 @@
           视频编辑器
         </div>
         <ul class="movie-editor-top-bar clearfix">
-          <li :class="['theme-btn', { 'active': theme !== 'dark' }]" @click="theme = ''">浅色主题</li>
+          <li :class="['theme-btn', { 'active': theme !== 'dark' }]" @click="theme = 'stroke'">浅色主题</li>
           <li :class="['theme-btn', { 'active': theme === 'dark' }]" @click="theme = 'dark'">深色主题</li>
           <li @click="back" class="close-btn">
             <span class="iconfont icon-small-close"></span>
