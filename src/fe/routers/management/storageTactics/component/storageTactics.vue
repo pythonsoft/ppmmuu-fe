@@ -35,23 +35,23 @@
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" align="center" label="状态" >
-          <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
+          <template slot-scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="source" label="目标">
-          <template scope="props">{{ formatSourceName(props.row.source) }}</template>
+          <template slot-scope="props">{{ formatSourceName(props.row.source) }}</template>
         </fj-table-column>
         <fj-table-column prop="maxSize"  label="类型">
-          <template scope="props">{{ formatType(props.row.type) }}</template>
+          <template slot-scope="props">{{ formatType(props.row.type) }}</template>
         </fj-table-column>
         <fj-table-column prop="creator" label="创建人">
-          <template scope="props">{{ props.row.creator.name }}</template>
+          <template slot-scope="props">{{ props.row.creator.name }}</template>
         </fj-table-column>
         <fj-table-column prop="createdTime" width="160" align="center" label="创建时间">
-          <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
         <fj-table-column prop="modifyTime" width="160" align="center" label="修改时间">
-          <template scope="props">{{ props.row.modifyTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.modifyTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>

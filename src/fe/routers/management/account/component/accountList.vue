@@ -36,14 +36,14 @@
       <fj-table style="font-size: 12px;" :data="tableData" name="accountTable" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="50" align="center"></fj-table-column>
         <fj-table-column prop="status" label="状态" width="50" align="center">
-          <template scope="props">
+          <template slot-scope="props">
             <span :class="STATUS_CONFIG[props.row.status].class">{{ STATUS_CONFIG[props.row.status].text }}</span>
           </template>
         </fj-table-column>
         <fj-table-column prop="name" label="姓名"></fj-table-column>
         <fj-table-column prop="email" label="邮箱"></fj-table-column>
         <fj-table-column prop="verifyType" label="验证方式">
-          <template scope="props">
+          <template slot-scope="props">
             {{ VERIFY_TYPE_CONFIG[props.row.verifyType] }}
           </template>
         </fj-table-column>

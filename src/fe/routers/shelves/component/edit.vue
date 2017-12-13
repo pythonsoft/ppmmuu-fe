@@ -20,12 +20,12 @@
                 direction="x"
                 name="child1"
         >
-          <template slot="0" scope="props">
+          <template slot="0" slot-scope="props">
             <div class="shelf-edit-left">
               <edit-left :shelfInfo="shelfInfo"></edit-left>
             </div>
           </template>
-          <template slot="1" scope="props">
+          <template slot="1" slot-scope="props">
             <div class="shelf-edit-right">
               <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight"></edit-right>
             </div>

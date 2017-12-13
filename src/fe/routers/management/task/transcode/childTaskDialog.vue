@@ -24,24 +24,24 @@
 
     <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
       <fj-table-column prop="_type" width="100" align="center" label="类型">
-        <template scope="props">
+        <template slot-scope="props">
           {{ getCurrentStepConfig(props.row._type).text }}
         </template>
       </fj-table-column>
       <fj-table-column prop="status" width="50" align="center" label="状态">
-        <template scope="props">
+        <template slot-scope="props">
           <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
         </template>
       </fj-table-column>
       <fj-table-column prop="_path" width="220" label="路径">
-        <template scope="props">
+        <template slot-scope="props">
           <div class="task-slide-dialog-item-word-break">{{ props.row._path }}</div>
         </template>
       </fj-table-column>
       <fj-table-column prop="_totalTime" label="时长"></fj-table-column>
       <fj-table-column prop="processRate" width="80" label="进度(%)" align="center"></fj-table-column>
       <fj-table-column prop="createTime" width="140" align="center" label="创建时间">
-        <template scope="props">{{ props.row.createTime | formatTime }}</template>
+        <template slot-scope="props">{{ props.row.createTime | formatTime }}</template>
       </fj-table-column>
     </fj-table>
 

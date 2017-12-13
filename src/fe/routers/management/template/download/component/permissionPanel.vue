@@ -11,7 +11,7 @@
         <fj-table :data="permissionData" name="table" ref="table" @selection-change="handleSelectionChange">
           <fj-table-column type="selection" width="20"></fj-table-column>
           <fj-table-column prop="_id" label="授权组织/人">
-            <template scope="props">
+            <template slot-scope="props">
               <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
               <span>{{props.row.name}}</span>
               <span :class="getSearchItemClass(props.row)">{{searchItemTypeMap[props.row.type]}}</span>

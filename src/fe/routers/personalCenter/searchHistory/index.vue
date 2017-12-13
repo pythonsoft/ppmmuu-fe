@@ -10,7 +10,7 @@
         <fj-table-column type="selection" width="50" align="center"></fj-table-column>
         <fj-table-column prop="keyword" label="检索词"></fj-table-column>
         <fj-table-column prop="updatedTime" label="时间">
-          <template scope="props">{{ props.row.updatedTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.updatedTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>

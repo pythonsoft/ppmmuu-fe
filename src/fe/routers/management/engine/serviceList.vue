@@ -21,7 +21,7 @@
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="pid" width="90" align="center" label="进程号"></fj-table-column>
         <fj-table-column prop="status" width="90" align="center" label="运行状态" >
-          <template scope="props">{{ getRunStatus(props.row.status) }}</template>
+          <template slot-scope="props">{{ getRunStatus(props.row.status) }}</template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="cpu" label="CPU使用"></fj-table-column>

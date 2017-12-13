@@ -23,11 +23,11 @@
       <template slot="table">
         <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
           <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-          <fj-table-column prop="status" label="状态" width="90"><template scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
+          <fj-table-column prop="status" label="状态" width="90"><template slot-scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
           <fj-table-column prop="name" label="名称"></fj-table-column>
-          <fj-table-column prop="applicant" label="申请人"><template scope="props">{{props.row.applicant.companyName + '-' + props.row.applicant.name}}</template></fj-table-column>
-          <fj-table-column prop="verifier" label="审核人"><template scope="props">{{props.row.verifier.companyName + '-' + props.row.verifier.name}}</template></fj-table-column>
-          <fj-table-column prop="createTime" label="创建时间" width="160"><template scope="props">{{formatTime(props.row.createTime)}}</template></fj-table-column>
+          <fj-table-column prop="applicant" label="申请人"><template slot-scope="props">{{props.row.applicant.companyName + '-' + props.row.applicant.name}}</template></fj-table-column>
+          <fj-table-column prop="verifier" label="审核人"><template slot-scope="props">{{props.row.verifier.companyName + '-' + props.row.verifier.name}}</template></fj-table-column>
+          <fj-table-column prop="createTime" label="创建时间" width="160"><template slot-scope="props">{{formatTime(props.row.createTime)}}</template></fj-table-column>
         </fj-table>
       </template>
       <template slot="pagination">
