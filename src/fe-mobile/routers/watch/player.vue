@@ -158,6 +158,11 @@
 
       this.initDragEvents();
     },
+    beforeDestroy() {
+      if (this.isPlaying) {
+        this.video.pause();
+      }
+    },
     methods: {
       reset() {
         this.showVideo = false;
