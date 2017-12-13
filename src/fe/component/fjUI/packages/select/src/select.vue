@@ -130,10 +130,11 @@
       },
       handleMouseDown(e) {
         if (e.target.tagName !== 'INPUT') return;
-        if (this.visible) {
-          this.handleClose();
-          e.preventDefault();
-        }
+        e.target.blur();
+        // if (this.visible) {
+        //   this.handleClose();
+        //   e.preventDefault();
+        // }
       },
       handleIconClick(e) {
         // 如果为remote就触发搜索函数
