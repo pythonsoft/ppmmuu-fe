@@ -9,7 +9,7 @@
     <div class="permission-list-table">
       <fj-table :data="permissionListData" name="table2" ref="table2" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20"></fj-table-column>
-        <fj-table-column prop="status" label="状态"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
+        <fj-table-column prop="status" label="状态"><template slot-scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
         <fj-table-column prop="name" label="名称" ></fj-table-column>
         <fj-table-column prop="groupIndex" label="权限组" ></fj-table-column>
         <fj-table-column prop="description" label="描述" ></fj-table-column>

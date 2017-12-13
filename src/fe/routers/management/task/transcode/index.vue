@@ -33,16 +33,16 @@
     <template slot="table">
       <fj-table highlightKey="id" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" label="状态">
-          <template scope="props">
+          <template slot-scope="props">
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
         <fj-table-column prop="filePath" label="名称"></fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
-          <template scope="props">{{ props.row.createTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
         <fj-table-column prop="lastModify" width="160" label="修改时间">
-          <template scope="props">{{ props.row.lastModify | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.lastModify | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>

@@ -10,7 +10,7 @@
     <div v-if="searchOwner.length" class="manage-search-content">
       <fj-table :data="searchOwner" name="table" ref="table" @current-change="searchOwnerHandleCurrentChange" :showThead=false highlight-current-row>
         <fj-table-column prop="_id">
-          <template scope="props">
+          <template slot-scope="props">
             <div class="search-item-icon"><img class="search-item-icon-img" :src="props.row.photo ? props.row.photo : props.row.logo"></div>
             <span>{{props.row.name}}</span>
           </template>

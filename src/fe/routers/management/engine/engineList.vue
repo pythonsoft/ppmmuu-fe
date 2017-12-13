@@ -32,13 +32,13 @@
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" align="center" label="运行状态" >
-          <template scope="props">
+          <template slot-scope="props">
             <span :class="getRunStatus(props.row.command, props.row.modifyTime).css">{{ getRunStatus(props.row.command, props.row.modifyTime).text }}</span>
           </template>
         </fj-table-column>
         <fj-table-column prop="code" width="100" label="编号"></fj-table-column>
         <fj-table-column prop="name" label="名称">
-          <template scope="props">
+          <template slot-scope="props">
             {{ props.row.name }}
             <span v-if="props.row.installProgress && props.row.installProgress.percent !== 1" class="engine-install-status-tips">
               ({{ props.row.installProgress.step }} {{ props.row.installProgress.percent * 100 }} %)
@@ -47,13 +47,13 @@
         </fj-table-column>
         <fj-table-column prop="intranetIp" width="140" align="center" label="内网IP"></fj-table-column>
         <fj-table-column prop="isTest" width="90" align="center" label="测试机">
-          <template scope="props">{{ getTextByValue(props.row.isTest, 'isTest') }}</template>
+          <template slot-scope="props">{{ getTextByValue(props.row.isTest, 'isTest') }}</template>
         </fj-table-column>
         <fj-table-column prop="isVirtual" width="90" align="center" label="虚拟机">
-          <template scope="props">{{ getTextByValue(props.row.isVirtual, 'isVirtual') }}</template>
+          <template slot-scope="props">{{ getTextByValue(props.row.isVirtual, 'isVirtual') }}</template>
         </fj-table-column>
         <fj-table-column prop="modifyTime" width="160" align="center" label="上次活跃">
-          <template scope="props">{{ props.row.modifyTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.modifyTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>

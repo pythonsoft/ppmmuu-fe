@@ -523,7 +523,7 @@
           const resData = response.data;
           const newOption = {};
           // if (resData.constructor === Array && resData.length === 0) {
-          if (!resData.opinions) {
+          if (resData.opinions.length === 0) {
             this.showEmptySentiment = true;
             newOption.series = [{ data: [] }, { data: [] }];
             this.sentimentObj = {};

@@ -32,17 +32,17 @@
       <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
         <fj-table-column prop="status" label="状态" width="90">
-          <template scope="props"><div  v-html="formatStatus[props.row.status]"></div></template>
+          <template slot-scope="props"><div  v-html="formatStatus[props.row.status]"></div></template>
         </fj-table-column>
         <fj-table-column prop="companyName" label="公司名称"></fj-table-column>
         <fj-table-column prop="downloadSeconds" label="下载时长" width="120">
-          <template scope="props">{{transformSecondsToHours(props.row.downloadSeconds)}}</template>
+          <template slot-scope="props">{{transformSecondsToHours(props.row.downloadSeconds)}}</template>
         </fj-table-column>
         <fj-table-column prop="remainDownloadSeconds" label="剩余时长" width="120">
-          <template scope="props">{{transformSecondsToHours(props.row.remainDownloadSeconds)}}</template>
+          <template slot-scope="props">{{transformSecondsToHours(props.row.remainDownloadSeconds)}}</template>
         </fj-table-column>
         <fj-table-column prop="startTime" label="使用期限" width="340">
-          <template scope="props">{{formatTime(props.row.startTime) + '-' + formatTime(props.row.expiredTime)}}</template>
+          <template slot-scope="props">{{formatTime(props.row.startTime) + '-' + formatTime(props.row.expiredTime)}}</template>
         </fj-table-column>
       </fj-table>
     </template>

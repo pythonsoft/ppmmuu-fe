@@ -15,12 +15,12 @@
         <div v-if="permissions.length === 0">{{ tips }}</div>
         <fj-table v-else style="font-size: 12px;" :data="permissions" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
           <fj-table-column prop="acceptor" width="60" label="类型">
-            <template scope="props">
+            <template slot-scope="props">
               {{ getTargetType(props.row.acceptor.targetType) }}
             </template>
           </fj-table-column>
           <fj-table-column prop="acceptor" label="名称">
-            <template scope="props">
+            <template slot-scope="props">
               <span>{{ props.row.acceptor.name }}</span>
             </template>
           </fj-table-column>
