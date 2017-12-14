@@ -75,6 +75,10 @@
                 <td class="item-info-key">近线位置: </td>
                 <td class="item-info-value">{{ ARCHIVETYPE[file.ARCHIVETYPE].text }}</td>
               </tr>
+              <tr>
+                <td class="item-info-key">文件状态: </td>
+                <td class="item-info-value">{{ FILE_STATUS[file.STATUS].text }}</td>
+              </tr>
             </table>
             <more-view
               :info="file"
@@ -206,7 +210,8 @@
         programEmpty: false,
         FROM_WHERE: config.getConfig('FROM_WHERE'),
         UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE'),
-        ARCHIVETYPE: config.getConfig('ARCHIVETYPE')
+        ARCHIVETYPE: config.getConfig('ARCHIVETYPE'),
+        FILE_STATUS: config.getConfig('FILE_STATUS')
       };
     },
     watch: {

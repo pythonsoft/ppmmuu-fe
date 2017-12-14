@@ -80,8 +80,19 @@ config.UMP_FILETYPE = {
 };
 
 config.ARCHIVETYPE = {
-  0: { text: '帶庫', value: '0' },
+  0: { text: '带库', value: '0' },
   1: { text: 'UDS', value: '1' }
+};
+config.FILE_STATUS = {
+  0: { text: '不存在', value: '0' },
+  1: { text: '存在', value: '1' },
+  2: { text: '在线', value: '2' },
+  3: { text: '在线+近线', value: '3' },
+  4: { text: '在线+近线', value: '4' },
+  5: { text: '近线', value: '5' },
+  6: { text: '损坏', value: '6' },
+  7: { text: '在线+离线', value: '7' },
+  8: { text: '离线', value: '8' }
 };
 
 config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4'];
