@@ -295,6 +295,9 @@
       getDefaultMedia() {
         api.defaultMedia().then((res) => {
           this.defaultList = res.data;
+          if (res.data.length > 0) {
+            this.currentVideo = res.data[0].docs[0];
+          }
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -434,6 +437,11 @@
 
         api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
+          if (res.data.docs.length > 0) {
+            me.currentVideo = res.data.docs[0];
+          } else {
+            me.currentVideo = {};
+          }
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
         }).catch((error) => {
@@ -471,6 +479,11 @@
         formatMust(options.match, obj);
         api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
+          if (res.data.docs.length > 0) {
+            me.currentVideo = res.data.docs[0];
+          } else {
+            me.currentVideo = {};
+          }
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
         }).catch((error) => {

@@ -89,12 +89,11 @@
     },
     data() {
       return {
-        selectInfoId: ''
+        selectInfoId: this.currentItem && this.currentItem.id ? this.currentItem.id : ''
       };
     },
     watch: {
       currentItem(val) {
-        console.log('currentItem change', val);
         if (val && val.id) {
           this.selectInfoId = val.id;
         } else {

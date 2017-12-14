@@ -216,6 +216,13 @@
     },
     watch: {
       videoInfo(val) {
+        if (!val.id) {
+          this.item = {};
+          this.videoId = '';
+          this.rootid = '';
+          this.url = '';
+          return;
+        }
         this.title = this.getTitle(val);
         this.shelfName = this.title.replace(/<em>/g,'').replace(/<\/em>/g,'');
         if(this.shelfName.indexOf('.') !== -1) {
