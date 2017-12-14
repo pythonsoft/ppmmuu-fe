@@ -1,8 +1,8 @@
 <template>
-  <div class="watchContent">
+  <div :class="$style.watchContent">
     <div class="mainBox">
-      <div class="leftBox" ref="leftBox" :style="{ right: rightboxWidth }">
-        <div class="leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
+      <div :class="$style.leftBox" ref="leftBox" :style="{ right: rightboxWidth }">
+        <div :class="$style.leftBoxContent" :style="{ width: `${playerWidth+100}px` }">
           <player :videoId="objectId" :height="playerHeight" :width="playerWidth" :url="url" :streamInfo="streamInfo" mode="big" :fromWhere="fromWhere"></player>
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="name"></div>
@@ -12,8 +12,8 @@
               </li>
             </ul>
           </div>
-          <div class="leftBoxFooter">
-            <h3 class="footerTitle">更多节目</h3>
+          <div :class="$style.leftBoxFooter">
+            <h3 :class="$style.footerTitle">更多节目</h3>
             <grid-list-view
               :width="playerWidth"
               :items="items"
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="rightBox" :style="{ width: rightboxWidth }">
+      <div :class="$style.rightBox" :style="{ width: rightboxWidth }">
         <i class="iconfont rightBoxToggle" :class="rightBoxToggle" @click="foldedOrExpandRightBox"></i>
         <fj-tabs v-model="activeTabName" class="media-video-panel-wrap">
           <fj-tab-pane label="内容简介" name="tab1">
@@ -339,3 +339,56 @@
     }
   };
 </script>
+<style module>
+.watchContent {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 100;
+  background: #F8FAFB;
+}
+
+.rightBox {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: #F8FAFB;
+  border-left: 4px solid #F2F6FA;
+  font-size: 12px;
+  color: #2A3E52;
+  transition: width .4s cubic-bezier(0.23, 1, 0.32, 1) 100ms;
+}
+.leftBox {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+}
+.leftBoxContent {
+  margin: 0 auto;
+  padding: 14px 50px;
+}
+.footerTitle {
+  position: relative;
+  height: 20px;
+  margin-top: 20px;
+  margin-bottom: 14px;
+  padding-left: 9px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333333;
+}
+.footerTitle:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: #20A4F3;
+}
+</style>

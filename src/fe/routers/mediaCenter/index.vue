@@ -110,7 +110,7 @@
                 type="grid"
                 :width="listWidth"
                 :items="categoryItem.docs"
-                @currentItemChange="currentItemChange"
+                :current-item.sync="currentVideo"
               ></grid-list-view>
             </div>
           </div>
@@ -144,7 +144,7 @@
               :type="viewType"
               :width="listWidth"
               :items="items"
-              @currentItemChange="currentItemChange"
+              :current-item.sync="currentVideo"
             ></grid-list-view>
 
             <div class="media-pagination" v-if="items.length > 1">
@@ -479,9 +479,6 @@
       },
       handleCurrentPageChange(page) {
         this.getMediaList();
-      },
-      currentItemChange(item) {
-        this.currentVideo = item;
       }
     }
   };
