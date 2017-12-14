@@ -8,16 +8,16 @@
     <div class="task-slide-dialog-item-title">
       <div class="task-slide-dialog-item-bar">
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="stopBtn.disabled" :loading="stopBtn.loading" @click="stopClick">停止</fj-button>
+          <fj-button type="primary" size="mini" :disabled="stopBtn.disabled" :loading="stopBtn.loading" @click="stopClick">停止</fj-button>
         </span>
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="restartBtn.disabled" :loading="restartBtn.loading" @click="restartClick">重启</fj-button>
+          <fj-button type="primary" size="mini" :disabled="restartBtn.disabled" :loading="restartBtn.loading" @click="restartClick">重启</fj-button>
         </span>
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="detailBtn.disabled" :loading="detailBtn.loading" @click="detailClick">详细</fj-button>
+          <fj-button type="primary" size="mini" :disabled="detailBtn.disabled" :loading="detailBtn.loading" @click="detailClick">详细</fj-button>
         </span>
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="refreshBtn.disabled" :loading="refreshBtn.loading" @click="refreshClick">刷新</fj-button>
+          <fj-button type="primary" size="mini" :disabled="refreshBtn.disabled" :loading="refreshBtn.loading" @click="refreshClick">刷新</fj-button>
         </span>
       </div>
     </div>

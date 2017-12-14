@@ -21,11 +21,11 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">

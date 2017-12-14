@@ -2,7 +2,7 @@
   <div class="config-dialog-content">
     <div class="permission-operation">
       <span class="permission-title">权限项</span>
-      <fj-button type="info" size="mini" @click="addPermissionClick"  v-if="!readonly">增加</fj-button>
+      <fj-button type="primary" size="mini" @click="addPermissionClick"  v-if="!readonly">增加</fj-button>
       <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="deletePermissionDisabled"  v-if="!readonly">删除</fj-button>
     </div>
     <div class="permissions">

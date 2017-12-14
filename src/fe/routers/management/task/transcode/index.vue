@@ -21,13 +21,13 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="taskClick">任务详细</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">子任务详细</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="taskClick">任务详细</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">子任务详细</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
+        <fj-button type="primary" size="mini" @click="refreshClick">刷新</fj-button>
       </div>
     </template>
     <template slot="table">

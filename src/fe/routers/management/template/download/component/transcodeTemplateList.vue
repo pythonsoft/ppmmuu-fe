@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :style="{ lineHeight: '36px' }">
-      <fj-button type="info" size="mini" @click.stop.prevent="dialogVisible = true">增加</fj-button>
+      <fj-button type="primary" size="mini" @click.stop.prevent="dialogVisible = true">增加</fj-button>
       <fj-button type="danger" size="mini" @click.stop.prevent="deleteTemplate" :disabled="!deletable">删除</fj-button>
     </div>
     <div :style="{ borderTop: '1px solid #EBF3FB', marginTop: '20px' }">
@@ -24,7 +24,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <fj-button @click.stop.prevent="closeDialog">取消</fj-button><!--
-        --><fj-button type="info" @click.stop.prevent="addTemplate">添加</fj-button>
+        --><fj-button type="primary" @click.stop.prevent="addTemplate">添加</fj-button>
       </div>
     </fj-dialog>
   </div>

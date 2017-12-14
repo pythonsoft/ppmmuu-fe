@@ -5,8 +5,8 @@
             :visible.sync="manageSlideDialogVisible" @close="close">
       <div class="config-dialog-content">
         <div class="manage-operation">
-          <fj-button type="info" size="mini" @click="assignUserClick">添加用户</fj-button>
-          <fj-button type="info" size="mini" @click="assignGroupClick">添加组织</fj-button>
+          <fj-button type="primary" size="mini" @click="assignUserClick">添加用户</fj-button>
+          <fj-button type="primary" size="mini" @click="assignGroupClick">添加组织</fj-button>
           <fj-button type="danger" size="mini" @click="manageSearchDeleteClick" v-bind:disabled="manageSearchDeleteDisabled">移除</fj-button>
         </div>
         <div class="manage-search">

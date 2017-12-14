@@ -3,8 +3,8 @@
     <h1>引用策略（{{ name }}）</h1>
     <div class="config-dialog-content">
       <div class="permission-operation">
-        <fj-button type="info" size="mini" @click="addGroupDialogVisible=true">增加组织</fj-button>
-        <fj-button type="info" size="mini" @click="addUserClick">增加用户</fj-button>
+        <fj-button type="primary" size="mini" @click="addGroupDialogVisible=true">增加组织</fj-button>
+        <fj-button type="primary" size="mini" @click="addUserClick">增加用户</fj-button>
         <fj-button type="danger" size="mini" @click="deletePermissionClick" v-bind:disabled="selectedRows.length < 1">删除</fj-button>
       </div>
       <div class="permissions">

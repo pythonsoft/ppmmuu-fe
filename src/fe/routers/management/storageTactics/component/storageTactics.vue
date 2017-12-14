@@ -23,13 +23,13 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
+        <fj-button type="primary" size="mini" @click="addBtnClick">增加</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
       </div>
     </template>
     <template slot="table">

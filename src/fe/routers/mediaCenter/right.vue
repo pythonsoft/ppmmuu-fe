@@ -73,18 +73,18 @@
               </tr>
               <tr>
                 <td class="item-info-key">近线位置: </td>
-                <td class="item-info-value">{{ ARCHIVETYPE[file.ARCHIVETYPE].text }}</td>
+                <td class="item-info-value">{{ file.ARCHIVETYPE ? ARCHIVETYPE[file.ARCHIVETYPE].text : '' }}</td>
               </tr>
               <tr>
                 <td class="item-info-key">文件状态: </td>
-                <td class="item-info-value">{{ FILE_STATUS[file.STATUS].text }}</td>
+                <td class="item-info-value">{{ file.STATUS ? FILE_STATUS[file.STATUS].text : '' }}</td>
               </tr>
             </table>
             <more-view
               :info="file"
             ></more-view>
             <div class="media-center-operation-bar">
-              <fj-button type="info" size="mini" @click.stop=" prepareDownload(file)">下载</fj-button>
+              <fj-button type="primary" size="mini" @click.stop=" prepareDownload(file)">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>

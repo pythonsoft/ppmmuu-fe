@@ -1,10 +1,8 @@
 <template>
   <div>
     <fj-progress-bar></fj-progress-bar>
-    <div class="menu">
-      <left-menu :showMenuIndex="showMenuIndex">
-      </left-menu>
-    </div>
+    <left-menu :showMenuIndex="showMenuIndex">
+    </left-menu>
     <div class="main"><router-view></router-view></div>
   </div>
 </template>
