@@ -14,16 +14,16 @@
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="libraryDepartment" label="所属部门">
-          <template scope="props">{{ props.row.department.name || '-' }}</template>
+          <template slot-scope="props">{{ props.row.department.name || '-' }}</template>
         </fj-table-column>
         <fj-table-column prop="creator" width="120" label="创建人">
-          <template scope="props">{{ props.row.creator.name || '-' }}</template>
+          <template slot-scope="props">{{ props.row.creator.name || '-' }}</template>
         </fj-table-column>
         <fj-table-column prop="creator" width="120" label="来源">
-          <template scope="props">{{ props.row.source || '-' }}</template>
+          <template slot-scope="props">{{ props.row.source || '-' }}</template>
         </fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
-          <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>

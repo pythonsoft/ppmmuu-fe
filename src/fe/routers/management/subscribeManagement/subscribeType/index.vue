@@ -22,11 +22,11 @@
       <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
         <fj-table-column prop="photo" label="图标" width="50">
-          <template scope="props"><img class="subscribe-type-photo" :src="props.row.photo"></template>
+          <template slot-scope="props"><img class="subscribe-type-photo" :src="props.row.photo"></template>
         </fj-table-column>
         <fj-table-column prop="name" label="类型名"></fj-table-column>
         <fj-table-column prop="description" label="描述" width="200">
-          <template scope="props"><div class="subscribe-type-description">{{props.row.description}}</div></template>
+          <template slot-scope="props"><div class="subscribe-type-description">{{props.row.description}}</div></template>
         </fj-table-column>
       </fj-table>
     </template>

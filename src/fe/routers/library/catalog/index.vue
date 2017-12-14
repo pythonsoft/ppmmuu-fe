@@ -22,14 +22,14 @@
           panels="#/2,#-p0"
           direction="x"
         >
-          <template slot="0" scope="props">
+          <template slot="0" slot-scope="props">
             <panel-view
               :parentSize="{ width: props.width, height: props.height }"
               panels="#/5*3,#-p0"
               direction="y"
               name="child1"
             >
-              <template slot="0" scope="props">
+              <template slot="0" slot-scope="props">
                 <video-source-panel
                   :title="sourceTitle"
                   :videoId="sourceVideoId"
@@ -37,7 +37,7 @@
                   :size="{ width: props.width, height: props.height }"
                   @insert="importSource"></video-source-panel>
               </template>
-              <template slot="1" scope="props">
+              <template slot="1" slot-scope="props">
                 <div :style="{ width: '100%', height: '100%', overflow: 'auto' }">
                   <fj-tree
                     :data="catalogList"
@@ -48,7 +48,7 @@
               </template>
             </panel-view>
           </template>
-          <template slot="1" scope="props">
+          <template slot="1" slot-scope="props">
             <div :style="{ width: '100%', height: '100%', overflow: 'auto', position: 'absolute' }" ref="rightContent">
               <div class="catalogRightContent" v-if="currentCatalogId">
                 <h3>填写编目内容</h3>

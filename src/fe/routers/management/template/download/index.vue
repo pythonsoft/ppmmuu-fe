@@ -38,10 +38,10 @@
             <fj-table-column prop="_id" width="260" label="标识"></fj-table-column>
             <fj-table-column prop="name" label="名称"></fj-table-column>
             <fj-table-column width="100" label="类型">
-              <template scope="props">{{ getTextByValue(props.row.type, 'NODE_TEMPLATE') }}</template>
+              <template slot-scope="props">{{ getTextByValue(props.row.type, 'NODE_TEMPLATE') }}</template>
             </fj-table-column>
             <fj-table-column prop="createTime" width="160" label="创建时间">
-              <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+              <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
             </fj-table-column>
             <fj-table-column prop="description" width="240" label="描述"></fj-table-column>
           </fj-table>

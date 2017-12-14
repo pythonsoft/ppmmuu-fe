@@ -46,7 +46,6 @@
         <li v-for="(item, index) in articleList.slice(0, articleLength)" class="article-list-item">
           <div :style="{ overflow: 'hidden' }">
             <a :href="item.url" target="_blank" class="article-title" v-html="item.title"></a>
-            <!-- <a href="javascript:;" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a> -->
             <p class="article-abstract" v-html="item.summary"></p>
             <div class="article-footer">
               <div class="article-source-image">
@@ -61,13 +60,13 @@
       </ul>
       <div class="empty-box" v-show="articleList.length === 0">没有数据</div>
     </div>
-    <!-- <div class="topic-box board">
+    <div class="topic-box board">
       <div class="topic-box-header">
         <h3>传播路径分析</h3>
       </div>
       <div class="spread-path-chart-box" ref="spreadPathChart"></div>
       <div class="empty-box" v-show="showEmptySpreadPath">没有数据</div>
-    </div> -->
+    </div>
     <div class="topic-box board">
       <div class="topic-box-header">
         <h3>事件脉络</h3>
@@ -100,7 +99,6 @@
             <ul class="timeline-article-list" v-if="event.showArticleLength[date].show > 0">
               <li class="timeline-article-item" v-for="(article, articleIndex) in event.mailuo[date].slice(0, event.showArticleLength[date].show)">
                 <a :href="article.url" target="_blank" class="timeline-article-title">{{ article.title }}</a>
-                <!-- <a href="javascript:;" class="timeline-article-title" @click="showWebBrowser(article.title, article.url)">{{ article.title }}</a> -->
                 <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
                 <span
                   class="article-view-more"
@@ -226,13 +224,13 @@
       this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue', { height: chartHeight });
       this.geoChart.setOption(geoOption);
 
-      // this.spreadPathChart = echarts.init(
-      //   this.$refs.spreadPathChart,
-      //   'umpBlue',
-      //   { height: chartHeight }
-      // );
-      // spreadPathOption.title = {};
-      // this.spreadPathChart.setOption(spreadPathOption);
+      this.spreadPathChart = echarts.init(
+        this.$refs.spreadPathChart,
+        'umpBlue',
+        { height: chartHeight }
+      );
+      spreadPathOption.title = {};
+      this.spreadPathChart.setOption(spreadPathOption);
 
       this.spreadTrendChart = echarts.init(
         this.$refs.spreadTrendChart,
@@ -307,7 +305,7 @@
         this.updateGeoData({ history: this.activeHistoryType, keyword: v });
         this.updateTrends({ keyword: v });
         this.updateTimeline({ keyword: v });
-        // this.updateSpreadPathData({ keyword: v });
+        this.updateSpreadPathData({ keyword: v });
         this.updateOpinion({ keyword: v });
       },
       updateGeoData(reqData) {
@@ -341,7 +339,7 @@
       },
       updateSpreadPathData(reqData) {
         this.spreadPathChart.showLoading({ color: '#38B1EB' });
-        BigdataAPI.getRealtimeFlowSpread({ params: reqData })
+        BigdataAPI.getRealtimeFlowSpread({ params: Object.assign(reqData, { sourceSize: 3, targetSize: 30 }) })
         .then((response) => {
           const resData = response.data;
           const newOption = {};
@@ -351,7 +349,7 @@
           } else {
             this.showEmptySpreadPath = false;
             newOption.series = [{
-              data: convertGraph(resData.content_graph).nodes,
+              data: convertGraph(resData.content_graph, 3, 30).nodes,
               edges: resData.content_graph.links
             }];
           }
@@ -367,7 +365,7 @@
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          if (!resData.opinions) {
+          if (resData.opinions.length === 0) {
             this.showEmptySentiment = true;
             newOption.series = [{ data: [] }, { data: [] }];
             this.sentimentObj = {};

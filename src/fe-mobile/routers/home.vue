@@ -1,5 +1,5 @@
 <template>
-  <div :class="['root', {'ShowSearchCondition': isShowSearchCondition}]">
+  <div :class="['root', {'cannotScroll': isShowSearchCondition}]" id="root">
     <fj-header
       title="凤凰卫视全媒体平台"
       v-model="tempKeyword"
