@@ -11,22 +11,22 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
+        <fj-button type="primary" size="mini" @click="addBtnClick">增加</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="installBtnClick">安装</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="stopBtnClick">停止</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="rebootBtnClick">重启</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="installBtnClick">安装</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="stopBtnClick">停止</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="rebootBtnClick">重启</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="configBtnClick">配置管理</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="statusBtnClick">运行状态</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="monitorBtnClick">服务监控</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="configBtnClick">配置管理</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="statusBtnClick">运行状态</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="monitorBtnClick">服务监控</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="refreshBtnClick">刷新</fj-button>
+        <fj-button type="primary" size="mini" @click="refreshBtnClick">刷新</fj-button>
       </div>
     </template>
     <template slot="table">

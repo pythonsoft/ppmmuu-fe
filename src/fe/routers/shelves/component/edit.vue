@@ -3,11 +3,11 @@
     <template slot="search-left">编辑中</template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="handleClickSave">保存</fj-button>
-        <fj-button type="info" size="mini" @click="handleClickSubmit">提交</fj-button>
+        <fj-button type="primary" size="mini" @click="handleClickSave">保存</fj-button>
+        <fj-button type="primary" size="mini" @click="handleClickSubmit">提交</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="handleClickCancel">取消</fj-button>
+        <fj-button type="primary" size="mini" @click="handleClickCancel">取消</fj-button>
       </div>
     </template>
     <template slot="table">

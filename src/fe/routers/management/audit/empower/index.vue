@@ -3,12 +3,12 @@
     <template slot="search-left">审核授权</template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="addClick">添加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="updateClick">变更</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
+        <fj-button type="primary" size="mini" @click="addClick">添加</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="updateClick">变更</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
+        <fj-button type="primary" size="mini" @click="refreshClick">刷新</fj-button>
       </div>
     </template>
     <template slot="table">

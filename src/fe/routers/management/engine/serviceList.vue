@@ -15,7 +15,7 @@
       </div>
     </template>
     <template slot="operation">
-      <fj-button type="info" size="mini" @click="showProperty" v-bind:disabled="isDisabled">属性</fj-button>
+      <fj-button type="primary" size="mini" @click="showProperty" v-bind:disabled="isDisabled">属性</fj-button>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>

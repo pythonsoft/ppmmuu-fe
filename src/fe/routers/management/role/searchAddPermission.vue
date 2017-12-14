@@ -17,7 +17,7 @@
     </div>
     <div slot="footer" class="dialog-footer">
       <fj-button @click="close">取消</fj-button><!--
-      --><fj-button type="info" @click="addAllowedClick">添加允许权限</fj-button><!--
+      --><fj-button type="primary" @click="addAllowedClick">添加允许权限</fj-button><!--
       --><fj-button type="danger" @click="addDeniedClick">添加拒绝权限</fj-button>
     </div>
 
