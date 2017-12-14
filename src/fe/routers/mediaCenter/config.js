@@ -79,6 +79,11 @@ config.UMP_FILETYPE = {
   OTHER: '4' // 其它
 };
 
+config.ARCHIVETYPE = {
+  0: { text: '帶庫', value: '0' },
+  1: { text: 'UDS', value: '1' }
+};
+
 config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4'];
 
 method.getTextByValue = function (v, st) {
