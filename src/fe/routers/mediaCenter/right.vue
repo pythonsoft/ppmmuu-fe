@@ -73,11 +73,11 @@
               </tr>
               <tr>
                 <td class="item-info-key">近线位置: </td>
-                <td class="item-info-value">{{ ARCHIVETYPE[file.ARCHIVETYPE].text }}</td>
+                <td class="item-info-value">{{ file.ARCHIVETYPE ? ARCHIVETYPE[file.ARCHIVETYPE].text : '' }}</td>
               </tr>
               <tr>
                 <td class="item-info-key">文件状态: </td>
-                <td class="item-info-value">{{ FILE_STATUS[file.STATUS].text }}</td>
+                <td class="item-info-value">{{ file.STATUS ? FILE_STATUS[file.STATUS].text : '' }}</td>
               </tr>
             </table>
             <more-view
