@@ -13,8 +13,11 @@
       <fj-form-item label="来源" prop="source">
         <fj-input v-model="formData.source"></fj-input>
       </fj-form-item>
-      <fj-form-item label="高清后缀名">
-        <fj-input v-model="formData.hdExt"></fj-input>
+      <fj-form-item label="windows路径">
+        <fj-input v-model="formData.windowsPath"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="linux路径">
+        <fj-input v-model="formData.linuxPath"></fj-input>
       </fj-form-item>
       <fj-form-item label="所属部门">
         <div class="library-bucket-input">
@@ -28,22 +31,38 @@
         </div>
         <fj-button @click.stop.prevent="bucketBrowserVisible=true">修改</fj-button>
       </fj-form-item>
-      <fj-form-item label="转码模版">
-        <transcode-template-list
-          :data="formData.transcodeTemplateDetail.templatesId"
-          @add-template="addTemplate"
-          @delete-template="deleteTemplate"
-        ></transcode-template-list>
+      <fj-form-item label="高码流模板">
+        <div class="library-bucket-input">
+          <fj-input v-model="formData.highTemplate.name" :readonly="true"></fj-input>
+        </div>
+        <fj-button @click.stop.prevent="updateHighTranscodeTemplate()">修改</fj-button>
       </fj-form-item>
-      <fj-form-item label="转码脚本">
-        <fj-input type="textarea" :rows="7" v-model="formData.transcodeTemplateDetail.script"></fj-input>
-        <p class="template-download-link" @click="transcodeScriptDialogVisible=true">* 查看脚本说明</p>
+      <fj-form-item label="文件后缀">
+        <fj-input v-model="formData.highBitrateStandard.fileFomart" placeholder="高码流文件后缀,如(mxf)"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="视频编码">
+        <fj-input v-model="formData.highBitrateStandard.videoCode" placeholder="如(mpeg2video)"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="码率">
+        <fj-input v-model="formData.highBitrateStandard.bitrate"  placeholder="如(50000000)"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="低码流模板">
+        <div class="library-bucket-input">
+          <fj-input v-model="formData.lowTemplate.name" :readonly="true"></fj-input>
+        </div>
+        <fj-button @click.stop.prevent="updateLowTranscodeTemplate()">修改</fj-button>
+      </fj-form-item>
+      <fj-form-item label="文件后缀">
+        <fj-input v-model="formData.lowBitrateStandard.fileFomart" placeholder="低码流文件后缀,如(mp4)"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="视频编码">
+        <fj-input v-model="formData.lowBitrateStandard.videoCode" placeholder="如(libx264)"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="码率">
+        <fj-input v-model="formData.lowBitrateStandard.bitrate"  placeholder="如(1500000)"></fj-input>
       </fj-form-item>
     </fj-form>
     <add-group :visible.sync="addGroupDialogVisible"  @add-owner="addOwner" :title="addGroupDialogTitle"></add-group>
-    <transcode-script-dialog-view
-      :visible.sync="transcodeScriptDialogVisible"
-    ></transcode-script-dialog-view>
     <div class="library-dialog-footer">
       <fj-button @click="close">取消</fj-button>
       <fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
@@ -52,24 +71,39 @@
             :visible.sync="bucketBrowserVisible"
             @confirm="bucketConfirm"
     ></bucket-browser-view>
+    <transcode-browser-view
+            :visible.sync="transcodeBrowserVisible"
+            @confirm="transcodeConfirm"
+    ></transcode-browser-view>
   </fj-slide-dialog>
 </template>
 <script>
   import '../index.css';
   import AddGroup from '../../../role/searchAddGroup';
   import bucketBrowserView from '../../../bucket/component/browser';
-  import transcodeTemplateList from '../../../template/download/component/transcodeTemplateList';
-  import transcodeScriptDialogView from '../../../template/download/component/transcodeScriptDialog';
+  import transcodeBrowserView from '../../../template/download/component/transcodeBrowser';
 
   const api = require('../../../../../api/library');
+
+  const templateInfo = {
+    _id: '',
+    source: '',
+    bucketId: '',
+    department: { _id: '', name: '' },
+    highTemplate: { _id: '', name: '' },
+    lowTemplate: { _id: '', name: '' },
+    windowsPath: '',
+    linuxPath: '',
+    highBitrateStandard: { fileFomart: 'mxf', videoCode: 'mpeg2video', bitrate: '50000000' },
+    lowBitrateStandard: { fileFomart: 'mp4', videoCode: 'libx264', bitrate: '1500000' }
+  };
 
   export default {
     name: 'libraryDialog',
     components: {
       'add-group': AddGroup,
-      'transcode-template-list': transcodeTemplateList,
-      'transcode-script-dialog-view': transcodeScriptDialogView,
-      'bucket-browser-view': bucketBrowserView
+      'bucket-browser-view': bucketBrowserView,
+      'transcode-browser-view': transcodeBrowserView
     },
     props: {
       libraryInfo: Object,
@@ -92,9 +126,8 @@
       },
       libraryInfo(v) {
         if(v) {
-          this.formData = Object.assign({}, v);
+          this.formData = Object.assign({}, templateInfo, v);
           this.formData.bucketId = this.formData.bucketId || '';
-          this.formData.hdExt = this.formData.hdExt.join(',');
         }else {
           this.initParam();
         }
@@ -103,23 +136,14 @@
     data() {
       return {
         bucketBrowserVisible: false,
-        transcodeScriptDialogVisible: false,
+        transcodeBrowserVisible: false,
         dialogVisible: false,
+        isUpdateHighTemplate: true,
         title: '',
         departmentVisible: false,
-        formData: {
-          _id: '',
-          source: '',
-          bucketId: '',
-          department: { _id: '', name: '' },
-          hdExt: '',
-          transcodeTemplateDetail: { script: '', templatesId: [] }
-        },
+        formData: JSON.parse(JSON.stringify(templateInfo)),
         isBtnLoading: false,
         rules: {
-          ownerName: [
-            { required: true, message: '请输入名称' }
-          ],
           bucketId: [
             { required: true, message: '请选择存储区' }
           ],
@@ -132,14 +156,7 @@
     },
     methods: {
       initParam() {
-        this.formData = {
-          _id: '',
-          source: '',
-          bucketId: '',
-          department: { _id: '', name: '' },
-          hdExt: '',
-          transcodeTemplateDetail: { script: '', templatesId: [] }
-        };
+        this.formData = JSON.parse(JSON.stringify(templateInfo));
       },
       close() {
         this.dialogVisible = false;
@@ -159,15 +176,9 @@
         });
       },
       composeData() {
-        return {
-          _id: this.formData._id,
-          source: this.formData.source,
-          departmentId: this.formData.department._id,
-          hdExt: this.formData.hdExt,
-          transcodeScript: this.formData.transcodeTemplateDetail.script,
-          transcodeTemplates: JSON.stringify(this.formData.transcodeTemplateDetail.templatesId),
-          bucketId: this.formData.bucketId
-        }
+        const rs = Object.assign({}, this.formData);
+        rs.departmentId = rs.department._id || '';
+        return rs;
       },
       add() {
         const me = this;
@@ -197,18 +208,13 @@
 
         return false;
       },
-      deleteTemplate(rows) {
-        rows.forEach(item => {
-          const index = this.formData.transcodeTemplateDetail.templatesId.indexOf(item);
-          if (index > -1) {
-            this.formData.transcodeTemplateDetail.templatesId.splice(index, 1);
-          }
-        });
+      updateHighTranscodeTemplate(){
+        this.transcodeBrowserVisible = true;
+        this.isUpdateHighTemplate = true;
       },
-      addTemplate(rows) {
-        rows.forEach((item) => {
-          this.formData.transcodeTemplateDetail.templatesId.push(item);
-        });
+      updateLowTranscodeTemplate(){
+        this.transcodeBrowserVisible = true;
+        this.isUpdateHighTemplate = false;
       },
       updateDepartmentClick(){
         this.addGroupDialogVisible = true;
@@ -222,6 +228,19 @@
       bucketConfirm(val) {
         this.formData.bucketId = val._id;
       },
+      transcodeConfirm(val) {
+        if(this.isUpdateHighTemplate){
+          this.formData.highTemplate = {
+            _id: val._id,
+            name: val.name
+          }
+        }else{
+          this.formData.lowTemplate = {
+            _id: val._id,
+            name: val.name
+          }
+        }
+      }
     }
   };
 </script>
