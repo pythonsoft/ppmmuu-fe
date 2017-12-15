@@ -94,3 +94,10 @@
     }
   };
 </script>
+
+<style>
+  .bucket-browser-content {
+    overflow: scroll;
+    max-height: 500px;
+  }
+</style>
