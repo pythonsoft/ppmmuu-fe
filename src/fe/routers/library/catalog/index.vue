@@ -94,7 +94,7 @@
                   <template v-for="radioField in radioFields">
                     <fj-form-item :label="radioField.label" :prop="radioField.key">
                       <div class="clearfix">
-                        <fj-radio-group v-model="formData[radioField.key]">
+                        <fj-radio-group v-model="formData[radioField.key]" custom-class="radio-group">
                            <template v-for="item in radioField.items">
                              <div class="catalog-checkbox">
                                <fj-radio :label="item.value">{{item.label}}</fj-radio>
