@@ -93,15 +93,11 @@
                   </template>
                   <template v-for="radioField in radioFields">
                     <fj-form-item :label="radioField.label" :prop="radioField.key">
-                      <div class="clearfix">
-                        <fj-radio-group v-model="formData[radioField.key]" custom-class="radio-group">
-                           <template v-for="item in radioField.items">
-                             <div class="catalog-checkbox">
-                               <fj-radio :label="item.value">{{item.label}}</fj-radio>
-                             </div>
-                           </template>
-                        </fj-radio-group>
-                      </div>
+                      <fj-radio-group v-model="formData[radioField.key]" custom-class="radio-group">
+                         <template v-for="item in radioField.items">
+                           <fj-radio :label="item.value">{{item.label}}</fj-radio>
+                         </template>
+                      </fj-radio-group>
                     </fj-form-item>
                   </template>
                   <fj-form-item label="内容" prop="content">

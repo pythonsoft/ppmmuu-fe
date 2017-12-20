@@ -8,7 +8,7 @@
     <fj-table style="font-size: 12px;" :data="parentInfoMap" name="table" ref="table">
       <fj-table-column prop="key" width="100" label="key"></fj-table-column>
       <fj-table-column prop="value" label="value">
-        <template scope="props">
+        <template slot-scope="props">
             <span style="word-break: break-all;word-wrap: break-word;">
               {{ props.row.value }}
             </span>

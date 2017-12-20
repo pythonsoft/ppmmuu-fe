@@ -8,35 +8,35 @@
     <div class="task-slide-dialog-item-title">
       <div class="task-slide-dialog-item-bar">
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="stopBtn.disabled" :loading="stopBtn.loading" @click="stopClick">停止</fj-button>
+          <fj-button type="primary" size="mini" :disabled="stopBtn.disabled" :loading="stopBtn.loading" @click="stopClick">停止</fj-button>
         </span>
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="restartBtn.disabled" :loading="restartBtn.loading" @click="restartClick">重启</fj-button>
+          <fj-button type="primary" size="mini" :disabled="restartBtn.disabled" :loading="restartBtn.loading" @click="restartClick">重启</fj-button>
         </span>
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="detailBtn.disabled" :loading="detailBtn.loading" @click="detailClick">详细</fj-button>
+          <fj-button type="primary" size="mini" :disabled="detailBtn.disabled" :loading="detailBtn.loading" @click="detailClick">详细</fj-button>
         </span>
         <span class="layout-btn-mini-margin">
-          <fj-button type="info" size="mini" :disabled="refreshBtn.disabled" :loading="refreshBtn.loading" @click="refreshClick">刷新</fj-button>
+          <fj-button type="primary" size="mini" :disabled="refreshBtn.disabled" :loading="refreshBtn.loading" @click="refreshClick">刷新</fj-button>
         </span>
       </div>
     </div>
 
     <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
       <fj-table-column prop="_type" width="100" align="center" label="类型">
-        <template scope="props">
+        <template slot-scope="props">
           {{ getTaskType(props.row._type).text }}
         </template>
       </fj-table-column>
       <fj-table-column prop="status" width="50" align="center" label="状态">
-        <template scope="props">
+        <template slot-scope="props">
           <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
         </template>
       </fj-table-column>
       <fj-table-column prop="filePath" width="220" label="路径"></fj-table-column>
       <fj-table-column prop="position" width="80" label="进度(%)" align="center"></fj-table-column>
       <fj-table-column prop="createTime" width="140" align="center" label="创建时间">
-        <template scope="props">{{ parentInfo.createTime | formatTime }}</template>
+        <template slot-scope="props">{{ parentInfo.createTime | formatTime }}</template>
       </fj-table-column>
     </fj-table>
 
@@ -49,7 +49,7 @@
       <fj-table style="font-size: 12px;" :data="childTaskData" name="table" ref="table">
         <fj-table-column prop="key" width="100" label="key"></fj-table-column>
         <fj-table-column prop="value" label="value">
-          <template scope="props">
+          <template slot-scope="props">
             <div>{{ props.row.value }}</div>
           </template>
         </fj-table-column>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['root', {'ShowSearchCondition': isShowSearchCondition}]">
+  <div :class="['root', {'cannotScroll': isShowSearchCondition}]" id="root">
     <fj-header
       title="凤凰卫视全媒体平台"
       v-model="tempKeyword"
@@ -401,11 +401,11 @@
         const f_date_162 = getTimeRange([
           this.datetimerange1.start,
           this.datetimerange1.end
-        ], 'f_date_162'); // 新聞日期
+        ], 'news_data'); // 新聞日期
         const f_date_36 = getTimeRange([
           this.datetimerange2.start,
           this.datetimerange2.end
-        ], 'f_date_36'); // 首播日期
+        ], 'airdata'); // 首播日期
         options.range.push(f_date_162);
         options.range.push(f_date_36);
         getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
@@ -443,7 +443,7 @@
               }
             }
           } else {
-            formatMust(options.should, { name: this.keyword });
+            formatMust(options.should, { full_name: this.keyword });
           }
         } else {
           if (!options.sort.length) {

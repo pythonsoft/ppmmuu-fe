@@ -25,12 +25,12 @@
         <template slot="search-left">下载模板管理</template>
         <template slot="operation">
           <div class="operation-btn-group">
-            <fj-button type="info" size="mini" @click="addClick">添加</fj-button>
-            <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="updateClick">变更</fj-button>
-            <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
+            <fj-button type="primary" size="mini" @click="addClick">添加</fj-button>
+            <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="updateClick">变更</fj-button>
+            <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
           </div>
           <div class="operation-btn-group">
-            <fj-button type="info" size="mini" @click="handleClickSearch">刷新</fj-button>
+            <fj-button type="primary" size="mini" @click="handleClickSearch">刷新</fj-button>
           </div>
         </template>
         <template slot="table">
@@ -38,10 +38,10 @@
             <fj-table-column prop="_id" width="260" label="标识"></fj-table-column>
             <fj-table-column prop="name" label="名称"></fj-table-column>
             <fj-table-column width="100" label="类型">
-              <template scope="props">{{ getTextByValue(props.row.type, 'NODE_TEMPLATE') }}</template>
+              <template slot-scope="props">{{ getTextByValue(props.row.type, 'NODE_TEMPLATE') }}</template>
             </fj-table-column>
             <fj-table-column prop="createTime" width="160" label="创建时间">
-              <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+              <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
             </fj-table-column>
             <fj-table-column prop="description" width="240" label="描述"></fj-table-column>
           </fj-table>

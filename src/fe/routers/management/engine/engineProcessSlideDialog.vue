@@ -8,7 +8,7 @@
     <div class="engine-setting">
       <div class="engine-setting-bar">
         <span class="engine-setting-bar-title">功能项</span>
-        <fj-button type="info" size="mini" :disabled="isDisable" @click="exec">执行</fj-button>
+        <fj-button type="primary" size="mini" :disabled="isDisable" @click="exec">执行</fj-button>
       </div>
       <div class="engine-setting-list">
         <fj-table :data="tableData" name="table" ref="table" @current-change="selectionChange" highlight-current-row>

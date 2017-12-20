@@ -21,40 +21,40 @@
       </template>
       <template slot="operation">
         <div class="operation-btn-group">
-          <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
+          <fj-button type="primary" size="mini" @click="addBtnClick">增加</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
         </div>
         <div class="operation-btn-group">
-          <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editPathClick">配置路径</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editTacticsClick">配置策略</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="editPathClick">配置路径</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="editTacticsClick">配置策略</fj-button>
         </div>
         <div class="operation-btn-group">
-          <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="setEnableClick">启用</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="setDisableClick">挂起</fj-button>
         </div>
       </template>
       <template slot="table">
         <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
           <fj-table-column prop="status" width="90" align="center" label="状态" >
-            <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
+            <template slot-scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
           </fj-table-column>
           <fj-table-column prop="_id" width="150" label="标识" ></fj-table-column>
           <fj-table-column prop="name" label="名称"></fj-table-column>
           <fj-table-column prop="type" label="存储类型">
-            <template scope="props">{{ formatType(props.row.type) }}</template>
+            <template slot-scope="props">{{ formatType(props.row.type) }}</template>
           </fj-table-column>
           <fj-table-column prop="permission" label="读写权限">
-            <template scope="props">{{ formatPermission(props.row.permission) }}</template>
+            <template slot-scope="props">{{ formatPermission(props.row.permission) }}</template>
           </fj-table-column>
           <fj-table-column prop="creator" label="创建人">
-            <template scope="props">{{ props.row.creator.name }}</template>
+            <template slot-scope="props">{{ props.row.creator.name }}</template>
           </fj-table-column>
           <fj-table-column prop="createdTime" width="160" align="center" label="创建时间">
-            <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+            <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
           </fj-table-column>
           <fj-table-column prop="modifyTime" width="160" align="center" label="修改时间">
-            <template scope="props">{{ props.row.modifyTime | formatTime }}</template>
+            <template slot-scope="props">{{ props.row.modifyTime | formatTime }}</template>
           </fj-table-column>
         </fj-table>
       </template>

@@ -11,11 +11,11 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -23,7 +23,7 @@
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
         <fj-table-column prop="name" label="节目名称"></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
-        <fj-table-column prop="operationTime" label="操作时间" width="160"><template scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
+        <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination">

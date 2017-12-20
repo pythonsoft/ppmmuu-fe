@@ -12,6 +12,7 @@
         :width="listWidth"
         :items="items"
         @deleteItem="deleteItem"
+        :current-item.sync="currentVideo"
         @currentItemChange="currentItemChange"
       ></grid-list-view>
       <div :class="$style.pagination" v-show="items.length">
@@ -45,7 +46,8 @@
         currentPage: 1,
         clearHistoryDialogVisible: false,
         isClearBtnLoading: false,
-        visible: true
+        visible: true,
+        currentVideo: {}
       };
     },
     mounted() {
@@ -86,6 +88,9 @@
       },
       currentItemChange(item) {
         this.$router.push({ name: 'historyWatch', params: { objectId: item.id, fromWhere: item.from_where } });
+        this.$nextTick(()=> {
+          this.currentVideo = {};
+        });
       },
       deleteItem(item) {
         const id = item._id;

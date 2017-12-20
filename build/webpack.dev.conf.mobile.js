@@ -6,6 +6,7 @@ var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 var config = require('./config-mobile');
 var AssetsPlugin = require('assets-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var baseWebpackConfig = require('./webpack.base.conf.mobile');
 
 // ......
@@ -50,6 +51,9 @@ module.exports = merge(baseWebpackConfig, {
   },
   plugins: [
     // new BundleAnalyzerPlugin(),
+    // new BrowserSyncPlugin({
+    //   port: 8001
+    // }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({

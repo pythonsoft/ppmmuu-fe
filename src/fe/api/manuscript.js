@@ -1,76 +1,10 @@
 const api = {};
 const axios = require('../config');
 
-api.getTagsConfig = function getTagsConfig(data, scope) {
+api.addManuscript = function addManuscript(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/manuscript/getTagsConfig', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getManuscriptConfig = function getManuscriptConfig(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/manuscript/getManuscriptConfig', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getManuscript = function getManuscript(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/manuscript/getManuscript', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.addOrUpdateManuscript = function addOrUpdateManuscript(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.post('/manuscript/addOrUpdate', data).then((response) => {
+    axios.post('/manuscript/add', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -133,10 +67,10 @@ api.getManuscript = function getManuscript(data, scope) {
   });
 };
 
-api.changeManuscriptStatus = function changeManuscriptStatus(data, scope) {
+api.updateManuscript = function updateManuscript(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/manuscript/changeManuscriptStatus', data).then((response) => {
+    axios.post('/manuscript/updateManuscript', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -155,10 +89,10 @@ api.changeManuscriptStatus = function changeManuscriptStatus(data, scope) {
   });
 };
 
-api.clearAll = function clearAll(data, scope) {
+api.changeManuscriptStatus = function changeManuscriptStatus(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/manuscript/clearAll', data).then((response) => {
+    axios.post('/manuscript/changeManuscriptStatus', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -247,50 +181,6 @@ api.hongKongSimplified = function hongKongSimplified(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/manuscript/hongKongSimplified', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getGroupList = function getGroupList(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/manuscript/listGroup', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.getGroupUserList = function getGroupUserList(data, scope) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/manuscript/listUser', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
