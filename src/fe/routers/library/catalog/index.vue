@@ -22,14 +22,14 @@
           panels="#/2,#-p0"
           direction="x"
         >
-          <template slot="0" slot-scope="props">
+          <template slot="0" scope="props">
             <panel-view
               :parentSize="{ width: props.width, height: props.height }"
               panels="#/5*3,#-p0"
               direction="y"
               name="child1"
             >
-              <template slot="0" slot-scope="props">
+              <template slot="0" scope="props">
                 <video-source-panel
                   :title="sourceTitle"
                   :videoId="sourceVideoId"
@@ -37,7 +37,7 @@
                   :size="{ width: props.width, height: props.height }"
                   @insert="importSource"></video-source-panel>
               </template>
-              <template slot="1" slot-scope="props">
+              <template slot="1" scope="props">
                 <div :style="{ width: '100%', height: '100%', overflow: 'auto' }">
                   <fj-tree
                     :data="catalogList"
@@ -48,7 +48,7 @@
               </template>
             </panel-view>
           </template>
-          <template slot="1" slot-scope="props">
+          <template slot="1" scope="props">
             <div :style="{ width: '100%', height: '100%', overflow: 'auto', position: 'absolute' }" ref="rightContent">
               <div class="catalogRightContent" v-if="currentCatalogId">
                 <h3>填写编目内容</h3>
@@ -93,15 +93,11 @@
                   </template>
                   <template v-for="radioField in radioFields">
                     <fj-form-item :label="radioField.label" :prop="radioField.key">
-                      <div class="clearfix">
-                        <fj-radio-group v-model="formData[radioField.key]">
-                           <template v-for="item in radioField.items">
-                             <div class="catalog-checkbox">
-                               <fj-radio :label="item.value">{{item.label}}</fj-radio>
-                             </div>
-                           </template>
-                        </fj-radio-group>
-                      </div>
+                      <fj-radio-group v-model="formData[radioField.key]" custom-class="radio-group">
+                         <template v-for="item in radioField.items">
+                           <fj-radio :label="item.value">{{item.label}}</fj-radio>
+                         </template>
+                      </fj-radio-group>
                     </fj-form-item>
                   </template>
                   <fj-form-item label="内容" prop="content">
