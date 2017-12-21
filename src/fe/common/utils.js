@@ -354,11 +354,10 @@ utils.formatDuration = function formatDuration(duration, needMiniSeconds = false
   duration %= 60 * 1000;
   const seconds = Math.floor(duration / 1000);
   duration %= 1000;
-  if(needMiniSeconds && duration !== 0){
+  if (needMiniSeconds && duration !== 0) {
     return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}.${Math.round(duration)}`;
-  }else {
-    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
   }
+  return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
 };
 
 utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {

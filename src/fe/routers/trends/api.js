@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
   withCredentials: true,
   headers: {
     common: {
-      'Authorization': 'JWT ' + jswToken
+      Authorization: `JWT ${jswToken}`
     }
   }
 });

@@ -36,7 +36,7 @@ class TransferTask {
         index: i,
         retryTime: 0,
         info: {},
-        log: [],
+        log: []
       };
     }
 
@@ -44,7 +44,6 @@ class TransferTask {
   }
 
   _generateHeaderPackage() {
-
     const size = this.settings.size;
     const headerPackageInfo = {
       _id: this.settings._id,
@@ -57,7 +56,7 @@ class TransferTask {
       createdTime: '',
       eachPackageSize: 1024 * 1024 * 5,
       packageCount: 0,
-      order: [], // child task uuid list
+      order: [] // child task uuid list
     };
     headerPackageInfo.packageCount = ((size / headerPackageInfo.eachPackageSize) | 0) + (size % headerPackageInfo.eachPackageSize === 0 ? 0 : 1);
     for (let i = 0, len = headerPackageInfo.packageCount; i < len; i++) {

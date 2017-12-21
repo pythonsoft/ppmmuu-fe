@@ -139,9 +139,11 @@
   import ConfigDialog from './component/copyConfigDialog';
   import manuscriptAPI from '../../api/manuscript';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
-  import { formatTime, getItemFromLocalStorage } from '../../common/utils';
+  import { formatTime, getItemFromLocalStorage, formatSize } from '../../common/utils';
 
   const fileClient = require('../../common/client');
+
+  const FILE_SIZE_LIMIT = 700 * 1024 * 1024;
 
   const MENU = [
     { title: '我的稿件',
@@ -470,6 +472,14 @@
       chooseFiles(event) {
         const files = event.target.files;
         const attachments = this.transferAttachments[this.copyContent._id] ? this.transferAttachments[this.copyContent._id] : [];
+        let totalSize = 0;
+        for (let i = 0, len = files.length; i < len; i++) {
+          totalSize += files[i].size;
+        }
+        if(totalSize >= FILE_SIZE_LIMIT){
+          this.$message.error(`正在传输的文件总大小限制为${formatSize(FILE_SIZE_LIMIT)}`);
+          return;
+        }
         for (let i = 0, len = files.length; i < len; i++) {
           const task = new fileClient({
             file: files[i],
