@@ -1,0 +1,469 @@
+<template>
+  <div :style="{ width: '100%', height: '100%' }">
+    <div class="copy-menu">
+      <div class="copy-menu-btn">
+        <fj-button type="primary" @click="createCopy"><i class="iconfont icon-edit"></i>写稿件</fj-button>
+      </div>
+      <ul class="copy-menu-list">
+        <li v-for="group in MENU">
+          <div class="copy-menu-group-title">
+            <i
+              :class="'tri-bottom'"></i>
+            {{ group.title }}
+          </div>
+          <ul>
+            <li
+              class="copy-menu-item"
+              :class="{ 'active': activeMenu === item.route }"
+              v-for="item in group.children"
+              @click="handleClickMenu(item.route)">
+              {{ item.text }}
+              <span class="copy-menu-count">{{ item.count }}</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="copy-list" ref="copyList">
+      <div class="copy-search-wrap">
+        <fj-select
+          remote
+          :parent-el="selectParentEl"
+          :clear-history-method="clearHistory"
+          :history-method="getSearchHistory"
+          :remote-method="remoteMethod"
+          :loading="loading"
+          @search="searchClick"
+          v-model="keyword"
+          placeholder="请输入关键词检索"
+          size="small"
+          theme="fill">
+          <fj-option
+            v-for="item in keywordOptions"
+            :key="item._id"
+            :label="item.label"
+            :value="item.value">
+          </fj-option>
+        </fj-select>
+      </div>
+      <ul>
+        <li v-if="copyList.length === 0 && keyword" class="empty-box">未搜索到相关稿件</li>
+        <li v-else-if="copyList.length === 0" class="empty-box">暂无稿件</li>
+        <li v-for="item in copyList" :class="['copy-item clearfix', {'active': item._id === activeCopyId}]" @click="activeCopyId = item._id">
+          <i :class="['copy-item-icon iconfont', CREATETYPE_CONFIG[item.createType].icon]"></i>
+          <div class="copy-item-content">
+            <span class="copy-item-title">{{ item.title }}</span>
+            <span class="copy-item-detail">{{ item.modifyTime | formatTime }}</span>
+            <span class="copy-item-detail" v-if="item.attachments.length > 0">{{ `附件${item.attachments.length}个` }}</span>
+          </div>
+        </li>
+        <li class="load-list-button">
+          <fj-button type="text" v-show="total > currentPage * pageSize" @click="currentPage += 1">{{ loadListBtnText }}</fj-button>
+        </li>
+      </ul>
+    </div>
+    <div class="copy-detail-wrap" ref="copyContent">
+      <div class="copy-detail" v-if="activeCopyId">
+        <div :class="[$style.toolbarWrap, 'clearfix']">
+          <button :class="$style.toolbarBtn" v-show="activeMenu === 'drafts'" @click="updateCopy()"><i class="iconfont icon-save"></i>保存</button>
+          <button
+            :class="$style.toolbarBtn"
+            v-show="activeMenu !== 'sent'"
+            @click="deleteCopyDialogVisible = true">
+            <i class="iconfont icon-trash"></i>删除
+          </button>
+          <button
+            :class="$style.toolbarBtn"
+            v-show="activeMenu === 'sent'"
+            @click="createRepeatCopy"><i class="iconfont icon-copy"></i>复制</button>
+          <button
+            :class="$style.toolbarBtn"
+            v-show="activeMenu === 'spam'"
+            @click="handleRestoreCopy"><i class="iconfont icon-restore"></i>恢复</button>
+          <span :class="$style.uploadBtn" v-show="activeMenu !== 'spam'">附件<i class="iconfont icon-attachment"></i></span>
+          <div :class="$style.tagsGroupWrap" v-show="activeMenu === 'drafts'">
+            <li :class="$style.tag" @click="">简</li>
+            <li :class="$style.tag" @click="">繁</li>
+          </div>
+          <div :class="$style.tagsGroupWrap" v-show="activeMenu === 'drafts'">
+            <template v-if="toolbarSize === 'normal'">
+              <span :class="$style.tagsLabel">标签</span>
+              <ul :class="$style.tagsGroup">
+                <li v-for="tag in tags" :class="$style.tag" @click="">{{ tag.label }}</li>
+              </ul>
+            </template>
+            <template v-else>
+              <span :class="$style.tagsLabelSelect" @click="showTags = !showTags" ref="tagsLabel">
+                标签
+                <i :class="['iconfont icon-fill-bottom', $style.tagsLabelIcon, showTags ? $style.isReverse : '']"></i>
+              </span>
+              <div :class="$style.tagsPanel" v-show="showTags" v-clickoutside="closeTagsPanel">
+                <ul>
+                  <li v-for="tag in tags" :class="$style.tag" @click="">{{ tag.label }}</li>
+                </ul>
+              </div>
+            </template>
+          </div>
+          <div :class="$style.submitBtn" v-show="activeMenu === 'drafts'">
+            <fj-button type="primary" @click="copyConfigDialogVisible = true"><i class="iconfont icon-send"></i>提交</fj-button>
+          </div>
+        </div>
+        <copy-editor
+          :content.sync="copyContent"
+          :show-saved-text="showSavedText"
+          :editor-width="contentWidth"
+          :editor-height="contentHeight - 78"></copy-editor>
+      </div>
+      <div v-else class="empty-box">
+        <i class="iconfont icon-empty-copy"></i>
+        暂无稿件
+      </div>
+    </div>
+    <fj-dialog
+      title="删除"
+      :visible.sync="deleteCopyDialogVisible">
+      <p>{{ activeMenu === 'spam' ? '您确定要彻底删除稿件吗？此操作不可恢复！' : '您确定要删除稿件吗？'}}</p>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click.stop="deleteCopyDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="isDeleteBtnLoading" @click.stop="handleDeleteCopy">确定</fj-button>
+      </div>
+    </fj-dialog>
+    <config-dialog :dialog-visible.sync="copyConfigDialogVisible" @submit="handleSubmitCopy"></config-dialog>
+  </div>
+</template>
+<script>
+  import './index.css';
+  import CopyEditor from './component/copyEditor';
+  import ConfigDialog from './component/copyConfigDialog';
+  import manuscriptAPI from '../../api/manuscript';
+  import Clickoutside from '../../component/fjUI/utils/clickoutside';
+  import { formatTime } from '../../common/utils';
+
+  const MENU = [
+    { title: '我的稿件',
+    index: 'my',
+    children: [
+      { text: '草稿箱', status: '1', route: 'drafts', count: 0 },
+      { text: '已提交', status: '2', route: 'sent', count: 0 },
+      { text: '垃圾箱', status: '3', route: 'spam', count: 0 }
+    ] },
+  ];
+  const STATUS_CONFIG = {
+    drafts: { code: '1' },
+    sent: { code: '2' },
+    spam: { code: '3' },
+    deleted: { code: '4' }
+  };
+  const CREATETYPE_CONFIG = {
+    1: { text: '创建者', icon: 'icon-creator' },
+    2: { text: '协作者', icon: 'icon-collaborator' }
+  };
+  export default {
+    data() {
+      return {
+        toolbarSize: 'normal',
+        showTags: false,
+        MENU: MENU,
+        selectParentEl: null,
+        activeMenu: '',
+        loading: false,
+        keyword: '',
+        keywordOptions: [],
+        currentPage: 1,
+        pageSize: 30,
+        total: 0,
+        copyList: [],
+        tags: [],
+        loadListBtnText: '加载更多',
+        activeCopyId: '',
+        copyContent: {
+          title: '',
+          viceTitle: '',
+          status: 1,
+          editContent: [],
+          collaborators: []
+        },
+        autoSave: false,
+        showSavedText: false,
+        deleteCopyDialogVisible: false,
+        isDeleteBtnLoading: false,
+        copyConfigDialogVisible: false,
+        STATUS_CONFIG: STATUS_CONFIG,
+        CREATETYPE_CONFIG: CREATETYPE_CONFIG,
+        contentWidth: 0,
+        contentHeight: 0
+      };
+    },
+    directives: { Clickoutside },
+    created() {
+      this.activeMenu = this.$route.params.type;
+      this.getSummary();
+      this.getTagsConfig();
+    },
+    mounted() {
+      this.selectParentEl = this.$refs.copyList;
+      this.resizeToolbar();
+      window.addEventListener('resize', this.resizeToolbar);
+    },
+    watch: {
+      '$route.params'(val) {
+        this.activeMenu = val.type;
+      },
+      activeMenu(val) {
+        this.copyList = [];
+        this.activeCopyId = '';
+        this.keyword = '';
+        if (this.currentPage === 1) {
+          this.updateList({ page: 1 });
+        } else {
+          this.currentPage = 1;
+        }
+        if (val === 'drafts') {
+          this.autoSave = true;
+          this.handleAutoSave();
+        } else {
+          this.autoSave = false;
+        }
+      },
+      currentPage(val) {
+        this.updateList();
+      },
+      activeCopyId(val) {
+        if (val) this.getCopy(val);
+      },
+      copyContent(val) {
+        let index = 0;
+        for (let i = 0, len = this.copyList.length; i < len; i++) {
+          if (this.copyList[i]._id === val._id) {
+            index = i;
+            break;
+          }
+        }
+        this.copyList[index].title = val.title;
+      }
+    },
+    methods: {
+      createRepeatCopy() {
+        const data = Object.assign({}, this.copyContent);
+        data.status = STATUS_CONFIG['drafts'].code;
+        delete data._id;
+        this.createCopy(data);
+      },
+      createCopy(data = {}) {
+        if (!data.title) {
+          data.title = `无标题稿件${formatTime(new Date())}`;
+        }
+        manuscriptAPI.addOrUpdateManuscript(data)
+          .then((response) => {
+            if (this.activeMenu === 'drafts') {
+              this.copyList = [];
+              this.activeCopyId = '';
+              this.keyword = '';
+              if (this.currentPage === 1) {
+                this.updateList({ page: 1 });
+              } else {
+                this.currentPage = 1;
+              }
+            }
+            this.$router.push({ name: 'copy', params: { type: 'drafts' } });
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      changeCopyStatus(data, successText = '保存成功', successFn = ()=>{}, failFn = ()=>{}) {
+        const id = this.copyContent._id;
+        manuscriptAPI.changeManuscriptStatus(data)
+          .then((response) => {
+            successFn && successFn();
+            this.$message.success(successText);
+            let index = 0;
+            for (let i = 0, len = this.copyList.length; i < len; i++) {
+              if (this.copyList[i]._id === id) {
+                index = i;
+                break;
+              }
+            }
+            this.copyList.splice(index, 1);
+            this.activeCopyId = (index + 1) > this.copyList.length ? this.copyList[0]._id : this.copyList[index]._id;
+            this.getSummary();
+          })
+          .catch((error) => {
+            failFn && failFn();
+            this.$message.error(error);
+          });
+      },
+      handleSubmitCopy(data) {
+        this.updateCopy(() => {
+          Object.assign(data, { _ids: this.copyContent._id, status: STATUS_CONFIG['sent'].code });
+          this.changeCopyStatus(data, '提交成功', ()=> {
+            this.copyConfigDialogVisible = false;
+          });
+        })
+      },
+      handleRestoreCopy() {
+        this.changeCopyStatus({ status: STATUS_CONFIG['drafts'].code, _ids: this.copyContent._id }, '恢复成功');
+      },
+      handleDeleteCopy() {
+        this.isDeleteBtnLoading = true;
+        let status = STATUS_CONFIG['spam'].code;
+        if (this.copyContent.status == STATUS_CONFIG['spam'].code) {
+          status = STATUS_CONFIG['deleted'].code;
+        }
+        this.changeCopyStatus({ status: status, _ids: this.copyContent._id }, '删除成功', ()=> {
+          this.isDeleteBtnLoading = false;
+          this.deleteCopyDialogVisible = false;
+        }, () => {
+          this.isDeleteBtnLoading = false;
+        });
+      },
+      handleAutoSave() {
+        if (!this.autoSave) return;
+        setTimeout(() => {
+          if (this.copyContent._id) this.updateCopy(this.handleAutoSave);
+        }, 30000);
+      },
+      updateCopy(cb = ()=>{}) {
+        console.log('updateCopy');
+        manuscriptAPI.addOrUpdateManuscript(this.copyContent)
+          .then((response) => {
+            this.showSavedText = true;
+            setTimeout(()=> {
+              this.showSavedText = false;
+            }, 2000);
+            cb && cb();
+          })
+          .catch((error) => {
+            if (cb) {
+              cb();
+            } else {
+              this.$message.error(error);
+            }
+          });
+      },
+      resizeToolbar() {
+        if(!this.$refs.copyContent) return;
+        const width = this.$refs.copyContent.getBoundingClientRect().width;
+        const height = this.$refs.copyContent.getBoundingClientRect().height;
+        this.contentWidth = width;
+        this.contentHeight = height;
+        if (width < 920) {
+          this.toolbarSize = 'small';
+        } else {
+          this.toolbarSize = 'normal';
+        }
+      },
+      getActiveRoute(path, level) {
+        const pathArr = path.split('/');
+        return pathArr[level] || '';
+      },
+      handleClickMenu(menu) {
+        this.$router.push({ name: 'copy', params: { type: menu } });
+      },
+      getTagsConfig() {
+        manuscriptAPI.getTagsConfig()
+          .then((response) => {
+            const data = response.data;
+            this.tags = data[0].items;
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getSummary() {
+        manuscriptAPI.getSummary()
+          .then((response) => {
+            const data = response.data.summary;
+            this.MENU[0].children.forEach((item) => {
+              item.count = data[item.status].count;
+            });
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getCopy(id) {
+        manuscriptAPI.getManuscript({ params: { _id: id } })
+          .then((response) => {
+            this.copyContent = response.data;
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      updateList(query) {
+        if (this.loadListBtnText === '加载中...') return;
+        this.loadListBtnText = '加载中...';
+        const data = {
+          keyword: this.keyword,
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          status: STATUS_CONFIG[this.activeMenu].code
+        };
+        Object.assign(data, query);
+        manuscriptAPI.listManuscript({ params: data })
+          .then((response) => {
+            this.loadListBtnText = '加载更多';
+            const data = response.data;
+            this.copyList = this.copyList.concat(data.docs);
+            if (!this.activeCopyId && this.copyList.length > 0) {
+              this.activeCopyId = this.copyList[0]._id;
+            }
+            this.total = data.total;
+            this.currentPage = data.page;
+          })
+          .catch((error) => {
+            this.loadListBtnText = '加载更多';
+            this.$message.error(error);
+          });
+      },
+      clearHistory() {
+        manuscriptAPI.clearSearchHistory()
+          .then((response) => {
+            this.getSearchHistory();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getSearchHistory() {
+        this.loading = true;
+        manuscriptAPI.getSearchHistory().then((res) => {
+          this.loading = false;
+          const data = res.data;
+          this.keywordOptions = res.data.map((item) => {
+            item.value = item.keyword;
+            item.label = item.keyword;
+            return item;
+          });
+        }).catch((error) => {
+          this.loading = false;
+          this.$message.error(error);
+        });
+      },
+      remoteMethod() {},
+      searchClick() {
+        this.copyList = [];
+        this.activeCopyId = '';
+        if (this.currentPage === 1) {
+          this.updateList();
+        } else {
+          this.currentPage = 1;
+        }
+      },
+      closeTagsPanel(target) {
+        if (this.$refs.tagsLabel.contains(target)) return;
+        if (this.showTags) {
+          this.showTags = false;
+        }
+      }
+    },
+    components: {
+      CopyEditor,
+      ConfigDialog
+    }
+  };
+</script>
+<style module>
+  @import './copy.css';
+</style>
