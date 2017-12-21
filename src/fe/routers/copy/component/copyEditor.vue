@@ -60,15 +60,23 @@
             <div :class="$style.attachmentWrap">
               <h3>
                 <i class="iconfont icon-attachment"></i>
-                附件{{ attachments.length }}
+                附件{{ mixedRows.length }}
               </h3>
               <div :class="$style.attachmentTable">
-                <fj-table :data="attachments">
-                  <fj-table-column prop="name" label="文件名"></fj-table-column>
-                  <fj-table-column prop="progress" label="文件进度"></fj-table-column>
+                <fj-table :data="mixedRows">
+                  <fj-table-column prop="name" label="文件名">
+                    <template slot-scope="props">
+                      {{ getFileName(props.row) }}
+                    </template>
+                  </fj-table-column>
+                  <fj-table-column prop="progress" label="文件进度">
+                    <template slot-scope="props">
+                      {{ getFileProgress(props.row) }}
+                    </template>
+                  </fj-table-column>
                   <fj-table-column prop="fileInfo" label="文件大小">
                     <template slot-scope="props">
-                      {{ formatSize(props.row.fileInfo.size) }}
+                      {{ getFileSize(props.row) }}
                     </template>
                   </fj-table-column>
                 </fj-table>
@@ -90,6 +98,7 @@
   import PanelView from "../../../component/layout/panel/index.vue";
   import DepartmentBrowser from "../../../component/higherOrder/departmentBrowser";
   import { formatSize } from "../../../common/utils";
+  import manuscriptAPI from '../../../api/manuscript';
 
   const STATUS_CONFIG = {
     1: { type: 'drafts' },
@@ -107,7 +116,8 @@
       content: {},
       editorWidth: Number,
       editorHeight: Number,
-      showSavedText: Boolean
+      showSavedText: Boolean,
+      mixedTableData: Array
     },
     data() {
       return {
@@ -119,7 +129,7 @@
         departmentBrowserVisible: false,
         status: 1,
         collaborators: [],
-        attachments: [],
+        mixedRows: [],
         width: this.editorWidth,
         height: this.editorHeight
       };
@@ -134,7 +144,7 @@
     },
     computed: {
       panelsRule() {
-        return this.attachments.length > 0 ? '#/3*2, #/3' : '#, 0';
+        return this.mixedRows.length > 0 ? '#/3*2, #/3' : '#, 0';
       }
     },
     watch: {
@@ -157,7 +167,9 @@
         } else {
           this.words = 0;
         }
-        this.attachments = val.attachments ? val.attachments : [];
+      },
+      mixedTableData(val) {
+        this.mixedRows = val ? val : [];
       }
     },
     methods: {
@@ -189,6 +201,27 @@
       },
       updateContent(data) {
         this.$emit('update:content', Object.assign({}, this.content, data));
+      },
+      getFileName(row) {
+        if(row.getFileInfo){
+          return row.getFileInfo().name;
+        }else{
+          return row.name;
+        }
+      },
+      getFileProgress(row) {
+        if(row.showProcess){
+          return row.showProcess();
+        }else{
+          return row.progress;
+        }
+      },
+      getFileSize(row) {
+        if(row.getFileInfo){
+          return formatSize(row.getFileInfo().size);
+        }else{
+          return formatSize(row.fileInfo.size);
+        }
       }
     },
     components: {

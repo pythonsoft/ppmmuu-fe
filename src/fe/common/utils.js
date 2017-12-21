@@ -1,5 +1,6 @@
 const utils = {};
 
+const crypto = require('crypto');
 const mediaAPI = require('../api/media');
 const config = require('../config');
 
@@ -353,11 +354,10 @@ utils.formatDuration = function formatDuration(duration, needMiniSeconds = false
   duration %= 60 * 1000;
   const seconds = Math.floor(duration / 1000);
   duration %= 1000;
-  if(needMiniSeconds && duration !== 0){
+  if (needMiniSeconds && duration !== 0) {
     return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}.${Math.round(duration)}`;
-  }else {
-    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
   }
+  return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
 };
 
 utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {
@@ -688,6 +688,20 @@ utils.formatTaskList = function (currentStep, taskList = []) {
   }
 
   return { total: `${(rs * 100).toFixed(2)}%`, current: str };
+};
+
+utils.cipher = function (str, password) {
+  const cipher = crypto.createCipher('aes-256-cbc', password);
+  let crypted = cipher.update(str, 'utf8', 'hex');
+  crypted += cipher.final('hex');
+  return crypted;
+};
+
+utils.decipher = function (str, password) {
+  const decipher = crypto.createDecipher('aes-256-cbc', password);
+  let dec = decipher.update(Buffer.from(str, 'hex'), 'utf8');
+  dec += decipher.final('utf8');
+  return dec;
 };
 
 module.exports = utils;

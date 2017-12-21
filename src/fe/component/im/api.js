@@ -65,7 +65,7 @@ callback_store.exec = function (cid, rs) {
 
 // 开始连接服务器
 api.connect = function (ticket, cb) {
-  if(meInfo) {
+  if (meInfo) {
     return cb && cb();
   }
 
@@ -201,7 +201,7 @@ api.getFriendPhotoFromMembersInC2C = function (meId, sessionInfo) {
   return url;
 };
 
-api.getNameFromMembers = function(meId, sessionInfo) {
+api.getNameFromMembers = function (meId, sessionInfo) {
   let name = sessionInfo.name || '暂无名称';
 
   if (sessionInfo.type === SESSION_TYPE.C2C) {
@@ -248,13 +248,13 @@ api.sendMessage = function (sessionId, sessionType, content, fromId, toId, cb) {
 api.hasRead = function () {
 };
 
-api.getAvatar = function(currentSessionInfo, messageInfo) {
+api.getAvatar = function (currentSessionInfo, messageInfo) {
   const members = currentSessionInfo.members;
   const fromId = messageInfo.from._id;
   let photo = '';
 
-  for(let i = 0, len = members.length; i < len; i++) {
-    if(members[i]._id === fromId) {
+  for (let i = 0, len = members.length; i < len; i++) {
+    if (members[i]._id === fromId) {
       photo = members[i].photo;
     }
   }
@@ -266,7 +266,7 @@ api.getAvatar = function(currentSessionInfo, messageInfo) {
 api.SESSION_TYPE = SESSION_TYPE;
 api.MESSAGE_TYPE = MESSAGE_TYPE;
 
-api.convertMsgToHtml = function(messageInfo) {
+api.convertMsgToHtml = function (messageInfo) {
   return messageInfo.content;
 };
 

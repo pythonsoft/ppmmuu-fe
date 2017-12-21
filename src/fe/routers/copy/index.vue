@@ -80,7 +80,8 @@
             :class="$style.toolbarBtn"
             v-show="activeMenu === 'spam'"
             @click="handleRestoreCopy"><i class="iconfont icon-restore"></i>恢复</button>
-          <span :class="$style.uploadBtn" v-show="activeMenu !== 'spam'">附件<i class="iconfont icon-attachment"></i></span>
+          <span :class="$style.uploadBtn" v-show="activeMenu !== 'spam'" @click="fileInputClick()">附件<i class="iconfont icon-attachment"></i></span>
+          <input id="file-input" accept="*" class="upload-file-input" @change="chooseFiles" type="file" multiple="multiple">
           <div :class="$style.tagsGroupWrap" v-show="activeMenu === 'drafts'">
             <li :class="$style.tag" @click="">简</li>
             <li :class="$style.tag" @click="">繁</li>
@@ -110,6 +111,7 @@
         </div>
         <copy-editor
           :content.sync="copyContent"
+          :mixedTableData.sync="mixedTableData"
           :show-saved-text="showSavedText"
           :editor-width="contentWidth"
           :editor-height="contentHeight - 78"></copy-editor>
@@ -137,7 +139,11 @@
   import ConfigDialog from './component/copyConfigDialog';
   import manuscriptAPI from '../../api/manuscript';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
-  import { formatTime } from '../../common/utils';
+  import { formatTime, getItemFromLocalStorage, formatSize } from '../../common/utils';
+
+  const fileClient = require('../../common/client');
+
+  const FILE_SIZE_LIMIT = 700 * 1024 * 1024;
 
   const MENU = [
     { title: '我的稿件',
@@ -181,7 +187,8 @@
           viceTitle: '',
           status: 1,
           editContent: [],
-          collaborators: []
+          collaborators: [],
+          attachments: []
         },
         autoSave: false,
         showSavedText: false,
@@ -191,7 +198,9 @@
         STATUS_CONFIG: STATUS_CONFIG,
         CREATETYPE_CONFIG: CREATETYPE_CONFIG,
         contentWidth: 0,
-        contentHeight: 0
+        contentHeight: 0,
+        transferAttachments: {},
+        mixedTableData: []
       };
     },
     directives: { Clickoutside },
@@ -199,6 +208,7 @@
       this.activeMenu = this.$route.params.type;
       this.getSummary();
       this.getTagsConfig();
+      this.watchTask();
     },
     mounted() {
       this.selectParentEl = this.$refs.copyList;
@@ -229,7 +239,18 @@
         this.updateList();
       },
       activeCopyId(val) {
-        if (val) this.getCopy(val);
+        if (val) {
+          this.getCopy(val);
+          const me = this;
+          manuscriptAPI.listAttachments({ params: { manuscriptId: val } })
+            .then((response) => {
+              const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];;
+              this.mixedTableData = attachments.concat(response.data.docs);
+            })
+            .catch((error) => {
+              this.$message.error(error);
+            });
+        }
       },
       copyContent(val) {
         let index = 0;
@@ -324,7 +345,6 @@
         }, 30000);
       },
       updateCopy(cb = ()=>{}) {
-        console.log('updateCopy');
         manuscriptAPI.addOrUpdateManuscript(this.copyContent)
           .then((response) => {
             this.showSavedText = true;
@@ -456,6 +476,67 @@
         if (this.showTags) {
           this.showTags = false;
         }
+      },
+      fileInputClick() {
+        let inputFileEl =  document.getElementById('file-input');
+        inputFileEl.click();
+      },
+      chooseFiles(event) {
+        const files = event.target.files;
+        const attachments = this.transferAttachments[this.copyContent._id] ? this.transferAttachments[this.copyContent._id] : [];
+        let totalSize = 0;
+        for (let i = 0, len = files.length; i < len; i++) {
+          totalSize += files[i].size;
+        }
+        if(totalSize >= FILE_SIZE_LIMIT){
+          this.$message.error(`正在传输的文件总大小限制为${formatSize(FILE_SIZE_LIMIT)}`);
+          return;
+        }
+        for (let i = 0, len = files.length; i < len; i++) {
+          const task = new fileClient({
+            file: files[i],
+            userId: getItemFromLocalStorage('userInfo')._id,
+            userName: getItemFromLocalStorage('userInfo').name
+          });
+          task.transfer();
+          attachments.push(task);
+        }
+        this.transferAttachments[this.copyContent._id] = attachments;
+      },
+      watchTask(){
+        const me = this;
+        setInterval(()=>{
+          const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];
+          if(attachments && attachments.length){
+            let flag = false;
+            for(let i = attachments.length -1 ; i >= 0; i--){
+              const task = attachments[i];
+              if(task.status === 'complete'){
+                const item = {
+                  attachmentId: task._id,
+                  userId: getItemFromLocalStorage('userInfo')._id,
+                  name: task.getFileInfo().name,
+                }
+                me.copyContent.attachments.push(item);
+                task.destroy();
+                flag = true;
+                attachments.splice(i, 1);
+              }
+            }
+            if(flag) {
+              me.updateCopy(() => {
+                manuscriptAPI.listAttachments({ params: { manuscriptId: me.copyContent._id } })
+                    .then((response) => {
+                      this.mixedTableData = attachments.concat(response.data.docs);
+                    })
+                    .catch((error) => {
+                      this.$message.error(error);
+                    });
+              });
+            }
+            me.transferAttachments[me.copyContent._id] = attachments;
+          }
+        }, 100);     //500ms更新一次进度
       }
     },
     components: {
