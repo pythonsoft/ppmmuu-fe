@@ -44,6 +44,10 @@ class FileClient {
     };
   }
 
+  getId() {
+    return this._id;
+  }
+
   transfer() {
     const me = this;
 

@@ -513,7 +513,7 @@
               const task = attachments[i];
               if(task.status === 'complete'){
                 const item = {
-                  attachmentId: task._id,
+                  attachmentId: task.getId(),
                   userId: getItemFromLocalStorage('userInfo')._id,
                   name: task.getFileInfo().name,
                 }
