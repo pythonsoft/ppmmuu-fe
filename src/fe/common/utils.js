@@ -1,5 +1,6 @@
 const utils = {};
 
+const crypto = require('crypto');
 const mediaAPI = require('../api/media');
 const config = require('../config');
 
@@ -688,6 +689,20 @@ utils.formatTaskList = function (currentStep, taskList = []) {
   }
 
   return { total: `${(rs * 100).toFixed(2)}%`, current: str };
+};
+
+utils.cipher = function (str, password) {
+  const cipher = crypto.createCipher('aes-256-cbc', password);
+  let crypted = cipher.update(str, 'utf8', 'hex');
+  crypted += cipher.final('hex');
+  return crypted;
+};
+
+utils.decipher = function (str, password) {
+  const decipher = crypto.createDecipher('aes-256-cbc', password);
+  let dec = decipher.update(Buffer.from(str, 'hex'), 'utf8');
+  dec += decipher.final('utf8');
+  return dec;
 };
 
 module.exports = utils;
