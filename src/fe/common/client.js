@@ -32,20 +32,22 @@ class FileClient {
     this.stop = false;
     this._id = uuid.v1();
     this.status = 'create';
+    const file = this.settings.file;
+    this.name = file.name;
+    this.size = file.size;
   }
 
   getFileInfo() {
-    const file = this.settings.file;
     return {
-      name: file.name,
-      size: file.size
+      name: this.name,
+      size: this.size
     };
   }
 
   transfer() {
     const me = this;
 
-    me.connectState();
+    //me.connectState();
     const ticket = utils.cipher(`${me.settings.userId}-${me.settings.isCrypto ? 1 : 0}`, me.settings.key);
 
     const socket = clientConnect(`http://${me.settings.host}:${me.settings.port}/file?im-ticket=${ticket}&im-key=ump`, {
@@ -117,7 +119,6 @@ class FileClient {
       this.socket = null;
     }
     this.transferTaskInstance = null;
-    this.settings.file = null;
     this.settings = null;
   }
   stopTask() {

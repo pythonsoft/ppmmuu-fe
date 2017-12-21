@@ -117,7 +117,7 @@
       editorWidth: Number,
       editorHeight: Number,
       showSavedText: Boolean,
-      transferAttachments: Array
+      mixedTableData: Array
     },
     data() {
       return {
@@ -129,8 +129,6 @@
         departmentBrowserVisible: false,
         status: 1,
         collaborators: [],
-        attachments: [],
-        transferTasks: [],
         mixedRows: [],
         width: this.editorWidth,
         height: this.editorHeight
@@ -146,7 +144,7 @@
     },
     computed: {
       panelsRule() {
-        return this.attachments.length > 0 ? '#/3*2, #/3' : '#, 0';
+        return this.mixedRows.length > 0 ? '#/3*2, #/3' : '#, 0';
       }
     },
     watch: {
@@ -169,25 +167,13 @@
         } else {
           this.words = 0;
         }
-        this.listAttachments();
       },
-      transferAttachments(val) {
-        this.transferTasks = val ? val : [];
-        this.listAttachments();
+      mixedTableData(val) {
+        this.mixedRows = val ? val : [];
       }
     },
     methods: {
       formatSize,
-      listAttachments() {
-        manuscriptAPI.listAttachments({ params: { manuscriptId: this._id } })
-          .then((response) => {
-            this.attachments = response.data.docs;
-            this.mixedRows = this.transferTasks.concat(this.attachments);
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          });
-      },
       departmentBrowserConfirm(items) {
         const collaboratorIds = this.collaborators.map((item) => {
           return item._id;

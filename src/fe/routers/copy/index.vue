@@ -111,7 +111,7 @@
         </div>
         <copy-editor
           :content.sync="copyContent"
-          :transferAttachments.sync="transferAttachments[copyContent._id]"
+          :mixedTableData.sync="mixedTableData"
           :show-saved-text="showSavedText"
           :editor-width="contentWidth"
           :editor-height="contentHeight - 78"></copy-editor>
@@ -199,7 +199,8 @@
         CREATETYPE_CONFIG: CREATETYPE_CONFIG,
         contentWidth: 0,
         contentHeight: 0,
-        transferAttachments: {}
+        transferAttachments: {},
+        mixedTableData: []
       };
     },
     directives: { Clickoutside },
@@ -238,7 +239,18 @@
         this.updateList();
       },
       activeCopyId(val) {
-        if (val) this.getCopy(val);
+        if (val) {
+          this.getCopy(val);
+          const me = this;
+          manuscriptAPI.listAttachments({ params: { manuscriptId: val } })
+            .then((response) => {
+              const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];;
+              this.mixedTableData = attachments.concat(response.data.docs);
+            })
+            .catch((error) => {
+              this.$message.error(error);
+            });
+        }
       },
       copyContent(val) {
         let index = 0;
@@ -494,7 +506,7 @@
       watchTask(){
         const me = this;
         setInterval(()=>{
-          const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];;
+          const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];
           if(attachments && attachments.length){
             let flag = false;
             for(let i = attachments.length -1 ; i >= 0; i--){
@@ -512,10 +524,19 @@
               }
             }
             if(flag) {
-              me.updateCopy(() => {});
+              me.updateCopy(() => {
+                manuscriptAPI.listAttachments({ params: { manuscriptId: me.copyContent._id } })
+                    .then((response) => {
+                      this.mixedTableData = attachments.concat(response.data.docs);
+                    })
+                    .catch((error) => {
+                      this.$message.error(error);
+                    });
+              });
             }
+            me.transferAttachments[me.copyContent._id] = attachments;
           }
-        }, 500);     //500ms更新一次进度
+        }, 100);     //500ms更新一次进度
       }
     },
     components: {
