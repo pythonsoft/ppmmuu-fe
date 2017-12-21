@@ -41,6 +41,10 @@
         this.setSplits(this.panels);
         this.setSlideBars();
         this.size = v;
+      },
+      panels(v) {
+        this.setSplits(v);
+        this.setSlideBars();
       }
     },
     created() {
