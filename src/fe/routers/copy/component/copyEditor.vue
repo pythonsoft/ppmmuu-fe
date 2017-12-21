@@ -54,7 +54,12 @@
         :panels="panelsRule"
         direction="y">
           <template slot="0">
-            <div id="editor" :class="$style.editor"></div>
+            <div :class="$style.editor">
+              <quill-editor
+                v-model="selfContent"
+                :editable="editable"
+                :editor-instance="editorInstance"></quill-editor>
+            </div>
           </template>
           <template slot="1">
             <div :class="$style.attachmentWrap">
@@ -92,11 +97,9 @@
   </div>
 </template>
 <script>
-  import Quill from 'quill/core';
-  import Snow from 'quill/themes/snow';
-  import Toolbar from 'quill/modules/toolbar';
   import PanelView from "../../../component/layout/panel/index.vue";
   import DepartmentBrowser from "../../../component/higherOrder/departmentBrowser";
+  import QuillEditor from './quillEditor';
   import { formatSize } from "../../../common/utils";
   import manuscriptAPI from '../../../api/manuscript';
 
@@ -106,18 +109,15 @@
     3: { type: 'spam' }
   };
 
-  Quill.register({
-    'themes/snow': Snow,
-    'modules/toolbar': Toolbar
-  });
-
   export default {
     props: {
-      content: {},
+      copy: {},
+      editorInstance: {},
       editorWidth: Number,
       editorHeight: Number,
       showSavedText: Boolean,
-      mixedTableData: Array
+      mixedTableData: Array,
+      tags: Array
     },
     data() {
       return {
@@ -130,17 +130,21 @@
         status: 1,
         collaborators: [],
         mixedRows: [],
+        selfContent: '',
         width: this.editorWidth,
-        height: this.editorHeight
+        height: this.editorHeight,
+        tagsMap: {},
+        labelsMap: {},
+        labels: []
       };
+    },
+    created() {
+      this.updateTags();
+      this.editorInstance.$on('updateContent', this.updateSelfContent);
     },
     mounted() {
       const headerHeight = this.$refs.editorHeader.getBoundingClientRect().height;
       this.height = this.editorHeight - headerHeight;
-      this.quill = new Quill('#editor', {
-        modules: { toolbar: false },
-        theme: 'snow'
-      });
     },
     computed: {
       panelsRule() {
@@ -148,7 +152,10 @@
       }
     },
     watch: {
-      content(val) {
+      tags(val) {
+        this.updateTags();
+      },
+      copy(val) {
         this.title = val.title;
         this.viceTitle = val.viceTitle;
         this.collaborators = val.collaborators;
@@ -157,23 +164,67 @@
         if (this.editable && val._id !== this._id) {
           // this.$refs.titleInput.focus();
         }
-        this._id = val._id;
         if (val.editContent && val.editContent.length > 0) {
           let words = 0;
+          let content = '';
           val.editContent.forEach((item)=> {
             words += item.content.length;
+            content += `${this.tagsMap[item.tag]}\n${item.content}`;
           });
           this.words = words;
+          if (val._id !== this._id) {
+            this.selfContent = content;
+          }
         } else {
           this.words = 0;
         }
+        this._id = val._id;
       },
       mixedTableData(val) {
         this.mixedRows = val ? val : [];
+      },
+      selfContent(val) {
+        const content = [];
+        const reg = /【([^【]+)】/g;
+        const matchedLabels = val.match(reg) || [];
+        for (let i = 0, len = matchedLabels.length; i < len; i++) {
+          const label = matchedLabels[i];
+          if (this.labels.indexOf(label) > -1) {
+            const contentItem = { tag: this.labelsMap[label] };
+            const index = val.indexOf(label) + label.length;
+            const endIndex = (i === len - 1) ? val.length : val.indexOf(matchedLabels[i + 1]) ;
+            contentItem.content = val.slice(index, endIndex);
+            content.push(contentItem);
+          }
+        }
+        this.updateContent({ editContent: content });
       }
     },
     methods: {
       formatSize,
+      updateSelfContent(editContent) {
+        let words = 0;
+        let content = '';
+        editContent.forEach((item)=> {
+          words += item.content.length;
+          content += `${this.tagsMap[item.tag]}\n${item.content}`;
+        });
+        this.words = words;
+        this.selfContent = content;
+      },
+      updateTags() {
+        const tagsObj = {};
+        const labelsObj = {};
+        const labels = [];
+        this.tags.forEach((tag)=> {
+          tagsObj[tag.value] = `【${tag.label}】`;
+          labelsObj[`【${tag.label}】`] = tag.value;
+          labels.push(`【${tag.label}】`);
+        });
+        this.tagsMap = tagsObj;
+        this.labelsMap = labelsObj;
+        this.labels = labels;
+      },
       departmentBrowserConfirm(items) {
         const collaboratorIds = this.collaborators.map((item) => {
           return item._id;
@@ -226,7 +277,8 @@
     },
     components: {
       DepartmentBrowser,
-      PanelView
+      PanelView,
+      QuillEditor
     }
   };
 </script>
@@ -344,5 +396,9 @@
   .editor {
     width: 100%;
     height: 100%;
+    padding: 20px 0;
+    font-size: 14px;
+    color: #4C637B;
+    line-height: 21px;
   }
 </style>
