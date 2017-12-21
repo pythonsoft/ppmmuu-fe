@@ -84,6 +84,11 @@
                       {{ getFileSize(props.row) }}
                     </template>
                   </fj-table-column>
+                  <fj-table-column prop="_id" label="操作">
+                    <template slot-scope="props">
+                      <i class="iconfont icon-trash"></i>
+                    </template>
+                  </fj-table-column>
                 </fj-table>
               </div>
             </div>
@@ -251,7 +256,7 @@
         this.updateContent({ viceTitle: value });
       },
       updateContent(data) {
-        this.$emit('update:content', Object.assign({}, this.content, data));
+        this.$emit('update:content', Object.assign({}, this.copy, data));
       },
       getFileName(row) {
         if(row.getFileInfo){
@@ -377,7 +382,9 @@
     padding: 0 40px;
   }
   .attachmentWrap {
+    height: 100%;
     padding: 20px 0;
+    overflow: auto;
   }
   .attachmentWrap h3 {
     font-size: 12px;
