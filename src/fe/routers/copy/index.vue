@@ -533,6 +533,14 @@
                       this.$message.error(error);
                     });
               });
+            }else{
+              manuscriptAPI.listAttachments({ params: { manuscriptId: me.copyContent._id } })
+                  .then((response) => {
+                    this.mixedTableData = attachments.concat(response.data.docs);
+                  })
+                  .catch((error) => {
+                    this.$message.error(error);
+                  });
             }
             me.transferAttachments[me.copyContent._id] = attachments;
           }

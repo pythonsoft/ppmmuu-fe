@@ -155,8 +155,7 @@ class FileClient {
       return '100';
     }
     const me = this;
-    const file = me.settings.file;
-    const totalSize = file.size;
+    const totalSize = this.size;
     const percent = `${Math.ceil((me.passedLength / totalSize) * 100)}`;
     return percent;
   }

@@ -3,7 +3,7 @@
  */
 const config = {};
 
-config.baseDomain = 'localhost:8080';
+config.baseDomain = '10.0.15.152:8080';
 // config.baseDomain = '10.0.16.107:8080';
 
 config.streamURL = 'http://ump-live.phoenixtv.com';
