@@ -169,6 +169,7 @@
         }
       },
       mixedTableData(val) {
+        console.log("val length===>", val.length)
         this.mixedRows = val ? val : [];
       }
     },
