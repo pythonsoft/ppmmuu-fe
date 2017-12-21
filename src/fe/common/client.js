@@ -117,6 +117,8 @@ class FileClient {
       this.socket = null;
     }
     this.transferTaskInstance = null;
+    this.settings.file = null;
+    this.settings = null;
   }
   stopTask() {
     this.stop = true;
