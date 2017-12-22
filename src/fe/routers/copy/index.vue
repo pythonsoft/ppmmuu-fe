@@ -55,6 +55,7 @@
             <span class="copy-item-title">{{ item.title }}</span>
             <span class="copy-item-detail">{{ item.modifyTime | formatTime }}</span>
             <span class="copy-item-detail" v-if="item.attachments.length > 0">{{ `附件${item.attachments.length}个` }}</span>
+            <span class="copy-item-words" v-if="item._id === activeCopyId">{{ `字数：${getWords(item.editContent)}` }}</span>
           </div>
         </li>
         <li class="load-list-button">
@@ -92,7 +93,7 @@
             <template v-if="toolbarSize === 'normal'">
               <span :class="$style.tagsLabel">标签</span>
               <ul :class="$style.tagsGroup">
-                <li v-for="tag in tags" :class="$style.tag" @click="">{{ tag.label }}</li>
+                <li v-for="tag in tags" :class="$style.tag" @click="insertTag(tag.label)">{{ tag.label }}</li>
               </ul>
             </template>
             <template v-else>
@@ -273,6 +274,14 @@
       }
     },
     methods: {
+      getWords(editContent) {
+        let words = 0;
+        editContent.forEach((item)=> {
+          const matchedCharacter = item.content.match(/(\S)/g);
+          words += matchedCharacter ? matchedCharacter.length : 0;
+        });
+        return words;
+      },
       handleConvert(type) {
         const copyContent = this.copyContent;
         const data = {
@@ -412,7 +421,7 @@
         if(!this.$refs.copyContent) return;
         const width = this.$refs.copyContent.getBoundingClientRect().width;
         const height = this.$refs.copyContent.getBoundingClientRect().height;
-        this.contentWidth = width;
+        this.contentWidth = width < 684 ? 684 : width;
         this.contentHeight = height;
         if (width < 920) {
           this.toolbarSize = 'small';
