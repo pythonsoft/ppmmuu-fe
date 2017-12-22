@@ -86,8 +86,8 @@
                   </fj-table-column>
                   <fj-table-column prop="_id" label="操作">
                     <template slot-scope="props">
-                      <i :class="['iconfont icon-pause', $style.operatorBtn]" @click=""></i>
-                      <i :class="['iconfont icon-play', $style.operatorBtn]" @click=""></i>
+                      <i :class="['iconfont icon-pause', $style.operatorBtn]" v-if="canStop(props.row)" @click="stopTask(props.row)"></i>
+                      <i :class="['iconfont icon-play', $style.operatorBtn]" v-if="canRestart(props.row)" @click="restartTask(props.row)"></i>
                       <i :class="['iconfont icon-trash', $style.operatorBtn]" @click="deleteAttachment(props.row)"></i>
                     </template>
                   </fj-table-column>
@@ -159,7 +159,7 @@
       }
     },
     watch: {
-      editorWidth(valsd) {
+      editorWidth(val) {
         this.width = val;
       },
       tags(val) {
@@ -285,9 +285,36 @@
         }
       },
       deleteAttachment(row) {
-        if (row.getFileInfo) {
-          row.destroy();
-          const index = this.mixedTableData.indexOf(row);
+        const me = this;
+        const _id = row._id ? row._id : row.getId();
+        manuscriptAPI.deleteAttachments({ _ids: _id}, me)
+          .then((res)=>{
+            this.$emit('list-attachment', row);
+          })
+          .catch((error)=>{
+            this.$message.error(error);
+          })
+      },
+      canStop(row){
+        if(row.getFileInfo){
+          return row.canStop();
+        }
+        return false;
+      },
+      canRestart(row){
+        if(row.getFileInfo){
+          return row.canRestart();
+        }
+        return false;
+      },
+      stopTask(row){
+        if(row.getFileInfo){
+          row.stopTask();
+        }
+      },
+      restartTask(row){
+        if(row.getFileInfo){
+          row.restart();
         }
       }
     },

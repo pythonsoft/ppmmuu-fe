@@ -117,7 +117,8 @@
           :show-saved-text="showSavedText"
           :editor-width="contentWidth"
           :editor-height="contentHeight - 78"
-          :editor-instance="editorInstance"></copy-editor>
+          :editor-instance="editorInstance"
+          @list-attachment="listAttachments"></copy-editor>
       </div>
       <div v-else class="empty-box">
         <i class="iconfont icon-empty-copy"></i>
@@ -547,6 +548,41 @@
         }
         this.transferAttachments[this.copyContent._id] = attachments;
       },
+      listAttachments(row){
+        const me = this;
+        if(row.getFileInfo){
+          row.destroy();
+          const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];
+          const index = attachments.indexOf(row);
+          if(index !== -1) {
+            attachments.splice(index, 1);
+          }
+        } else{
+          for (let i = me.copyContent.attachments.length - 1; i >= 0; i--) {
+            if (me.copyContent.attachments[i].attachmentId === row._id) {
+              me.copyContent.attachments.splice(i, 1);
+              break;
+            }
+          }
+        }
+        manuscriptAPI.listAttachments({ params: { manuscriptId: me.copyContent._id } })
+          .then((response) => {
+            const newAttach = response.data.docs;
+            const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];
+            me.oldListAttachments[me.copyContent._id] = newAttach;
+            me.mixedTableData = attachments.concat(newAttach);
+
+            for(let i = 0, len = me.copyList.length; i < len; i++){
+              if(me.copyList[i]._id === me.copyContent._id){
+                me.copyList[i].attachments = newAttach;
+                break;
+              }
+            }
+          })
+          .catch((error) => {
+            me.$message.error(error);
+          });
+      },
       watchTask(){
         const me = this;
         setInterval(()=>{
@@ -594,7 +630,7 @@
             }
             me.transferAttachments[me.copyContent._id] = attachments;
           }
-        }, 500);     //500ms更新一次进度
+        }, 100);     //100ms更新一次进度
       }
     },
     components: {
