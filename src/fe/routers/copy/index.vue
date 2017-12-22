@@ -148,7 +148,7 @@
 
   const fileClient = require('../../common/client');
 
-  const FILE_SIZE_LIMIT = 700 * 1024 * 1024;
+  const FILE_SIZE_LIMIT = 20 * 1024 * 1024 * 1024; //限制上传文件大小,20G
 
   const MENU = [
     { title: '我的稿件',
