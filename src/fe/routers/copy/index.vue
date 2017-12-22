@@ -82,7 +82,9 @@
             :class="$style.toolbarBtn"
             v-show="activeMenu === 'spam'"
             @click="handleRestoreCopy"><i class="iconfont icon-restore"></i>恢复</button>
-          <span :class="$style.uploadBtn" v-show="activeMenu !== 'spam'" @click="fileInputClick()">附件<i class="iconfont icon-attachment"></i></span>
+          <span :class="$style.uploadBtn" v-show="activeMenu !== 'spam'" @click="fileInputClick()">附件<i class="iconfont icon-attachment"></i>
+            <span class="attachment-number">{{ getAttachmentsLength()}}</span>
+          </span>
           <div :class="$style.tagsGroupWrap" v-show="activeMenu === 'drafts'">
             <li :class="$style.tag" @click="handleConvert('0')">简</li>
             <li :class="$style.tag" @click="handleConvert('1')">繁</li>
@@ -591,6 +593,13 @@
           .catch((error) => {
             me.$message.error(error);
           });
+      },
+      getAttachmentsLength() {
+        const attachments = this.copyContent.attachments;
+        if(attachments && attachments.length){
+          return attachments.length;
+        }
+        return '';
       },
       watchTask(){
         const me = this;
