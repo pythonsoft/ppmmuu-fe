@@ -44,6 +44,10 @@ class FileClient {
     };
   }
 
+  getId() {
+    return this._id;
+  }
+
   transfer() {
     const me = this;
 
@@ -129,6 +133,28 @@ class FileClient {
   restart() {
     this.stop = false;
     this.socket.emit('restart');
+  }
+  canStop() {
+    if(this.stop){
+      return false;
+    }
+    if(this.status === 'complete' || this.status === 'error' || !this.socket){
+      return false;
+    }
+
+    return true;
+  }
+
+  canRestart() {
+    if(!this.stop){
+      return false;
+    }
+
+    if(this.status === 'complete' || this.status === 'error' || !this.socket){
+      return false;
+    }
+
+    return true;
   }
   connectState() {
     const me = this;
