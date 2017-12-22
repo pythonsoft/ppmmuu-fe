@@ -285,23 +285,15 @@
         }
       },
       deleteAttachment(row) {
-        const index = this.mixedTableData.indexOf(row);
-        if(index !== -1) {
-          this.mixedTableData.splice(index, 1);
-        }
-        if (row.getFileInfo) {
-          row.destroy();
-          this.$emit('list-attachment', row);
-        }else{
-          const me = this;
-          manuscriptAPI.deleteAttachments({ _ids: row._id}, me)
-            .then((res)=>{
-              this.$emit('list-attachment', row);
-            })
-            .catch((error)=>{
-              this.$message.error(error);
-            })
-        }
+        const me = this;
+        const _id = row._id ? row._id : row.getId();
+        manuscriptAPI.deleteAttachments({ _ids: _id}, me)
+          .then((res)=>{
+            this.$emit('list-attachment', row);
+          })
+          .catch((error)=>{
+            this.$message.error(error);
+          })
       },
       canStop(row){
         if(row.getFileInfo){

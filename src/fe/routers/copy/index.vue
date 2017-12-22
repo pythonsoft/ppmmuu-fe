@@ -551,6 +551,7 @@
       listAttachments(row){
         const me = this;
         if(row.getFileInfo){
+          row.destroy();
           const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];
           const index = attachments.indexOf(row);
           if(index !== -1) {

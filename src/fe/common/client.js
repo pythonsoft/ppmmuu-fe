@@ -74,7 +74,7 @@ class FileClient {
         _id: me._id
       });
       task.socketId = socket.id;
-      console.log('headerPackage===>', task.headerPackage);
+      //console.log('headerPackage===>', task.headerPackage);
       socket.emit('headerPackage', task.headerPackage, config.umpAssistQueueName);
       me.transferTaskInstance = task;
       me.isConnect = true;
@@ -97,23 +97,23 @@ class FileClient {
     });
 
     socket.on('invalid_request', (msg) => {
-      console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
+      //console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
       this.status = 'error';
     });
 
     socket.on('complete', () => {
-      console.log('file transfer complete');
+      //console.log('file transfer complete');
       this.status = 'complete';
     });
 
     socket.on('error', (err) => {
-      console.log(`error socket id: ${me.getSocketId()}`, err);
+      //console.log(`error socket id: ${me.getSocketId()}`, err);
       this.status = 'error';
       me.destroy();
     });
 
     socket.on('disconnect', (msg) => {
-      console.log(`disconnect with server${me.getSocketId()}`, msg);
+      //console.log(`disconnect with server${me.getSocketId()}`, msg);
       me.destroy();
     });
   }
@@ -159,13 +159,13 @@ class FileClient {
   connectState() {
     const me = this;
     const fn = function (count) {
-      console.log(`正在连接服务器(${me.settings.host}:${me.settings.port})...${count}`);
+      //console.log(`正在连接服务器(${me.settings.host}:${me.settings.port})...${count}`);
       if (!me.isConnect) {
         setTimeout(() => {
           fn(count + 1);
         }, 1000);
       } else {
-        console.log('已经连上...');
+        //console.log('已经连上...');
       }
     };
 
@@ -196,19 +196,19 @@ class FileClient {
 
       if (pkg === 'done') {
         hasTask = false;
-        console.log('transfer complete');
+        //console.log('transfer complete');
       } else if (pkg && !me.stop) {
         if (index < me.settings.concurrency) {
           createTask(index + 1);
         }
 
         const file = me.settings.file;
-        console.log('start==>', pkg.packageInfo);
+        //console.log('start==>', pkg.packageInfo);
         const blob = file.slice(pkg.packageInfo.start, pkg.packageInfo.end);
         const reader = new FileReader();
 
         reader.onerror = function (e) { // 读取失败的时候重新执行一次
-          console.log(e);
+          //console.log(e);
         };
 
         reader.readAsArrayBuffer(blob);
@@ -225,7 +225,7 @@ class FileClient {
             rs.pipe(rStream);
           }
           me.passedLength += pkg.packageInfo.size;
-          console.log('send package===>');
+          //console.log('send package===>');
           socketStreamClient(me.socket).emit('fileStream', rStream, pkg.packageInfo, config.umpAssistQueueName);
         };
       } else {
