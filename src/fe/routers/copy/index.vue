@@ -65,6 +65,7 @@
     <div class="copy-detail-wrap" ref="copyContent">
       <div class="copy-detail" v-if="activeCopyId">
         <div :class="[$style.toolbarWrap, 'clearfix']">
+          <input id="file-input" accept="*" class="upload-file-input" @change="chooseFiles" type="file" multiple="multiple">
           <button :class="$style.toolbarBtn" v-show="activeMenu === 'drafts'" @click="updateCopy()"><i class="iconfont icon-save"></i>保存</button>
           <button
             :class="$style.toolbarBtn"
@@ -81,7 +82,6 @@
             v-show="activeMenu === 'spam'"
             @click="handleRestoreCopy"><i class="iconfont icon-restore"></i>恢复</button>
           <span :class="$style.uploadBtn" v-show="activeMenu !== 'spam'" @click="fileInputClick()">附件<i class="iconfont icon-attachment"></i></span>
-          <input id="file-input" accept="*" class="upload-file-input" @change="chooseFiles" type="file" multiple="multiple">
           <div :class="$style.tagsGroupWrap" v-show="activeMenu === 'drafts'">
             <li :class="$style.tag" @click="handleConvert('0')">简</li>
             <li :class="$style.tag" @click="handleConvert('1')">繁</li>
@@ -292,10 +292,26 @@
         this.editorInstance.$emit('insertTag', `【${val}】`);
       },
       createRepeatCopy() {
-        const data = Object.assign({}, this.copyContent);
+        const data = { _id: this.copyContent._id };
         data.status = STATUS_CONFIG['drafts'].code;
-        delete data._id;
-        this.createCopy(data);
+        manuscriptAPI.copy(data)
+          .then((response) => {
+            if (this.activeMenu === 'drafts') {
+              this.copyList = [];
+              this.activeCopyId = '';
+              this.keyword = '';
+              if (this.currentPage === 1) {
+                this.updateList({ page: 1 });
+              } else {
+                this.currentPage = 1;
+              }
+            }
+            this.$router.push({ name: 'copy', params: { type: 'drafts' } });
+            this.getSummary();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
       },
       createCopy(data = {}) {
         if (!data.title) {
@@ -314,6 +330,7 @@
               }
             }
             this.$router.push({ name: 'copy', params: { type: 'drafts' } });
+            this.getSummary();
           })
           .catch((error) => {
             this.$message.error(error);

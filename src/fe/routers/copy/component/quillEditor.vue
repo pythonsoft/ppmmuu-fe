@@ -74,7 +74,6 @@
         this.$emit('input', text);
       },
       insertTag(val) {
-        console.log(this.index);
         this.quill.insertText(this.index, `${val}\n`);
         this.quill.setSelection(this.index + val.length + 1, 0);
       }

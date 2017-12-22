@@ -76,7 +76,7 @@
                   </fj-table-column>
                   <fj-table-column prop="progress" label="文件进度">
                     <template slot-scope="props">
-                      {{ getFileProgress(props.row) }}
+                      {{ `${getFileProgress(props.row)}%` }}
                     </template>
                   </fj-table-column>
                   <fj-table-column prop="fileInfo" label="文件大小">
@@ -86,7 +86,9 @@
                   </fj-table-column>
                   <fj-table-column prop="_id" label="操作">
                     <template slot-scope="props">
-                      <i class="iconfont icon-trash"></i>
+                      <i :class="['iconfont icon-pause', $style.operatorBtn]" @click=""></i>
+                      <i :class="['iconfont icon-play', $style.operatorBtn]" @click=""></i>
+                      <i :class="['iconfont icon-trash', $style.operatorBtn]" @click="deleteAttachment(props.row)"></i>
                     </template>
                   </fj-table-column>
                 </fj-table>
@@ -157,6 +159,9 @@
       }
     },
     watch: {
+      editorWidth(valsd) {
+        this.width = val;
+      },
       tags(val) {
         this.updateTags();
       },
@@ -212,7 +217,7 @@
         let content = '';
         editContent.forEach((item)=> {
           words += item.content.length;
-          content += `${this.tagsMap[item.tag]}\n${item.content}`;
+          content += `${this.tagsMap[item.tag]}${item.content}`;
         });
         this.words = words;
         this.selfContent = content;
@@ -277,6 +282,12 @@
           return formatSize(row.getFileInfo().size);
         }else{
           return formatSize(row.fileInfo.size);
+        }
+      },
+      deleteAttachment(row) {
+        if (row.getFileInfo) {
+          row.destroy();
+          const index = this.mixedTableData.indexOf(row);
         }
       }
     },
@@ -380,6 +391,7 @@
   .editorMainWrap {
     position: relative;
     padding: 0 40px;
+    overflow: hidden;
   }
   .attachmentWrap {
     height: 100%;
@@ -396,9 +408,8 @@
     color: #9FB3CA;
   }
   .attachmentTable {
+    position: relative;
     margin-top: 12px;
-    border: 1px solid #CDD9E5;
-    border-radius: 2px;
   }
   .editor {
     width: 100%;
@@ -407,5 +418,10 @@
     font-size: 14px;
     color: #4C637B;
     line-height: 21px;
+  }
+  .operatorBtn {
+    font-size: 12px;
+    color: #9FB3CA;
+    cursor: pointer;
   }
 </style>
