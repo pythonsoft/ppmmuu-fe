@@ -35,6 +35,7 @@ class FileClient {
     const file = this.settings.file;
     this.name = file.name;
     this.size = file.size;
+    this.speed = 0;
   }
 
   getFileInfo() {
@@ -52,6 +53,7 @@ class FileClient {
     const me = this;
 
     //me.connectState();
+    me.countSpeed();
     const ticket = utils.cipher(`${me.settings.userId}-${me.settings.isCrypto ? 1 : 0}`, me.settings.key);
 
     const socket = clientConnect(`http://${me.settings.host}:${me.settings.port}/file?im-ticket=${ticket}&im-key=ump`, {
@@ -186,6 +188,35 @@ class FileClient {
     return percent;
   }
 
+  countSpeed() {
+    const me = this;
+    const interval = 2000;
+    const totalSize = this.size;
+    let lastSize = 0;
+
+    const show = function () {
+      const percent = Math.ceil((me.passedLength / totalSize) * 100);
+      const averageSpeed = (me.passedLength - lastSize) / interval * 1000;
+
+      lastSize = me.passedLength;
+      me.speed = utils.formatSize(averageSpeed) + '/s';
+      //console.log(`已完成${utils.formatSize(me.passedLength)}, ${percent}%, 平均速度：${utils.formatSize(averageSpeed)}/s`);
+
+      if (me.passedLength >= totalSize) {
+        //console.log(`共用时：${(Date.now() - startTime) / 1000}秒`);
+      } else {
+        setTimeout(() => {
+          show();
+        }, interval);
+      }
+    };
+
+    show();
+  }
+
+  getSpeed() {
+    return this.speed;
+  }
   sendPartOfFilePackage() {
     let hasTask = true;
     const me = this;

@@ -160,3 +160,8 @@
   left: 0;
   opacity:0;
 }
+.attachment-number {
+  font-size: 14px;
+  color: #9FB3CA;
+  margin-left: 4px;
+}

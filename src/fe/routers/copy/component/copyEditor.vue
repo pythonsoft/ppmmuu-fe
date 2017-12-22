@@ -79,6 +79,11 @@
                       {{ `${getFileProgress(props.row)}%` }}
                     </template>
                   </fj-table-column>
+                  <fj-table-column prop="speed" label="传输速度">
+                    <template slot-scope="props">
+                      {{ `${getFileSpeed(props.row)}` }}
+                    </template>
+                  </fj-table-column>
                   <fj-table-column prop="fileInfo" label="文件大小">
                     <template slot-scope="props">
                       {{ getFileSize(props.row) }}
@@ -275,6 +280,13 @@
           return row.showProcess();
         }else{
           return row.progress;
+        }
+      },
+      getFileSpeed(row) {
+        if(row.getSpeed){
+          return row.getSpeed();
+        }else{
+          return row.speed || '';
         }
       },
       getFileSize(row) {
