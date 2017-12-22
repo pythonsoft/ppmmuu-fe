@@ -178,8 +178,9 @@
           let words = 0;
           let content = '';
           val.editContent.forEach((item)=> {
-            words += item.content.length;
-            content += `${this.tagsMap[item.tag]}\n${item.content}`;
+            const matchedCharacter = item.content.match(/(\S)/g);
+            words += matchedCharacter ? matchedCharacter.length : 0;
+            content += `${this.tagsMap[item.tag]}${item.content}`;
           });
           this.words = words;
           if (val._id !== this._id) {
@@ -194,16 +195,30 @@
         this.mixedRows = val ? val : [];
       },
       selfContent(val) {
+        let selfContent = val;
         const content = [];
         const reg = /【([^【]+)】/g;
-        const matchedLabels = val.match(reg) || [];
+        const matchedLabels = selfContent.match(reg) || [];
         for (let i = 0, len = matchedLabels.length; i < len; i++) {
           const label = matchedLabels[i];
           if (this.labels.indexOf(label) > -1) {
             const contentItem = { tag: this.labelsMap[label] };
-            const index = val.indexOf(label) + label.length;
-            const endIndex = (i === len - 1) ? val.length : val.indexOf(matchedLabels[i + 1]) ;
-            contentItem.content = val.slice(index, endIndex);
+            const index = selfContent.indexOf(label) + label.length;
+            let endIndex = index;
+            if (i === len - 1) {
+              endIndex = selfContent.length;
+            } else {
+              let nextLabelIndex = selfContent.indexOf(matchedLabels[i + 1]);
+              if (nextLabelIndex + label.length === index) {
+                const arr = selfContent.split(matchedLabels[i + 1]);
+                endIndex = index + arr[1].length;
+              } else {
+                endIndex = nextLabelIndex;
+              }
+            }
+            contentItem.content = selfContent.slice(index, endIndex);
+            selfContent = selfContent.slice(index);
+            // console.log(selfContent);
             content.push(contentItem);
           }
         }

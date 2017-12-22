@@ -84,8 +84,14 @@
   overflow: hidden;
 }
 .copy-item-content {
+  position: relative;
   margin-left: 29px;
   text-align: left;
+}
+.copy-item-words {
+  position: absolute;
+  right: 20px;
+  bottom: 0;
 }
 .copy-item-title {
   display: block;
