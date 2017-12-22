@@ -65,6 +65,7 @@
     <div class="copy-detail-wrap" ref="copyContent">
       <div class="copy-detail" v-if="activeCopyId">
         <div :class="[$style.toolbarWrap, 'clearfix']">
+          <input id="file-input" accept="*" class="upload-file-input" @change="chooseFiles" type="file" multiple="multiple">
           <button :class="$style.toolbarBtn" v-show="activeMenu === 'drafts'" @click="updateCopy()"><i class="iconfont icon-save"></i>保存</button>
           <button
             :class="$style.toolbarBtn"
@@ -81,10 +82,9 @@
             v-show="activeMenu === 'spam'"
             @click="handleRestoreCopy"><i class="iconfont icon-restore"></i>恢复</button>
           <span :class="$style.uploadBtn" v-show="activeMenu !== 'spam'" @click="fileInputClick()">附件<i class="iconfont icon-attachment"></i></span>
-          <input id="file-input" accept="*" class="upload-file-input" @change="chooseFiles" type="file" multiple="multiple">
           <div :class="$style.tagsGroupWrap" v-show="activeMenu === 'drafts'">
-            <li :class="$style.tag" @click="">简</li>
-            <li :class="$style.tag" @click="">繁</li>
+            <li :class="$style.tag" @click="handleConvert('0')">简</li>
+            <li :class="$style.tag" @click="handleConvert('1')">繁</li>
           </div>
           <div :class="$style.tagsGroupWrap" v-show="activeMenu === 'drafts'">
             <template v-if="toolbarSize === 'normal'">
@@ -100,7 +100,7 @@
               </span>
               <div :class="$style.tagsPanel" v-show="showTags" v-clickoutside="closeTagsPanel">
                 <ul>
-                  <li v-for="tag in tags" :class="$style.tag" @click="">{{ tag.label }}</li>
+                  <li v-for="tag in tags" :class="$style.tag" @click="insertTag(tag.label)">{{ tag.label }}</li>
                 </ul>
               </div>
             </template>
@@ -112,9 +112,12 @@
         <copy-editor
           :content.sync="copyContent"
           :mixedTableData.sync="mixedTableData"
+          :copy.sync="copyContent"
+          :tags="tags"
           :show-saved-text="showSavedText"
           :editor-width="contentWidth"
-          :editor-height="contentHeight - 78"></copy-editor>
+          :editor-height="contentHeight - 78"
+          :editor-instance="editorInstance"></copy-editor>
       </div>
       <div v-else class="empty-box">
         <i class="iconfont icon-empty-copy"></i>
@@ -135,6 +138,7 @@
 </template>
 <script>
   import './index.css';
+  import Vue from 'vue';
   import CopyEditor from './component/copyEditor';
   import ConfigDialog from './component/copyConfigDialog';
   import manuscriptAPI from '../../api/manuscript';
@@ -205,6 +209,7 @@
     },
     directives: { Clickoutside },
     created() {
+      this.editorInstance = new Vue();
       this.activeMenu = this.$route.params.type;
       this.getSummary();
       this.getTagsConfig();
@@ -265,11 +270,48 @@
       }
     },
     methods: {
+      handleConvert(type) {
+        const copyContent = this.copyContent;
+        const data = {
+          conversionType: type,
+          title: copyContent.title,
+          viceTitle: copyContent.viceTitle,
+          content: JSON.stringify(copyContent.editContent)
+        };
+        manuscriptAPI.hongKongSimplified(data)
+          .then((response) => {
+            const resData = response.data;
+            this.copyContent = Object.assign({}, this.copyContent, { title: resData.title, viceTitle: resData.viceTitle });
+            this.editorInstance.$emit('updateContent', JSON.parse(resData.content));
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      insertTag(val) {
+        this.editorInstance.$emit('insertTag', `【${val}】`);
+      },
       createRepeatCopy() {
-        const data = Object.assign({}, this.copyContent);
+        const data = { _id: this.copyContent._id };
         data.status = STATUS_CONFIG['drafts'].code;
-        delete data._id;
-        this.createCopy(data);
+        manuscriptAPI.copy(data)
+          .then((response) => {
+            if (this.activeMenu === 'drafts') {
+              this.copyList = [];
+              this.activeCopyId = '';
+              this.keyword = '';
+              if (this.currentPage === 1) {
+                this.updateList({ page: 1 });
+              } else {
+                this.currentPage = 1;
+              }
+            }
+            this.$router.push({ name: 'copy', params: { type: 'drafts' } });
+            this.getSummary();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
       },
       createCopy(data = {}) {
         if (!data.title) {
@@ -288,6 +330,7 @@
               }
             }
             this.$router.push({ name: 'copy', params: { type: 'drafts' } });
+            this.getSummary();
           })
           .catch((error) => {
             this.$message.error(error);
