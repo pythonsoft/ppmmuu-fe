@@ -187,8 +187,7 @@
           viceTitle: '',
           status: 1,
           editContent: [],
-          collaborators: [],
-          attachments: []
+          collaborators: []
         },
         autoSave: false,
         showSavedText: false,
@@ -200,6 +199,7 @@
         contentWidth: 0,
         contentHeight: 0,
         transferAttachments: {},
+        oldListAttachments: {},
         mixedTableData: []
       };
     },
@@ -244,8 +244,9 @@
           const me = this;
           manuscriptAPI.listAttachments({ params: { manuscriptId: val } })
             .then((response) => {
-              const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];;
-              this.mixedTableData = attachments.concat(response.data.docs);
+              const attachments = me.transferAttachments[me.copyContent._id] ? me.transferAttachments[me.copyContent._id] : [];
+              me.oldListAttachments[me.copyContent._id] = response.data.docs;
+              me.mixedTableData = attachments.concat(response.data.docs);
             })
             .catch((error) => {
               this.$message.error(error);
@@ -517,6 +518,9 @@
                   userId: getItemFromLocalStorage('userInfo')._id,
                   name: task.getFileInfo().name,
                 }
+                if(!me.copyContent.attachments) {
+                  me.copyContent.attachments = [];
+                }
                 me.copyContent.attachments.push(item);
                 task.destroy();
                 flag = true;
@@ -526,25 +530,28 @@
             if(flag) {
               me.updateCopy(() => {
                 manuscriptAPI.listAttachments({ params: { manuscriptId: me.copyContent._id } })
-                    .then((response) => {
-                      this.mixedTableData = attachments.concat(response.data.docs);
-                    })
-                    .catch((error) => {
-                      this.$message.error(error);
-                    });
-              });
-            }else{
-              manuscriptAPI.listAttachments({ params: { manuscriptId: me.copyContent._id } })
                   .then((response) => {
-                    this.mixedTableData = attachments.concat(response.data.docs);
+                    const newAttach = response.data.docs;
+                    me.oldListAttachments[me.copyContent._id] = newAttach;
+                    me.mixedTableData = attachments.concat(newAttach);
+
+                    for(let i = 0, len = me.copyList.length; i < len; i++){
+                      if(me.copyList[i]._id === me.copyContent._id){
+                        me.copyList[i].attachments = newAttach;
+                        break;
+                      }
+                    }
                   })
                   .catch((error) => {
-                    this.$message.error(error);
+                    me.$message.error(error);
                   });
+              });
+            }else{
+              me.mixedTableData = attachments.concat(me.oldListAttachments[me.copyContent._id]);
             }
             me.transferAttachments[me.copyContent._id] = attachments;
           }
-        }, 100);     //500ms更新一次进度
+        }, 500);     //500ms更新一次进度
       }
     },
     components: {
