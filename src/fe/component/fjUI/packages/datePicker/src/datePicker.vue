@@ -13,7 +13,7 @@
       @mouseenter.native="inputHovering = true"
       @mouseleave.native="inputHovering = false" />
     <div
-      :class="['date-range-picker-wrap clearfix', { 'focus': isShowPanel }]"
+      :class="['date-range-picker-wrap clearfix', `date-range-picker-${theme}`, { 'focus': isShowPanel }]"
       v-if="type==='datetimerange' && direction === 'vertical'"
       @mouseenter="inputHovering = true"
       @mouseleave="inputHovering = false"
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div
-      :class="['date-range-picker-wrap-horizontal clearfix', { 'focus': isShowPanel }]"
+      :class="['date-range-picker-wrap-horizontal clearfix', `date-range-picker-${theme}`, { 'focus': isShowPanel }]"
       v-if="type==='datetimerange' && direction === 'horizontal'"
       @mouseenter="inputHovering = true"
       @mouseleave="inputHovering = false"

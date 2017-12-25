@@ -76,6 +76,7 @@
             <h4>新聞日期</h4>
             <div id="media-category-date">
               <fj-date-picker
+                theme="fill"
                 :parent-el="(()=>{return this.$refs.mediaLeft})()"
                 type="datetimerange"
                 placeholder="请选择日期范围"
@@ -88,6 +89,7 @@
             <h4>首播日期</h4>
             <div id="media-category-date">
               <fj-date-picker
+                theme="fill"
                 :parent-el="(()=>{return this.$refs.mediaLeft})()"
                 type="datetimerange"
                 placeholder="请选择日期范围"
@@ -119,9 +121,9 @@
               <span class="media-center-result-count">
                 {{searchResult}}
               </span>
-              <div :class="['media-center-view-bar', {'media-center-view-bar-left': listWidth === MIN_LIST_WIDTH}]">
-                <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
-                --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
+              <div :class="['media-center-view-bar', {'media-center-view-bar-left': listWidth < MIN_RESULT_BAR_WIDTH}]">
+                <span class="shortcut-btn" @click="setDatetimerange('lastWeek')">最近一周</span><!--
+                --><span class="shortcut-btn" @click="setDatetimerange('lastMonth')">最近一月</span><!--
                 --><div class="order-select">
                   <fj-select :parent-el="selectParentEl" v-model="orderVal" size="small">
                     <fj-option
@@ -130,7 +132,9 @@
                       :value="item.value"
                       :label="item.label"></fj-option>
                   </fj-select>
-                </div>
+                </div><!--
+                --><span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
+                --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
               </div>
             </div>
 
@@ -200,6 +204,7 @@
   const userAPI = require('../../api/user');
 
   const MIN_LIST_WIDTH = 448;
+  const MIN_RESULT_BAR_WIDTH = 612;
 
   export default {
     components: {
@@ -228,6 +233,7 @@
         offsetWidth: 0,
         offsetHeight: 0,
         MIN_LIST_WIDTH: MIN_LIST_WIDTH,
+        MIN_RESULT_BAR_WIDTH: MIN_RESULT_BAR_WIDTH,
         listWidth: 0,
         itemSize: { width: 198, height: 180 },
         timeId: '',
@@ -237,6 +243,7 @@
 
         datetimerange1: [],
         datetimerange2: [],
+        datetimerangeCreated: [],
         displayMovieEditor: false,
 
         parentSize: { width: '100', height: '100' },
@@ -351,6 +358,7 @@
       },
       searchClick() {
         this.currentPage = 1;
+        this.datetimerangeCreated = [];
         this.resize();
       },
       getSeachConfigs() {
@@ -366,12 +374,24 @@
           me.$message.error(error);
         });
       },
+      setDatetimerange(type) {
+        const start = new Date();
+        const end = new Date();
+        if (type === 'lastMonth') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+        } else if (type === 'lastWeek') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
+        }
+        this.datetimerangeCreated = [start, end];
+        this.getMediaList();
+      },
       getMediaList() {
         this.listType = 'normal';
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const f_date_162 = getTimeRange(this.datetimerange1, 'news_data'); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2, 'airdata'); // 首播日期
+        const created = getTimeRange(this.datetimerangeCreated, 'created');
         console.log(this.fl);
         const options = {
           source: this.fl,
@@ -386,6 +406,7 @@
         const must = options.match;
         options.range.push(f_date_162);
         options.range.push(f_date_36);
+        options.range.push(created);
         getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');

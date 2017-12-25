@@ -56,6 +56,9 @@
 .fj-tree-current-item .tri-right {
   border-color: transparent transparent transparent #fff;
 }
+.fj-tree-node-content {
+  white-space: pre-wrap;
+}
 
 .theme-dark .tri-bottom,
 .theme-dark .tri-right {
