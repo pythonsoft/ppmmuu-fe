@@ -364,10 +364,20 @@
   display: inline-block;
   width: 141px;
 }
+.shortcut-btn {
+  display: inline-block;
+  margin-right: 20px;
+  font-size: 12px;
+  color: #2A3E52;
+  cursor: pointer;
+}
+.shortcut-btn:hover {
+  color: #38B1EB;
+}
 .media-center-view-grid,
 .media-center-view-list {
   vertical-align: top;
-  margin-right: 20px;
+  margin-left: 20px;
   cursor: default;
   color: #9FB3CA;
 }
