@@ -89,8 +89,15 @@
           </div>
         </fj-tab-pane>
         <fj-tab-pane label="视频片段" name="tab3">
-          <div class="media-center-file-item media-center-file-item-bottom-line" v-if="fragments.length === 0">无</div>
-          <div class="media-center-file-item media-center-file-item-bottom-line" v-else v-for="file in fragments">
+          <div class="media-center-file-item" v-if="fragmentsTree.length === 0 || fragmentsTree[0].children.length === 0">无</div>
+          <fj-tree
+            v-else
+            :default-expanded-key="fragmentsTree[0].id"
+            :data="fragmentsTree"
+            node-key="id"
+            @node-click="$emit('update-list', fragments)"></fj-tree>
+
+          <!-- <div class="media-center-file-item media-center-file-item-bottom-line" v-else v-for="file in fragments">
             <table class="media-center-table">
               <tr>
                 <td class="item-info-value" width="303" @click="$emit('update-list', fragments)">
@@ -120,7 +127,7 @@
                 </td>
               </tr>
             </table>
-          </div>
+          </div> -->
         </fj-tab-pane>
       </fj-tabs>
     </div>
@@ -201,6 +208,7 @@
         },
         rootid: '',
         fragments: [],
+        fragmentsTree: [],
         fileInfo: {},
         downloadDialogDisplay: false,
         shelfDialogVisible: false,
@@ -301,14 +309,31 @@
           pageSize: 999
         };
         const fragments = [];
+        const fragmentsTree = [];
+        const children = [];
         api.esSearch(options)
           .then((res)=>{
             const docs = res.data.docs;
             for(let i = 0, len = docs.length; i < len; i++){
+              const name = `${getTitle(docs[i])}    ${getDuration(docs[i])}`;
+              const item = Object.assign({}, docs[i], { name: name });
               if(docs[i].id !== me.rootid){
-                fragments.push(docs[i]);
+                children.push(item);
+              } else {
+                fragmentsTree.push(item);
+              }
+              fragments.push(docs[i]);
+            }
+            for(let i = 0; i < fragmentsTree.length; i++) {
+              const fragment = fragmentsTree[i];
+              fragment.children = [];
+              for(let j = 0; j < children.length; j++) {
+                if (children[j].rootid === fragment.id) {
+                  fragment.children.push(children[j]);
+                }
               }
             }
+            me.fragmentsTree = fragmentsTree;
             me.fragments = fragments;
           })
           .catch((error)=>{
