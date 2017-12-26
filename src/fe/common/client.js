@@ -17,12 +17,13 @@ class FileClient {
     this.settings = Object.assign({
       host: config.imHost,
       port: config.imPort,
-      key: 'secret',
       userId: 'chaoningx',
       userName: 'chaoningx',
       isCrypto: false,
       file: '',
-      concurrency: 0
+      concurrency: 0,
+      ticket: '',
+      vueInstance: null,
     }, options);
 
     this.transferTaskInstance = null;
@@ -54,12 +55,14 @@ class FileClient {
 
     //me.connectState();
     me.countSpeed();
-    const ticket = utils.cipher(`${me.settings.userId}-${me.settings.isCrypto ? 1 : 0}`, me.settings.key);
+    const ticket = me.settings.ticket;
+    const isCrypto = me.settings.isCrypto ? '1' : '0';
 
-    const socket = clientConnect(`http://${me.settings.host}:${me.settings.port}/file?im-ticket=${ticket}&im-key=ump`, {
-      extraHeaders: {
+    const socket = clientConnect(`ws://${me.settings.host}:${me.settings.port}/file`, {
+      query: {
         'im-ticket': ticket,
-        'im-key': 'ump'
+        'im-key': 'ump',
+        'im-secret': isCrypto
       }
     });
 
@@ -76,8 +79,7 @@ class FileClient {
         _id: me._id
       });
       task.socketId = socket.id;
-      //console.log('headerPackage===>', task.headerPackage);
-      socket.emit('headerPackage', task.headerPackage, config.umpAssistQueueName);
+      socket.emit('headerPackage', task.headerPackage);
       me.transferTaskInstance = task;
       me.isConnect = true;
     });
@@ -98,9 +100,18 @@ class FileClient {
       me.sendPartOfFilePackage();
     });
 
+    socket.on('transfer_error', (msg) => {
+      //console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
+      me.alertError(msg);
+      this.status = 'error';
+      me.destroy();
+    });
+
     socket.on('invalid_request', (msg) => {
       //console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
+      me.alertError(msg);
       this.status = 'error';
+      me.destroy();
     });
 
     socket.on('complete', () => {
@@ -111,6 +122,7 @@ class FileClient {
     socket.on('error', (err) => {
       //console.log(`error socket id: ${me.getSocketId()}`, err);
       this.status = 'error';
+      me.alertError(err);
       me.destroy();
     });
 
@@ -118,6 +130,11 @@ class FileClient {
       //console.log(`disconnect with server${me.getSocketId()}`, msg);
       me.destroy();
     });
+  }
+  alertError(error){
+    if(this.settings.vueInstance){
+      this.settings.vueInstance.$message.error(error);
+    }
   }
   destroy() {
     if (this.socket) {
@@ -130,7 +147,7 @@ class FileClient {
   stopTask() {
     this.stop = true;
     const pkg = this.transferTaskInstance.getPackage();
-    this.socket.emit('stop', pkg.packageInfo, config.umpAssistQueueName);
+    this.socket.emit('stop', pkg.packageInfo);
   }
   restart() {
     this.stop = false;
@@ -257,7 +274,7 @@ class FileClient {
           }
           me.passedLength += pkg.packageInfo.size;
           //console.log('send package===>');
-          socketStreamClient(me.socket).emit('fileStream', rStream, pkg.packageInfo, config.umpAssistQueueName);
+          socketStreamClient(me.socket).emit('fileStream', rStream, pkg.packageInfo);
         };
       } else {
         hasTask = false;

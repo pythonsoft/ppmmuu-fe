@@ -21,6 +21,5 @@ config.baseURL = `http://${config.baseDomain}`;
 // im地址
 config.imHost = '10.0.15.152';
 config.imPort = 9000;
-config.umpAssistQueueName = 'ump-assist-queue';
 
 module.exports = config;

@@ -552,7 +552,9 @@
           const task = new fileClient({
             file: files[i],
             userId: getItemFromLocalStorage('userInfo')._id,
-            userName: getItemFromLocalStorage('userInfo').name
+            userName: getItemFromLocalStorage('userInfo').name,
+            ticket: getItemFromLocalStorage('token'),
+            vueInstance: this
           });
           task.transfer();
           attachments.push(task);
