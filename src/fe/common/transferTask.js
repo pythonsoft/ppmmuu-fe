@@ -54,7 +54,7 @@ class TransferTask {
       size: size,
       lastModifiedTime: this.settings.lastModifiedTime,
       createdTime: '',
-      eachPackageSize: 1024 * 1024 * 5,
+      eachPackageSize: 1024 * 100,
       packageCount: 0,
       order: [] // child task uuid list
     };
