@@ -380,6 +380,7 @@
       },
       searchClick() {
         this.currentPage = 1;
+        this.createdTimeVal = 'all';
         this.datetimerangeCreated = [];
         this.resize();
       },
