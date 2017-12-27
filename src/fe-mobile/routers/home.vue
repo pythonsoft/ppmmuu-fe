@@ -260,10 +260,12 @@
           this.isShowSearchCondition = true;
           this.getSearchHistory();
         } else {
+          if (!this.isShowSearchCondition) {
+            this.$router.push({ name: 'mediaCenter' });
+          }
           this.isShowSearchCondition = false;
           this.handleReset();
           this.searchOptions = {};
-          this.$router.go(-1);
           // if (!isEmptyObject(this.searchOptions)) {
           //   this.$router.push({ name: 'mediaCenter' });
           //   this.searchOptions = {};
