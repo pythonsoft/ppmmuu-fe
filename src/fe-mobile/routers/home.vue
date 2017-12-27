@@ -57,7 +57,18 @@
           {{config.label}}
           <i class="iconfont icon-arrow-down" @click="config.collapse = !config.collapse"></i>
         </h4>
-        <ul class="clearfix media-category-list">
+        <ul v-if="config.displayItems" class="clearfix media-category-list">
+          <li v-for="row in config.displayItems" class="media-category-option-row">
+            <span
+              v-for="item in row"
+              :class="[
+                'media-category-option-row-content',
+                {'selected': config.tempSelected.indexOf(item.value)>-1}
+              ]"
+              @click="setMultipleValue(config.tempSelected, item.value)">{{ item.label }}</span>
+          </li>
+        </ul>
+        <ul v-else class="clearfix media-category-list">
           <li v-for="item in config.items" class="media-category-option">
             <span
               :class="[
@@ -249,10 +260,12 @@
           this.isShowSearchCondition = true;
           this.getSearchHistory();
         } else {
+          if (!this.isShowSearchCondition) {
+            this.$router.push({ name: 'mediaCenter' });
+          }
           this.isShowSearchCondition = false;
           this.handleReset();
           this.searchOptions = {};
-          this.$router.go(-1);
           // if (!isEmptyObject(this.searchOptions)) {
           //   this.$router.push({ name: 'mediaCenter' });
           //   this.searchOptions = {};
@@ -265,19 +278,40 @@
       getSeachConfigs() {
         mediaAPI.getSearchConfig().then((res) => {
           const tempSelectConfigs = [];
-          res.data.searchSelectConfigs.forEach(function(item) {
+          res.data.searchSelectConfigs.forEach(function(item, index) {
             if (item.key !== 'occur_country') {
-              item.collapse = false;
+              item.collapse = index < 3 ? false : true;
               item.tempSelected = item.selected.slice();
               item.items.sort(function(a, b) {
                 return a.label.length - b.label.length;
               });
               tempSelectConfigs.push(item);
+            } else {
+              item.collapse = true;
+              item.tempSelected = item.selected.slice();
+              // item.items.forEach(function(subItem) {
+              //   if (subItem.label.length > 16) {
+              //     subItem.label = subItem.label.slice(0, 16) + '...';
+              //   }
+              // });
+              const displayItems = [];
+              let tempDisplayItem = [];
+              for (let i = 0; i < item.items.length; i++) {
+                const subItem = item.items[i];
+                if (tempDisplayItem.length < 3) {
+                  tempDisplayItem.push(subItem);
+                } else {
+                  displayItems.push(tempDisplayItem.slice());
+                  tempDisplayItem = [subItem];
+                }
+              }
+              item.displayItems = displayItems;
+              tempSelectConfigs.push(item);
             }
           });
           this.searchSelectConfigs = tempSelectConfigs;
           this.searchRadioboxConfigs = res.data.searchRadioboxConfigs.map(function(item) {
-            item.collapse = false;
+            item.collapse = true;
             item.tempSelected = item.selected;
             return item;
           });

@@ -183,6 +183,12 @@ const ORDER_OPTIONS = [
   { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'airdata' }
 ];
 
+const CREATED_TIME_OPTIONS = [
+  { value: 'all', label: '时间不限' },
+  { value: 'lastWeek', label: '最近一周' },
+  { value: 'lastMonth', label: '最近一月' }
+];
+
 // 从哪个接口拿的数据
 const FROM_WHERE = {
   program: 1,
@@ -195,6 +201,7 @@ const HHIGHLIGHT_FIELDS2 = 'name,program_type,program_name_cn,program_name_en,co
 const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,airdata,publish_time,program_name,from_where,full_text,rootid';
 
 method.ORDER_OPTIONS = ORDER_OPTIONS;
+method.CREATED_TIME_OPTIONS = CREATED_TIME_OPTIONS;
 method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;
 method.HHIGHLIGHT_FIELDS2 = HHIGHLIGHT_FIELDS2;
 method.FILETR_FIELDS = FILETR_FIELDS;

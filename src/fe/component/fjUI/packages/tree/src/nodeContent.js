@@ -10,7 +10,7 @@ export default {
     return (
       parent.renderContent
         ? parent.renderContent.call(parent._renderProxy, h, node)
-        : <span>{node.name}</span>
+        : <span class="fj-tree-node-content">{node.name}</span>
     );
   }
 };

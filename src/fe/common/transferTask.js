@@ -109,8 +109,8 @@ class TransferTask {
     const headerPackage = this.headerPackage;
     const eachPackageSize = headerPackage.eachPackageSize;
     const readStartPosition = eachPackageSize * index;
-    let readEndPosition = readStartPosition + eachPackageSize - 1;
-    const maxEndPosition = headerPackage.size - 1;
+    let readEndPosition = readStartPosition + eachPackageSize;
+    const maxEndPosition = headerPackage.size;
     let size = headerPackage.eachPackageSize;
 
     if (readEndPosition > maxEndPosition) {
