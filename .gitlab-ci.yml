@@ -6,7 +6,7 @@ stages:
 deploy_to_68_job:
   stage: deploy
   script:
-    - git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git dev HEAD | (rm -rf /home/gitlab-runner/UMP-FE && mkdir -p /home/gitlab-runner/UMP-FE && cd /home/gitlab-runner/UMP-FE && tar xf -)
+    - git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git dev | (rm -rf /home/gitlab-runner/UMP-FE && mkdir -p /home/gitlab-runner/UMP-FE && cd /home/gitlab-runner/UMP-FE && tar xf -)
 
   environment:
     name: test
