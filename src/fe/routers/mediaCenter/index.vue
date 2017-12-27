@@ -122,8 +122,15 @@
                 {{searchResult}}
               </span>
               <div :class="['media-center-view-bar', {'media-center-view-bar-left': listWidth < MIN_RESULT_BAR_WIDTH}]">
-                <span class="shortcut-btn" @click="setDatetimerange('lastWeek')">最近一周</span><!--
-                --><span class="shortcut-btn" @click="setDatetimerange('lastMonth')">最近一月</span><!--
+                <div class="order-select">
+                  <fj-select :parent-el="selectParentEl" v-model="createdTimeVal" size="small">
+                    <fj-option
+                      v-for="item in CREATED_TIME_OPTIONS"
+                      :key="item.value"
+                      :value="item.value"
+                      :label="item.label"></fj-option>
+                  </fj-select>
+                </div><!--
                 --><div class="order-select">
                   <fj-select :parent-el="selectParentEl" v-model="orderVal" size="small">
                     <fj-option
@@ -187,6 +194,7 @@
     formatMust,
     getHighLightFields,
     ORDER_OPTIONS,
+    CREATED_TIME_OPTIONS,
     HHIGHLIGHT_FIELDS1,
     HHIGHLIGHT_FIELDS2,
     FILETR_FIELDS
@@ -216,7 +224,9 @@
     },
     data() {
       return {
+        CREATED_TIME_OPTIONS: CREATED_TIME_OPTIONS,
         ORDER_OPTIONS: ORDER_OPTIONS,
+        createdTimeVal: 'all',
         orderVal: 'order1',
         defaultRoute: '/',
         keyword: '',
@@ -270,6 +280,18 @@
     watch: {
       orderVal(val) {
         this.currentPage = 1;
+        this.getMediaList();
+      },
+      createdTimeVal(val) {
+        this.currentPage = 1;
+        const start = new Date();
+        const end = new Date();
+        if (val === 'lastMonth') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+        } else if (val === 'lastWeek') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
+        }
+        this.datetimerangeCreated = [start, end];
         this.getMediaList();
       }
     },
@@ -375,15 +397,15 @@
         });
       },
       setDatetimerange(type) {
-        const start = new Date();
-        const end = new Date();
-        if (type === 'lastMonth') {
-          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
-        } else if (type === 'lastWeek') {
-          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
-        }
-        this.datetimerangeCreated = [start, end];
-        this.getMediaList();
+        // const start = new Date();
+        // const end = new Date();
+        // if (type === 'lastMonth') {
+        //   start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+        // } else if (type === 'lastWeek') {
+        //   start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
+        // }
+        // this.datetimerangeCreated = [start, end];
+        // this.getMediaList();
       },
       getMediaList() {
         this.listType = 'normal';
