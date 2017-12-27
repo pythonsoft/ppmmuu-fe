@@ -364,6 +364,9 @@
   display: inline-block;
   width: 141px;
 }
+.order-select + .order-select {
+  margin-left: 10px;
+}
 .shortcut-btn {
   display: inline-block;
   margin-right: 20px;
