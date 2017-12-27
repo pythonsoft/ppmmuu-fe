@@ -8,7 +8,7 @@
       <div class="engine-setting">
         <div class="engine-setting-bar">
           <span class="engine-setting-bar-title">配置项</span>
-          <fj-button type="info" size="mini" @click="addClick">增加</fj-button>
+          <fj-button type="primary" size="mini" @click="addClick">增加</fj-button>
           <fj-button type="danger" size="mini" @click="deleteClick" :disabled="!tableSelectInfo.key">删除</fj-button>
         </div>
         <div class="engine-setting-list">

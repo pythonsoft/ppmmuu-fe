@@ -22,11 +22,11 @@
       </template>
       <template slot="operation">
         <div class="operation-btn-group">
-          <fj-button type="info" size="mini" v-bind:disabled="canPassIds.length < 1" @click="handleClickPass">通过</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="canRejectIds.length < 1" @click="handleClickReject">拒绝</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="canPassIds.length < 1" @click="handleClickPass">通过</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="canRejectIds.length < 1" @click="handleClickReject">拒绝</fj-button>
         </div>
         <div class="operation-btn-group">
-          <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
+          <fj-button type="primary" size="mini" @click="refreshClick">刷新</fj-button>
         </div>
       </template>
       <template slot="table">

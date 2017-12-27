@@ -3,7 +3,7 @@
     <template slot="search-left">权限组</template>
     <template slot="search-right">
       <div class="permission-search-item">
-        <fj-input placeholder="请输入权限组" v-model="name" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
+        <fj-input placeholder="请输入权限组或主菜单" v-model="name" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
       </div>
       <div class="permission-search-item">
         <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
@@ -13,6 +13,7 @@
       <fj-table :data="tableData" name="table1" ref="table">
         <fj-table-column prop="index" label="名称" width="200"></fj-table-column>
         <fj-table-column prop="name" label="中文名称" width="200"></fj-table-column>
+        <fj-table-column prop="topParentMenu" label="主菜单" width="200"></fj-table-column>
         <fj-table-column prop="description" label="描述"></fj-table-column>
       </fj-table>
     </template>

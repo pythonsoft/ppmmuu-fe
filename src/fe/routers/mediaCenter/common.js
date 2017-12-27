@@ -4,7 +4,7 @@ const global = require('../../global');
 
 const common = {
   getThumb(item) {
-    if(item.getIcon) {
+    if (item.getIcon) {
       return `${global.baseURL}${item.getIcon}`;
     }
     return api.getIcon(item.id, item.from_where);
@@ -42,31 +42,31 @@ const common = {
       key: 'news_data',
       name: '新闻时间',
       value: ''
-    },{
+    }, {
       key: 'airdata',
       name: '首播时间',
       value: ''
-    },{
+    }, {
       key: 'publish_time',
       name: '发布时间',
       value: ''
-    },{
+    }, {
       key: 'last_modify',
       name: '入库时间',
       value: ''
-    }]
-    for(let i = 0, len = timeConfig.length; i < len; i++){
+    }];
+    for (let i = 0, len = timeConfig.length; i < len; i++) {
       const temp = timeConfig[i];
       const t = item[temp.key];
-      if(t){
+      if (t) {
         const compareDate = new Date('1900-01-01');
-        if(new Date(t) > compareDate) {
+        if (new Date(t) > compareDate) {
           temp.value = utils.formatTime(t);
           return temp;
         }
       }
     }
-    return {key: '', name: '', value: ''};
+    return { key: '', name: '', value: '' };
   }
 };
 

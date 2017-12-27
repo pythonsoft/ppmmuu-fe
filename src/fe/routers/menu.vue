@@ -1,16 +1,38 @@
 <template>
-  <fj-menu :default-active="defaultRoute" router @select="menuSelect">
-    <div class="iconfont icon-phoenixtv logo-wrap"></div>
-    <fj-menu-item
-      v-for="item in menu"
-      :key="item.index"
-      :index="item.index"
-      :route="item.route">
-      <div class="menu-box">
-        <i class="iconfont menu-icon" :class="item.icon"></i>
-        <div>{{ item.text }}</div>
-      </div>
-    </fj-menu-item>
+  <div class="menu">
+    <div class="iconfont icon-phoenixtv menu-logo-wrap"></div>
+    <div class="menu-wrap">
+    <fj-menu :default-active="defaultRoute" router @select="menuSelect">
+      <fj-menu-item
+        v-for="item in menu"
+        :key="item.index"
+        :index="item.index"
+        :route="item.route">
+        <div class="menu-box">
+          <i class="iconfont menu-icon" :class="item.icon"></i>
+          <div>{{ item.text }}</div>
+        </div>
+      </fj-menu-item>
+
+      <!-- <div class="menu-logout" @click.stop="logout">
+        <div class="fj-menu-item">
+          <div class="menu-box">
+            <i class="iconfont menu-icon icon-logout"></i>
+            <div>退出</div>
+          </div>
+        </div>
+      </div> -->
+      <!-- <fj-dialog title="退出当前帐户" :visible.sync="display" @close="cancelDialog">
+        <template>
+          <span>确定退出当前帐户吗?</span>
+        </template>
+        <div slot="footer">
+          <fj-button @click="cancelDialog">取消</fj-button>
+          <fj-button type="primary" @click="confirmDialog">确定</fj-button>
+        </div>
+      </fj-dialog> -->
+    </fj-menu>
+    </div>
     <div class="app-profile-entry" ref="profileEntry" @click="showProfilePopover" v-clickoutside="closeProfilePopover">
       <template v-if="userInfo.photo">
         <img :src="userInfo.photo" class="app-profile-avatar" width="24" height="24">
@@ -20,24 +42,7 @@
       </template>
       <div>{{ userInfo.name }}</div>
     </div>
-    <!-- <div class="menu-logout" @click.stop="logout">
-      <div class="fj-menu-item">
-        <div class="menu-box">
-          <i class="iconfont menu-icon icon-logout"></i>
-          <div>退出</div>
-        </div>
-      </div>
-    </div> -->
-    <!-- <fj-dialog title="退出当前帐户" :visible.sync="display" @close="cancelDialog">
-      <template>
-        <span>确定退出当前帐户吗?</span>
-      </template>
-      <div slot="footer">
-        <fj-button @click="cancelDialog">取消</fj-button>
-        <fj-button type="primary" @click="confirmDialog">确定</fj-button>
-      </div>
-    </fj-dialog> -->
-  </fj-menu>
+  </div>
 </template>
 <script>
   import Vue from 'vue';
@@ -52,6 +57,7 @@
   const menu = [
     { text: '舆情', index: 'trends', route: '/trends', icon: 'icon-yuqing' },
     { text: '媒体库', index: 'mediaCenter', route: '/mediaCenter', icon: 'icon-media-library' },
+    { text: '文稿', index: 'copy', route: '/copy/drafts', icon: 'icon-articles' },
     { text: '入库', index: 'library', route: '/library', icon: 'icon-library' },
     { text: '上架', index: 'shelf', route: '/shelf', icon: 'icon-shangjia' },
     { text: '订阅', index: 'subscriptions', route: '/subscriptions', icon: 'icon-subscription' },
@@ -65,7 +71,7 @@
       showMenuIndex: {
         type: Array,
         default() {
-          return ['mediaCenter', 'taskCenter', 'library', 'personalCenter'];
+          return ['mediaCenter', 'taskCenter', 'library', 'personalCenter', 'copy'];
         }
       }
     },
@@ -156,7 +162,11 @@
   };
 </script>
 <style>
-  .logo-wrap {
+  .menu-logo-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 62px;
     line-height: 62px;
     background: #4C637B;
@@ -165,6 +175,13 @@
     color: #fff;
     text-align: center;
     font-size: 26px;
+  }
+  .menu-wrap {
+    position: absolute;
+    top: 62px;
+    left: 0;
+    right: 0;
+    bottom: 77px;
   }
   .menu-box {
     position: absolute;
@@ -198,6 +215,7 @@
     text-align: center;
     color: #8CA2BB;
     cursor: pointer;
+    background: #4C637B;
   }
   .app-profile-avatar {
     width: 24px;

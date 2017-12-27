@@ -84,12 +84,22 @@
       type: { type: String, default: 'grid' },
       width: { type: Number, default: 100 },
       items: { type: Array, default: [] },
-      editable: { type: Boolean, default: false }
+      editable: { type: Boolean, default: false },
+      currentItem: {}
     },
     data() {
       return {
-        selectInfoId: ''
+        selectInfoId: this.currentItem && this.currentItem.id ? this.currentItem.id : ''
       };
+    },
+    watch: {
+      currentItem(val) {
+        if (val && val.id) {
+          this.selectInfoId = val.id;
+        } else {
+          this.selectInfoId = '';
+        }
+      }
     },
     methods: {
       deleteItem(item) {
@@ -98,6 +108,7 @@
       change(item) {
         this.selectInfoId = item.id;
         this.$emit('currentItemChange', item);
+        this.$emit('update:currentItem', item);
       },
       setThumbClass(id, className) {
         let cn = className || '';

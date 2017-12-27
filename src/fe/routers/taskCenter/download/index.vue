@@ -21,19 +21,19 @@
     </template>
     <template slot="operation">
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
       </span>
       <span class="layout-btn-margin">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
+        <fj-button type="primary" size="mini" @click="refreshClick">刷新</fj-button>
       </span>
     </template>
     <template slot="table">

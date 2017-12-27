@@ -20,8 +20,8 @@
       </div>
     </template>
      <template slot="operation">
-       <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
-       <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
+       <fj-button type="primary" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
+       <fj-button type="primary" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
      </template>
       <template slot="table">
         <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">

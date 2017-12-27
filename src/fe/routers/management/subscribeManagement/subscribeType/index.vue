@@ -11,11 +11,11 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改</fj-button>
+        <fj-button type="primary" size="mini" @click="handleClickAdd">增加</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedRows.length !== 1" @click="handleClickEdit">修改</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="selectedRows.length < 1" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedRows.length < 1" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">

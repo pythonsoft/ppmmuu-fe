@@ -26,6 +26,7 @@ const SearchHistory = resolve => require.ensure([], () => resolve(require('./per
 const Feedback = resolve => require.ensure([], () => resolve(require('./personalCenter/feedback/index')), 'feedback');
 const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
 
+const Copy = resolve => require.ensure([], () => resolve(require('./copy')), 'copy');
 const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 const MovieEditor = resolve => require.ensure([], () => resolve(require('./movieEditor')), 'movieEditor');
@@ -124,6 +125,13 @@ export default [{
       meta: { title: '订阅' },
       children: [],
       name: 'subscriptions'
+    },
+    {
+      path: 'copy/:type',
+      component: Copy,
+      meta: { title: '文稿' },
+      children: [],
+      name: 'copy'
     },
     {
       path: 'shelf',
