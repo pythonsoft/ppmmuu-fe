@@ -23,20 +23,20 @@
                   <td class="item-info-key" width="80">文件名: </td>
                   <td class="item-info-value" width="303">
                     <div class="media-center-file-name">
-                      {{ file.fileInfo.name || '无文件名' }}
+                      {{ file.name || '无文件名' }}
                       <span class="media-center-file-type">
-                        {{ FILE_TYPE_MAP[file.fileInfo.type].text || '无信息' }}
+                        {{ FILE_TYPE_MAP[file.type].text || '无信息' }}
                       </span>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td class="item-info-key">文件大小: </td>
-                  <td class="item-info-value" >{{ formatSize(file.fileInfo.size) }}</td>
+                  <td class="item-info-value" >{{ formatSize(file.size) }}</td>
                 </tr>
                 <tr>
                   <td class="item-info-key">时长: </td>
-                  <td class="item-info-value">{{ file.duration }}</td>
+                  <td class="item-info-value">{{ formatDuration(file.duration) }}</td>
                 </tr>
               </table>
               <more-view
@@ -57,7 +57,8 @@
     formatDuration,
     formatContent,
     getStreamURL,
-    formatTime
+    formatTime,
+    FROM_WHERE
   } from '../../../common/utils';
   import Player from '../../mediaCenter/components/player';
   import MoreView from '../../mediaCenter/moreView';
@@ -66,11 +67,12 @@
   const api = require('../../../api/media');
   const libraryAPI = require('../../../api/library');
   const FILE_TYPE_MAP = {
-    0: { text: '源文件' },
+    0: { text: '高码流' },
     1: { text: '低码流' },
     2: { text: '字幕' },
     3: { text: '缩略图' },
-    4: { text: '其它' }
+    4: { text: '文档' },
+    5: { text: '其它' }
   };
 
   export default {
@@ -93,21 +95,20 @@
         files: [], // 所有的文件信息
         activeTabName: 'tab2',
         videoId: '',
-        FILE_TYPE_MAP: FILE_TYPE_MAP
+        FILE_TYPE_MAP: FILE_TYPE_MAP,
+        fromWhere: FROM_WHERE.HK_RUKU
       };
     },
     watch: {
       objectId(val) {
         if (this.visible) {
           this.getDetail();
-          this.getStream();
         }
       },
       visible(val) {
         if (!val) return;
         if (this.objectId) {
           this.getDetail();
-          this.getStream();
         }
       }
     },
@@ -119,7 +120,7 @@
       getStreamURL,
       formatTime,
       getStream() {
-        getStreamURL(this.objectId, (err, url, res) => {
+        getStreamURL(this.objectId, this.fromWhere, (err, url, res) => {
           if (err) {
             console.log('err', err);
             // this.$message.error(err);
@@ -131,8 +132,10 @@
         }, this);
       },
       getDetail() {
-        libraryAPI.listCatalog({ params: { objectId: this.objectId } }).then((res) => {
+        libraryAPI.listFile({ params: { objectId: this.objectId } }).then((res) => {
           this.files = res.data;
+          this.fromWhere = this.files.length ? this.files[0].fromWhere : FROM_WHERE.HK_RUKU;
+          this.getStream();
         }).catch((error) => {
           this.$message.error(error);
         });
