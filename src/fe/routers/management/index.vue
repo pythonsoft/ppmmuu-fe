@@ -72,6 +72,7 @@
         { text: '转码模板', index: 'transcodeTemplate', route: 'transcodeTemplate' },
       ] },
     { text: '设置', index: 'configuration', route: 'configuration' },
+    { text: '报表统计', index: 'report', route: 'report' },
     { title: '帮助',
       index: 'help',
       children: [

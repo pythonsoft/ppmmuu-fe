@@ -309,6 +309,28 @@ api.bindAttachment = function bindAttachment(data, scope) {
   });
 };
 
+api.bindAttachment = function bindAttachment(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/manuscript/bindAttachment', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
 api.listAttachments = function listAttachments(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
@@ -401,6 +423,50 @@ api.getGroupUserList = function getGroupUserList(data, scope) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/manuscript/listUser', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.createWebSocketTask = function createWebSocketTask(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/manuscript/createWebSocketTask', data).then((response) => {
+      if (!response) {
+        reject('返回数据格式不正确');
+        return false;
+      }
+      const res = response.data;
+      if (res.status === '0') {
+        if (scope) { scope.$progress.finish(); }
+        return resolve(res);
+      }
+      if (scope) { scope.$progress.fail(); }
+      return reject(res.statusInfo.message);
+    }).catch((error) => {
+      if (scope) { scope.$progress.fail(); }
+      reject(error);
+    });
+  });
+};
+
+api.updateWebSocketTask = function updateWebSocketTask(data, scope) {
+  return new Promise((resolve, reject) => {
+    if (scope) { scope.$progress.start(); }
+    axios.post('/manuscript/updateWebSocketTask', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
