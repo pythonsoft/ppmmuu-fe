@@ -70,10 +70,14 @@ class FileClient {
 
     socket.on('connect', () => {
       const file = me.settings.file;
+      let lastModify = new Date();
+      if(file.lastModified){
+        lastModify = new Date(file.lastModified);
+      }
       const task = new TransferTask({
         name: file.name,
         size: file.size,
-        lastModifiedTime: file.lastModifiedDate.toLocaleDateString(),
+        lastModifiedTime: lastModify.toLocaleDateString(),
         userId: me.settings.userId,
         userName: me.settings.userName,
         _id: me._id
