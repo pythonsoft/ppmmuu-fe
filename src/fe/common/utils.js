@@ -514,11 +514,16 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
     let fileName = res.result.FILENAME || '';
 
     // if (fromWhere == 3) {
-    //   let playPath = '/mnt/transcoding/moved/2017/11/24/PMELOOP10_77/transcoding_PMELOOP10_77.mp4';
+    //   let playPath = '/mnt/z/moved/low/2017/11/24/PMELOOP10_77/transcoding_PMELOOP10_77.mp4';
     //   return cb && cb(null, `${config.defaults.streamURL}${playPath}`, res);
     // }
     if (dateString) {
-      dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
+      let temp = dateString.match(/\/[a-z,0-9,-,_]*\/\d{4}\/\d{2}\/\d{2}/g);
+      if(!temp) {
+        dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
+      }else{
+        dateString = temp;
+      }
       if (dateString) {
         if (dateString.length === 1) {
           dateString = dateString[0].replace(/\\/g, '\/');
