@@ -11,7 +11,7 @@
         <fj-table-column prop="description" label="描述"></fj-table-column>
       </fj-table> -->
       <ul v-if="!permissionViewVisible" :class="$style.list">
-        <li v-for="item in tableData" :key="item._id" @click="handleCurrentChange(item)">
+        <li v-for="item in tableData" :key="item._id" @click="handleCurrentChange(item)" :class="[currentId === item._id ? $style.active : '']">
           <h4 :class="$style.itemName">{{ item.name }}</h4>
           <p :class="$style.itemDesc">{{ item.description }}</p>
         </li>
