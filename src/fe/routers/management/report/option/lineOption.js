@@ -1,4 +1,7 @@
 export const convertLineSeries = function (data = {}, legend = [], key = '') {
+  if (legend.length === 0) {
+    return [{ type: 'line', data: [] }];
+  }
   const res = [];
   const seriesItem = {
     type: 'line',

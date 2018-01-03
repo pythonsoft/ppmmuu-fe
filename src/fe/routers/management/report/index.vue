@@ -1,26 +1,61 @@
 <template>
   <div :class="$style.reportWrap">
-    <div :class="[$style.headerWrap, $style.panel]">
-      <div :class="$style.datePicker">
-        <fj-date-picker type="datetimerange" theme="stroke" direction="horizontal" placeholder="请选择日期范围" v-model="datetimerange"></fj-date-picker>
+    <div :class="[$style.headerWrap, $style.panel, 'clearfix']">
+      <span :class="$style.headerLabel">视图类型：</span>
+      <div :class="$style.headerRadio">
+        <fj-radio-group v-model="viewRange">
+          <fj-radio label="year">年</fj-radio>
+          <fj-radio label="month">月</fj-radio>
+          <fj-radio label="date">日</fj-radio>
+        </fj-radio-group>
+      </div>
+      <div :class="$style.headerSelect">
+        <fj-select placeholder="请选择年份" v-model="year" size="small" theme="fill">
+          <fj-option
+            v-for="item in years"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </fj-option>
+        </fj-select>
+      </div>
+      <div :class="$style.headerSelect" v-show="viewRange !== 'year'">
+        <fj-select placeholder="请选择月份" v-model="month" size="small" theme="fill">
+          <fj-option
+            v-for="item in months"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </fj-option>
+        </fj-select>
+      </div>
+      <div :class="$style.headerSelect" v-show="viewRange === 'date'">
+        <fj-select placeholder="请选择日期" v-model="date" size="small" theme="fill">
+          <fj-option
+            v-for="item in dates"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </fj-option>
+        </fj-select>
+      </div>
+      <div :class="$style.headerSelect">
+        <fj-select placeholder="请选择" v-model="chartType" size="small" theme="fill">
+          <fj-option
+            v-for="item in PIE_DATA_TYPES"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </fj-option>
+        </fj-select>
       </div>
     </div>
     <div :class="[$style.titleWrap, $style.panel]">
       <h3>媒资报表总览</h3>
     </div>
     <div :class="[$style.panel]">
-      <div :class="[$style.typeTitle, 'clearfix']">
+      <div :class="$style.typeTitle">
         <h3>饼状图总览</h3>
-        <div :class="$style.typeTitleSelect">
-          <fj-select placeholder="请选择" v-model="chartType" size="small" theme="fill">
-            <fj-option
-              v-for="item in PIE_DATA_TYPES"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </fj-option>
-          </fj-select>
-        </div>
       </div>
       <div :class="['clearfix', $style.pieWrap]">
         <div :class="$style.pieChartBox" ref="areasPie"></div>
@@ -29,7 +64,7 @@
       </div>
     </div>
     <div :class="[$style.panel, $style.panelLastChild]">
-      <div :class="[$style.typeTitle, 'clearfix']">
+      <div :class="$style.typeTitle">
         <h3>线状图总览</h3>
       </div>
     </div>
@@ -40,11 +75,21 @@
 </template>
 <script>
   import '../../../static/umpBlue';
+  import { getDayCountOfMonth, fillupZero } from '../../../common/utils';
   import echarts from 'echarts';
   import RequestsAPI from '../../../api/requests';
   import { pieOption, convertPieData, convertPieLegend } from './option/pieOption';
   import { lineOption, convertLineSeries } from './option/lineOption';
   // import tempJson from './option/temp.json';
+
+  const emptyGraphic = {
+    type: 'text',
+    top: 'center',
+    left: 'center',
+    style: {
+      text: '暂无数据'
+    }
+  };
 
   const PIE_DATA_TYPES = [
     { value: 'FileSize', label: '文件大小' },
@@ -52,36 +97,104 @@
     { value: 'FileCount', label: '文件数' },
     { value: 'RecordCount', label: '条目数' }
   ];
+  const viewRangeTypes = {
+    year: 3,
+    month: 1,
+    date: 0
+  };
 
   export default {
     data() {
+      const now = new Date();
       return {
         PIE_DATA_TYPES: PIE_DATA_TYPES,
+        viewRange: 'month',
+        years: [],
+        months: [],
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        date: now.getDate(),
         chartType: 'FileSize',
-        datetimerange: [new Date(2017, 10), new Date(2017, 11)],
-        startDatetime: '',
-        endDatetime: '',
         pieData: {},
         lineData: []
       };
+    },
+    computed: {
+      dates() {
+        const dates = [];
+        const dayCountOfMonth = getDayCountOfMonth(this.year, this.month - 1);
+        for (let i = 1; i <= dayCountOfMonth; i++) {
+          dates.push({ value: i, label: i });
+        }
+        return dates;
+      },
+      timeinterval() {
+        return viewRangeTypes[this.viewRange];
+      },
+      startdatetime() {
+        const startdatetimeArr = [this.year, fillupZero(this.month), fillupZero(this.date), '00'];
+        if (this.viewRange === 'month') {
+          startdatetimeArr[2] = '01';
+        } else if (this.viewRange === 'year') {
+          startdatetimeArr[2] = '01';
+          startdatetimeArr[1] = '01';
+        }
+        return startdatetimeArr.join('');
+      },
+      enddatetime() {
+        const enddatetimeArr = [this.year, fillupZero(this.month), fillupZero(this.date), '23'];
+        if (this.viewRange === 'month') {
+          enddatetimeArr[2] = getDayCountOfMonth(this.year, this.month - 1);
+        } else if (this.viewRange === 'year') {
+          enddatetimeArr[2] = '31';
+          enddatetimeArr[1] = '12';
+        }
+        return enddatetimeArr.join('');
+      }
     },
     watch: {
       chartType(val) {
         this.updatePie();
         this.updateLine();
       },
-      datetimerange(val) {
-        console.log('datetimerange change', val);
+      viewRange(val) {
+        this.getReport();
+      },
+      year(val) {
+        this.getReport();
+      },
+      month(val) {
+        this.getReport();
+      },
+      date(val) {
+        this.getReport();
       }
     },
     created() {
+      this.initOptions();
     },
     mounted() {
       this.initPie();
       this.initLine();
-      this.getReport({ reporttype: 2, params: { startdatetime: 2017110100, enddatetime: 2017110123 } });
+      this.getReport();
     },
     methods: {
+      initOptions() {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+
+        const years = [];
+        for (let i = currentYear; i > currentYear - 10; i--) {
+          years.push({ value: i, label: i });
+        }
+        this.years = years;
+
+        const months = [];
+        for (let i = 1; i < 13; i++) {
+          months.push({ value: i, label: i });
+        }
+        this.months = months;
+      },
       initPie() {
         const areasPieOption = Object.assign({}, pieOption);
         areasPieOption.title.text = '各制作地点饼状图';
@@ -116,34 +229,48 @@
       },
       updatePie() {
         const newAreasPieOption = this.getPieOption(this.pieData.Areas.Increment);
+        if (this.pieData.Areas.Increment.length === 0) {
+          newAreasPieOption.graphic = emptyGraphic;
+        }
         this.areasPie.setOption(newAreasPieOption);
 
         const newLocationsPieOption = this.getPieOption(this.pieData.Locations.Increment);
+        if (this.pieData.Locations.Increment.length === 0) {
+          newLocationsPieOption.graphic = emptyGraphic;
+        }
         this.locationsPie.setOption(newLocationsPieOption);
 
         const newTypesPieOption = this.getPieOption(this.pieData.Types.Increment);
+        if (this.pieData.Types.Increment.length === 0) {
+          newTypesPieOption.graphic = emptyGraphic;
+        }
         this.typesPie.setOption(newTypesPieOption);
       },
       updateLine() {
         const { legend, xAxis, areasSeries, locationsSeries, typesSeries } = this.lineData;
 
-        const areasOption = {};
-        areasOption.legend = { data: legend.Areas };
-        areasOption.xAxis = [{ data: xAxis }];
+        if (xAxis.length === 0) {
+          lineOption.graphic = emptyGraphic;
+        } else {
+          lineOption.graphic = { $action: 'remove' };
+        }
+        const areasOption = lineOption;
+        areasOption.legend.data = legend.Areas;
+        areasOption.xAxis[0].data = xAxis;
         areasOption.series = convertLineSeries(areasSeries, legend.Areas, this.chartType);
-        this.areasLine.setOption(areasOption);
+        this.areasLine.setOption(areasOption, true);
 
-        const locationsOption = {};
-        locationsOption.legend = { data: legend.Locations };
-        locationsOption.xAxis = [{ data: xAxis }];
+        const locationsOption = lineOption;
+        locationsOption.legend.data = legend.Locations;
+        locationsOption.xAxis[0].data = xAxis;
         locationsOption.series = convertLineSeries(locationsSeries, legend.Locations, this.chartType);
-        this.locationsLine.setOption(locationsOption);
+        this.locationsLine.setOption(locationsOption, true);
 
-        const typesOption = {};
-        typesOption.legend = { data: legend.Types };
-        typesOption.xAxis = [{ data: xAxis }];
+        const typesOption = lineOption;
+        typesOption.legend.data = legend.Types;
+        typesOption.xAxis[0].data = xAxis;
         typesOption.series = convertLineSeries(typesSeries, legend.Types, this.chartType);
-        this.typesLine.setOption(typesOption);
+        this.typesLine.setOption(typesOption, true);
       },
       convertLineData(curve) {
         const curveItem = curve.length > 0 ? curve[0] : {};
@@ -211,7 +338,13 @@
         this.typesLine.showLoading({ color: '#38B1EB' });
         const data = {};
         data.path = '/get_report';
-        data.params = JSON.stringify(params);
+        const reqData = { reporttype: 2 };
+        reqData.params = Object.assign(params, {
+          timeinterval: this.timeinterval,
+          startdatetime: this.startdatetime,
+          enddatetime: this.enddatetime
+        });
+        data.params = JSON.stringify(reqData);
 
 
         // const resData = tempJson.data;
@@ -242,6 +375,13 @@
             this.updatePie();
             this.updateLine();
           }).catch((error) => {
+            this.$message.error(error);
+            this.areasPie.hideLoading();
+            this.locationsPie.hideLoading();
+            this.typesPie.hideLoading();
+            this.areasLine.hideLoading();
+            this.locationsLine.hideLoading();
+            this.typesLine.hideLoading();
           });
       }
     }
@@ -265,6 +405,7 @@
     padding: 15px 27px;
   }
   .datePicker {
+    float: left;
     width: 292px;
   }
   .titleWrap {
@@ -278,15 +419,21 @@
     border-bottom: 1px solid #e3e3e3;
   }
   .typeTitle h3 {
-    float: left;
     height: 79px;
     line-height: 79px;
     font-size: 24px;
   }
-  .typeTitleSelect {
-    float: right;
-    width: 210px;
-    margin-top: 24px;
+  .headerLabel,
+  .headerRadio {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 10px;
+  }
+  .headerSelect {
+    float: left;
+    width: 150px;
+    margin-right: 10px;
   }
   .pieWrap {
     height: 505px;
