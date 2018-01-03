@@ -4,7 +4,7 @@
 const config = {};
 
 // im地址
-config.imHost = 'localhost';
+config.imHost = 'ump-im.phoenixtv.com';
 config.imPort = 80;
 
 config.socketDomain = `${config.imHost}:${config.imPort}`;

@@ -7,7 +7,6 @@
   bottom: 0;
   left: 0;
   z-index: var(--z-index-message);
-  overflow: auto;
 }
 .fj-modal {
   position: fixed;
