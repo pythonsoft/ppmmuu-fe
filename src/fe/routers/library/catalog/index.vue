@@ -50,7 +50,7 @@
           </template>
           <template slot="1" slot-scope="props">
             <div :style="{ width: '100%', height: '100%', overflow: 'auto', position: 'absolute' }" ref="rightContent">
-              <div class="catalogRightContent" v-if="currentCatalogId">
+              <div class="catalogRightContent" v-if="hasSelectedItem">
                 <h3>填写编目内容</h3>
                 <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="100px">
                   <fj-form-item label="名称(中文)" prop="chineseName">
@@ -230,7 +230,8 @@
         selectFields: selectFields,
         dateFields: dateFields,
         radioFields: radioFields,
-        parentEl: ''
+        parentEl: '',
+        hasSelectedItem: false
       };
     },
     created() {
@@ -338,6 +339,7 @@
         });
       },
       handleClickCatalogItem(node) {
+        this.hasSelectedItem = true;
         if (node.type && node.type === 'tempItem') {
           const keys = Object.keys(this.formData);
           keys.forEach(key => {
