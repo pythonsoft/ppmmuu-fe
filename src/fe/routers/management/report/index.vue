@@ -80,7 +80,6 @@
   import RequestsAPI from '../../../api/requests';
   import { pieOption, convertPieData, convertPieLegend } from './option/pieOption';
   import { lineOption, convertLineSeries } from './option/lineOption';
-  // import tempJson from './option/temp.json';
 
   const emptyGraphic = {
     type: 'text',
@@ -111,7 +110,7 @@
         viewRange: 'month',
         years: [],
         months: [],
-        year: now.getFullYear(),
+        year: now.getFullYear() - 1,
         month: now.getMonth() + 1,
         date: now.getDate(),
         chartType: 'FileSize',
@@ -184,7 +183,7 @@
         const currentYear = now.getFullYear();
 
         const years = [];
-        for (let i = currentYear; i > currentYear - 10; i--) {
+        for (let i = currentYear; i >= 2000; i--) {
           years.push({ value: i, label: i });
         }
         this.years = years;
@@ -255,18 +254,21 @@
           lineOption.graphic = { $action: 'remove' };
         }
         const areasOption = lineOption;
+        areasOption.title.text = '各制作地点曲线图';
         areasOption.legend.data = legend.Areas;
         areasOption.xAxis[0].data = xAxis;
         areasOption.series = convertLineSeries(areasSeries, legend.Areas, this.chartType);
         this.areasLine.setOption(areasOption, true);
 
         const locationsOption = lineOption;
+        locationsOption.title.text = '各文件状态曲线图';
         locationsOption.legend.data = legend.Locations;
         locationsOption.xAxis[0].data = xAxis;
         locationsOption.series = convertLineSeries(locationsSeries, legend.Locations, this.chartType);
         this.locationsLine.setOption(locationsOption, true);
 
         const typesOption = lineOption;
+        typesOption.title.text = '各节目类型曲线图';
         typesOption.legend.data = legend.Types;
         typesOption.xAxis[0].data = xAxis;
         typesOption.series = convertLineSeries(typesSeries, legend.Types, this.chartType);
@@ -274,7 +276,7 @@
       },
       convertLineData(curve) {
         const curveItem = curve.length > 0 ? curve[0] : {};
-        const keys = Object.keys(this.pieData);
+        const keys = Object.keys(curve[0].Total);
         const legend = {};
 
         // 获取每个曲线图的legend
@@ -286,6 +288,7 @@
             });
           }
         });
+        console.log(legend);
 
         const xAxis = [];
         const areasSeries = {};
@@ -329,60 +332,66 @@
         option.legend = [{ data: convertPieLegend(data) }];
         return option;
       },
-      getReport(params = {}) {
+      getPieData(reqData = {}) {
+        const data = {};
+        data.path = '/get_report';
+        data.params = JSON.stringify(reqData);
+
         this.areasPie.showLoading({ color: '#38B1EB' });
         this.locationsPie.showLoading({ color: '#38B1EB' });
         this.typesPie.showLoading({ color: '#38B1EB' });
-        this.areasLine.showLoading({ color: '#38B1EB' });
-        this.locationsLine.showLoading({ color: '#38B1EB' });
-        this.typesLine.showLoading({ color: '#38B1EB' });
-        const data = {};
-        data.path = '/get_report';
-        const reqData = { reporttype: 2 };
-        reqData.params = Object.assign(params, {
-          timeinterval: this.timeinterval,
-          startdatetime: this.startdatetime,
-          enddatetime: this.enddatetime
-        });
-        data.params = JSON.stringify(reqData);
-
-
-        // const resData = tempJson.data;
-        // this.pieData = resData.pie;
-        // this.lineData = this.convertLineData(resData.curve);
-
-        // this.areasPie.hideLoading();
-        // this.locationsPie.hideLoading();
-        // this.typesPie.hideLoading();
-        // this.areasLine.hideLoading();
-        // this.locationsLine.hideLoading();
-        // this.typesLine.hideLoading();
-        // this.updatePie();
-        // this.updateLine();
-
         RequestsAPI.sendRequests(data)
           .then((response) => {
             const resData = response.data;
-            this.pieData = resData.pie;
-            this.lineData = this.convertLineData(resData.curve);
+            this.pieData = resData;
 
             this.areasPie.hideLoading();
             this.locationsPie.hideLoading();
             this.typesPie.hideLoading();
-            this.areasLine.hideLoading();
-            this.locationsLine.hideLoading();
-            this.typesLine.hideLoading();
+
             this.updatePie();
-            this.updateLine();
           }).catch((error) => {
             this.$message.error(error);
+
             this.areasPie.hideLoading();
             this.locationsPie.hideLoading();
             this.typesPie.hideLoading();
+          });
+      },
+      getLineData(reqData = {}) {
+        const data = {};
+        data.path = '/get_report';
+        data.params = JSON.stringify(reqData);
+
+        this.areasLine.showLoading({ color: '#38B1EB' });
+        this.locationsLine.showLoading({ color: '#38B1EB' });
+        this.typesLine.showLoading({ color: '#38B1EB' });
+        RequestsAPI.sendRequests(data)
+          .then((response) => {
+            const resData = response.data;
+            this.lineData = this.convertLineData(resData);
+
+            this.areasLine.hideLoading();
+            this.locationsLine.hideLoading();
+            this.typesLine.hideLoading();
+
+            this.updateLine();
+          }).catch((error) => {
+            this.$message.error(error);
+
             this.areasLine.hideLoading();
             this.locationsLine.hideLoading();
             this.typesLine.hideLoading();
           });
+      },
+      getReport(params = {}) {
+        params = Object.assign(params, {
+          timeinterval: this.timeinterval,
+          startdatetime: this.startdatetime,
+          enddatetime: this.enddatetime
+        });
+        this.getPieData(Object.assign({}, { params: params }, { reporttype: 2 }));
+        this.getLineData(Object.assign({}, { params: params }, { reporttype: 1 }));
       }
     }
   };
