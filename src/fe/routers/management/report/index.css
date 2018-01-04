@@ -1,0 +1,103 @@
+.reportWrap {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #f6f7f8;
+}
+.panel {
+  padding: 0 27px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+.panelLastChild {
+  margin-bottom: 0;
+}
+.headerWrap {
+  padding: 15px 27px;
+}
+.datePicker {
+  width: 180px;
+}
+.titleWrap {
+  padding: 0 27px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 32px;
+  color: #303641;
+}
+.titleWrap h3 {
+  padding: 42px 0;
+  border-bottom: 1px solid #e3e3e3;
+}
+.overviewWrap {
+  padding: 50px 0;
+}
+.overviewItem {
+  float: left;
+  width: 25%;
+}
+.overviewItem+.overviewItem {
+  border-left: 1px solid #e3e3e3;
+}
+.overviewItem .label {
+  font-size: 14px;
+  color: #454c58;
+  display: block;
+}
+.overviewItem .count {
+  font-size: 24px;
+  color: #303641;
+}
+.typeTitle {
+  border-bottom: 1px solid #e3e3e3;
+}
+.typeTitle h3 {
+  float: left;
+  height: 79px;
+  line-height: 79px;
+  font-size: 24px;
+}
+.typeSelect {
+  float: right;
+  width: 150px;
+  margin-top: 24px;
+  margin-left: 10px;
+}
+.typeRadioGroup {
+  float: right;
+  line-height: 79px;
+  margin-left: 25px;
+}
+.typeRadioGroup label {
+  margin-right: 5px;
+}
+.headerLabel,
+.headerRadio {
+  float: left;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 10px;
+}
+.headerSelect {
+  float: left;
+  width: 150px;
+  margin-right: 10px;
+}
+.pieWrap {
+  height: 505px;
+}
+.pieChartBox {
+  float: left;
+  width: 33.3%;
+  height: 100%;
+  padding: 50px 0;
+}
+.pieChartBox+.pieChartBox {
+  border-left: 1px solid #e3e3e3;
+}
+.lineChartBox {
+  width: 100%;
+  height: 520px;
+  margin-bottom: 5px;
+  padding: 38px 27px;
+  background: #fff;
+}

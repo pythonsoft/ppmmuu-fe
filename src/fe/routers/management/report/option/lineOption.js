@@ -1,18 +1,17 @@
-export const convertLineSeries = function (data = {}, legend = [], key = '') {
+export const convertLineSeries = function (data = {}, legend = [], key = '', type = '') {
   if (legend.length === 0) {
     return [{ type: 'line', data: [] }];
   }
   const res = [];
   const seriesItem = {
     type: 'line',
-    stack: '总量',
     smooth: true
   };
   for (let i = 0; i < legend.length; i++) {
     const name = legend[i];
     seriesItem.name = name;
     seriesItem.data = data[name].map(item => {
-      return item[key];
+      return type ? item[type][key] : item[key];
     });
     res.push(Object.assign({}, seriesItem));
   }
@@ -62,7 +61,12 @@ export const lineOption = {
   ],
   yAxis: [
     {
-      type: 'value'
+      type: 'value',
+      axisLabel: {},
+      axisPointer: false,
+      nameTextStyle: {
+        color: '#2A3E52'
+      }
     }
   ],
   series: [{

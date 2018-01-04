@@ -397,12 +397,12 @@ utils.transformSecondsToHours = function transformSecondsToHours(time = 0, forma
   time %= 60;
   const seconds = Math.floor(time);
 
-  let rs = `${hours}小时`;
+  let rs = `${fillupZero(hours)}小时`;
   if (minutes) {
-    rs += `${minutes}分`;
+    rs += `${fillupZero(minutes)}分`;
   }
   if (seconds) {
-    rs += `${seconds}秒`;
+    rs += `${fillupZero(seconds)}秒`;
   }
 
   return rs;

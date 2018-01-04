@@ -1,7 +1,8 @@
-export const convertPieData = function (data, key) {
+export const convertPieData = function (data, key, formatter) {
   data.forEach((item) => {
     item.name = item.Name;
     item.value = item[key];
+    item.displayValue = formatter ? formatter(item[key]) : item[key];
   });
   return data;
 };
@@ -27,7 +28,10 @@ export const pieOption = {
       fontSize: 12
     },
     backgroundColor: 'rgba(42, 62, 82, .8)',
-    formatter: '{b} <br/> {c} ({d}%)'
+    // formatter: '{b} <br/> {c} ({d}%)'
+    formatter: function (params) {
+      return `${params.name}<br/>${params.data.displayValue}(${params.percent}%)`;
+    }
   },
   legend: {
     y: 'bottom'
@@ -36,6 +40,12 @@ export const pieOption = {
     {
       name: '饼状图',
       type: 'pie',
+      itemStyle: {
+        normal: {
+          borderColor: "#fff",
+          borderWidth: 1
+        }
+      },
       label: {
         normal: {
           formatter: '{d}%',

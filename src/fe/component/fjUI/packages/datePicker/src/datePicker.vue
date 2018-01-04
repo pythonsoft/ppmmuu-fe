@@ -1,7 +1,7 @@
 <template>
   <div class="fj-date-picker" v-clickoutside="handleClose">
     <fj-input
-      v-if="type!=='datetimerange'"
+      v-if="type!=='datetimerange'&&type!=='daterange'"
       :size="size"
       :theme="theme"
       :readonly="true"
@@ -14,7 +14,7 @@
       @mouseleave.native="inputHovering = false" />
     <div
       :class="['date-range-picker-wrap clearfix', `date-range-picker-${theme}`, { 'focus': isShowPanel }]"
-      v-if="type==='datetimerange' && direction === 'vertical'"
+      v-if="(type==='datetimerange' || type==='daterange') && direction === 'vertical'"
       @mouseenter="inputHovering = true"
       @mouseleave="inputHovering = false"
       @click="handleFocus">
@@ -28,7 +28,7 @@
     </div>
     <div
       :class="['date-range-picker-wrap-horizontal clearfix', `date-range-picker-${theme}`, { 'focus': isShowPanel }]"
-      v-if="type==='datetimerange' && direction === 'horizontal'"
+      v-if="(type==='datetimerange' || type==='daterange') && direction === 'horizontal'"
       @mouseenter="inputHovering = true"
       @mouseleave="inputHovering = false"
       @click="handleFocus">
@@ -94,20 +94,20 @@
     },
     data() {
       return {
-        selfModel: this.type === 'datetimerange' ? [null, null] : '',
+        selfModel: (this.type === 'datetimerange' || this.type === 'daterange') ? [null, null] : '',
         inputHovering: false,
         isShowPanel: false
       };
     },
     computed: {
       iconClass() {
-        if (this.type !== 'datetimerange') {
+        if (this.type !== 'datetimerange' && this.type !== 'daterange') {
           return this.inputHovering && this.displayValue !== '' ? 'icon-fill-close datetime-date-icon' : 'icon-date datetime-date-icon';
         }
         return this.inputHovering && this.displayValue[0] ? 'icon-fill-close datetime-date-icon' : 'icon-date datetime-date-icon';
       },
       displayValue() {
-        if (this.type !== 'datetimerange') {
+        if (this.type !== 'datetimerange' && this.type !== 'daterange') {
           return formatDate(this.selfModel, this.format);
         }
         return [formatDate(this.selfModel[0], this.format),
@@ -118,7 +118,7 @@
       value: {
         immediate: true,
         handler(val) {
-          if (this.type !== 'datetimerange') {
+          if (this.type !== 'datetimerange' && this.type !== 'daterange') {
             this.selfModel = isDate(val) ? new Date(val) : val;
           } else {
             this.selfModel = val;
@@ -143,7 +143,7 @@
       },
       deleteValue(e) {
         e.stopPropagation();
-        this.selfModel = this.type === 'datetimerange' ? [null, null] : '';
+        this.selfModel = (this.type === 'datetimerange' || this.type === 'daterange') ? [null, null] : '';
         this.$emit('input', this.selfModel);
         this.isShowPanel = false;
       },
@@ -222,7 +222,7 @@
       }
     },
     created() {
-      if (this.type === 'datetimerange') {
+      if (this.type === 'datetimerange' || this.type === 'daterange') {
         this.panel = DateRangePanel;
       } else {
         this.panel = DatePanel;
