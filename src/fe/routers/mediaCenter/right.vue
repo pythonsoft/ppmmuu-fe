@@ -240,11 +240,14 @@
         this.poster = this.getThumb(val);
         this.item = val;
         this.videoId = val.id;
-        this.rootid = val.rootid;
+        this.rootid = val.id;   //根节点rootid可能为空字符串
         this.getDetail();
         this.getStream();
-        if(this.rootid) {
+        if(this.rootid || val.rootid === '') {
           this.getVideoFragments();
+        }else{
+          this.fragments = [];
+          this.fragmentsTree = [];
         }
       },
       program(val) {
@@ -310,6 +313,12 @@
         };
         const fragments = [];
         const fragmentsTree = [];
+
+        //root只有一个,根节点的rootid可能为空,把for循环的赋值提到上面来
+        const name = `${getTitle(this.item)}    ${getDuration(this.item)}`;
+        const item = Object.assign({}, this.item, { name: name });
+        fragmentsTree.push(item);
+
         const children = [];
         api.esSearch(options)
           .then((res)=>{
@@ -319,8 +328,6 @@
               const item = Object.assign({}, docs[i], { name: name });
               if(docs[i].id !== me.rootid){
                 children.push(item);
-              } else {
-                fragmentsTree.push(item);
               }
               fragments.push(docs[i]);
             }

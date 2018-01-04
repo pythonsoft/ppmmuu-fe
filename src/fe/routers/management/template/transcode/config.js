@@ -234,7 +234,19 @@ config.fields = [
   },
   {
     field: 'audioIndexs', type: 'input', text: '音轨index', required: false, value: 'null'
-  }
+  },
+  // {
+  //   field: 'target',
+  //   type: 'select',
+  //   text: 'target',
+  //   required: false,
+  //   selected: 'null',
+  //   options: [
+  //     { text: 'null', value: 'null', key: 'null' },
+  //     { text: 'imx50', value: 'imx50', key: 'imx50' },
+  //     { text: 'dvcpro50', value: 'dvcpro50', key: 'dvcpro50' }
+  //   ]
+  // }
 ];
 
 config.getFormData = function getFormData() {

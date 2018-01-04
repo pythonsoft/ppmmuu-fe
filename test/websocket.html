@@ -15,288 +15,9 @@
 <output id="list"></output>
 
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="./transfer.js"></script>
 
 <script>
-  class Transfer {
-    constructor(file, uuid){
-      this.socket = new WebSocket('ws://10.0.15.59:9000');
-      this.status = '';
-      this.button = '';
-      this.control = false;
-      let fileSize = file.size;
-      console.log("file len==>", fileSize);
-      this.file = file;
-      this.fileSize = fileSize;
-      this.stopped = false;
-      this.sendFileInterval = '';
-      this.sendFileTimeout = 10;
-      this.beatInterval = '';
-      this.beatTimeout = 1000;
-      this.transfered = 0;
-      this.uuid = '' + uuid;
-      this.CONFIG_STATUS = {
-        STATUS_CONNECTING:  '0',
-        STATUS_CONNECTED:   '1',
-        STATUS_START:       '2',
-        STATUS_STARTED:     '3',
-        STATUS_TRANSFERING: '4',
-        STATUS_TRANSFERED:  '5',
-        STATUS_STOPING:     '6',
-        STATUS_STOPED:      '7',
-        STATUS_CANCELING:   '8',
-        STATUS_CANCELED:    '9',
-        STATUS_FAIL:        '10',
-        STATUS_RETRANSFER:  '11',
-        STATUS_EXIT:        '13',
-        STATUS_BEATING:     '14'
-
-      };
-      this.payload = {
-        "protocol":"0",
-        "type":"0",
-        "mode":"1",
-        "encrypt":"0",
-        "speed":"0",
-        "transfered":"0",
-        "total": '' + fileSize,
-        "status": "0",
-        "uuid": this.uuid,
-        "ip":"10.0.14.57",
-        "port":"36201",
-        "log":"none",
-        "reserve":"none",
-      }
-
-      this.socket.binaryType = "arraybuffer";
-      const me = this;
-
-      this.socket.onopen = function(){
-        me.onopen();
-      };
-      this.socket.onmessage = function(msg){
-        me.onmessage(msg);
-      }
-
-      this.socket.onerror = function(e){
-        console.log("error===>", e);
-        me.clearAllInterval();
-      }
-
-      this.socket.onclose = function(){
-        console.log("server closed===>");
-        me.clearAllInterval();
-      }
-      this.prepareTransferSend = this.prepareTransferSend.bind(this);
-      this.sendFile = this.sendFile.bind(this);
-      this.getPayLoad = this.getPayLoad.bind(this);
-      this.clearAllInterval = this.clearAllInterval.bind(this);
-    }
-    clearAllInterval(){
-      this.stopped = true;
-      if(this.sendFileInterval){
-        clearInterval(this.sendFileInterval);
-      }
-      if(this.beatInterval){
-        clearInterval(this.beatInterval);
-      }
-    }
-    onopen(){
-      console.log('connect success');
-      const me = this;
-      me.start();
-    }
-    onmessage(msg){
-      console.log("msg", msg);
-      const buffer = msg.data;
-      var msgBuffer = '';
-      let payload = {};
-      var dv = new DataView(msg.data);
-      var optcode = dv.getUint8(0);
-      var length = dv.getUint32(1, true);
-      console.log("buffer length==>", buffer.byteLength);
-      if(buffer.byteLength > 5){
-        msgBuffer = buffer.slice(5, length + 5);
-        payload = JSON.parse(this.arrayBufferToString(msgBuffer));
-      }
-      const status = payload.status;
-      //this.transfered = payload.transfered * 1;
-      console.log("receive status==>", status);
-      switch(status){
-        case this.CONFIG_STATUS.STATUS_CONNECTED:
-          console.log("send start==>");
-          this.transfered = payload.transfered * 1;
-          this.prepareTransferSend(this.CONFIG_STATUS.STATUS_START);
-          if(this.control && this.button){
-            this.button.text('停止');
-            this.button.attr('disabled', false);
-            this.control = false;
-          }
-          break;
-        case this.CONFIG_STATUS.STATUS_STARTED:
-          console.log(" start set intval ==>");
-          this.stopped = false;
-          this.sendFile();
-          //this.sendFileInterval = setInterval(this.sendFile, this.sendFileTimeout);
-          this.beatInterval = setInterval(this.prepareTransferSend, this.beatTimeout, this.CONFIG_STATUS.STATUS_BEATING);
-          break;
-        case this.CONFIG_STATUS.STATUS_TRANSFERING:
-          if(payload.transfered * 1 >= this.fileSize){
-            console.log("send stopping");
-            this.button.text('已完成');
-            this.button.attr('disabled', true);
-            this.prepareTransferSend(this.CONFIG_STATUS.STATUS_STOPING);
-          }
-          break;
-        case this.CONFIG_STATUS.STATUS_TRANSFERED:
-          console.log("server says: transfered");
-          this.clearAllInterval();
-          break;
-        case this.CONFIG_STATUS.STATUS_RETRANSFER:
-          console.log(" restart set intval ==>");
-          this.stopped = false;
-          this.transfered = payload.transfered;
-          this.sendFile();
-          //this.sendFileInterval = setInterval(this.sendFile, this.sendFileTimeout);
-          this.beatInterval = setInterval(this.prepareTransferSend, this.beatTimeout, this.CONFIG_STATUS.STATUS_BEATING);
-          break;
-        case this.CONFIG_STATUS.STATUS_STOPED:
-          console.log("stopped!");
-          if(this.control && this.button){
-            this.button.text('开始');
-            this.button.attr('disabled', false);
-            this.control = false;
-          }
-          this.clearAllInterval();
-          break;
-        case this.CONFIG_STATUS.STATUS_CANCELED:
-          this.clearAllInterval();
-          break;
-      }
-    }
-    stop(button){
-      this.button = button;
-      this.control = true;
-      console.log("pause send stopping");
-      this.prepareTransferSend(this.CONFIG_STATUS.STATUS_STOPING);
-    }
-    start(button){
-      this.button = button;
-      this.control = true;
-      console.log("starting");
-      this.stopped = false;
-      this.prepareTransferSend('0');
-    }
-    prepareTransferSend(status){
-      const options = {
-        "transfered":"" + this.transfered,
-        "status": status,
-      }
-      let message = this.getPayLoad(this.payload, options);
-      let pac = this.getPackage(message, 0);
-      console.log("send payload==>", message);
-      this.socket.send(pac);
-    }
-    sendFile(){
-      const file = this.file;
-      let start = this.transfered;
-      let leftLen = this.fileSize - start;
-      if(leftLen <= 0){
-        console.log("send completed!");
-        return;
-      }
-      if(this.stopped){
-        console.log('send file stopped');
-        return;
-      }
-      let stop = leftLen > 256*1024 ? start + 256*1024 : start + leftLen;
-      var blob = file.slice(start, stop);
-      console.log("blob==>", typeof blob, blob);
-      var reader = new FileReader();
-      reader.readAsArrayBuffer(blob);
-      const me = this;
-      reader.onload = function(e){
-        me.transfered += stop - start;
-        let pac = me.getFilePackage(reader.result, 1);
-        console.log("send file==>", pac);
-        me.socket.send(pac);
-        setTimeout(me.sendFile, me.sendFileTimeout);
-      }
-      reader.onerror = function(e){  //读取失败的时候重新执行一次
-        console.log("read file error==>", e);
-        setTimeout(me.sendFile, me.sendFileTimeout);
-      }
-    }
-    getPackage(str, opcode=0){
-      let pack = new ArrayBuffer(5 + str.length);
-      const message = this.stringToArrayBuffer(str);
-      const messageArr = new Uint8Array(message);
-      const dv = new Uint8Array(pack);
-      dv[0] = opcode;
-      dv[1] = str.length & 0xff;
-      dv[2] = (str.length & 0xff00) >> 8;
-      dv[3] = (str.length & 0xff0000) >> 16;
-      dv[4] = (str.length & 0xff000000) >> 24;
-      console.log(dv[0], dv[1], dv[2], dv[3],dv[4]);
-      dv.set(messageArr, 5);
-      return dv.buffer;
-    }
-
-    getFilePackage(arr, opcode=0){
-      let pack = new ArrayBuffer(5 + arr.byteLength);
-      const message = arr;
-      const messageArr = new Uint8Array(message);
-      const length = arr.byteLength;
-      const dv = new Uint8Array(pack);
-      dv[0] = opcode;
-      dv[1] = length & 0xff;
-      dv[2] = (length & 0xff00) >> 8;
-      dv[3] = (length & 0xff0000) >> 16;
-      dv[4] = (length & 0xff000000) >> 24;
-      console.log(dv[0], dv[1], dv[2], dv[3],dv[4]);
-      dv.set(messageArr, 5);
-      return dv.buffer;
-    }
-
-    getPayLoad(payload, options){
-      return JSON.stringify(Object.assign(payload, options));
-    }
-
-    stringToArrayBuffer(str){
-      if(/[\u0080-\uffff]/.test(str)){
-        throw new Error("this needs encoding, like UTF-8");
-      }
-      var arr = new Uint8Array(str.length);
-      for(var i=str.length; i--; )
-        arr[i] = str.charCodeAt(i);
-      return arr.buffer;
-    }
-
-    arrayBufferToString(buffer){
-      var arr = new Uint8Array(buffer);
-      if (!("TextDecoder" in window))
-        alert("Sorry, this browser does not support TextDecoder...");
-
-      var enc = new TextDecoder();
-      var str = enc.decode(arr);
-      if(/[\u0080-\uffff]/.test(str)){
-        throw new Error("this string seems to contain (still encoded) multibytes");
-      }
-      console.log("receive str==>", str);
-      return str;
-    }
-
-    uint8ArrayToString(arr){
-      if (!("TextDecoder" in window))
-        alert("Sorry, this browser does not support TextDecoder...");
-
-      var enc = new TextDecoder();
-      var str = enc.decode(arr);
-      if(/[\u0080-\uffff]/.test(str)){
-        throw new Error("this string seems to contain (still encoded) multibytes");
-      }
-      return str;
-    }
-  }
 
   function checkBrowserSupportFile(){
     // Check for the various File API support.
@@ -322,12 +43,12 @@
     const files = e.dataTransfer.files;
     var output = [];
     for (var i = 0, f; f = files[i]; i++) {
-      const uuid = new Date().getTime() + '';
+      const uuid = 1;
       const button = '<button class="control" data-id="' + uuid + '"' + '>停止</button>'
       output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
           f.size, ' bytes, last modified: ',
           f.lastModifiedDate.toLocaleDateString(), button, '</li>');
-      const transfer = new Transfer(f, uuid);
+      const transfer = new Transfer({file: f, uuid: uuid});
       transferObj[uuid] = transfer;
     }
     document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
@@ -341,50 +62,16 @@
     if(!transfer){
       alert('这个传输任务不存在');
     }
-    if(me.text() == '停止'){
-      me.text() == '停止中....';
-      me.attr('disabled', true);
-      transfer.stop(me);
-    }else if(me.text() == '开始'){
-      me.text('开始中...');
-      me.attr('disabled', true);
-      transfer.start(me);
+    if(transfer.canStop()){
+      console.log("stop===>");
+      me.text() == '停止';
+      transfer.stopTask();
+    }else if(transfer.canStart()){
+      console.log("start===>");
+      me.text('开始');
+      transfer.start();
     }
   })
-
-  function onInitFs(fs) {
-    console.log(fs.root);
-
-    fs.root.getFile('log.txt', {create: true}, function(fileEntry) {
-
-      // Create a FileWriter object for our FileEntry (log.txt).
-      fileEntry.createWriter(function(fileWriter) {
-
-        fileWriter.onwriteend = function(e) {
-          console.log('Write completed.');
-        };
-
-        fileWriter.onerror = function(e) {
-          console.log('Write failed: ' + e.toString());
-        };
-
-        // Create a new Blob and write it to log.txt.
-        var bb = new Blob(['asfasfasf']); // Note: window.WebKitBlobBuilder in Chrome 12.
-        fileWriter.write(bb);
-
-      }, errorHandler);
-
-    }, errorHandler);
-
-  }
-
-  window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-
-  console.log("temp==>", window.TEMPORARY);
-  window.requestFileSystem(window.TEMPORARY, 1024*1024, onInitFs, errorHandler);
-  function errorHandler(e){
-    console.log("error", e);
-  }
 </script>
 </body>
 </html>
