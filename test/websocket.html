@@ -43,7 +43,7 @@
     const files = e.dataTransfer.files;
     var output = [];
     for (var i = 0, f; f = files[i]; i++) {
-      const uuid = 1;
+      const uuid = '5a4de67eeb852e37055ded29';
       const button = '<button class="control" data-id="' + uuid + '"' + '>停止</button>'
       output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
           f.size, ' bytes, last modified: ',
