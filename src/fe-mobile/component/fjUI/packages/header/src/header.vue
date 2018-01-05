@@ -20,7 +20,7 @@
           :value="currentValue"
           @focus="handleFocus"
           @input="handleInput"
-          @keyup.enter.prevent="">
+          @keyup.enter.prevent="handleSearch">
           <i
             v-show="showClearBtn"
             class="iconfont icon-circle-error fj-search-bar-icon"
@@ -72,6 +72,7 @@
         this.$emit('on-content-type-change', type);
       },
       handleSearch() {
+        this.$refs.input.blur();
         this.$emit('search');
       },
       handleInput(e) {

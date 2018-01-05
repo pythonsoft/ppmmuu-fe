@@ -72,11 +72,28 @@ config.IVIDEO_EDIT_FILE_TYPE_ID = [
 config.FROM_WHERE = utils.FROM_WHERE;
 
 config.UMP_FILETYPE = {
-  ORIGINAL: '0', // 源文件
+  HIGH_VIDEO: '0', // 源文件
   LOW_BIT_VIDEO: '1', // 低码流
   SUBTITLE: '2', // 字幕
   THUMB: '3', // 缩略图
-  OTHER: '4' // 其它
+  DOC: '4',  //文档
+  OTHER: '5' // 其它
+};
+
+config.ARCHIVETYPE = {
+  0: { text: '带库', value: '0' },
+  1: { text: 'UDS', value: '1' }
+};
+config.FILE_STATUS = {
+  0: { text: '不存在', value: '0' },
+  1: { text: '存在', value: '1' },
+  2: { text: '在线', value: '2' },
+  3: { text: '在线+近线', value: '3' },
+  4: { text: '在线+近线', value: '4' },
+  5: { text: '近线', value: '5' },
+  6: { text: '损坏', value: '6' },
+  7: { text: '在线+离线', value: '7' },
+  8: { text: '离线', value: '8' }
 };
 
 config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4'];
@@ -167,6 +184,12 @@ const ORDER_OPTIONS = [
   { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'airdata' }
 ];
 
+const CREATED_TIME_OPTIONS = [
+  { value: 'all', label: '时间不限' },
+  { value: 'lastWeek', label: '最近一周' },
+  { value: 'lastMonth', label: '最近一月' }
+];
+
 // 从哪个接口拿的数据
 const FROM_WHERE = {
   program: 1,
@@ -174,11 +197,12 @@ const FROM_WHERE = {
 };
 
 
-const HHIGHLIGHT_FIELDS1 = 'name,program_name_en,program_name_cn,content,content_introduction,house_num,from_where,full_text';
-const HHIGHLIGHT_FIELDS2 = 'name,program_type,program_name_cn,program_name_en,content,content_introduction,house_num,from_where,full_text';
-const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,program_name,from_where,full_text,publish_time,rootid';
+const HHIGHLIGHT_FIELDS1 = 'name,program_name_en,program_name_cn,content,content_introduction,house_num,full_text';
+const HHIGHLIGHT_FIELDS2 = 'name,program_type,program_name_cn,program_name_en,content,content_introduction,house_num,full_text';
+const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,airdata,publish_time,program_name,from_where,full_text,rootid';
 
 method.ORDER_OPTIONS = ORDER_OPTIONS;
+method.CREATED_TIME_OPTIONS = CREATED_TIME_OPTIONS;
 method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;
 method.HHIGHLIGHT_FIELDS2 = HHIGHLIGHT_FIELDS2;
 method.FILETR_FIELDS = FILETR_FIELDS;

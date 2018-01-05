@@ -3,11 +3,11 @@
     <template slot="search-left">编辑中</template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="handleClickSave">保存</fj-button>
-        <fj-button type="info" size="mini" @click="handleClickSubmit">提交</fj-button>
+        <fj-button type="primary" size="mini" @click="handleClickSave">保存</fj-button>
+        <fj-button type="primary" size="mini" @click="handleClickSubmit">提交</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="handleClickCancel">取消</fj-button>
+        <fj-button type="primary" size="mini" @click="handleClickCancel">取消</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -20,12 +20,12 @@
                 direction="x"
                 name="child1"
         >
-          <template slot="0" scope="props">
+          <template slot="0" slot-scope="props">
             <div class="shelf-edit-left">
               <edit-left :shelfInfo="shelfInfo"></edit-left>
             </div>
           </template>
-          <template slot="1" scope="props">
+          <template slot="1" slot-scope="props">
             <div class="shelf-edit-right">
               <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight"></edit-right>
             </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="player-wrap" ref="videoWrap" :style="{height: `${height}px`}">
     <div class="video-poster" v-show="!showVideo">
-      <img :src="poster">
+      <img :src="poster" ref="poster" :style="getPosterStyle()">
       <i class="iconfont icon-play" @click="updatePlayerStatus"></i>
     </div>
     <template v-show="showVideo">
@@ -91,7 +91,8 @@
           ? this.OUTPOINT : this.currentTime - this.INPOINT;
       },
       indicatorStyle() {
-        return { left: `${this.indicatorOffset * 100}%` };
+        const left = this.indicatorOffset < 0 ? 0 : this.indicatorOffset * 100;
+        return { left: `${left}%` };
       },
       displayCurrentTime() {
         return transformSecondsToStr(this.innerCurrentTime, 'HH:mm:ss');
@@ -147,8 +148,20 @@
         this.currentTime = this.video.currentTime;
         this.updateCurrentSRT();
       });
+      this.video.addEventListener('canplay', () => {
+        if (this.video.currentTime < this.INPOINT) {
+          this.loading = false;
+          this.video.currentTime = this.INPOINT;
+          this.currentTime = this.video.currentTime;
+        }
+      });
 
       this.initDragEvents();
+    },
+    beforeDestroy() {
+      if (this.isPlaying) {
+        this.video.pause();
+      }
     },
     methods: {
       reset() {
@@ -168,6 +181,16 @@
         this.duration = this.OUTPOINT - this.INPOINT;
         this.indicatorOffset = 0;
         this.playProgressPercent = 0;
+      },
+      getPosterStyle() {
+        const element = this.$refs.poster;
+        if (element) {
+          let height = element.naturalHeight;
+          if (height > this.height) {
+            return { height: `${this.height}px` };
+          }
+        }
+        return { width: '100%', height: '100%' };
       },
       getSRTArr(id) {
         getSRT(id, this.fromWhere, (err, data, res) => {
@@ -212,6 +235,9 @@
       updatePlayerStatus() {
         if (!this.isPlaying) {
           if (this.currentTime <= this.OUTPOINT && this.currentTime + 1 / this.fps >= this.OUTPOINT) {
+            this.video.currentTime = this.INPOINT;
+          }
+          if (this.video.currentTime < this.INPOINT) {
             this.video.currentTime = this.INPOINT;
           }
           this.play();

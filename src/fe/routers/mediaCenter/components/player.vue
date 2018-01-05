@@ -221,6 +221,9 @@
       document.removeEventListener('mozfullscreenchange', this.fullscreenchangeListener, false);
       document.removeEventListener('webkitfullscreenchange', this.fullscreenchangeListener, false);
       document.removeEventListener('msfullscreenchange', this.fullscreenchangeListener, false);
+      if (this.isPlaying) {
+        this.video.pause();
+      }
     },
     methods: {
       contextMenuStop() {

@@ -25,9 +25,9 @@
           </div>
         </template>
         <template slot="operation">
-          <fj-button type="info" size="mini" @click="handleClickAdd">增加</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="change" @click="handleClickChange">变更</fj-button>
-          <fj-button type="info" size="mini" v-bind:disabled="deleted" @click="handleClickDeleted">删除</fj-button>
+          <fj-button type="primary" size="mini" @click="handleClickAdd">增加</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="change" @click="handleClickChange">变更</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="deleted" @click="handleClickDeleted">删除</fj-button>
         </template>
         <template slot="table">
           <fj-table :data="tableData" name="table1" ref="table" @current-change="handleSelectionChange" highlight-current-row>

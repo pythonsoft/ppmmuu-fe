@@ -4,6 +4,7 @@
   width: var(--menu-width);
   height: 100%;
   background-color: var(--menu-bg-color);
+  overflow-y: auto;
 }
 
 .fj-menu-item {

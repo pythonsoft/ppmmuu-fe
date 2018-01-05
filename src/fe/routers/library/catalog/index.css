@@ -63,3 +63,9 @@
   margin-top: -10px;
   float:left;
 }
+.radio-group {
+  line-height: 36px;
+}
+.catalogRightContent .fj-radio-wrap {
+  margin-right: 10px;
+}

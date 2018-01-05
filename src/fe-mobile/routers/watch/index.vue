@@ -52,6 +52,14 @@
             <td class="item-info-key">时长: </td>
             <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
           </tr>
+          <tr>
+            <td class="item-info-key">近线位置: </td>
+            <td class="item-info-value">{{ ARCHIVETYPE[file.ARCHIVETYPE].text }}</td>
+          </tr>
+          <tr>
+            <td class="item-info-key">文件状态: </td>
+            <td class="item-info-value">{{ FILE_STATUS[file.STATUS].text }}</td>
+          </tr>
         </table>
       </div>
       <action-sheet :visible.sync="actionsheetVisible" :actions="actionsheetMenu" @click-menu="handleCurrentChange"></action-sheet>
@@ -127,7 +135,9 @@
         permissions: [],
         actionsheetMenu: [],
         fromWhere: 'MAM',
-        filename: ''
+        filename: '',
+        ARCHIVETYPE: getConfig('ARCHIVETYPE'),
+        FILE_STATUS: getConfig('FILE_STATUS')
       };
     },
     watch: {
@@ -209,7 +219,7 @@
           this.filename = rs.result.FILENAME;
           this.updateList();
           this.url = url;
-        });
+        }, this);
       },
       getDetail() {
         const params = {

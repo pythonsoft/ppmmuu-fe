@@ -36,19 +36,19 @@
       <fj-table :data="tableData" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="50" align="center"></fj-table-column>
         <fj-table-column prop="status" label="状态" width="50" align="center">
-           <template scope="props">
+           <template slot-scope="props">
              <span :class="getStatusByCode(props.row.status).css">{{ getStatusByCode(props.row.status).text }}</span>
            </template>
         </fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="owner" label="认领人">
-          <template scope="props">{{ props.row.owner.name || '--' }}</template>
+          <template slot-scope="props">{{ props.row.owner.name || '--' }}</template>
         </fj-table-column>
         <fj-table-column prop="assignee" label="派发人">
-          <template scope="props">{{ props.row.assignee.name || '--' }}</template>
+          <template slot-scope="props">{{ props.row.assignee.name || '--' }}</template>
         </fj-table-column>
         <fj-table-column prop="createdTime" label="创建时间">
-          <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>

@@ -17,6 +17,10 @@
 
 .icon-date:before { content: "\e627"; }
 
+.icon-icon:before { content: "\e650"; }
+
+.icon-articles:before { content: "\e6b0"; }
+
 .icon-library:before { content: "\e699"; }
 
 .icon-media-library:before { content: "\e660"; }
@@ -164,4 +168,26 @@
 .icon-xiala:before { content: "\e6aa"; }
 
 .icon-jian:before { content: "\e6ab"; }
+
+.icon-quanqiu:before { content: "\e6c4"; }
+
+.icon-creator:before { content: "\e6c8"; }
+
+.icon-empty-copy:before { content: "\e6c9"; }
+
+.icon-collaborator:before { content: "\e6cb"; }
+
+.icon-attachment:before { content: "\e6cc"; }
+
+.icon-trash:before { content: "\e6cd"; }
+
+.icon-send:before { content: "\e6ce"; }
+
+.icon-save:before { content: "\e6cf"; }
+
+.icon-edit:before { content: "\e6d0"; }
+
+.icon-restore:before { content: "\e6d1"; }
+
+.icon-copy:before { content: "\e6d3"; }
 

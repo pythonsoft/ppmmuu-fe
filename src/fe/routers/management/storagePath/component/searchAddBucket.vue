@@ -10,12 +10,12 @@
     <div v-if="tableData.length" class="manage-search-content">
       <fj-table :data="tableData" name="table" ref="table" @current-change="searchOwnerHandleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" align="center" label="状态" >
-          <template scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
+          <template slot-scope="props"><div v-html="formatStatus(props.row.status)"></div></template>
         </fj-table-column>
         <fj-table-column prop="_id" width="90" label="标识" ></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
         <fj-table-column prop="permission" width="90" label="读写权限">
-          <template scope="props">{{ formatPermission(props.row.permission) }}</template>
+          <template slot-scope="props">{{ formatPermission(props.row.permission) }}</template>
         </fj-table-column>
       </fj-table>
     </div>

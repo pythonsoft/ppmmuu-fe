@@ -7,6 +7,9 @@
     background: #F8FAFB;
     /*overflow: hidden;*/
   }
+  .root.cannotScroll .page-wrap {
+    overflow: hidden;
+  }
   .search-condition-box{
     position: fixed;
     top: 45px;
@@ -79,6 +82,11 @@
     /*transform: scaleY(0);*/
     height: 0;
   }
+  .media-category-option-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
   .media-category-option {
     float: left;
     width: 33.333333%;
@@ -98,6 +106,17 @@
   .datetime-input.placeholder {
     color: #CED9E5;
   }
+  .media-category-option-row-content {
+    flex: 1;
+    margin: 7.5px;
+    padding: 9px;
+    text-align: center;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #767676;
+    background: #F2F2F2;
+    transition: all .2s;
+  }
   .media-category-option-content {
     display: block;
     margin: 7.5px;
@@ -112,6 +131,7 @@
   .media-category-option-content.radio {
     border-radius: 50px;
   }
+  .media-category-option-row-content.selected,
   .media-category-option-content.selected {
     background: #38B1EB;
     color: #fff;

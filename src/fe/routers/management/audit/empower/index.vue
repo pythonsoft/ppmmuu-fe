@@ -3,28 +3,28 @@
     <template slot="search-left">审核授权</template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="addClick">添加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="updateClick">变更</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
+        <fj-button type="primary" size="mini" @click="addClick">添加</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="updateClick">变更</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
+        <fj-button type="primary" size="mini" @click="refreshClick">刷新</fj-button>
       </div>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="permissionType" width="80" label="权限">
-          <template scope="props">{{ getTextByValue(props.row.permissionType, 'AUDIT_RULE_PERMISSTION_TYPE') }}</template>
+          <template slot-scope="props">{{ getTextByValue(props.row.permissionType, 'AUDIT_RULE_PERMISSTION_TYPE') }}</template>
         </fj-table-column>
         <fj-table-column prop="ownerName" label="资源所属部门"></fj-table-column>
         <fj-table-column prop="auditDepartment" label="审核部门">
-          <template scope="props">{{ props.row.auditDepartment.name || '-' }}</template>
+          <template slot-scope="props">{{ props.row.auditDepartment.name || '-' }}</template>
         </fj-table-column>
         <fj-table-column prop="creator" width="120" label="创建人">
-          <template scope="props">{{ props.row.creator.name || '-' }}</template>
+          <template slot-scope="props">{{ props.row.creator.name || '-' }}</template>
         </fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
-          <template scope="props">{{ props.row.createdTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
         <fj-table-column prop="description" width="240"  label="描述"></fj-table-column>
       </fj-table>

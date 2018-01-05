@@ -1,5 +1,5 @@
 <template>
-  <div class="root">
+  <div :class="['root', {'cannotScroll': isShowSearchCondition}]" id="root">
     <fj-header
       title="凤凰卫视全媒体平台"
       v-model="tempKeyword"
@@ -57,7 +57,18 @@
           {{config.label}}
           <i class="iconfont icon-arrow-down" @click="config.collapse = !config.collapse"></i>
         </h4>
-        <ul class="clearfix media-category-list">
+        <ul v-if="config.displayItems" class="clearfix media-category-list">
+          <li v-for="row in config.displayItems" class="media-category-option-row">
+            <span
+              v-for="item in row"
+              :class="[
+                'media-category-option-row-content',
+                {'selected': config.tempSelected.indexOf(item.value)>-1}
+              ]"
+              @click="setMultipleValue(config.tempSelected, item.value)">{{ item.label }}</span>
+          </li>
+        </ul>
+        <ul v-else class="clearfix media-category-list">
           <li v-for="item in config.items" class="media-category-option">
             <span
               :class="[
@@ -158,15 +169,7 @@
       this.MENU = MENU;
       this.tabIndex = this.getActiveRoute(this.$route.path, 1);
       this.getSeachConfigs();
-      if (this.$route.name === 'mediaCenter') {
-        const keyword = this.$route.query.keyword;
-        if (keyword) {
-          this.tempKeyword = keyword;
-          this.headerContentType = 'searchInput';
-          this.handleSearch();
-          this.getSearchHistory();
-        }
-      }
+
       if (this.$route.meta.hideTabbar) {
         this.hideTabbar = true;
       } else {
@@ -204,6 +207,10 @@
       tabIndex(val) {
         if (val !== this.$route.name) {
           this.$router.push({ name: val });
+        }
+        if (val !== 'mediaCenter') {
+          this.headerContentType = 'default';
+          this.handleReset();
         }
       },
       '$route' (to, from) {
@@ -253,37 +260,94 @@
           this.isShowSearchCondition = true;
           this.getSearchHistory();
         } else {
+          if (!this.isShowSearchCondition) {
+            this.$router.push({ name: 'mediaCenter' });
+          }
           this.isShowSearchCondition = false;
           this.handleReset();
-          if (!isEmptyObject(this.searchOptions)) {
-            this.$router.push({ name: 'mediaCenter' });
-            this.searchOptions = {};
-            this.tempKeyword = '';
-            this.keyword = '';
-          }
+          this.searchOptions = {};
+          // if (!isEmptyObject(this.searchOptions)) {
+          //   this.$router.push({ name: 'mediaCenter' });
+          //   this.searchOptions = {};
+          //   this.tempKeyword = '';
+          //   this.keyword = '';
+          // }
         }
+        this.headerContentType = type;
       },
       getSeachConfigs() {
         mediaAPI.getSearchConfig().then((res) => {
           const tempSelectConfigs = [];
-          res.data.searchSelectConfigs.forEach(function(item) {
+          res.data.searchSelectConfigs.forEach(function(item, index) {
             if (item.key !== 'occur_country') {
-              item.collapse = false;
+              item.collapse = index < 3 ? false : true;
               item.tempSelected = item.selected.slice();
               item.items.sort(function(a, b) {
                 return a.label.length - b.label.length;
               });
               tempSelectConfigs.push(item);
+            } else {
+              item.collapse = true;
+              item.tempSelected = item.selected.slice();
+              // item.items.forEach(function(subItem) {
+              //   if (subItem.label.length > 16) {
+              //     subItem.label = subItem.label.slice(0, 16) + '...';
+              //   }
+              // });
+              const displayItems = [];
+              let tempDisplayItem = [];
+              for (let i = 0; i < item.items.length; i++) {
+                const subItem = item.items[i];
+                if (tempDisplayItem.length < 3) {
+                  tempDisplayItem.push(subItem);
+                } else {
+                  displayItems.push(tempDisplayItem.slice());
+                  tempDisplayItem = [subItem];
+                }
+              }
+              item.displayItems = displayItems;
+              tempSelectConfigs.push(item);
             }
           });
           this.searchSelectConfigs = tempSelectConfigs;
           this.searchRadioboxConfigs = res.data.searchRadioboxConfigs.map(function(item) {
-            item.collapse = false;
+            item.collapse = true;
             item.tempSelected = item.selected;
             return item;
           });
+          this.initSearchQuery();
         }).catch((error) => {
         });
+      },
+      initSearchQuery() {
+        if (this.$route.name === 'mediaCenter') {
+          // const keyword = this.$route.query.keyword;
+          // if (keyword) {
+          //   this.tempKeyword = keyword;
+          //   this.headerContentType = 'searchInput';
+          //   this.handleSearch();
+          //   this.getSearchHistory();
+          // }
+          let search_query = this.$route.query.search_query;
+          if (search_query) {
+            this.headerContentType = 'searchInput';
+            search_query = JSON.parse(search_query);
+            this.tempKeyword = search_query.keyword;
+            this.tempOrderVal = search_query.orderVal;
+            this.datetimerange1 = { start: search_query.datetimerange1[0], end: search_query.datetimerange1[1] };
+            this.datetimerange2 = { start: search_query.datetimerange2[0], end: search_query.datetimerange2[1] };
+            const selectValue = search_query.selectValue;
+            const radioValue = search_query.radioValue;
+            this.searchSelectConfigs.forEach(function(item) {
+              item.tempSelected = selectValue[item.key] || [];
+            });
+            this.searchRadioboxConfigs.forEach(function(item) {
+              item.tempSelected = radioValue[item.key] || '';
+            });
+            this.handleSearch();
+            this.getSearchHistory();
+          }
+        }
       },
       getSearchHistory() {
         mediaAPI.getSearchHistory().then((res) => {
@@ -314,13 +378,21 @@
           });
       },
       handleReset() {
-        this.tempKeyword = this.keyword;
-        this.tempOrderVal = this.orderVal;
+        // this.tempKeyword = this.keyword;
+        // this.tempOrderVal = this.orderVal;
+        // this.searchSelectConfigs.forEach(function(item) {
+        //   item.tempSelected = item.selected.slice();
+        // });
+        // this.searchRadioboxConfigs.forEach(function(item) {
+        //   item.tempSelected = item.selected;
+        // });
+        this.tempKeyword = '';
+        this.tempOrderVal = 'order1';
         this.searchSelectConfigs.forEach(function(item) {
-          item.tempSelected = item.selected.slice();
+          item.tempSelected = [];
         });
         this.searchRadioboxConfigs.forEach(function(item) {
-          item.tempSelected = item.selected;
+          item.tempSelected = '';
         });
         this.datetimerange1 = { start: null, end: null };
         this.datetimerange2 = { start: null, end: null };
@@ -329,12 +401,26 @@
         this.isShowSearchCondition = false;
         this.keyword = this.tempKeyword;
         this.orderVal = this.tempOrderVal;
+
+        const selectValue = {};
+        const radioValue = {};
         this.searchSelectConfigs.forEach(function(item) {
+          selectValue[item.key] = item.tempSelected.slice();
           item.selected = item.tempSelected.slice();
         });
         this.searchRadioboxConfigs.forEach(function(item) {
+          radioValue[item.key] = item.tempSelected;
           item.selected = item.tempSelected;
         });
+
+        const search_query = {
+          keyword: this.keyword,
+          orderVal: this.orderVal,
+          selectValue: selectValue,
+          radioValue: radioValue,
+          datetimerange1: [this.datetimerange1.start, this.datetimerange2.end],
+          datetimerange2: [this.datetimerange2.start, this.datetimerange2.end]
+        };
         const options = {
           source: FILETR_FIELDS,
           match: [],
@@ -349,11 +435,11 @@
         const f_date_162 = getTimeRange([
           this.datetimerange1.start,
           this.datetimerange1.end
-        ], 'f_date_162'); // 新聞日期
+        ], 'news_data'); // 新聞日期
         const f_date_36 = getTimeRange([
           this.datetimerange2.start,
           this.datetimerange2.end
-        ], 'f_date_36'); // 首播日期
+        ], 'airdata'); // 首播日期
         options.range.push(f_date_162);
         options.range.push(f_date_36);
         getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
@@ -391,7 +477,7 @@
               }
             }
           } else {
-            formatMust(options.should, { name: this.keyword });
+            formatMust(options.should, { full_name: this.keyword });
           }
         } else {
           if (!options.sort.length) {
@@ -402,7 +488,8 @@
           }
         }
         this.searchOptions = options;
-        this.linkToMediaSearch(this.keyword);
+
+        this.linkToMediaSearch(search_query);
 
         // mediaAPI.esSearch(options).then((res) => {
         //   // me.items = res.data.docs;
@@ -412,8 +499,8 @@
         //   // me.$message.error(error);
         // });
       },
-      linkToMediaSearch(name) {
-        this.$router.push({ name: 'mediaCenter', query: { keyword: name } });
+      linkToMediaSearch(options) {
+        this.$router.push({ name: 'mediaCenter', params: { program_type: 'searchResult' }, query: { search_query: JSON.stringify(options) } });
       },
     }
   };

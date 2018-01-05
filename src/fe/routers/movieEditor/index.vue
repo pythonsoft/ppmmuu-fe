@@ -7,7 +7,7 @@
           视频编辑器
         </div>
         <ul class="movie-editor-top-bar clearfix">
-          <li :class="['theme-btn', { 'active': theme !== 'dark' }]" @click="theme = ''">浅色主题</li>
+          <li :class="['theme-btn', { 'active': theme !== 'dark' }]" @click="theme = 'stroke'">浅色主题</li>
           <li :class="['theme-btn', { 'active': theme === 'dark' }]" @click="theme = 'dark'">深色主题</li>
           <li @click="back" class="close-btn">
             <span class="iconfont icon-small-close"></span>
@@ -20,14 +20,14 @@
           panels="#/2,#-p0"
           direction="y"
         >
-          <template slot="0" scope="props">
+          <template slot="0" slot-scope="props">
             <panel-view
               :parentSize="{ width: props.width, height: props.height }"
               panels="#/2,#-p0"
               direction="x"
               name="child1"
             >
-              <template slot="0" scope="props">
+              <template slot="0" slot-scope="props">
                 <video-source-panel
                   :title="sourceTitle"
                   :videoId="sourceVideoId"
@@ -36,7 +36,7 @@
                   :size="{ width: props.width, height: props.height }"
                   @insert="importSource"></video-source-panel>
               </template>
-              <template slot="1" scope="props">
+              <template slot="1" slot-scope="props">
                 <program-panel
                   :title="programInfo.title"
                   :range="programInfo.range"
@@ -46,20 +46,20 @@
               </template>
             </panel-view>
           </template>
-          <template slot="1" scope="props">
+          <template slot="1" slot-scope="props">
             <panel-view
               :parentSize="{ width: props.width, height: props.height }"
               panels="#/3,#-p0"
               direction="x"
               name="child2"
             >
-              <template slot="0" scope="props">
+              <template slot="0" slot-scope="props">
                 <media-browser
                   :theme="theme"
                   :activePanel.sync="activePanel"
                   @updateCurrentSource="updateCurrentSource"></media-browser>
               </template>
-              <template slot="1" scope="props">
+              <template slot="1" slot-scope="props">
                 <workspace-panel
                   :theme="theme"
                   :activePanel.sync="activePanel"

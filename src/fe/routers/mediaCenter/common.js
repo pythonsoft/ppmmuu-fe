@@ -4,7 +4,7 @@ const global = require('../../global');
 
 const common = {
   getThumb(item) {
-    if(item.getIcon) {
+    if (item.getIcon) {
       return `${global.baseURL}${item.getIcon}`;
     }
     return api.getIcon(item.id, item.from_where);
@@ -17,10 +17,10 @@ const common = {
       className = 'media-center-color-span';
     }
 
-    return className + (item.hd_flag === 0 ? ' _720P' : ' _1080P');
+    return className + (item.hd_flag === 0 ? ' _SD' : ' _HD');
   },
   getMediaFormat(item) {
-    return item.hd_flag === 0 ? '720P' : '1080P';
+    return item.hd_flag === 0 ? 'SD' : 'HD';
   },
   getReplaceName(item) {
     let name = common.getTitle(item);
@@ -36,6 +36,37 @@ const common = {
   },
   getDescription(item) {
     return item.content_introduction || item.content || common.getTitle(item);
+  },
+  formatShowTime(item) {
+    const timeConfig = [{
+      key: 'news_data',
+      name: '新闻时间',
+      value: ''
+    }, {
+      key: 'airdata',
+      name: '首播时间',
+      value: ''
+    }, {
+      key: 'publish_time',
+      name: '发布时间',
+      value: ''
+    }, {
+      key: 'last_modify',
+      name: '入库时间',
+      value: ''
+    }];
+    for (let i = 0, len = timeConfig.length; i < len; i++) {
+      const temp = timeConfig[i];
+      const t = item[temp.key];
+      if (t) {
+        const compareDate = new Date('1900-01-01');
+        if (new Date(t) > compareDate) {
+          temp.value = utils.formatTime(t);
+          return temp;
+        }
+      }
+    }
+    return { key: '', name: '', value: '' };
   }
 };
 

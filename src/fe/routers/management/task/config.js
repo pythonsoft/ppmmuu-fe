@@ -38,7 +38,7 @@ config.TASK_STATUS = {
   restart: { text: '重启中', value: 'restart', key: 'restart', css: 'task-status-base task-status-created' },
   error: { text: '错误', value: 'error', key: 'error', css: 'task-status-base task-status-error' },
   complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' },
-  delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' },
+  delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' }
 };
 
 // 下载任务状态

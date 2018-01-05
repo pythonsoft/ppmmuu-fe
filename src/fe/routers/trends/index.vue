@@ -64,8 +64,8 @@
                     <img :ref="item.source" :src="getFavicon(item.source)" :width="getFaviconWidth(item.source)">
                   </div>
                   <div :style="{ overflow: 'hidden' }">
-                    <!--<a :href="item.url" target="_blank" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>-->
-                    <a href="javascript:;" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
+                    <a :href="item.url" target="_blank" class="article-title" v-html="item.title"></a>
+                    <!-- <a href="javascript:;" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a> -->
                     <p class="article-abstract" v-html="item.summary"></p>
                     <span class="article-info">{{ `${item.source}  ${item.datetime}` }}</span>
                   </div>
@@ -99,8 +99,8 @@
                 </ul>
                 <ul class="geo-article-list" v-if="areaNewsData[activeArea]">
                   <li v-for="item in areaNewsData[activeArea].news" class="clearfix">
-                    <!--<a class="geo-article-title" v-html="item.title" :href="item.url" target="_blank"></a>-->
-                    <a href="javascript:;" class="geo-article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a>
+                    <a class="geo-article-title" v-html="item.title" :href="item.url" target="_blank"></a>
+                    <!-- <a href="javascript:;" class="geo-article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a> -->
                     <span class="geo-article-time">{{ item.datetime }}</span>
                   </li>
                 </ul>
@@ -150,8 +150,8 @@
               </span>
               <ul class="timeline-article-list">
                 <li class="timeline-article-item" v-for="article in event.mailuo[date].slice(0, event.showArticleLength[date].show)">
-                  <!--<a :href="article.url" target="_blank" class="timeline-article-title" @click="showWebBrowser(article)">{{ article.title }}</a>-->
-                  <a href="javascript:;" class="timeline-article-title" @click="showWebBrowser(article.title, article.url)">{{ article.title }}</a>
+                  <a :href="article.url" target="_blank" class="timeline-article-title">{{ article.title }}</a>
+                  <!-- <a href="javascript:;" class="timeline-article-title" @click="showWebBrowser(article.title, article.url)">{{ article.title }}</a> -->
                   <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
                 </li>
                 <li class="timeline-article-item" v-show="event.showArticleLength[date].show < event.showArticleLength[date].length">
@@ -523,7 +523,7 @@
           const resData = response.data;
           const newOption = {};
           // if (resData.constructor === Array && resData.length === 0) {
-          if (!resData.opinions) {
+          if (resData.opinions.length === 0) {
             this.showEmptySentiment = true;
             newOption.series = [{ data: [] }, { data: [] }];
             this.sentimentObj = {};

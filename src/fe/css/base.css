@@ -43,6 +43,7 @@ html,body,#app {
   top: 0;
   bottom: 0;
   left: 0;
+  width: 84px;
   overflow: auto;
 }
 .main {

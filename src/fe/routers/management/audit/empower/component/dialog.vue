@@ -35,7 +35,7 @@
     </fj-form-item>
     <fj-form-item label="直接授权">
       <div :style="{ lineHeight: '36px' }">
-        <fj-button type="info" size="mini" @click.stop.prevent="addDepartmentClick">添加部门</fj-button>
+        <fj-button type="primary" size="mini" @click.stop.prevent="addDepartmentClick">添加部门</fj-button>
         <fj-button type="danger" size="mini" @click.stop.prevent="deleteDepartmentClick" :disabled="selectedTableSelectedRows.length<1">删除</fj-button>
       </div>
       <div style="borderTop: '1px solid #EBF3FB'; marginTop: '20px'">
