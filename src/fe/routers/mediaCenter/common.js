@@ -1,8 +1,12 @@
 const api = require('../../api/media');
 const utils = require('../../common/utils');
+const global = require('../../global');
 
 const common = {
   getThumb(item) {
+    if(item.getIcon) {
+      return `${global.baseURL}${item.getIcon}`;
+    }
     return api.getIcon(item.id, item.from_where);
   },
   getDuration(item) {

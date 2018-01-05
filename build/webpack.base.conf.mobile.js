@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var config = require('./config-mobile');
 var path = require('path');
 
@@ -40,29 +39,6 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader'
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: function() {
-                  return [
-                    require('postcss-import'),
-                    require('autoprefixer'),
-                    require('postcss-custom-properties')
-                  ]
-                }
-              }
-            }
-          ]
-        })
-      },
-      {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
         loader: 'url-loader',
         options: {
@@ -86,7 +62,6 @@ module.exports = {
         // 只接受node_modules目录里的库
         return module.context && module.context.indexOf('node_modules') !== -1;
       }
-    }),
-    new ExtractTextPlugin(path.join(assetsSubDirectory, '/css/[name].[contenthash].css'))
+    })
   ]
 };

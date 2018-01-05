@@ -142,9 +142,8 @@
   }
   .login-input {
     flex: 1;
-    margin: 0;
-    margin-left: 15px;
-    padding: 0;
+    margin: 10px;
+    padding: 0 5px;
     border: 0;
     border-radius: 0;
     outline: 0;
@@ -152,7 +151,7 @@
     color: #fff;
     background: transparent;
     font-size: 17px;
-    line-height: 23px;
+    line-height: 30px;
   }
   .login-input.password {
     font-size: 15px;
