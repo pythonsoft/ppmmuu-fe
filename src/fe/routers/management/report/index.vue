@@ -187,9 +187,11 @@
       this.getReport();
       this.bodyWrap = document.getElementsByClassName('right-content')[0];
       this.bodyWrap.addEventListener('scroll', this.scrollHandler);
+      window.addEventListener('resize', this.resizeHandler);
     },
     beforeDestroy() {
       this.bodyWrap.removeEventListener('scroll', this.scrollHandler);
+      window.removeEventListener('resize', this.resizeHandler);
     },
     methods: {
       scrollHandler() {
@@ -208,6 +210,16 @@
       },
       getSummary(item) {
         return this.incrementSummary[item.value] ? item.formatFn(this.incrementSummary[item.value]) : 0;
+      },
+      resizeHandler() {
+        this.areasPie.resize();
+        this.locationsPie.resize();
+        this.typesPie.resize();
+
+        this.areasLine.resize();
+        this.locationsLine.resize();
+        this.typesLine.resize();
+        this.statisticsLine.resize();
       },
       initPie() {
         const areasPieOption = Object.assign({}, pieOption);
