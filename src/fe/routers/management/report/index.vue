@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.reportWrap">
+  <div :class="$style.reportWrap" ref="reportBody">
     <div :class="[$style.headerWrap, $style.panel]">
       <div :class="$style.datePicker">
         <fj-date-picker
@@ -21,22 +21,24 @@
       </div>
     </div>
     <div :class="[$style.panel]">
-      <div :class="[$style.typeTitle, 'clearfix']">
-        <h3>饼状图总览</h3>
-        <div :class="$style.typeRadioGroup">
-          <fj-radio-group v-model="chartValueType">
-            <fj-radio label="Total">总量</fj-radio>
-            <fj-radio label="Increment">增量</fj-radio>
-          </fj-radio-group>
-        </div>
-        <div :class="$style.typeRadioGroup">
-          <fj-radio-group v-model="chartType">
-            <fj-radio
-              v-for="item in PIE_DATA_TYPES"
-              :key="item.value"
-              :label="item.value"
-              >{{ item.label }}</fj-radio>
-          </fj-radio-group>
+      <div :class="[$style.typeTitle]">
+        <div :class="[$style.typeTitleInner, 'clearfix']">
+          <h3>饼状图总览</h3>
+          <div :class="$style.typeRadioGroup">
+            <fj-radio-group v-model="chartValueType">
+              <fj-radio label="Total">总量</fj-radio>
+              <fj-radio label="Increment">增量</fj-radio>
+            </fj-radio-group>
+          </div>
+          <div :class="$style.typeRadioGroup">
+            <fj-radio-group v-model="chartType">
+              <fj-radio
+                v-for="item in PIE_DATA_TYPES"
+                :key="item.value"
+                :label="item.value"
+                >{{ item.label }}</fj-radio>
+            </fj-radio-group>
+          </div>
         </div>
       </div>
       <div :class="['clearfix', $style.pieWrap]">
@@ -46,31 +48,33 @@
       </div>
     </div>
     <div :class="[$style.panel, $style.panelLastChild]">
-      <div :class="[$style.typeTitle, 'clearfix']">
-        <h3>线状图总览</h3>
-        <div :class="$style.typeRadioGroup">
-          <fj-radio-group v-model="lineValueType">
-            <fj-radio label="Total">总量</fj-radio>
-            <fj-radio label="Increment">增量</fj-radio>
-          </fj-radio-group>
-        </div>
-        <div :class="$style.typeRadioGroup">
-          <fj-radio-group v-model="timeinterval">
-            <fj-radio
-              v-for="item in TIME_INTERVAL_MAP"
-              :key="item.value"
-              :label="item.value"
-              >{{ item.label }}</fj-radio>
-          </fj-radio-group>
-        </div>
-        <div :class="$style.typeRadioGroup">
-          <fj-radio-group v-model="lineType">
-            <fj-radio
-              v-for="item in PIE_DATA_TYPES"
-              :key="item.value"
-              :label="item.value"
-              >{{ item.label }}</fj-radio>
-          </fj-radio-group>
+      <div :class="[$style.typeTitle, fixLineChartsHeader ? $style.isFixed : '']" ref="lineChartsHeader">
+        <div :class="[$style.typeTitleInner, 'clearfix']">
+          <h3>线状图总览</h3>
+          <div :class="$style.typeRadioGroup">
+            <fj-radio-group v-model="lineValueType">
+              <fj-radio label="Total">总量</fj-radio>
+              <fj-radio label="Increment">增量</fj-radio>
+            </fj-radio-group>
+          </div>
+          <div :class="$style.typeRadioGroup">
+            <fj-radio-group v-model="timeinterval">
+              <fj-radio
+                v-for="item in TIME_INTERVAL_MAP"
+                :key="item.value"
+                :label="item.value"
+                >{{ item.label }}</fj-radio>
+            </fj-radio-group>
+          </div>
+          <div :class="$style.typeRadioGroup">
+            <fj-radio-group v-model="lineType">
+              <fj-radio
+                v-for="item in PIE_DATA_TYPES"
+                :key="item.value"
+                :label="item.value"
+                >{{ item.label }}</fj-radio>
+            </fj-radio-group>
+          </div>
         </div>
       </div>
     </div>
@@ -128,7 +132,8 @@
         lineValueType: 'Total',
         pieData: {},
         incrementSummary: {},
-        lineData: []
+        lineData: [],
+        fixLineChartsHeader: false
       };
     },
     computed: {
@@ -180,8 +185,21 @@
       this.initPie();
       this.initLine();
       this.getReport();
+      this.bodyWrap = document.getElementsByClassName('right-content')[0];
+      this.bodyWrap.addEventListener('scroll', this.scrollHandler);
+    },
+    beforeDestroy() {
+      this.bodyWrap.removeEventListener('scroll', this.scrollHandler);
     },
     methods: {
+      scrollHandler() {
+        const distance = this.bodyWrap.scrollTop;
+        if (distance > 990) {
+          this.fixLineChartsHeader = true;
+        } else {
+          if (this.fixLineChartsHeader) this.fixLineChartsHeader = false;
+        }
+      },
       dateToStr(date) {
         const year = date.getFullYear();
         const month = fillupZero(date.getMonth() + 1);
