@@ -53,11 +53,17 @@
               <div class="catalogRightContent" v-if="hasSelectedItem">
                 <h3>填写编目内容</h3>
                 <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="100px">
+                  <fj-form-item label="名称" prop="name">
+                    <fj-input v-model="formData.name"></fj-input>
+                  </fj-form-item>
                   <fj-form-item label="名称(中文)" prop="chineseName">
                     <fj-input v-model="formData.chineseName"></fj-input>
                   </fj-form-item>
                   <fj-form-item label="名称(英文)" prop="englishName">
                     <fj-input v-model="formData.englishName"></fj-input>
+                  </fj-form-item>
+                  <fj-form-item label="关键字" prop="keyword">
+                    <fj-input v-model="formData.keyword"></fj-input>
                   </fj-form-item>
                   <fj-form-item label="编目人">
                     <fj-input v-model="formData.ownerName" :disabled="true"></fj-input>
@@ -144,8 +150,10 @@
         sourceVideoId: '',
         sourceSnippet: {},
         formData: {
+          name: '',
           chineseName: '',
           englishName: '',
+          keyword: '',
           departmentName: '',
           ownerName: '',
           type: '',
@@ -169,11 +177,17 @@
         currentCatalogType: '',
         currentClip: {},
         rules: {
+          name: [
+            { required: true, message: '请输入名称' }
+          ],
           chineseName: [
             { required: true, message: '请输入名称' }
           ],
           englishName: [
             { required: true, message: '请输入名称' }
+          ],
+          keyword: [
+            { required: true, message: '请输入关键字' }
           ],
           type: [
             { required: true, message: '请输入类型' }
