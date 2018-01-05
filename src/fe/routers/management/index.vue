@@ -58,6 +58,7 @@
       children: [
         { text: '转码任务', index: 'transcode', route: 'transcode' },
         { text: '下载任务', index: 'download', route: 'download' },
+        { text: '入库任务', index: 'libraryTask', route: 'libraryTask' },
       ] },
     { title: '审核管理',
       index: 'auditManager',
