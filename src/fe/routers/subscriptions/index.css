@@ -323,7 +323,7 @@
   color: #4C637B;
 }
 
-.media-center-view-bar{
+.channel-view-bar{
   float: right;
   line-height: 30px;
   cursor: default;
@@ -333,20 +333,20 @@
   display: inline-block;
   width: 141px;
 }
-.media-center-view-grid,
-.media-center-view-list {
+.subscriptions-view-grid,
+.subscriptions-view-list {
   vertical-align: top;
   margin-right: 20px;
   cursor: default;
   color: #9FB3CA;
 }
 
-.media-center-view-grid:active,
-.media-center-view-list:active{
+.subscriptions-view-grid:active,
+.subscriptions-view-list:active{
   color: #1497D6;
 }
 
-.media-center-view-selected {
+.subscriptions-view-selected {
   color: #4C637B;
 }
 

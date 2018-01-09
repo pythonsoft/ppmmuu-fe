@@ -4,7 +4,7 @@
       <span class="result-count">大约{{ total }}条结果</span>
       <div class="button-group clearfix">
         <span
-          class="iconfont icon-filter subscriptions-view-list media-center-view-selected"
+          class="iconfont icon-filter subscriptions-view-list subscriptions-view-selected"
           ref="filterBtn"
           @click.stop="handleFilterBtnClick"></span><!--
         --><span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
@@ -213,13 +213,13 @@
         if (type === 'grid') {
           className += ' icon-view-grid subscriptions-view-grid';
           if (this.viewType === 'grid') {
-            className += ' media-center-view-selected';
+            className += ' subscriptions-view-selected';
           }
         } else if (type === 'list') {
           className += ' icon-view-list subscriptions-view-list';
 
           if (this.viewType === 'list') {
-            className += ' media-center-view-selected';
+            className += ' subscriptions-view-selected';
           }
         }
 
