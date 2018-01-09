@@ -76,7 +76,7 @@ config.UMP_FILETYPE = {
   LOW_BIT_VIDEO: '1', // 低码流
   SUBTITLE: '2', // 字幕
   THUMB: '3', // 缩略图
-  DOC: '4',  //文档
+  DOC: '4', // 文档
   OTHER: '5' // 其它
 };
 

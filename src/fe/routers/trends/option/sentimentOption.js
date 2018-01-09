@@ -40,7 +40,7 @@ export const sentimentOption = {
       stillShowZeroSum: false,
       itemStyle: {
         normal: {
-          borderColor: "#fff",
+          borderColor: '#fff',
           borderWidth: 1
         }
       },
@@ -68,7 +68,7 @@ export const sentimentOption = {
       stillShowZeroSum: false,
       itemStyle: {
         normal: {
-          borderColor: "#fff",
+          borderColor: '#fff',
           borderWidth: 1
         }
       },
