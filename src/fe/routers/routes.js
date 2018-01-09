@@ -13,6 +13,7 @@ const StorageTactics = resolve => require.ensure([], () => resolve(require('./ma
 
 const Transcode = resolve => require.ensure([], () => resolve(require('./management/task/transcode/index')), 'transcode');
 const Download = resolve => require.ensure([], () => resolve(require('./management/task/download/index')), 'download');
+const LibraryTask = resolve => require.ensure([], () => resolve(require('./management/task/libraryTask/index')), 'libraryTask');
 
 const ManagementAbout = resolve => require.ensure([], () => resolve(require('./management/help/about/index')), 'managementAbout');
 const ManagementFeedback = resolve => require.ensure([], () => resolve(require('./management/help/feedback/index')), 'managementFeedback');
@@ -25,6 +26,7 @@ const Watch = resolve => require.ensure([], () => resolve(require('./personalCen
 const SearchHistory = resolve => require.ensure([], () => resolve(require('./personalCenter/searchHistory')), 'searchHistory');
 const Feedback = resolve => require.ensure([], () => resolve(require('./personalCenter/feedback/index')), 'feedback');
 const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
+const Report = resolve => require.ensure([], () => resolve(require('./management/report')), 'report');
 
 const Copy = resolve => require.ensure([], () => resolve(require('./copy')), 'copy');
 const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
@@ -87,7 +89,9 @@ export default [{
         { path: 'storageTactics', component: StorageTactics, meta: { title: '策略' }, name: 'storageTactics' },
         { path: 'transcode', component: Transcode, meta: { title: '转码任务' }, name: 'transcode' },
         { path: 'download', component: Download, meta: { title: '下载任务' }, name: 'download' },
+        { path: 'libraryTask', component: LibraryTask, meta: { title: '入库任务' }, name: 'libraryTask' },
         { path: 'configuration', component: Configuration, meta: { title: '设置' }, name: 'configuration' },
+        { path: 'report', component: Report, meta: { title: '报表统计' }, name: 'report' },
         { path: 'managementAbout', component: ManagementAbout, meta: { title: '关于' }, name: 'managementAbout' },
         { path: 'managementFeedback', component: ManagementFeedback, meta: { title: '报告问题' }, name: 'managementFeedback' },
         { path: 'downloadTemplate', component: DownloadTemplate, meta: { title: '下载模板' }, name: 'downloadTemplate' },

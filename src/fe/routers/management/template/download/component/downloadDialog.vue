@@ -3,7 +3,7 @@
     title="下载地址选择列表"
     :visible.sync="dialogVisible"
     @close="close">
-    <div class="bucket-browser-content">
+    <div :class="$style.content">
 
       <!-- <fj-table v-if="!permissionViewVisible" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" width="160" label="标识"></fj-table-column>
@@ -143,6 +143,10 @@
   };
 </script>
 <style module>
+  .content {
+    max-height: 300px;
+    overflow: auto;
+  }
   .list li {
     padding-top: 16px;
     padding-bottom: 10px;

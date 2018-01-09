@@ -13,6 +13,15 @@ utils.FROM_WHERE = {
 utils.fillupZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
+
+utils.getDayCountOfMonth = function(year, month) {
+  const date = new Date(year, month, 1);
+  const nextDate = new Date(year, month + 1, 1);
+  const ms = nextDate.getTime() - date.getTime();
+  const DAY_DURATION = 24 * 60 * 60 * 1000;
+  return ms / DAY_DURATION;
+};
+
 utils.formatQuery = function formatQuery(obj, isGet = false) {
   return isGet ? {
     params: obj
@@ -388,12 +397,12 @@ utils.transformSecondsToHours = function transformSecondsToHours(time = 0, forma
   time %= 60;
   const seconds = Math.floor(time);
 
-  let rs = `${hours}小时`;
+  let rs = `${fillupZero(hours)}小时`;
   if (minutes) {
-    rs += `${minutes}分`;
+    rs += `${fillupZero(minutes)}分`;
   }
   if (seconds) {
-    rs += `${seconds}秒`;
+    rs += `${fillupZero(seconds)}秒`;
   }
 
   return rs;
