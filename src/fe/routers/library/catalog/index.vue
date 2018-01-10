@@ -50,7 +50,7 @@
           </template>
           <template slot="1" slot-scope="props">
             <div :style="{ width: '100%', height: '100%', overflow: 'auto', position: 'absolute' }" ref="rightContent">
-              <div class="catalogRightContent" v-if="hasSelectedItem">
+              <div class="catalogRightContent" v-if="hasSelectedItem || currentCatalogId">
                 <h3>填写编目内容</h3>
                 <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="100px">
                   <fj-form-item label="名称" prop="name">
@@ -72,7 +72,7 @@
                     <fj-input v-model="formData.keyman"></fj-input>
                   </fj-form-item>
                   <fj-form-item label="净长" prop="duration">
-                    <fj-input v-model="formData.duration"></fj-input>
+                    <fj-input v-model="formData.duration" :disabled="true"></fj-input>
                   </fj-form-item>
                   <fj-form-item label="语言" prop="language">
                     <fj-input v-model="formData.language"></fj-input>
@@ -304,17 +304,23 @@
         this.editStatusFn = this.EDIT_STATUS_CONFIG[type].fn;
       },
       submitCatalogTask() {
-        this.isSubmitBtnLoading = true;
-        libraryAPI.submitCatalogTask({ taskIds: this.taskId })
-          .then((response) => {
-            this.isSubmitBtnLoading = false;
-            this.$router.push({ name: 'personal_catalog_task_submitted' });
-            this.$message.success('提交成功');
-          })
-          .catch((error) => {
-            this.isSubmitBtnLoading = false;
-            this.$message.error(error);
-          });
+        this.$refs.catalogForm.validate((valid) => {
+          if (valid) {
+            this.isSubmitBtnLoading = true;
+            libraryAPI.submitCatalogTask({taskIds: this.taskId})
+              .then((response) => {
+                this.isSubmitBtnLoading = false;
+                this.$router.push({name: 'personal_catalog_task_submitted'});
+                this.$message.success('提交成功');
+              })
+              .catch((error) => {
+                this.isSubmitBtnLoading = false;
+                this.$message.error(error);
+              });
+          }else{
+            this.$message.error('请检查编目信息是否填写正确');
+          }
+        });
       },
       updateCatalog() {
          this.$refs.catalogForm.validate((valid) => {
@@ -386,9 +392,23 @@
         });
       },
       listCatalog(objectId) {
+        const me = this;
         libraryAPI.listCatalog({ params: { objectId: objectId } }).then((res) => {
           const tempObj = {};
           res.data.forEach(item => {
+            if(!this.hasSelectedItem && !this.currentCatalogId){
+              me.currentCatalogId = item._id;
+              libraryAPI.getCatalog({ params: { id: item._id } }).then((res) => {
+                const keys = Object.keys(this.formData);
+                keys.forEach(key => {
+                  me.formData[key] = res.data[key];
+                });
+                me.formData.ownerName = res.data.owner.name;
+                me.formData.departmentName = res.data.department.name;
+              }).catch((error) => {
+                me.$message.error(error);
+              });
+            }
             tempObj[item._id] = item;
           });
           const originalKeys = Object.keys(tempObj);

@@ -10,9 +10,7 @@ export const convertLineSeries = function (data = {}, legend = [], key = '', typ
   for (let i = 0; i < legend.length; i++) {
     const name = legend[i];
     seriesItem.name = name;
-    seriesItem.data = data[name].map(item => {
-      return type ? item[type][key] : item[key];
-    });
+    seriesItem.data = data[name].map(item => (type ? item[type][key] : item[key]));
     res.push(Object.assign({}, seriesItem));
   }
   return res;

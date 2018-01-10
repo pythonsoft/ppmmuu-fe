@@ -7,9 +7,7 @@ export const convertPieData = function (data, key, formatter) {
   return data;
 };
 export const convertPieLegend = function (data) {
-  return data.map((item) => {
-    return item.Name;
-  });
+  return data.map(item => item.Name);
 };
 
 export const pieOption = {
@@ -19,7 +17,7 @@ export const pieOption = {
     textStyle: {
       fontSize: '12',
       fontWeight: 'bold',
-      color: '#303641',
+      color: '#303641'
     }
   },
   tooltip: {
@@ -29,7 +27,7 @@ export const pieOption = {
     },
     backgroundColor: 'rgba(42, 62, 82, .8)',
     // formatter: '{b} <br/> {c} ({d}%)'
-    formatter: function (params) {
+    formatter(params) {
       return `${params.name}<br/>${params.data.displayValue}(${params.percent}%)`;
     }
   },
@@ -42,7 +40,7 @@ export const pieOption = {
       type: 'pie',
       itemStyle: {
         normal: {
-          borderColor: "#fff",
+          borderColor: '#fff',
           borderWidth: 1
         }
       },

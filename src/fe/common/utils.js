@@ -14,7 +14,7 @@ utils.fillupZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
 
-utils.getDayCountOfMonth = function(year, month) {
+utils.getDayCountOfMonth = function (year, month) {
   const date = new Date(year, month, 1);
   const nextDate = new Date(year, month + 1, 1);
   const ms = nextDate.getTime() - date.getTime();
@@ -527,10 +527,10 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
     //   return cb && cb(null, `${config.defaults.streamURL}${playPath}`, res);
     // }
     if (dateString) {
-      let temp = dateString.match(/\/[a-z,0-9,-,_]*\/\d{4}\/\d{2}\/\d{2}/g);
-      if(!temp) {
+      const temp = dateString.match(/\/[a-z,0-9,-,_]*\/\d{4}\/\d{2}\/\d{2}/g);
+      if (!temp) {
         dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
-      }else{
+      } else {
         dateString = temp;
       }
       if (dateString) {

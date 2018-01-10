@@ -332,7 +332,7 @@ export const radioFields = [
       { value: 1, label: '高清' },
       { value: 0, label: '標清' }
     ],
-    selected: 'all'
+    selected: 1
   },
   {
     key: 'pigeonhole',
