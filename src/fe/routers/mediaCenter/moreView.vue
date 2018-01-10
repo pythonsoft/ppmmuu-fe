@@ -12,14 +12,16 @@
       </tr>
     </table>
     <table class="media-center-table" :style="{ display: visible }">
-      <tr v-for="(item, key) in info">
-        <td class="item-info-key" width="80">{{ key + ': ' || '空KEY:' }}</td>
-        <td class="item-info-value">{{ item || '-' }}</td>
+      <tr v-for="(item, key) in info" v-if="item && FIELD_NAME[key]">
+        <td class="item-info-key" width="80">{{ FIELD_NAME[key].cn || key }}</td>
+        <td class="item-info-value">{{ item }}</td>
       </tr>
     </table>
   </div>
 </template>
 <script>
+  import { getConfig } from './config';
+
   export default {
     name: 'mediaCenterMore',
     props: {
@@ -28,7 +30,8 @@
     data() {
       return {
         visible: 'none',
-        arrowClass: 'media-center-arrow-right'
+        arrowClass: 'media-center-arrow-right',
+        FIELD_NAME: getConfig('FIELD_NAME')
       };
     },
     methods: {
