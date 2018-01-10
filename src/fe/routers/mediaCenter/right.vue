@@ -84,7 +84,7 @@
               :info="file"
             ></more-view>
             <div class="media-center-operation-bar">
-              <fj-button type="primary" size="mini" @click.stop=" prepareDownload(file)">下载</fj-button>
+              <fj-button type="primary" size="mini" @click.stop="prepareDownload(file)">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>
