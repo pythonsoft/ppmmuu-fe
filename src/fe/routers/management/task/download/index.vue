@@ -217,7 +217,8 @@
 
         const param = {
           page: this.page,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          processType: 'download,distribute,media_combine',
         };
 
         if (this.formData.status) {
