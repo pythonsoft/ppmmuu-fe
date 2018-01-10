@@ -90,7 +90,7 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
 };
 
 api.getIcon = function getIcon(id, fromWhere) {
-  return `${axios.defaults.baseURL}/media/getIcon?objectid=${id}&fromWhere=${fromWhere}`;
+  return axios.defaults.baseURL + '/media/getIcon?objectid=' + id + '&fromWhere=' + fromWhere;
 };
 
 api.getObject = function getObject(data, scope) {
