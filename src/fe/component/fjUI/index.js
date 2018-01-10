@@ -3,6 +3,7 @@ import Vue from 'vue';
 import Input from './packages/input';
 import Button from './packages/button';
 import Radio from './packages/radio';
+import RadioButton from './packages/radioButton';
 import RadioGroup from './packages/radioGroup';
 import Checkbox from './packages/checkbox';
 import CheckboxGroup from './packages/checkboxGroup';
@@ -37,6 +38,7 @@ const components = [
   Input,
   Button,
   Radio,
+  RadioButton,
   RadioGroup,
   Checkbox,
   CheckboxGroup,
@@ -84,6 +86,7 @@ const FjUI = {
   Input,
   Button,
   Radio,
+  RadioButton,
   RadioGroup,
   Checkbox,
   CheckboxGroup,
