@@ -111,7 +111,7 @@ config.FILE_STATUS = {
   8: { text: '离线', value: '8' }
 };
 
-config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4'];
+config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4', '5'];
 
 method.getTextByValue = function (v, st) {
   return utils.getTextByValue(config, v, st) || {};
