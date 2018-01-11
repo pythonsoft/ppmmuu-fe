@@ -86,3 +86,41 @@
   transform: translate(-50%,-50%) scale(1);
   transition: all .15s cubic-bezier(.78,.14,.15,.86);
 }
+
+
+.fj-radio-button-wrap {
+  position: relative;
+}
+.fj-radio-button-input {
+  opacity: 0;
+  position: absolute;
+  top: -10000px;
+  z-index: -1;
+}
+.fj-radio-button {
+  padding: 4px 12px;
+  border-top: 1px solid #CED9E5;
+  border-bottom: 1px solid #CED9E5;
+  transition: all .15s cubic-bezier(.78,.14,.15,.86);
+}
+.fj-radio-button-wrap:first-child .fj-radio-button {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-left: 1px solid #CED9E5;
+}
+.fj-radio-button-wrap:last-child .fj-radio-button {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-right: 1px solid #CED9E5;
+}
+.fj-radio-button-wrap+.fj-radio-button-wrap .fj-radio-button {
+  border-left: 1px solid #CED9E5;
+}
+.fj-radio-button-wrap.fj-radio-button-checked .fj-radio-button {
+  background: #38B1EB;
+  border-color: #38B1EB;
+  color: #fff;
+}
+.fj-radio-button-wrap.fj-radio-button-checked+.fj-radio-button-wrap .fj-radio-button {
+  border-left: 1px solid #38B1EB;
+}
