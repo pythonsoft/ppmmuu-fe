@@ -401,7 +401,10 @@
         }, 30000);
       },
       updateCopy(cb = ()=>{}) {
-        manuscriptAPI.addOrUpdateManuscript(this.copyContent)
+        const data = Object.assign({}, this.copyContent);
+        delete data.modifyTime;
+        delete data.createdTime;
+        manuscriptAPI.addOrUpdateManuscript(data)
           .then((response) => {
             this.showSavedText = true;
             setTimeout(()=> {
