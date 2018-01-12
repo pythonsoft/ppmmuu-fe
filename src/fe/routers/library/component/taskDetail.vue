@@ -44,6 +44,18 @@
               ></more-view>
             </div>
           </fj-tab-pane>
+          <fj-tab-pane label="编目信息" name="tab1">
+            <div class="media-center-file-item media-center-file-item-bottom-line" v-for="catalogInfo in catalogInfos">
+              <table class="media-center-table">
+                <template v-for="(item, key) in catalogInfo">
+                  <tr>
+                    <td class="item-info-key">{{ item.cn || key }} </td>
+                    <td class="item-info-value">{{ item.value }}</td>
+                  </tr>
+                </template>
+              </table>
+            </div>
+          </fj-tab-pane>
         </fj-tabs>
       </div>
       <i class="iconfont icon-close closebtn" @click="handleClose"></i>
@@ -96,19 +108,22 @@
         activeTabName: 'tab2',
         videoId: '',
         FILE_TYPE_MAP: FILE_TYPE_MAP,
-        fromWhere: FROM_WHERE.HK_RUKU
+        fromWhere: FROM_WHERE.HK_RUKU,
+        catalogInfos: []
       };
     },
     watch: {
       objectId(val) {
         if (this.visible) {
           this.getDetail();
+          this.getCatalogInfoTranslation();
         }
       },
       visible(val) {
         if (!val) return;
         if (this.objectId) {
           this.getDetail();
+          this.getCatalogInfoTranslation();
         }
       }
     },
@@ -146,6 +161,13 @@
         // }).catch((error) => {
         //   this.$message.error(error);
         // });
+      },
+      getCatalogInfoTranslation() {
+        libraryAPI.getCatalogInfoTranslation({ params: { objectId: this.objectId }}).then((res) => {
+          this.catalogInfos = res.data;
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       },
       handleClose() {
         this.$emit('update:visible', false);
