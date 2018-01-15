@@ -293,6 +293,7 @@
 
         api.deleteJob({ params: param }).then((res) => {
           me.$message.success('任务已成功停止');
+          me.dialog.visible = false;
           me.listTask();
         }).catch((error) => {
           me.$message.error(error);

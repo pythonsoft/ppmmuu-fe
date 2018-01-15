@@ -15,8 +15,6 @@ const config = require('../global');
 class FileClient {
   constructor(options) {
     this.settings = Object.assign({
-      host: config.imHost,
-      port: config.imPort,
       userId: 'chaoningx',
       userName: 'chaoningx',
       isCrypto: false,
@@ -58,7 +56,7 @@ class FileClient {
     const ticket = me.settings.ticket;
     const isCrypto = me.settings.isCrypto ? '1' : '0';
 
-    const socket = clientConnect(`ws://${me.settings.host}:${me.settings.port}/file`, {
+    const socket = clientConnect(`ws://${config.socketDomain}/file`, {
       query: {
         'im-ticket': ticket,
         'im-key': 'ump',
