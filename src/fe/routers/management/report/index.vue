@@ -26,17 +26,17 @@
           <h3>饼状图总览</h3>
           <div :class="$style.typeRadioGroup">
             <fj-radio-group v-model="chartValueType">
-              <fj-radio label="Total">总量</fj-radio>
-              <fj-radio label="Increment">增量</fj-radio>
+              <fj-radio-button label="Total">总量</fj-radio-button><!--
+              --><fj-radio-button label="Increment">增量</fj-radio-button>
             </fj-radio-group>
           </div>
           <div :class="$style.typeRadioGroup">
             <fj-radio-group v-model="chartType">
-              <fj-radio
+              <fj-radio-button
                 v-for="item in PIE_DATA_TYPES"
                 :key="item.value"
                 :label="item.value"
-                >{{ item.label }}</fj-radio>
+                >{{ item.label }}</fj-radio-button>
             </fj-radio-group>
           </div>
         </div>
@@ -53,26 +53,27 @@
           <h3>线状图总览</h3>
           <div :class="$style.typeRadioGroup">
             <fj-radio-group v-model="lineValueType">
-              <fj-radio label="Total">总量</fj-radio>
-              <fj-radio label="Increment">增量</fj-radio>
+              <fj-radio-button label="Total">总量</fj-radio-button><!--
+              --><fj-radio-button label="Increment">增量</fj-radio-button>
             </fj-radio-group>
           </div>
           <div :class="$style.typeRadioGroup">
             <fj-radio-group v-model="timeinterval">
-              <fj-radio
+              <fj-radio-button
+                :disabled="loading"
                 v-for="item in TIME_INTERVAL_MAP"
                 :key="item.value"
                 :label="item.value"
-                >{{ item.label }}</fj-radio>
+                >{{ item.label }}</fj-radio-button>
             </fj-radio-group>
           </div>
           <div :class="$style.typeRadioGroup">
             <fj-radio-group v-model="lineType">
-              <fj-radio
+              <fj-radio-button
                 v-for="item in PIE_DATA_TYPES"
                 :key="item.value"
                 :label="item.value"
-                >{{ item.label }}</fj-radio>
+                >{{ item.label }}</fj-radio-button>
             </fj-radio-group>
           </div>
         </div>
@@ -133,6 +134,7 @@
         pieData: {},
         incrementSummary: {},
         lineData: [],
+        loading: false,
         fixLineChartsHeader: false
       };
     },
@@ -418,6 +420,7 @@
           });
       },
       getLineData(reqData = {}) {
+        this.loading = true;
         const data = {};
         data.path = '/get_report';
         data.params = JSON.stringify(reqData);
@@ -428,6 +431,7 @@
         this.typesLine.showLoading({ color: '#38B1EB' });
         RequestsAPI.sendRequests(data)
           .then((response) => {
+            this.loading = false;
             const resData = response.data;
             this.lineData = this.convertLineData(resData);
 
@@ -438,6 +442,7 @@
 
             this.updateLine();
           }).catch((error) => {
+            this.loading = false;
             this.$message.error(error);
 
             this.statisticsLine.hideLoading();

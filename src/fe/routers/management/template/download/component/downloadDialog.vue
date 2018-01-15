@@ -18,7 +18,7 @@
       </ul>
 
       <div v-else>
-        <div v-if="permissions.length === 0">{{ tips }}</div>
+        <div :class="$style.tips" v-if="permissions.length === 0">{{ tips }}</div>
         <!-- <fj-table v-else style="font-size: 12px;" :data="permissions" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
           <fj-table-column prop="acceptor" width="60" label="类型">
             <template slot-scope="props">
@@ -145,13 +145,27 @@
 <style module>
   .content {
     max-height: 300px;
-    overflow: auto;
+    margin: 0 -20px;
+    overflow-y: auto;
   }
   .list li {
-    padding-top: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #EBF3FB;
+    position: relative;
+    /*padding-top: 16px;*/
+    /*padding-bottom: 10px;*/
+    padding: 16px 20px 10px;
     cursor: pointer;
+  }
+  .tips {
+    padding: 0 20px;
+  }
+  .list li:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    border-bottom: 1px solid #EBF3FB;
   }
   .itemName {
     font-size: 12px;
@@ -166,5 +180,8 @@
   .list li.active .itemName,
   .list li:hover .itemName {
     color: #38B1EB;
+  }
+  .list li.active {
+    background-color: #f8fafb;
   }
 </style>

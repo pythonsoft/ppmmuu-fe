@@ -20,16 +20,15 @@
 .titleWrap {
   padding: 0 27px;
   text-align: center;
-  font-weight: bold;
-  font-size: 32px;
-  color: #303641;
+  font-size: 18px;
+  color: #2A3E52;
 }
 .titleWrap h3 {
-  padding: 42px 0;
+  padding: 26px 0;
   border-bottom: 1px solid #e3e3e3;
 }
 .overviewWrap {
-  padding: 50px 0;
+  padding: 40px 0;
 }
 .overviewItem {
   float: left;
@@ -39,13 +38,14 @@
   border-left: 1px solid #e3e3e3;
 }
 .overviewItem .label {
-  font-size: 14px;
-  color: #454c58;
   display: block;
+  font-size: 12px;
+  color: #2A3E52;
 }
 .overviewItem .count {
-  font-size: 24px;
-  color: #303641;
+  font-size: 17px;
+  color: #2A3E52;
+  font-weight: bold;
 }
 .typeTitle {
   padding: 0 27px;
@@ -67,7 +67,9 @@
   float: left;
   height: 79px;
   line-height: 79px;
-  font-size: 24px;
+  font-size: 16px;
+  color: #2A3E52;
+  letter-spacing: 0;
 }
 .typeSelect {
   float: right;
@@ -80,9 +82,7 @@
   line-height: 79px;
   margin-left: 25px;
 }
-.typeRadioGroup label {
-  margin-right: 5px;
-}
+
 .headerLabel,
 .headerRadio {
   float: left;
@@ -112,6 +112,6 @@
   width: 100%;
   height: 520px;
   margin-bottom: 5px;
-  padding: 38px 27px;
+  padding: 24px 27px;
   background: #fff;
 }

@@ -4,49 +4,64 @@ const config = {};
 const method = {};
 
 config.FIELD_NAME = {
-  ACCESSCOUNT: { cn: '' },
-  ARCHIVETYPE: { cn: '' },
+  ACCESSCOUNT: { cn: '訪問次數' },
+  ARCHIVETYPE: { cn: '歸檔類型' },
   CAPCHANNEL: { cn: '' },
-  CHANNEL: { cn: '' },
-  CHECKFILE: { cn: '' },
-  CREATETIME: { cn: '' },
-  DELAFTERARCHIVE: { cn: '' },
-  DESCRIPTION: { cn: '' },
-  EXPIRETIME: { cn: '' },
+  CHANNEL: { cn: '頻道' },
+  CHECKFILE: { cn: '檢查文件' },
+  CREATETIME: { cn: '創建時間' },
+  DELAFTERARCHIVE: { cn: '歸檔后刪除' },
+  DESCRIPTION: { cn: '描述' },
+  EXPIRETIME: { cn: '過期時間' },
   FILECLASS: { cn: '' },
   FILENAME: { cn: '文件名' },
   FILESIZE: { cn: '文件大小' },
-  FILETYPE: { cn: '文件类型' },
-  FILETYPEID: { cn: '文件类型ID' },
-  FILETYPENAME: { cn: '文件类型名称' },
-  INPOINT: { cn: '入点' },
+  FILETYPE: { cn: '文件類型' },
+  FILETYPEID: { cn: '文件類型ID' },
+  FILETYPENAME: { cn: '文件類型名稱' },
+  INPOINT: { cn: '入點' },
   ISOK: { cn: '' },
   LANGUAGEID: { cn: '' },
-  LASTACCESS: { cn: '' },
-  MD5CODE: { cn: '' },
-  MEDIAINFOFLAG: { cn: '' },
-  NAME: { cn: '名称' },
+  LASTACCESS: { cn: '最近一次訪問' },
+  MD5CODE: { cn: 'MD5編碼' },
+  MEDIAINFOFLAG: { cn: '媒體信息標識' },
+  NAME: { cn: '名稱' },
   OBJECTID: { cn: '' },
-  OUTPOINT: { cn: '出点' },
-  PATHID: { cn: '' },
-  PROCESSSTATUS: { cn: '' },
+  OUTPOINT: { cn: '出點' },
+  PATHID: { cn: '路勁id' },
+  PROCESSSTATUS: { cn: '進度狀態' },
   PURGETIME: { cn: '' },
   RESERVED1: { cn: '' },
   RESERVED2: { cn: '' },
   SAID: { cn: '' },
-  SANAME: { cn: '' },
+  SANAME: { cn: '文件類型名' },
   SASTATUS: { cn: '' },
   SATYPE: { cn: '' },
-  SOURCE: { cn: '' },
+  SOURCE: { cn: '來源' },
   SPSTATUS: { cn: '' },
-  STATUS: { cn: '' },
-  STREAMMEDIAID: { cn: '' },
-  STREAMMEDIAINFO: { cn: '' },
-  STREAMMEDIAINFOID: { cn: '' },
-  STREAMTYPE: { cn: '' },
+  STATUS: { cn: '狀態' },
+  STREAMMEDIAID: { cn: '流媒體id' },
+  STREAMMEDIAINFO: { cn: '流媒體信息' },
+  STREAMMEDIAINFOID: { cn: '流媒體信息id' },
+  STREAMTYPE: { cn: '劉類型' },
   TAPECODE: { cn: '' },
   UNCPATH: { cn: '' },
-  VIDEOSTANDARD: { cn: '' }
+  VIDEOSTANDARD: { cn: '視頻標準' },
+  INPOINT: {
+    cn: '入點'
+  },
+  OUTPOINT: {
+    cn: '出點'
+  },
+  realPath: { cn: '文件真實路勁' },
+  path: { cn: '文件路勁' },
+  avaliable: { cn: '是否可用' },
+  status: { cn: '狀態' },
+  description: { cn: '描述' },
+  archivePath: { cn: '歸檔路勁' },
+  createdTime: { cn: '創建時間' },
+  lastModifyTime: { cn: '修改時間' },
+  fromWhere: { cn: '入庫地點' },
 };
 
 config.FILE_TYPE_ID = [
@@ -76,7 +91,7 @@ config.UMP_FILETYPE = {
   LOW_BIT_VIDEO: '1', // 低码流
   SUBTITLE: '2', // 字幕
   THUMB: '3', // 缩略图
-  DOC: '4',  //文档
+  DOC: '4', // 文档
   OTHER: '5' // 其它
 };
 
@@ -96,7 +111,7 @@ config.FILE_STATUS = {
   8: { text: '离线', value: '8' }
 };
 
-config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4'];
+config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4', '5'];
 
 method.getTextByValue = function (v, st) {
   return utils.getTextByValue(config, v, st) || {};

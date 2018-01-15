@@ -84,7 +84,7 @@
               :info="file"
             ></more-view>
             <div class="media-center-operation-bar">
-              <fj-button type="primary" size="mini" @click.stop=" prepareDownload(file)">下载</fj-button>
+              <fj-button type="primary" size="mini" @click.stop="prepareDownload(file)">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>
@@ -490,7 +490,7 @@
           return {};
         }
 
-        if(this.videoInfo.from_where*1 === this.FROM_WHERE.UMP){
+        if(this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU){
           for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
             for (let i = 0, len = files.length; i < len; i++) {
               if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {

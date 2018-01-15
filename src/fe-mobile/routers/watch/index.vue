@@ -31,7 +31,7 @@
     </div>
     <template v-else>
       <div :class="['media-center-file-item media-center-file-item-bottom-line', { 'first-child': index === 0 }]" v-for="(file, index) in files">
-        <span v-if="index === 0" class="operation-btn" @click="prepareDownload()">下载</span>
+        <span class="operation-btn" @click="prepareDownload(file)">下载</span>
         <table class="media-center-table">
           <tr>
             <td class="item-info-key">文件名: </td>

@@ -15,15 +15,13 @@ const config = require('../global');
 class FileClient {
   constructor(options) {
     this.settings = Object.assign({
-      host: config.imHost,
-      port: config.imPort,
       userId: 'chaoningx',
       userName: 'chaoningx',
       isCrypto: false,
       file: '',
       concurrency: 0,
       ticket: '',
-      vueInstance: null,
+      vueInstance: null
     }, options);
 
     this.transferTaskInstance = null;
@@ -53,12 +51,12 @@ class FileClient {
   transfer() {
     const me = this;
 
-    //me.connectState();
+    // me.connectState();
     me.countSpeed();
     const ticket = me.settings.ticket;
     const isCrypto = me.settings.isCrypto ? '1' : '0';
 
-    const socket = clientConnect(`ws://${me.settings.host}:${me.settings.port}/file`, {
+    const socket = clientConnect(`ws://${config.socketDomain}/file`, {
       query: {
         'im-ticket': ticket,
         'im-key': 'ump',
@@ -71,7 +69,7 @@ class FileClient {
     socket.on('connect', () => {
       const file = me.settings.file;
       let lastModify = new Date();
-      if(file.lastModified){
+      if (file.lastModified) {
         lastModify = new Date(file.lastModified);
       }
       const task = new TransferTask({
@@ -105,38 +103,38 @@ class FileClient {
     });
 
     socket.on('transfer_error', (msg) => {
-      //console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
+      // console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
       me.alertError(msg);
       this.status = 'error';
       me.destroy();
     });
 
     socket.on('invalid_request', (msg) => {
-      //console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
+      // console.log(`invalid_request socket id: ${me.getSocketId()}`, msg);
       me.alertError(msg);
       this.status = 'error';
       me.destroy();
     });
 
     socket.on('complete', () => {
-      //console.log('file transfer complete');
+      // console.log('file transfer complete');
       this.status = 'complete';
     });
 
     socket.on('error', (err) => {
-      //console.log(`error socket id: ${me.getSocketId()}`, err);
+      // console.log(`error socket id: ${me.getSocketId()}`, err);
       this.status = 'error';
       me.alertError(err);
       me.destroy();
     });
 
     socket.on('disconnect', (msg) => {
-      //console.log(`disconnect with server${me.getSocketId()}`, msg);
+      // console.log(`disconnect with server${me.getSocketId()}`, msg);
       me.destroy();
     });
   }
-  alertError(error){
-    if(this.settings.vueInstance){
+  alertError(error) {
+    if (this.settings.vueInstance) {
       this.settings.vueInstance.$message.error(error);
     }
   }
@@ -158,10 +156,10 @@ class FileClient {
     this.socket.emit('restart');
   }
   canStop() {
-    if(this.stop){
+    if (this.stop) {
       return false;
     }
-    if(this.status === 'complete' || this.status === 'error' || !this.socket){
+    if (this.status === 'complete' || this.status === 'error' || !this.socket) {
       return false;
     }
 
@@ -169,11 +167,11 @@ class FileClient {
   }
 
   canRestart() {
-    if(!this.stop){
+    if (!this.stop) {
       return false;
     }
 
-    if(this.status === 'complete' || this.status === 'error' || !this.socket){
+    if (this.status === 'complete' || this.status === 'error' || !this.socket) {
       return false;
     }
 
@@ -182,13 +180,13 @@ class FileClient {
   connectState() {
     const me = this;
     const fn = function (count) {
-      //console.log(`正在连接服务器(${me.settings.host}:${me.settings.port})...${count}`);
+      // console.log(`正在连接服务器(${me.settings.host}:${me.settings.port})...${count}`);
       if (!me.isConnect) {
         setTimeout(() => {
           fn(count + 1);
         }, 1000);
       } else {
-        //console.log('已经连上...');
+        // console.log('已经连上...');
       }
     };
 
@@ -220,11 +218,11 @@ class FileClient {
       const averageSpeed = (me.passedLength - lastSize) / interval * 1000;
 
       lastSize = me.passedLength;
-      me.speed = utils.formatSize(averageSpeed) + '/s';
-      //console.log(`已完成${utils.formatSize(me.passedLength)}, ${percent}%, 平均速度：${utils.formatSize(averageSpeed)}/s`);
+      me.speed = `${utils.formatSize(averageSpeed)}/s`;
+      // console.log(`已完成${utils.formatSize(me.passedLength)}, ${percent}%, 平均速度：${utils.formatSize(averageSpeed)}/s`);
 
       if (me.passedLength >= totalSize) {
-        //console.log(`共用时：${(Date.now() - startTime) / 1000}秒`);
+        // console.log(`共用时：${(Date.now() - startTime) / 1000}秒`);
       } else {
         setTimeout(() => {
           show();
@@ -248,19 +246,19 @@ class FileClient {
 
       if (pkg === 'done') {
         hasTask = false;
-        //console.log('transfer complete');
+        // console.log('transfer complete');
       } else if (pkg && !me.stop) {
         if (index < me.settings.concurrency) {
           createTask(index + 1);
         }
 
         const file = me.settings.file;
-        //console.log('start==>', pkg.packageInfo);
+        // console.log('start==>', pkg.packageInfo);
         const blob = file.slice(pkg.packageInfo.start, pkg.packageInfo.end);
         const reader = new FileReader();
 
         reader.onerror = function (e) { // 读取失败的时候重新执行一次
-          //console.log(e);
+          // console.log(e);
         };
 
         reader.readAsArrayBuffer(blob);
@@ -277,7 +275,7 @@ class FileClient {
             rs.pipe(rStream);
           }
           me.passedLength += pkg.packageInfo.size;
-          //console.log('send package===>');
+          // console.log('send package===>');
           socketStreamClient(me.socket).emit('fileStream', rStream, pkg.packageInfo);
         };
       } else {

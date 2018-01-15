@@ -173,7 +173,7 @@
       ></media-right>
     </template>
 
-    <!--<im></im>-->
+    <!-- <im></im> -->
   </layout-three-column>
 </template>
 <script>
@@ -482,7 +482,9 @@
         api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
           if (res.data.docs.length > 0) {
-            me.currentVideo = res.data.docs[0];
+            if (me.listType === 'default' || (me.listType === "normal" && me.currentPage === 1)) {
+              me.currentVideo = res.data.docs[0];
+            }
           } else {
             me.currentVideo = {};
           }

@@ -3,7 +3,7 @@
     <div class="channel-header clearfix" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px' }">
       <h3 class="channel-name">{{ this.query.channel_name }}</h3>
       <span class="channel-count">共{{ total }}个</span>
-      <div class="media-center-view-bar">
+      <div class="channel-view-bar">
         <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
         --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
         --><div class="order-select">
@@ -178,15 +178,15 @@
         let className = 'iconfont';
 
         if (type === 'grid') {
-          className += ' icon-view-grid media-center-view-grid';
+          className += ' icon-view-grid subscriptions-view-grid';
           if (this.viewType === 'grid') {
-            className += ' media-center-view-selected';
+            className += ' subscriptions-view-selected';
           }
         } else if (type === 'list') {
-          className += ' icon-view-list media-center-view-list';
+          className += ' icon-view-list subscriptions-view-list';
 
           if (this.viewType === 'list') {
-            className += ' media-center-view-selected';
+            className += ' subscriptions-view-selected';
           }
         }
 
