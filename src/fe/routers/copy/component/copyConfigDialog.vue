@@ -25,7 +25,7 @@
     </fj-form>
     <div slot="footer" class="dialog-footer">
       <fj-button @click.stop="handleClose">取消</fj-button><!--
-      --><fj-button type="primary" @click="handleSubmitBtnClick">确定</fj-button>
+      --><fj-button type="primary" @click="handleSubmitBtnClick" :loading="isLoading">确定</fj-button>
     </div>
   </fj-dialog>
 </template>
@@ -40,12 +40,14 @@
         step: 1,
         visible: this.dialogVisible,
         config: [],
-        formData: {}
+        formData: {},
+        isLoading: false
       };
     },
     watch: {
       dialogVisible(val) {
         this.visible = val;
+        this.isLoading = false;
         if (val && this.config.length === 0) {
           this.getCopyConfig();
         }
@@ -68,6 +70,7 @@
         if (this.step === 1) {
           this.step = 2;
         } else if (this.step === 2) {
+          this.isLoading = true;
           const data = { toWhere: 'DAYANG' };
           this.config.forEach(item => {
             data[item.key] = item.selected;
