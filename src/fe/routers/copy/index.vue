@@ -46,15 +46,18 @@
           </fj-option>
         </fj-select>
       </div>
+      <tabs :menus="submitMenus" @tab-click="submitTabClick" v-if="activeMenu === 'sent'"></tabs>
       <ul>
         <li v-if="copyList.length === 0 && keyword" class="empty-box">未搜索到相关稿件</li>
         <li v-else-if="copyList.length === 0" class="empty-box">暂无稿件</li>
-        <li v-for="item in copyList" :class="['copy-item clearfix', {'active': item._id === activeCopyId}]" @click="activeCopyId = item._id">
+        <li v-else v-for="item in copyList" :class="['copy-item clearfix', {'active': item._id === activeCopyId}]" @click="activeCopyId = item._id">
           <i :class="['copy-item-icon iconfont', CREATETYPE_CONFIG[item.createType].icon]"></i>
           <div class="copy-item-content">
             <span class="copy-item-title">{{ item.title }}</span>
-            <span class="copy-item-detail">{{ item.modifyTime | formatTime }}</span>
-            <span class="copy-item-detail" v-if="item.attachments.length > 0">{{ `附件${item.attachments.length}个` }}</span>
+            <span class="copy-item-detail">{{ formatTime(item.modifyTime, 'YYYY-MM-DD HH:mm') }}</span>
+            <span class="copy-item-detail" v-if="getItemAttachmentsLength(item) > 0"><i class="iconfont icon-attachment list-font-size copy-list-color"></i>
+            <span class="attachment-number list-font-size copy-list-color">{{ getItemAttachmentsLength(item) + ',  ' + getProccess(item)}}</span></span>
+            <span :class="['copy-item-detail', getSubmitStatus(item.status).class]" v-if="activeMenu === 'sent'">{{ getSubmitStatus(item.status).text }}</span>
             <span class="copy-item-words" v-if="item._id === activeCopyId">{{ `字数：${getWords(item.editContent)}` }}</span>
           </div>
         </li>
@@ -109,7 +112,10 @@
             </template>
           </div>
           <div :class="$style.submitBtn" v-show="activeMenu === 'drafts'">
-            <fj-button type="primary" @click="copyConfigDialogVisible = true"><i class="iconfont icon-send"></i>提交</fj-button>
+            <fj-button type="primary" @click="handleSubmitClick()"><i class="iconfont icon-send"></i>提交</fj-button>
+          </div>
+          <div :class="$style.submitBtn" v-show="isShowResubmit()">
+            <fj-button type="primary" @click="handleResubmitClick"><i class="iconfont icon-send"></i>再次提交</fj-button>
           </div>
         </div>
         <copy-editor
@@ -137,41 +143,33 @@
         --><fj-button type="primary" :loading="isDeleteBtnLoading" @click.stop="handleDeleteCopy">确定</fj-button>
       </div>
     </fj-dialog>
+    <fj-dialog
+            title="再次提交"
+            :visible.sync="resubmitDialogVisible">
+      <p>您确定要再次提交吗</p>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click.stop="resubmitDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="isResubmitBtnLoading" @click.stop="resubmitCopy">确定</fj-button>
+      </div>
+    </fj-dialog>
     <config-dialog :dialog-visible.sync="copyConfigDialogVisible" @submit="handleSubmitCopy"></config-dialog>
   </div>
 </template>
 <script>
   import './index.css';
   import Vue from 'vue';
+  import Tabs from '../../component/layout/tab';
   import CopyEditor from './component/copyEditor';
   import ConfigDialog from './component/copyConfigDialog';
   import manuscriptAPI from '../../api/manuscript';
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import { formatTime, getItemFromLocalStorage, formatSize } from '../../common/utils';
+  import { MENU, STATUS_CONFIG, CREATETYPE_CONFIG, getSubmitStatus, SUBMIT_MENUS } from './config';
 
   const fileClient = require('../../common/client');
 
   const FILE_SIZE_LIMIT = 20 * 1024 * 1024 * 1024; //限制上传文件大小,20G
 
-  const MENU = [
-    { title: '我的稿件',
-    index: 'my',
-    children: [
-      { text: '草稿箱', status: '1', route: 'drafts', count: 0 },
-      { text: '已提交', status: '2', route: 'sent', count: 0 },
-      { text: '垃圾箱', status: '3', route: 'spam', count: 0 }
-    ] },
-  ];
-  const STATUS_CONFIG = {
-    drafts: { code: '1' },
-    sent: { code: '2' },
-    spam: { code: '3' },
-    deleted: { code: '4' }
-  };
-  const CREATETYPE_CONFIG = {
-    1: { text: '创建者', icon: 'icon-creator' },
-    2: { text: '协作者', icon: 'icon-collaborator' }
-  };
   export default {
     data() {
       return {
@@ -208,7 +206,11 @@
         contentHeight: 0,
         transferAttachments: {},
         oldListAttachments: {},
-        mixedTableData: []
+        mixedTableData: [],
+        submitMenus: SUBMIT_MENUS,
+        submitStatus: '',
+        resubmitDialogVisible: false,
+        isResubmitBtnLoading: false
       };
     },
     directives: { Clickoutside },
@@ -274,6 +276,7 @@
       }
     },
     methods: {
+      getSubmitStatus,
       getWords(editContent) {
         let words = 0;
         editContent.forEach((item)=> {
@@ -473,14 +476,19 @@
       updateList(query) {
         if (this.loadListBtnText === '加载中...') return;
         this.loadListBtnText = '加载中...';
+        let action = manuscriptAPI.listManuscript;
         const data = {
           keyword: this.keyword,
           page: this.currentPage,
           pageSize: this.pageSize,
           status: STATUS_CONFIG[this.activeMenu].code
         };
+        if(this.activeMenu === 'sent'){
+          delete data.status;
+          action = manuscriptAPI.listSubmitScript;
+        }
         Object.assign(data, query);
-        manuscriptAPI.listManuscript({ params: data })
+        action({ params: data })
           .then((response) => {
             this.loadListBtnText = '加载更多';
             const data = response.data;
@@ -654,11 +662,94 @@
             me.transferAttachments[me.copyContent._id] = attachments;
           }
         }, 100);     //100ms更新一次进度
-      }
+      },
+      submitTabClick(index) {
+        this.copyList = [];
+        for(let i = 0, len = this.submitMenus.length; i < len; i++){
+          this.submitMenus[i].active = false;
+        }
+        this.submitMenus[index].active = true;
+        let status = this.submitMenus[index].key;
+        this.submitStatus = status;
+
+        if(status === 'all'){
+          status = '';
+        }
+        this.updateList({status: status})
+      },
+      isShowResubmit(){
+        if(this.activeCopyId) {
+          let activeItem = {};
+          for(let i = 0, len = this.copyList.length; i < len; i++){
+            const item = this.copyList[i];
+            if(item._id === this.activeCopyId){
+              activeItem = item;
+              break;
+            }
+          }
+          return this.activeMenu === 'sent' && activeItem.status == '3';
+        }
+        return false;
+      },
+      handleSubmitClick(){
+        this.copyConfigDialogVisible = true
+      },
+      handleResubmitClick(){
+        this.resubmitDialogVisible = true
+      },
+      resubmitCopy(){
+        const id = this.copyContent._id;
+        this.isResubmitBtnLoading = true
+        manuscriptAPI.resubmitScript({_id: id})
+            .then((response) => {
+              this.$message.success('再次提交成功!');
+              this.isResubmitBtnLoading = false;
+              this.resubmitDialogVisible = false;
+              this.copyList = [];
+              this.updateList({status: this.submitStatus})
+            })
+            .catch((error) => {
+              this.isResubmitBtnLoading = false;
+              this.$message.error(error);
+            });
+      },
+      getItemAttachmentsLength(item){
+        let len = item.attachments.length;
+        if(this.transferAttachments[item._id]){
+          len += this.transferAttachments[item._id].length;
+        }
+        return len;
+      },
+      getFileProgress(row) {
+        if(row.showProcess){
+          return row.showProcess();
+        }else{
+          return row.progress;
+        }
+      },
+      getProccess(item){
+        let totalProcess = 0;
+        const attachments = item.attachments;
+        const transferAttachments = this.transferAttachments[item._id] ? this.transferAttachments[item._id] : [];
+        const totalLen = attachments.length + transferAttachments.length;
+        attachments.forEach((item)=>{
+          totalProcess += 100;
+        })
+        transferAttachments.forEach((item)=>{
+          totalProcess += this.getFileProgress(item) * 1;
+        })
+        if(totalLen){
+          return parseInt(totalProcess / totalLen) + '%';
+        }else{
+          return '';
+        }
+      },
+      formatTime
     },
     components: {
       CopyEditor,
-      ConfigDialog
+      ConfigDialog,
+      Tabs
     }
   };
 </script>

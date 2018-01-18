@@ -91,8 +91,8 @@
                   </fj-table-column>
                   <fj-table-column prop="_id" label="操作">
                     <template slot-scope="props">
-                      <i :class="['iconfont icon-pause', $style.operatorBtn]" v-if="canStop(props.row)" @click="stopTask(props.row)"></i>
                       <i :class="['iconfont icon-play', $style.operatorBtn]" v-if="canRestart(props.row)" @click="restartTask(props.row)"></i>
+                      <i :class="['iconfont icon-pause', $style.operatorBtn]" v-if="canStop(props.row)" @click="stopTask(props.row)"></i>
                       <i :class="['iconfont icon-trash', $style.operatorBtn]" @click="deleteAttachment(props.row)"></i>
                     </template>
                   </fj-table-column>
@@ -474,6 +474,7 @@
     line-height: 21px;
   }
   .operatorBtn {
+    margin-right: 12px;
     font-size: 12px;
     color: #9FB3CA;
     cursor: pointer;
