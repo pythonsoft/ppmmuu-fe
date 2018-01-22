@@ -253,6 +253,6 @@
   .group-input {
     float: left;
     width: 215px;
-    margin-right: 10px;
+    margin-right: 4px;
   }
 </style>

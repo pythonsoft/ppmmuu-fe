@@ -72,6 +72,7 @@
         { text: '下载模板', index: 'downloadTemplate', route: 'downloadTemplate' },
         { text: '转码模板', index: 'transcodeTemplate', route: 'transcodeTemplate' },
       ] },
+    { text: '大洋稿件入库', index: 'copyManagement', route: 'copyManagement' },
     { text: '设置', index: 'configuration', route: 'configuration' },
     { text: '报表统计', index: 'report', route: 'report' },
     { title: '帮助',
@@ -122,7 +123,9 @@
             delete item.children;
             delete item.title;
           }
-          menu.push(item);
+          if(item.index !== 'connection') {
+            menu.push(item);
+          }
         }
         return menu;
       }

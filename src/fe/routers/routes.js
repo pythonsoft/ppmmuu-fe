@@ -67,6 +67,8 @@ const AuditEmpower = resolve => require.ensure([], () => resolve(require('./mana
 
 const LibraryTemplate = resolve => require.ensure([], () => resolve(require('./management/library/template')), 'libraryTemplate');
 
+const CopyManagement = resolve => require.ensure([], () => resolve(require('./management/copy/index')), 'copyManagement');
+
 export default [{
   path: '/',
   component: Home,
@@ -100,7 +102,8 @@ export default [{
         { path: 'subscribeType', component: SubscribeType, meta: { title: '类型管理' }, name: 'subscribeType' },
         { path: 'auditDownload', component: AuditDownload, meta: { title: '下载审核' }, name: 'auditDownload' },
         { path: 'auditEmpower', component: AuditEmpower, meta: { title: '下载审核' }, name: 'auditEmpower' },
-        { path: 'libraryTemplate', component: LibraryTemplate, meta: { title: '入库模板' }, name: 'libraryTemplate' }
+        { path: 'libraryTemplate', component: LibraryTemplate, meta: { title: '入库模板' }, name: 'libraryTemplate' },
+        { path: 'copyManagement', component: CopyManagement, meta: { title: '大洋稿件入库' }, name: 'copyManagement' }
       ]
     },
     {
