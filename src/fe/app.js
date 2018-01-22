@@ -2,11 +2,12 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import './css/base.css';
 import routes from './routers/routes';
-import { formatTime } from './common/utils';
+import { formatTime, valueLengthLimit } from './common/utils';
 
 Vue.use(VueRouter);
 
 Vue.filter('formatTime', formatTime);
+Vue.filter('valueLengthLimit', valueLengthLimit);
 
 const router = new VueRouter({
   mode: 'history',

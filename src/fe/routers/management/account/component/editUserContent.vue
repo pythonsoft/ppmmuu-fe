@@ -81,7 +81,7 @@
           departmentId: '',
           teamId: '',
           description: '',
-          expiredTime: new Date('9999 23:59:59')
+          expiredTime: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
         },
         rules: {
           email: [
@@ -132,7 +132,7 @@
             const key = keys[i];
             this.formData[key] = '';
           }
-          this.formData.expiredTime = new Date('9999 23:59:59');
+          this.formData.expiredTime = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
           this.groupName = '';
         } else {
           this.initEditUser();
