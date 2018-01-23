@@ -704,4 +704,12 @@ utils.formatTaskList = function (currentStep, taskList = []) {
   return { total: `${(rs * 100).toFixed(2)}%`, current: str };
 };
 
+utils.valueLengthLimit = function valueLengthLimit(value, len){
+  if(value && value.length > len){
+    value = value.substring(0,len);
+    value += '...';
+  }
+  return value;
+}
+
 module.exports = utils;
