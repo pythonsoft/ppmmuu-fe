@@ -4,7 +4,7 @@
       <template slot="search-left">我的任务(处理中)</template>
       <template slot="search-right">
         <div class="permission-search-item">
-          <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
+          <fj-input theme="fill" placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
         </div>
         <div class="permission-search-item">
           <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
