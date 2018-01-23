@@ -75,10 +75,10 @@
 
   --label-color: #4C637B;
 
-  --disabled-color: #9F9F9F;
+  --disabled-color: #9FB3CA;
   --disabled-border-color: #CED9E5;
 
-  --input-disabled-background-color: #F4F4F4;
+  --input-disabled-background-color: rgba(206,217,229,.3);
 
   --input-border-radius: 4px;
   --input-border-radius-small: 2px;
