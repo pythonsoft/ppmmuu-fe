@@ -1,6 +1,5 @@
 <template>
   <div class="im-main">
-
     <div class="im-main-trigger" v-show="!dialogVisible" @click="displayDialog">
       <div v-if="message" class="user-avatar">
         <span class="iconfont icon-jiqiren im-xiaou-icon" :style="{position: 'absolute', top: 0, left: '14px'}"></span>
@@ -8,59 +7,18 @@
       </div>
       <span v-else class="iconfont icon-jiqiren im-xiaou-icon"></span>
     </div>
-
     <div v-show="dialogVisible" class="im-dialog">
       <div class="im-dialog-wrap">
         <div class="im-dialog-main">
-          <div class="im-dialog-main-left">
-            <div class="im-main-left-header">
-              <div class="im-main-left-header-top">
-                <div class="im-main-left-header-top-avatar">
-                  <img v-if="myselfInfo.photo" :src="myselfInfo.photo" class="im-avatar" width="24" height="24">
-                  <img v-else class="im-avatar im-img-style" width="24" height="24">
-                </div>
-                <div class="im-main-left-header-top-name">{{myselfInfo.name || defaultName}}</div>
-              </div>
-              <div class="iconfont icon-tongxunlu im-icon-menu" @click="displayMenu"></div>
-              <div class="im-dialog-main-left-search">
-                <fj-input
-                  placeholder="请输入用户名"
-                  size="small"
-                  theme="fill"
-                  v-model="keyword"
-                  icon="icon-search input-search-icon"
-                  @on-icon-click=""
-                  @keydown.native.enter.prevent=""
-                ></fj-input>
-              </div>
-            </div>
-            <div class="im-main-left-dialog-list" v-if="contactIds.length">
-              <div
-                v-for="id in contactIds"
-                v-if="contactObj[id]"
-                :key="id"
-                :class="getRecentContactClass(contactObj[id], id)"
-                @click="(e) => {contactClick(e, contactObj[id])}"
-              >
-                <div class="avatar">
-                  <img v-if="contactObj[id].avatar" :src="contactObj[id].avatar" class="im-avatar" width="24" height="24">
-                  <img
-                    v-else-if="contactObj[id].members"
-                    v-for="(member, index) in contactObj[id].members.slice(0, 4)"
-                    :src="(users[member] && users[member].avatar) || '/static/img/avatar.png'"
-                    class="im-avatar im-img-style im-avatar-group"
-                    width="16" height="16"
-                    :style="getGroupMemberAvatarStyle(index, contactObj[id].members.length)"
-                  >
-                  <div class="im-item-message-circle" v-if="contactObj[id]._hasUnreadMessage"></div>
-                </div>
-                <div class="content">
-                  {{ contactObj[id].groupid ? contactObj[id].name : contactObj[id].nickname }}
-                </div>
-              </div>
-            </div>
-          </div>
-
+          <conversation-browser
+            :loading-contacts="loadingContacts"
+            :myself-info="myselfInfo"
+            :talk-to-session="talkToSession"
+            :contact-ids="contactIds"
+            :contact-obj="contactObj"
+            :users="users"
+            @contact-click="contactClick"
+            @display-menu="displayMenu"></conversation-browser>
           <div v-if="isEmptyObject(contactObj[talkToSession])" class="im-dialog-main-right">
             <div class="im-dialog-main-right-bar">
               <div class="im-dialog-main-right-bar-wrap">
@@ -79,6 +37,7 @@
             :conversation-id="talkToSession"
             @clear-unread-message="handleClearUnreadMessage"
             @send-message="sendMessage"
+            @show-department-browser="()=>{departmentBrowserVisible = true;departmentDialogOperation = 'edit';}"
             :users="users"></message-browser>
         </div>
         <div class="iconfont icon-small-close im-icon-small-close" @click="closeHandle"></div>
@@ -109,41 +68,30 @@
 </template>
 <script>
   import './index.css'
-  import { getItemFromLocalStorage, isEmptyObject } from '../../common/utils';
-  import DepartmentBrowser from "../higherOrder/departmentBrowser/index.vue";
+  import { getItemFromLocalStorage, isEmptyObject, loadScript } from '../../common/utils';
+  import DepartmentBrowser from "../higherOrder/departmentBrowser";
   import MessageBrowser from "./component/messageBrowser";
+  import ConversationBrowser from "./component/conversationBrowser";
 
-  const api = require('./api');
   const userAPI = require('../../api/user');
-
-  function loadScript(url) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.onload = function() {
-        resolve();
-      };
-      script.src = url;
-      document.getElementsByTagName('head')[0].appendChild(script);
-    });
-  }
 
   export default {
     components: {
       MessageBrowser,
-      DepartmentBrowser
+      DepartmentBrowser,
+      ConversationBrowser
     },
     name: 'im',
     data() {
       return {
-        showTimeFlag: true, //对话框里边显示时间
-        defaultName: '无名',
+        loadingContacts: 0,
         message: '',
         departmentBrowserVisible: false,
         dialogVisible: false,
         myselfInfo: {}, // 当前登录用户信息
         myselfId: '',
         talkToSession: '', // 当前聊天对象信息的索引值，对应contactObj的key
+        departmentDialogOperation: 'new',
         keyword: '', // 检索用户时的关键词
         routers: [], // 好友们的id
         users: {}, // 包含用户信息的对象，key为用户id
@@ -157,6 +105,9 @@
       }
     },
     watch: {
+      departmentBrowserVisible(val) {
+        if (!val) this.departmentDialogOperation = 'new';
+      },
       dialogVisible(val) {
         if (val) {
           this.message = '';
@@ -172,8 +123,11 @@
     },
     created() {
       this.myselfInfo = getItemFromLocalStorage('userInfo');
-      this.myselfId = this.myselfInfo._id.split('-').join('_');
-      this.users[this.myselfId] = { nickname: this.myselfInfo.name, avatar: this.myselfInfo.photo };
+      this.myselfId = this.myselfInfo._id.replace(/-/g, '_');
+      this.users[this.myselfId] = {
+        nickname: this.myselfInfo.name,
+        avatar: this.myselfInfo.photo
+      };
 
       async function loadAllScript() {
         await loadScript('/static/strophe-1.2.8.min.js');
@@ -215,60 +169,7 @@
             console.log('onTextMessage', message);
             if (message.error) return;
             if (!this.dialogVisible) this.message = message.data;
-            const msg = {
-              time: new Date().getTime(),
-              content: message.data
-            };
-            // 判断这个人是否已经在列表中。
-            let flag = false;
-            let isGroupMsg = message.type === 'groupchat';
-
-            const contactObj = this.contactObj;
-            let key = '';
-            if (isGroupMsg) {
-              key = message.to;
-            } else {
-              key = message.from;
-            }
-            if (this.contactIds.indexOf(key) > -1) {
-              flag = true;
-              const tempItem = contactObj[key];
-              tempItem._hasUnreadMessage = true;
-              this.$set(this.contactObj, key, tempItem);
-              const index = this.contactIds.indexOf(key);
-              this.contactIds.splice(index, 1);
-              this.contactIds.unshift(key);
-
-              const newArray = this.messagesObj[key].slice();
-              newArray.push(Object.assign({}, message, msg));
-
-              this.messagesObj = this.$set({}, this.messagesObj, { [key]: newArray });
-            }
-
-            if (!flag) {
-              if (isGroupMsg) {
-                this.listGroupMember(message.to);
-                const item = {
-                  groupid: message.to,
-                  _hasUnreadMessage: true
-                };
-                this.$set(this.contactObj, message.to, item);
-                this.contactIds.push(message.to);
-                this.messagesObj = this.$set({}, this.messagesObj, { [message.to]: [Object.assign({}, message, msg)] });
-              } else {
-                this.getUsers([message.from]);
-                const item = {
-                  name: message.from,
-                  _hasUnreadMessage: true
-                };
-                this.$set(this.contactObj, message.from, item);
-                this.contactIds.push(message.from);
-                this.messagesObj = this.$set({}, this.messagesObj, { [message.from]: [Object.assign({}, message, msg)] });
-              }
-            }
-          },
-          onRoster: (message) => {
-            // 处理好友申请
+            this.onTextMessage(message);
           },
           onInviteMessage: (message) => {
             console.log('onInviteMessage', message);
@@ -279,18 +180,14 @@
                 item.members = members;
                 const len = members.length > 4 ? 4 : members.length;
                 this.getUsers(members.slice(0, len));
-
                 this.getGroupname(roomid);
 
                 item.groupid = roomid;
-                // item.message = [];
-                this.messagesObj[roomid] = [];
-
                 item._hasUnreadMessage = false;
 
+                this.messagesObj[roomid] = [];
                 this.$set(this.contactObj, roomid, item);
                 this.contactIds.unshift(roomid);
-                console.log('roomid', roomid);
               });
             }
           },
@@ -325,18 +222,56 @@
         console.log('openConn', option);
         this.conn.open(option);
       },
+      onTextMessage(message) {
+        const contactObj = this.contactObj;
+        const msg = {
+          time: new Date().getTime(),
+          content: message.data
+        };
+        let flag = false; // 判断这个人是否已经在列表中
+        let isGroupMsg = message.type === 'groupchat';
+        let key = isGroupMsg ? message.to : message.from;
+        let newArray = [];
+        let tempItem = {};
+        if (!this.messagesObj[key]) this.messagesObj[key] = [];
+        if (this.contactIds.indexOf(key) > -1) {
+          flag = true;
+          tempItem = contactObj[key];
+          tempItem._hasUnreadMessage = true;
+          const index = this.contactIds.indexOf(key);
+          this.contactIds.splice(index, 1);
+          newArray = this.messagesObj[key].slice();
+          newArray.push(Object.assign({}, message, msg));
+        }
+        if (!flag) {
+          if (isGroupMsg) {
+            this.listGroupMember(key);
+          } else {
+            this.getUsers([key]);
+          }
+          tempItem = {
+            name: key,
+            _hasUnreadMessage: true
+          };
+          newArray = [Object.assign({}, message, msg)];
+        }
+        this.contactIds.unshift(key);
+        this.$set(this.contactObj, key, tempItem);
+        this.messagesObj = Object.assign({}, this.messagesObj, { [key]: newArray });
+      },
       getRoster() {
         this.conn.getRoster({
           success: (roster)=> {
-            console.log('roster', roster);
+            // console.log('roster', roster);
             const tempObj = {};
             const tempRouters = [];
             roster.forEach((item)=> {
               if (item.subscription === 'both' || item.subscription === 'to') {
                 const oldItem = this.contactObj[item.name];
                 if (oldItem && this.messagesObj[item.name]) {
-                  item = Object.assign(item, oldItem);
+                  item = Object.assign(item, oldItem); // 在onTextMessage先初始化了
                 } else {
+                  // 初始化
                   this.contactIds.push(item.name);
                   this.messagesObj[item.name] = [];
                   item._hasUnreadMessage = false;
@@ -346,9 +281,9 @@
               }
             });
             this.routers = tempRouters;
-            this.getUsers(this.routers);
             Object.assign(this.contactObj, tempObj);
-            console.log('this.contactObj', this.contactObj);
+            this.loadingContacts += 1;
+            this.getUsers(this.routers);
           }
         });
       },
@@ -356,20 +291,23 @@
         this.conn.getGroup({
           success: (res)=> {
             const group = res.data;
-            console.log('group', group);
+            // console.log('group', group);
 
             const tempObj = {};
+            let tempUsers = [];
             const loop = (index)=> {
               let item = group[index];
               if(!item) {
                 this.contactObj = Object.assign({}, this.contactObj, tempObj);
+                this.getUsers(tempUsers);
+                this.loadingContacts += 1;
                 return false;
               }
 
               this.listGroupMember(item.groupid).then((members)=> {
                 item.members = members;
                 const len = members.length > 4 ? 4 : members.length;
-                this.getUsers(members.slice(0, len));
+                tempUsers = tempUsers.concat(members.slice(0, len));
 
                 item.name = item.groupname;
 
@@ -423,38 +361,6 @@
           this.conn.listGroupMember(option);
         });
       },
-      getUsers(ids) {
-        const reqIds = [];
-        const keys = Object.keys(this.users);
-        // 排除已经获取过的用户
-        for (let i = 0, len = ids.length; i < len; i++) {
-          const id = ids[i];
-          if (keys.indexOf(id) < 0) reqIds.push(id);
-        }
-        if (reqIds.length === 0) return;
-        userAPI.getUsers({ params: { _ids: reqIds.join(',') } }, this)
-          .then((res)=>{
-            const data = res.data;
-            const tempObj = {};
-            const keys = Object.keys(data);
-
-            keys.forEach(key => {
-              const id = key.split('-').join('_');
-              const item = data[key];
-              tempObj[id] = { nickname: item.name, avatar: item.photo };
-
-              if (this.contactObj[id]) {
-                Object.assign(this.contactObj[id], tempObj[id]);
-              }
-              if (!this.users[id]) {
-                this.users[id] = tempObj[id];
-              }
-            });
-          })
-          .catch((error)=>{
-            // this.$message.error(error);
-          })
-      },
       sendMessage(val) {
         const currentItem = this.contactObj[this.talkToSession];
 
@@ -497,39 +403,6 @@
         }
         this.conn.send(msg.body);
       },
-      contactClick(e, currentItem) {
-        this.talkToSession = currentItem.groupid ? currentItem.groupid : currentItem.name;
-        currentItem._hasUnreadMessage = false;
-        console.log('contactClick currentItem', currentItem);
-        console.log('contactClick talkToSession', this.talkToSession);
-        console.log('contactClick messagesObj', this.messagesObj[this.talkToSession]);
-        if (currentItem.members) {
-          this.getUsers(currentItem.members);
-        }
-      },
-      getFriendPhotoFromMembersInC2C: api.getFriendPhotoFromMembersInC2C,
-      getNameFromMembers: api.getNameFromMembers,
-      groupNameDialogCancel() {
-        this.departmentBrowserResult = [];
-        this.groupNameDialogVisible = false;
-        this.groupName = '';
-      },
-      groupNameDialogConfirm() {
-        if(!this.groupName) {
-          this.$message.error('请输入群组名称');
-          return false;
-        }
-
-        const items = this.departmentBrowserResult;
-        const len = items.length;
-
-        const members = [];
-
-        for(let i = 0; i < len; i++) {
-          members.push(items[i]._id.split('-').join('_'));
-        }
-        this.createGroupNew(members);
-      },
       createGroupNew(members) {
         const option = {
           data: {
@@ -543,7 +416,6 @@
           success: (res)=> {
             this.departmentBrowserResult = [];
             this.groupNameDialogVisible = false;
-            // this.getGroup();
             const groupid = res.data.groupid;
             this.addGroupMembers(groupid, members);
             const item = {
@@ -563,52 +435,57 @@
         };
         this.conn.createGroupNew(option);
       },
-      addGroupMembers(groupid, members) {
+      addGroupMembers(groupid, members, cb = ()=>{}) {
         const option = {
           list: members,
           roomId: groupid,
           success: (res) => {
+            cb();
             console.log('addGroupMembers', res);
           }
         };
         this.conn.addGroupMembers(option);
       },
+      getUsers(ids) {
+        const reqIds = [];
+        const keys = Object.keys(this.users);
+        // 排除已经获取过的用户
+        for (let i = 0, len = ids.length; i < len; i++) {
+          const id = ids[i];
+          if (keys.indexOf(id) < 0) reqIds.push(id);
+        }
+        if (reqIds.length === 0) return;
+        userAPI.getUsers({ params: { _ids: reqIds.join(',') } }, this)
+          .then((res)=>{
+            const data = res.data;
+            const tempObj = {};
+            const keys = Object.keys(data);
+
+            keys.forEach(key => {
+              const id = key.replace(/-/g, '_');
+              const item = data[key];
+              tempObj[id] = { nickname: item.name, avatar: item.photo };
+
+              if (this.contactObj[id]) {
+                Object.assign(this.contactObj[id], tempObj[id]);
+              }
+              if (!this.users[id]) {
+                this.users[id] = tempObj[id];
+              }
+            });
+          })
+          .catch((error)=>{
+            // this.$message.error(error);
+          })
+      },
+      contactClick(e, currentItem) {
+        this.talkToSession = currentItem.groupid ? currentItem.groupid : currentItem.name;
+        currentItem._hasUnreadMessage = false;
+        if (currentItem.members) {
+          this.getUsers(currentItem.members);
+        }
+      },
       isEmptyObject,
-      getRecentContactClass(item, id) {
-        const currentItem = this.contactObj[this.talkToSession];
-        if (!currentItem) return 'im-main-left-dialog-list-item';
-        if (currentItem.groupid) {
-          if (currentItem.groupid === item.groupid) {
-            return 'im-main-left-dialog-list-item active';
-          }
-        } else {
-          if (currentItem.name === item.name) {
-            return 'im-main-left-dialog-list-item active';
-          }
-        }
-        return 'im-main-left-dialog-list-item';
-      },
-      getGroupMemberAvatarStyle(index, length) {
-        let style_config = {};
-        if (length < 4) {
-          style_config = {
-            0: 'top: 0; left: 4px; z-index: 1;',
-            1: 'top: 8px; left: 0px; z-index: 2;',
-            2: 'top: 8px; left: 8px; z-index: 3;'
-          };
-        } else {
-          style_config = {
-            0: 'top: 0; left: 0; z-index: 1;',
-            1: 'top: 0; left: 8px; z-index: 2;',
-            2: 'top: 8px; left: 0px; z-index: 3;',
-            3: 'top: 8px; left: 8px; z-index: 4;'
-          };
-        }
-        return style_config[index];
-      },
-      isGroup(item) {
-        return item.type === api.MESSAGE_TYPE.GROUP;
-      },
       displayMenu() {
         this.departmentBrowserVisible = true;
       },
@@ -626,10 +503,25 @@
         const len = items.length;
         if(!len) return false;
 
+        if (this.departmentDialogOperation === 'edit') {
+          const groupid = this.talkToSession;
+          const members = items.map(item => {
+            return item._id.replace(/-/g, '_');
+          });
+          console.log('groupid, members', groupid, members);
+          this.addGroupMembers(groupid, members, ()=> {
+            this.listGroupMember(groupid).then((members)=> {
+              const len = members.length > 4 ? 4 : members.length;
+              this.getUsers(members.slice(0, len));
+              this.contactObj[groupid] = Object.assign({}, this.contactObj[groupid], { members: members });
+            });
+          });
+          return;
+        }
         if(len === 1) {
           const info = items[0];
           info.nickname = info.name;
-          info.name = info._id.split('-').join('_');
+          info.name = info._id.replace(/-/g, '_');
           this.messagesObj[info.name] = [];
           info._hasUnreadMessage = false;
           console.log('departmentBrowserConfirm-->', this.messagesObj[info.name]);
@@ -651,6 +543,27 @@
         }else if(len > 1) {
           this.groupNameDialogVisible = true;
         }
+      },
+      groupNameDialogCancel() {
+        this.departmentBrowserResult = [];
+        this.groupNameDialogVisible = false;
+        this.groupName = '';
+      },
+      groupNameDialogConfirm() {
+        if(!this.groupName) {
+          this.$message.error('请输入群组名称');
+          return false;
+        }
+
+        const items = this.departmentBrowserResult;
+        const len = items.length;
+
+        const members = [];
+
+        for(let i = 0; i < len; i++) {
+          members.push(items[i]._id.replace(/-/g, '_'));
+        }
+        this.createGroupNew(members);
       }
     }
   }

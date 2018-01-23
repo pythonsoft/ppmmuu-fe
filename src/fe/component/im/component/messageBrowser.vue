@@ -12,6 +12,7 @@
       </div>
       <group-member-browser
         v-if="conversation.groupid"
+        @show-department-browser="$emit('show-department-browser')"
         :visible.sync="groupMemberBrowserVisible"
         :members="conversation.members"
         :infos="users"></group-member-browser>
@@ -19,18 +20,18 @@
     <div class="im-dialog-main-right-content" ref="container">
       <p v-if="conversation.notFriend" class="im-dialog-main-right-tip">对方不是您的好友，可能接收不到您的信息</p>
       <div
-        v-for="item in messages"
+        v-for="(item, index) in messages"
         :key="item.time"
         :class="setDialogMessageClass(item)"
       >
-        <div class="time">{{formatTime(item.time)}}</div>
+        <div class="time" v-if="formatTime(item.time, index)">{{ formatTime(item.time, index) }}</div>
         <div class="body">
           <div class="avatar">
             <img :src="users[item.from].avatar" class="im-avatar im-img-style" width="24" height="24"/>
           </div>
           <div class="message">
             <div v-if="conversation.groupid && item.from !== myselfId" class="name">{{ users[item.from].nickname }}</div>
-            <div class="detail" v-html="item.content"></div>
+            <div class="detail" v-html="formatContent(item.content)"></div>
             <p v-if="item.error" class="resend">
               <span class="iconfont icon-info"></span>
               未发送成功
@@ -44,10 +45,10 @@
     </div>
     <div class="im-dialog-main-right-chat">
       <div class="im-dialog-main-right-chat-wrap">
-        <textarea @focus="handleFocus" @keyup.enter="sendMessage" v-model="content"></textarea>
+        <textarea ref="contentInput" @focus="handleFocus" @keydown.enter="handleEnter" v-model="content"></textarea>
       </div>
       <div class="im-dialog-main-right-chat-bar">
-        <span>按下Cmd+Enter换行</span>
+        <span>按下{{ metaName }}+Enter换行</span>
         <fj-button size="small" @click="sendMessage">发送</fj-button>
       </div>
     </div>
@@ -67,16 +68,18 @@
       myselfId: String
     },
     data() {
+      const platform = navigator.platform;
+      const system = {
+        win: platform.indexOf('Win') === 0,
+        mac: platform.indexOf('Mac') === 0
+      };
       return {
+        metaName: system.win ? 'Ctrl' : 'Cmd',
         content: '', //发送窗口内容
-        timeMap: {},
         groupMemberBrowserVisible: false
       };
     },
     watch: {
-      conversationId() {
-        this.timeMap = {};
-      },
       messages() {
         this.scrollToBottom();
       }
@@ -85,7 +88,23 @@
       handleFocus() {
         this.$emit('clear-unread-message');
       },
+      formatContent(content) {
+        return content.replace(/\n/g, '<br/>');
+      },
+      handleEnter(e) {
+        if (!e.metaKey) {
+          e.preventDefault();
+          this.sendMessage();
+        } else {
+          this.content += '\n';
+          const contentInput = this.$refs.contentInput;
+          this.$nextTick(()=> {
+            contentInput.scrollTop += 14;
+          });
+        }
+      },
       sendMessage() {
+        this.handleFocus();
         const val = this.content.trim();
         if (val.length === 0) return;
         this.$emit('send-message', val);
@@ -101,21 +120,14 @@
         }
         return rs.join(' ');
       },
-      formatTime(t) {
+      formatTime(t, messageIndex) {
+        if (messageIndex === 0) {
+          return formatShortTime(new Date(t));
+        }
         let str = '';
-        const time = t;
-        // const time = t * 1000;
-
-        if(new Date().getTime() - time > 1000 * 60 * 10) {
-          str = formatShortTime(new Date(time));
+        if(t - this.messages[messageIndex - 1].time > 1000 * 60 * 5) {
+          str = formatShortTime(new Date(t));
         }
-
-        if(this.timeMap[str]) {
-          str = ''
-        }else {
-          this.timeMap[str] = true;
-        }
-
         return str;
       },
       getAvatarAndClass(item) {
