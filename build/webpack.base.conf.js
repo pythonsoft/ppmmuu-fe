@@ -33,7 +33,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules(?!\/quill)/,
         query: {
           presets: ['es2015'],
           plugins: ['transform-runtime', 'transform-vue-jsx']

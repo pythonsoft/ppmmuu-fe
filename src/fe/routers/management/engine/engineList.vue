@@ -11,34 +11,34 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="addBtnClick">增加</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
+        <fj-button type="primary" size="mini" @click="addBtnClick">增加</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="editBtnClick">变更</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteBtnClick">删除</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="installBtnClick">安装</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="stopBtnClick">停止</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="rebootBtnClick">重启</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="installBtnClick">安装</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="stopBtnClick">停止</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="rebootBtnClick">重启</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="configBtnClick">配置管理</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="statusBtnClick">运行状态</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="monitorBtnClick">服务监控</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="configBtnClick">配置管理</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="statusBtnClick">运行状态</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="monitorBtnClick">服务监控</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="refreshBtnClick">刷新</fj-button>
+        <fj-button type="primary" size="mini" @click="refreshBtnClick">刷新</fj-button>
       </div>
     </template>
     <template slot="table">
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" align="center" label="运行状态" >
-          <template scope="props">
+          <template slot-scope="props">
             <span :class="getRunStatus(props.row.command, props.row.modifyTime).css">{{ getRunStatus(props.row.command, props.row.modifyTime).text }}</span>
           </template>
         </fj-table-column>
         <fj-table-column prop="code" width="100" label="编号"></fj-table-column>
         <fj-table-column prop="name" label="名称">
-          <template scope="props">
+          <template slot-scope="props">
             {{ props.row.name }}
             <span v-if="props.row.installProgress && props.row.installProgress.percent !== 1" class="engine-install-status-tips">
               ({{ props.row.installProgress.step }} {{ props.row.installProgress.percent * 100 }} %)
@@ -47,13 +47,13 @@
         </fj-table-column>
         <fj-table-column prop="intranetIp" width="140" align="center" label="内网IP"></fj-table-column>
         <fj-table-column prop="isTest" width="90" align="center" label="测试机">
-          <template scope="props">{{ getTextByValue(props.row.isTest, 'isTest') }}</template>
+          <template slot-scope="props">{{ getTextByValue(props.row.isTest, 'isTest') }}</template>
         </fj-table-column>
         <fj-table-column prop="isVirtual" width="90" align="center" label="虚拟机">
-          <template scope="props">{{ getTextByValue(props.row.isVirtual, 'isVirtual') }}</template>
+          <template slot-scope="props">{{ getTextByValue(props.row.isVirtual, 'isVirtual') }}</template>
         </fj-table-column>
         <fj-table-column prop="modifyTime" width="160" align="center" label="上次活跃">
-          <template scope="props">{{ props.row.modifyTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.modifyTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>

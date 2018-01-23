@@ -1,5 +1,6 @@
 const utils = {};
 
+const crypto = require('crypto');
 const mediaAPI = require('../api/media');
 const config = require('../config');
 
@@ -12,6 +13,15 @@ utils.FROM_WHERE = {
 utils.fillupZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
+
+utils.getDayCountOfMonth = function (year, month) {
+  const date = new Date(year, month, 1);
+  const nextDate = new Date(year, month + 1, 1);
+  const ms = nextDate.getTime() - date.getTime();
+  const DAY_DURATION = 24 * 60 * 60 * 1000;
+  return ms / DAY_DURATION;
+};
+
 utils.formatQuery = function formatQuery(obj, isGet = false) {
   return isGet ? {
     params: obj
@@ -353,11 +363,10 @@ utils.formatDuration = function formatDuration(duration, needMiniSeconds = false
   duration %= 60 * 1000;
   const seconds = Math.floor(duration / 1000);
   duration %= 1000;
-  if(needMiniSeconds && duration !== 0){
+  if (needMiniSeconds && duration !== 0) {
     return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}.${Math.round(duration)}`;
-  }else {
-    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
   }
+  return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
 };
 
 utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {
@@ -388,12 +397,12 @@ utils.transformSecondsToHours = function transformSecondsToHours(time = 0, forma
   time %= 60;
   const seconds = Math.floor(time);
 
-  let rs = `${hours}小时`;
+  let rs = `${fillupZero(hours)}小时`;
   if (minutes) {
-    rs += `${minutes}分`;
+    rs += `${fillupZero(minutes)}分`;
   }
   if (seconds) {
-    rs += `${seconds}秒`;
+    rs += `${fillupZero(seconds)}秒`;
   }
 
   return rs;
@@ -514,11 +523,16 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
     let fileName = res.result.FILENAME || '';
 
     // if (fromWhere == 3) {
-    //   let playPath = '/mnt/transcoding/moved/2017/11/24/PMELOOP10_77/transcoding_PMELOOP10_77.mp4';
+    //   let playPath = '/mnt/z/moved/low/2017/11/24/PMELOOP10_77/transcoding_PMELOOP10_77.mp4';
     //   return cb && cb(null, `${config.defaults.streamURL}${playPath}`, res);
     // }
     if (dateString) {
-      dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
+      const temp = dateString.match(/\/[a-z,0-9,-,_]*\/\d{4}\/\d{2}\/\d{2}/g);
+      if (!temp) {
+        dateString = dateString.replace('\\', '\\\\').match(/\\\d{4}\\\d{2}\\\d{2}/g);
+      } else {
+        dateString = temp;
+      }
       if (dateString) {
         if (dateString.length === 1) {
           dateString = dateString[0].replace(/\\/g, '\/');
@@ -689,5 +703,13 @@ utils.formatTaskList = function (currentStep, taskList = []) {
 
   return { total: `${(rs * 100).toFixed(2)}%`, current: str };
 };
+
+utils.valueLengthLimit = function valueLengthLimit(value, len){
+  if(value && value.length > len){
+    value = value.substring(0,len);
+    value += '...';
+  }
+  return value;
+}
 
 module.exports = utils;

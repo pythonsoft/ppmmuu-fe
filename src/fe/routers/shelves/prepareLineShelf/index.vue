@@ -11,11 +11,11 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickEdit">查看详情</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickOnline">上架</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickEdit">查看详情</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickOnline">上架</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickDelete">删除</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
     <template slot="table">
@@ -23,8 +23,8 @@
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
         <fj-table-column prop="name" label="节目名称"></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
-        <fj-table-column prop="dealer" label="编目人" width="100"><template scope="props">{{props.row.dealer.name}}</template></fj-table-column>
-        <fj-table-column prop="lastModifyTime" label="操作时间" width="160"><template scope="props">{{formatTime(props.row.lastModifyTime)}}</template></fj-table-column>
+        <fj-table-column prop="dealer" label="编目人" width="100"><template slot-scope="props">{{props.row.dealer.name}}</template></fj-table-column>
+        <fj-table-column prop="lastModifyTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.lastModifyTime)}}</template></fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination">

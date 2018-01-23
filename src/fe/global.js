@@ -3,18 +3,21 @@
  */
 const config = {};
 
-config.baseDomain = 'localhost:8080';
-// config.baseDomain = '10.0.16.107:8080';
+// im地址
+config.imHost = 'localhost';
+config.imPort = 9000;
 
-config.baseURL = `http://${config.baseDomain}`;
+config.socketDomain = `${config.imHost}:${config.imPort}`;
+
+config.baseDomain = 'localhost:8080';
 
 config.streamURL = 'http://ump-live.phoenixtv.com';
-// config.streamURL = 'http://10.0.15.68:8099';
-
-config.socketDomain = 'localhost:9000';
 
 if (window.location.hostname.indexOf('phoenixtv.com') !== -1) {
-  config.baseURL = 'http://ump-api.phoenixtv.com';
+  config.baseDomain = 'ump-api.phoenixtv.com';
+  config.socketDomain = 'ump-im.phoenixtv.com';
 }
+
+config.baseURL = `http://${config.baseDomain}`;
 
 module.exports = config;

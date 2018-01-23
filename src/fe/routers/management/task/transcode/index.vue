@@ -21,27 +21,28 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
-        <fj-button type="info" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="taskClick">任务详细</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">子任务详细</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button type="info" size="mini" @click="refreshClick">刷新</fj-button>
+        <fj-button type="primary" size="mini" @click="refreshClick">刷新</fj-button>
       </div>
     </template>
     <template slot="table">
       <fj-table highlightKey="id" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" label="状态">
-          <template scope="props">
+          <template slot-scope="props">
             <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
           </template>
         </fj-table-column>
         <fj-table-column prop="filePath" label="名称"></fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
-          <template scope="props">{{ props.row.createTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
         <fj-table-column prop="lastModify" width="160" label="修改时间">
-          <template scope="props">{{ props.row.lastModify | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.lastModify | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>
@@ -59,12 +60,18 @@
       :visible.sync="childTaskDialogVisible"
     ></child-task-slide-dialog-view>
 
+    <task-slide-dialog-view
+      :parentInfo="table.currentRowInfo"
+      :visible.sync="taskDialogVisible"
+    ></task-slide-dialog-view>
+
   </layout-four-row>
 </template>
 <script>
   import './index.css';
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
   import childTaskDialogView from './childTaskDialog';
+  import taskDialogView from '../../../../component/higherOrder/propsSlideDialog';
   import utils from '../../../../common/utils';
 
   const api = require('../../../../api/transcode');
@@ -74,7 +81,8 @@
   export default {
     components: {
       'layout-four-row': fourRowLayout,
-      'child-task-slide-dialog-view': childTaskDialogView
+      'child-task-slide-dialog-view': childTaskDialogView,
+      'task-slide-dialog-view': taskDialogView
     },
     data() {
       return {
@@ -99,6 +107,7 @@
 
         /* child task */
         childTaskDialogVisible: false,
+        taskDialogVisible: false,
 
         runTimer: false
       };
@@ -124,11 +133,15 @@
       childTaskClick() {
         this.childTaskDialogVisible = true;
       },
+      taskClick() {
+        this.taskDialogVisible = true;
+      },
       refreshClick() {
         this.listTask();
         this.isDisabled = true;
         this.table.currentRowInfo = {};
         this.childTaskDialogVisible = false;
+        this.taskDialogVisible = false;
       },
       /* table */
       handleCurrentChange(current) {

@@ -13,7 +13,7 @@
           <li class="topic-list-item" v-for="(item, ranking) in realtimeBuzzBd">
             <span :class="[ranking < 3 ? 'num-top' : 'num-normal']">{{ ranking + 1 }}</span>
             <p :class="['topic-name', {'active': item.keyword === keyword}]" @click="keyword = item.keyword">{{ item.keyword }}</p>
-            <i :style="{ width: '12px' }" class="iconfont icon-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe69a;</i>
+            <i :style="{ width: '12px' }" class="iconfont topic-loading" v-if="runningKeywords.indexOf(item.keyword)>=0">&#xe69a;</i>
             <span class="count">{{ item.trends }}</span>
           </li>
         </ul>
@@ -46,7 +46,6 @@
         <li v-for="(item, index) in articleList.slice(0, articleLength)" class="article-list-item">
           <div :style="{ overflow: 'hidden' }">
             <a :href="item.url" target="_blank" class="article-title" v-html="item.title"></a>
-            <!-- <a href="javascript:;" class="article-title" v-html="item.title" @click="showWebBrowser(item.title, item.url)"></a> -->
             <p class="article-abstract" v-html="item.summary"></p>
             <div class="article-footer">
               <div class="article-source-image">
@@ -100,7 +99,6 @@
             <ul class="timeline-article-list" v-if="event.showArticleLength[date].show > 0">
               <li class="timeline-article-item" v-for="(article, articleIndex) in event.mailuo[date].slice(0, event.showArticleLength[date].show)">
                 <a :href="article.url" target="_blank" class="timeline-article-title">{{ article.title }}</a>
-                <!-- <a href="javascript:;" class="timeline-article-title" @click="showWebBrowser(article.title, article.url)">{{ article.title }}</a> -->
                 <span class="timeline-article-info">{{ `${article.time.split(' ')[1]} &nbsp;&nbsp; ${article.source}` }}</span>
                 <span
                   class="article-view-more"
@@ -122,14 +120,48 @@
   </div>
 </template>
 <script>
-  import echarts from 'echarts';
+  import echarts from 'echarts/lib/echarts';
+  import 'echarts/lib/component/tooltip';
+  import 'echarts/lib/chart/line';
+  import 'echarts/lib/chart/pie';
+  import 'echarts/lib/chart/scatter';
+  import 'echarts/lib/chart/effectScatter';
+  import 'echarts/lib/chart/graph';
+
+  import 'echarts/lib/component/grid';
+  import 'echarts/lib/component/tooltip';
+  import 'echarts/lib/component/axisPointer';
+  import 'echarts/lib/component/geo';
+
+  import 'echarts/lib/component/title';
+
+  import 'echarts/lib/component/dataZoom';
+
+  import 'echarts/lib/component/markPoint';
+  import 'echarts/lib/component/markLine';
+  import 'echarts/lib/component/markArea';
+
   import 'echarts/map/js/china';
-  import '../../../fe/static/umpBlue';
+  import umpBlue from './umpBlue.json';
+
   import './index.css';
-  import { geoOption, convertGeoData } from '../../../fe/routers/trends/option/geoOption';
-  import { spreadTrendOption, getTrendSeries } from '../../../fe/routers/trends/option/spreadTrendOption';
-  import { spreadPathOption, convertGraph } from '../../../fe/routers/trends/option/spreadPathOption';
-  import { sentimentOption, convertOpinionData, convertSentimentData } from '../../../fe/routers/trends/option/sentimentOption';
+  import {
+    geoOption,
+    convertGeoData
+  } from '../../../fe/routers/trends/option/geoOption';
+  import {
+    spreadTrendOption,
+    getTrendSeries
+  } from '../../../fe/routers/trends/option/spreadTrendOption';
+  import {
+    spreadPathOption,
+    convertGraph
+  } from '../../../fe/routers/trends/option/spreadPathOption';
+  import {
+    sentimentOption,
+    convertOpinionData,
+    convertSentimentData
+  } from '../../../fe/routers/trends/option/sentimentOption';
   import BigdataAPI from '../../../fe/routers/trends/api';
 
   export default {
@@ -188,20 +220,32 @@
       const chartWidth = this.$refs.geoChart.getBoundingClientRect().width;
       const chartHeight = 2 * chartWidth / 3;
 
+      echarts.registerTheme('umpBlue', umpBlue);
       this.geoChart = echarts.init(this.$refs.geoChart, 'umpBlue', { height: chartHeight });
       this.geoChart.setOption(geoOption);
 
-      this.spreadPathChart = echarts.init(this.$refs.spreadPathChart, 'umpBlue', { height: chartHeight });
+      this.spreadPathChart = echarts.init(
+        this.$refs.spreadPathChart,
+        'umpBlue',
+        { height: chartHeight }
+      );
       spreadPathOption.title = {};
       this.spreadPathChart.setOption(spreadPathOption);
 
-      this.spreadTrendChart = echarts.init(this.$refs.spreadTrendChart, 'umpBlue', { height: chartHeight });
+      this.spreadTrendChart = echarts.init(
+        this.$refs.spreadTrendChart,
+        'umpBlue',
+        { height: chartHeight }
+      );
       spreadTrendOption.title = {};
       spreadTrendOption.legend.right = 'auto';
       this.spreadTrendChart.setOption(spreadTrendOption);
 
-
-      this.sentimentChart = echarts.init(this.$refs.sentimentChart, 'umpBlue', { height: chartHeight });
+      this.sentimentChart = echarts.init(
+        this.$refs.sentimentChart,
+        'umpBlue',
+        { height: chartHeight }
+      );
       sentimentOption.title = {};
       this.sentimentChart.setOption(sentimentOption);
       this.sentimentChart.on('pieselectchanged', (params)=> {
@@ -295,7 +339,7 @@
       },
       updateSpreadPathData(reqData) {
         this.spreadPathChart.showLoading({ color: '#38B1EB' });
-        BigdataAPI.getRealtimeFlowSpread({ params: reqData })
+        BigdataAPI.getRealtimeFlowSpread({ params: Object.assign(reqData, { sourceSize: 3, targetSize: 30 }) })
         .then((response) => {
           const resData = response.data;
           const newOption = {};
@@ -304,7 +348,10 @@
             newOption.series = [{ data: [], edges: [] }];
           } else {
             this.showEmptySpreadPath = false;
-            newOption.series = [{ data: convertGraph(resData.content_graph).nodes, edges: resData.content_graph.links }];
+            newOption.series = [{
+              data: convertGraph(resData.content_graph, 3, 30).nodes,
+              edges: resData.content_graph.links
+            }];
           }
           this.spreadPathChart.hideLoading();
           this.spreadPathChart.setOption(newOption);
@@ -318,13 +365,16 @@
         .then((response) => {
           const resData = response.data;
           const newOption = {};
-          if (!resData.opinions) {
+          if (resData.opinions.length === 0) {
             this.showEmptySentiment = true;
             newOption.series = [{ data: [] }, { data: [] }];
             this.sentimentObj = {};
           } else {
             this.showEmptySentiment = false;
-            newOption.series = [{ data: convertSentimentData(resData.total) }, { data: convertOpinionData(resData.opinions) }];
+            newOption.series = [
+              { data: convertSentimentData(resData.total) },
+              { data: convertOpinionData(resData.opinions) }
+            ];
             const sentimentObj = { total: resData.total };
             resData.opinions.forEach(function(opinion) {
               sentimentObj[opinion.title] = opinion.sentiment;
@@ -392,7 +442,8 @@
               ? showArticleLength[currentDate].length
               : showArticleLength[currentDate].show + 6;
 
-            // this.timelineData[eventIndex].showArticleLength[date] = Object.assign({}, showArticleLength[currentDate]);
+            // this.timelineData[eventIndex].showArticleLength[date] =
+            // Object.assign({}, showArticleLength[currentDate]);
           }
         });
       },

@@ -218,9 +218,12 @@
     },
     beforDestroy() {
       document.removeEventListener('fullscreenchange', this.fullscreenchangeListener);
-      document.addEventListener('mozfullscreenchange', this.fullscreenchangeListener, false);
-      document.addEventListener('webkitfullscreenchange', this.fullscreenchangeListener, false);
-      document.addEventListener('msfullscreenchange', this.fullscreenchangeListener, false);
+      document.removeEventListener('mozfullscreenchange', this.fullscreenchangeListener, false);
+      document.removeEventListener('webkitfullscreenchange', this.fullscreenchangeListener, false);
+      document.removeEventListener('msfullscreenchange', this.fullscreenchangeListener, false);
+      if (this.isPlaying) {
+        this.video.pause();
+      }
     },
     methods: {
       contextMenuStop() {
@@ -310,7 +313,7 @@
         // const progressBarWidth = this.getProgressBarStyle().width;
         this.currentTime = this.video.currentTime;
 
-        if (this.videoSRT.length > 0) {
+        if (this.videoSRT.length > 0 && this.videoSRT[this.videoSRTPosition]) {
           if (this.videoSRT[this.videoSRTPosition].start >= this.currentTime - 1 / this.fps
             && this.videoSRT[this.videoSRTPosition].start <= this.currentTime + 1 / this.fps) {
             this.currentVideoSRT = this.videoSRT[this.videoSRTPosition].text;

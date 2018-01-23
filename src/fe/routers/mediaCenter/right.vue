@@ -71,18 +71,33 @@
                 <td class="item-info-key">时长: </td>
                 <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
               </tr>
+              <tr>
+                <td class="item-info-key">近线位置: </td>
+                <td class="item-info-value">{{ file.ARCHIVETYPE ? ARCHIVETYPE[file.ARCHIVETYPE].text : '' }}</td>
+              </tr>
+              <tr>
+                <td class="item-info-key">文件状态: </td>
+                <td class="item-info-value">{{ file.STATUS ? FILE_STATUS[file.STATUS].text : '' }}</td>
+              </tr>
             </table>
             <more-view
               :info="file"
             ></more-view>
             <div class="media-center-operation-bar">
-              <fj-button type="info" size="mini" @click.stop=" prepareDownload(file)">下载</fj-button>
+              <fj-button type="primary" size="mini" @click.stop="prepareDownload(file)">下载</fj-button>
             </div>
           </div>
         </fj-tab-pane>
         <fj-tab-pane label="视频片段" name="tab3">
-          <div class="media-center-file-item media-center-file-item-bottom-line" v-if="fragments.length === 0">无</div>
-          <div class="media-center-file-item media-center-file-item-bottom-line" v-else v-for="file in fragments">
+          <div class="media-center-file-item" v-if="fragmentsTree.length === 0 || fragmentsTree[0].children.length === 0">无</div>
+          <fj-tree
+            v-else
+            :default-expanded-key="fragmentsTree[0].id"
+            :data="fragmentsTree"
+            node-key="id"
+            @node-click="$emit('update-list', fragments)"></fj-tree>
+
+          <!-- <div class="media-center-file-item media-center-file-item-bottom-line" v-else v-for="file in fragments">
             <table class="media-center-table">
               <tr>
                 <td class="item-info-value" width="303" @click="$emit('update-list', fragments)">
@@ -112,7 +127,7 @@
                 </td>
               </tr>
             </table>
-          </div>
+          </div> -->
         </fj-tab-pane>
       </fj-tabs>
     </div>
@@ -193,6 +208,7 @@
         },
         rootid: '',
         fragments: [],
+        fragmentsTree: [],
         fileInfo: {},
         downloadDialogDisplay: false,
         shelfDialogVisible: false,
@@ -201,11 +217,20 @@
         shelfName: '',
         programEmpty: false,
         FROM_WHERE: config.getConfig('FROM_WHERE'),
-        UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE')
+        UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE'),
+        ARCHIVETYPE: config.getConfig('ARCHIVETYPE'),
+        FILE_STATUS: config.getConfig('FILE_STATUS')
       };
     },
     watch: {
       videoInfo(val) {
+        if (!val.id) {
+          this.item = {};
+          this.videoId = '';
+          this.rootid = '';
+          this.url = '';
+          return;
+        }
         this.title = this.getTitle(val);
         this.shelfName = this.title.replace(/<em>/g,'').replace(/<\/em>/g,'');
         if(this.shelfName.indexOf('.') !== -1) {
@@ -259,7 +284,11 @@
       getDetail() {
         const me = this;
         api.getObject({ params: { objectid: this.item.id, fromWhere: this.videoInfo.from_where } }).then((res) => {
-          me.program = res.data.result.detail.program;
+          const detail = res.data.result.detail;
+          me.program = detail.program;
+          if (isEmptyObject(detail.program)) {
+            me.program = detail.sequence;
+          }
           me.programEmpty = me.isProgramEmpty();
           me.basic = res.data.result.basic;
           me.files = res.data.result.files;
@@ -280,14 +309,31 @@
           pageSize: 999
         };
         const fragments = [];
+        const fragmentsTree = [];
+        const children = [];
         api.esSearch(options)
           .then((res)=>{
             const docs = res.data.docs;
             for(let i = 0, len = docs.length; i < len; i++){
+              const name = `${getTitle(docs[i])}    ${getDuration(docs[i])}`;
+              const item = Object.assign({}, docs[i], { name: name });
               if(docs[i].id !== me.rootid){
-                fragments.push(docs[i]);
+                children.push(item);
+              } else {
+                fragmentsTree.push(item);
+              }
+              fragments.push(docs[i]);
+            }
+            for(let i = 0; i < fragmentsTree.length; i++) {
+              const fragment = fragmentsTree[i];
+              fragment.children = [];
+              for(let j = 0; j < children.length; j++) {
+                if (children[j].rootid === fragment.id) {
+                  fragment.children.push(children[j]);
+                }
               }
             }
+            me.fragmentsTree = fragmentsTree;
             me.fragments = fragments;
           })
           .catch((error)=>{
@@ -444,7 +490,7 @@
           return {};
         }
 
-        if(this.videoInfo.from_where*1 === this.FROM_WHERE.UMP){
+        if(this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU){
           for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
             for (let i = 0, len = files.length; i < len; i++) {
               if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {

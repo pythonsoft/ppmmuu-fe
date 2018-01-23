@@ -10,10 +10,10 @@
       </div>
     </template>
     <template slot="operation">
-      <fj-button type="info" size="mini" v-bind:disabled="addBtnDisabled" @click="addBtnClick">增加</fj-button>
-      <fj-button type="info" size="mini" v-bind:disabled="editBtnDisabled" @click="editBtnClick">编辑</fj-button>
-      <fj-button type="info" size="mini" v-bind:disabled="configBtnDisabled" @click="configBtnClick">配置</fj-button>
-      <fj-button type="info" size="mini" v-bind:disabled="manageBtnDisabled" @click="manageBtnClick">管理账户及组织</fj-button>
+      <fj-button type="primary" size="mini" v-bind:disabled="addBtnDisabled" @click="addBtnClick">增加</fj-button>
+      <fj-button type="primary" size="mini" v-bind:disabled="editBtnDisabled" @click="editBtnClick">编辑</fj-button>
+      <fj-button type="primary" size="mini" v-bind:disabled="configBtnDisabled" @click="configBtnClick">配置</fj-button>
+      <fj-button type="primary" size="mini" v-bind:disabled="manageBtnDisabled" @click="manageBtnClick">管理账户及组织</fj-button>
       <fj-button type="danger" size="mini" v-bind:disabled="deleteBtnDisabled" @click="deleteBtnClick">删除</fj-button>
     </template>
     <template slot="table">

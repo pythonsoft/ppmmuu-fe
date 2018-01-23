@@ -118,8 +118,6 @@
       this.getDefaultMedia();
       const program_type = this.$route.params.program_type;
       if (program_type) this.listType = program_type;
-      const keyword = this.$route.query.keyword;
-      if (keyword) this.listType = 'searchResult';
     },
     watch: {
       '$route.params.program_type'(val) {
@@ -161,7 +159,7 @@
       formatTime,
       getThumb,
       getDefaultMedia() {
-        mediaAPI.defaultMedia({ params: { size: 4 } })
+        mediaAPI.defaultMedia({ params: { size: 4 } }, this)
         .then((res) => {
           this.defaultList = res.data;
         }).catch((error) => {
@@ -169,7 +167,10 @@
         });
       },
       linkToWatch(item) {
-        this.$router.push({ name: 'watch', params: { objectId: item.id, fromWhere: item.from_where } });
+        this.$router.push({
+          name: 'watch',
+          params: { objectId: item.id, fromWhere: item.from_where }
+        });
       },
       linkToCategory(name) {
         this.$router.push({ name: 'mediaCenter', params: { program_type: name } });
@@ -227,7 +228,7 @@
           value: 'desc'
         }];
 
-        mediaAPI.esSearch(options).then((res) => {
+        mediaAPI.esSearch(options, this).then((res) => {
           this.categoryList = this.categoryList.concat(res.data.docs);
           this.loadCategoryListBtnText = '加载更多';
           // me.items = res.data.docs;
@@ -239,7 +240,7 @@
       getSearchResult(options) {
         if (this.loadSearchResultBtnText === '加载中...') return;
         this.loadSearchResultBtnText = '加载中...';
-        mediaAPI.esSearch(options).then((res) => {
+        mediaAPI.esSearch(options, this).then((res) => {
           this.loadSearchResultBtnText = '加载更多';
           this.searchResult = this.searchResult.concat(res.data.docs);
           this.searchResultTotal = res.data.numFound;

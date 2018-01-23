@@ -234,6 +234,19 @@ config.fields = [
   },
   {
     field: 'audioIndexs', type: 'input', text: '音轨index', required: false, value: 'null'
+  },
+  {
+    field: 'target',
+    type: 'select',
+    text: 'target',
+    required: false,
+    selected: 'null',
+    options: [
+      { text: 'null', value: 'null', key: 'null' },
+      { text: 'xdcamhd422', value: 'xdcamhd422', key: 'xdcamhd422' },
+      { text: 'imx50', value: 'imx50', key: 'imx50' },
+      { text: 'dvcpro50', value: 'dvcpro50', key: 'dvcpro50' }
+    ]
   }
 ];
 

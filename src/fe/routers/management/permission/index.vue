@@ -20,13 +20,13 @@
       </div>
     </template>
      <template slot="operation">
-       <fj-button type="info" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
-       <fj-button type="info" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
+       <fj-button type="primary" size="mini" v-bind:disabled="enabled" @click="handleClickEnable">启用</fj-button>
+       <fj-button type="primary" size="mini" v-bind:disabled="disabled" @click="handleClickDisable">禁用</fj-button>
      </template>
       <template slot="table">
         <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
           <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-          <fj-table-column prop="status" label="状态" width="120"><template scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
+          <fj-table-column prop="status" label="状态" width="120"><template slot-scope="props"><span :class="props.row.status == '0' ? 'permission-status-span permission-enable': 'permission-status-span permission-disable'">{{ props.row.status == '0' ? '启用':'禁用'}}</span></template></fj-table-column>
           <fj-table-column prop="name" label="名称"></fj-table-column>
           <fj-table-column prop="path" label="路径"></fj-table-column>
           <fj-table-column prop="groupIndex" label="权限组" width="200"></fj-table-column>

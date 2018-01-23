@@ -6,7 +6,7 @@ stages:
 deploy_to_68_job:
   stage: deploy
   script:
-    - git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git HEAD | (rm -rf /home/gitlab-runner/UMP-FE && mkdir -p /home/gitlab-runner/UMP-FE && cd /home/gitlab-runner/UMP-FE && tar xf -)
+    - git archive --format=tar --remote=git@gitlab.szdev.cn:dev/UMP-FE.git dev | (rm -rf /home/gitlab-runner/UMP-FE && mkdir -p /home/gitlab-runner/UMP-FE && cd /home/gitlab-runner/UMP-FE && tar xf -)
 
   environment:
     name: test
@@ -27,8 +27,9 @@ run_node_68:
   script:
     - cd /home/gitlab-runner/UMP-FE && sed -i -re "s/(^\s*axios\.defaults\.baseURL)\s*=.*/\1='http:\/\/api\.szdev\.cn'/" src/fe/config.js
     - npm run build
-    - cd dist
-    - pm2 startOrReload pm2.json
+    - npm run build:mobile
+    - cd
+    - pm2 startOrReload ~/UMP-FE/dist/pm2.json
 
   environment:
     name: test

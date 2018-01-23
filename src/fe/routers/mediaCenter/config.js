@@ -4,49 +4,64 @@ const config = {};
 const method = {};
 
 config.FIELD_NAME = {
-  ACCESSCOUNT: { cn: '' },
-  ARCHIVETYPE: { cn: '' },
+  ACCESSCOUNT: { cn: '訪問次數' },
+  ARCHIVETYPE: { cn: '歸檔類型' },
   CAPCHANNEL: { cn: '' },
-  CHANNEL: { cn: '' },
-  CHECKFILE: { cn: '' },
-  CREATETIME: { cn: '' },
-  DELAFTERARCHIVE: { cn: '' },
-  DESCRIPTION: { cn: '' },
-  EXPIRETIME: { cn: '' },
+  CHANNEL: { cn: '頻道' },
+  CHECKFILE: { cn: '檢查文件' },
+  CREATETIME: { cn: '創建時間' },
+  DELAFTERARCHIVE: { cn: '歸檔后刪除' },
+  DESCRIPTION: { cn: '描述' },
+  EXPIRETIME: { cn: '過期時間' },
   FILECLASS: { cn: '' },
   FILENAME: { cn: '文件名' },
   FILESIZE: { cn: '文件大小' },
-  FILETYPE: { cn: '文件类型' },
-  FILETYPEID: { cn: '文件类型ID' },
-  FILETYPENAME: { cn: '文件类型名称' },
-  INPOINT: { cn: '入点' },
+  FILETYPE: { cn: '文件類型' },
+  FILETYPEID: { cn: '文件類型ID' },
+  FILETYPENAME: { cn: '文件類型名稱' },
+  INPOINT: { cn: '入點' },
   ISOK: { cn: '' },
   LANGUAGEID: { cn: '' },
-  LASTACCESS: { cn: '' },
-  MD5CODE: { cn: '' },
-  MEDIAINFOFLAG: { cn: '' },
-  NAME: { cn: '名称' },
+  LASTACCESS: { cn: '最近一次訪問' },
+  MD5CODE: { cn: 'MD5編碼' },
+  MEDIAINFOFLAG: { cn: '媒體信息標識' },
+  NAME: { cn: '名稱' },
   OBJECTID: { cn: '' },
-  OUTPOINT: { cn: '出点' },
-  PATHID: { cn: '' },
-  PROCESSSTATUS: { cn: '' },
+  OUTPOINT: { cn: '出點' },
+  PATHID: { cn: '路勁id' },
+  PROCESSSTATUS: { cn: '進度狀態' },
   PURGETIME: { cn: '' },
   RESERVED1: { cn: '' },
   RESERVED2: { cn: '' },
   SAID: { cn: '' },
-  SANAME: { cn: '' },
+  SANAME: { cn: '文件類型名' },
   SASTATUS: { cn: '' },
   SATYPE: { cn: '' },
-  SOURCE: { cn: '' },
+  SOURCE: { cn: '來源' },
   SPSTATUS: { cn: '' },
-  STATUS: { cn: '' },
-  STREAMMEDIAID: { cn: '' },
-  STREAMMEDIAINFO: { cn: '' },
-  STREAMMEDIAINFOID: { cn: '' },
-  STREAMTYPE: { cn: '' },
+  STATUS: { cn: '狀態' },
+  STREAMMEDIAID: { cn: '流媒體id' },
+  STREAMMEDIAINFO: { cn: '流媒體信息' },
+  STREAMMEDIAINFOID: { cn: '流媒體信息id' },
+  STREAMTYPE: { cn: '劉類型' },
   TAPECODE: { cn: '' },
   UNCPATH: { cn: '' },
-  VIDEOSTANDARD: { cn: '' }
+  VIDEOSTANDARD: { cn: '視頻標準' },
+  INPOINT: {
+    cn: '入點'
+  },
+  OUTPOINT: {
+    cn: '出點'
+  },
+  realPath: { cn: '文件真實路勁' },
+  path: { cn: '文件路勁' },
+  avaliable: { cn: '是否可用' },
+  status: { cn: '狀態' },
+  description: { cn: '描述' },
+  archivePath: { cn: '歸檔路勁' },
+  createdTime: { cn: '創建時間' },
+  lastModifyTime: { cn: '修改時間' },
+  fromWhere: { cn: '入庫地點' },
 };
 
 config.FILE_TYPE_ID = [
@@ -72,14 +87,31 @@ config.IVIDEO_EDIT_FILE_TYPE_ID = [
 config.FROM_WHERE = utils.FROM_WHERE;
 
 config.UMP_FILETYPE = {
-  ORIGINAL: '0', // 源文件
+  HIGH_VIDEO: '0', // 源文件
   LOW_BIT_VIDEO: '1', // 低码流
   SUBTITLE: '2', // 字幕
   THUMB: '3', // 缩略图
-  OTHER: '4' // 其它
+  DOC: '4', // 文档
+  OTHER: '5' // 其它
 };
 
-config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4'];
+config.ARCHIVETYPE = {
+  0: { text: '带库', value: '0' },
+  1: { text: 'UDS', value: '1' }
+};
+config.FILE_STATUS = {
+  0: { text: '不存在', value: '0' },
+  1: { text: '存在', value: '1' },
+  2: { text: '在线', value: '2' },
+  3: { text: '在线+近线', value: '3' },
+  4: { text: '在线+近线', value: '4' },
+  5: { text: '近线', value: '5' },
+  6: { text: '损坏', value: '6' },
+  7: { text: '在线+离线', value: '7' },
+  8: { text: '离线', value: '8' }
+};
+
+config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4', '5'];
 
 method.getTextByValue = function (v, st) {
   return utils.getTextByValue(config, v, st) || {};
@@ -167,6 +199,12 @@ const ORDER_OPTIONS = [
   { value: 'order5', label: '首播时间由远到近', sort: 'asc', key: 'airdata' }
 ];
 
+const CREATED_TIME_OPTIONS = [
+  { value: 'all', label: '时间不限' },
+  { value: 'lastWeek', label: '最近一周' },
+  { value: 'lastMonth', label: '最近一月' }
+];
+
 // 从哪个接口拿的数据
 const FROM_WHERE = {
   program: 1,
@@ -174,11 +212,12 @@ const FROM_WHERE = {
 };
 
 
-const HHIGHLIGHT_FIELDS1 = 'name,program_name_en,program_name_cn,content,content_introduction,house_num,from_where,full_text';
-const HHIGHLIGHT_FIELDS2 = 'name,program_type,program_name_cn,program_name_en,content,content_introduction,house_num,from_where,full_text';
-const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,program_name,from_where,full_text,publish_time,rootid';
+const HHIGHLIGHT_FIELDS1 = 'name,program_name_en,program_name_cn,content,content_introduction,house_num,full_text';
+const HHIGHLIGHT_FIELDS2 = 'name,program_type,program_name_cn,program_name_en,content,content_introduction,house_num,full_text';
+const FILETR_FIELDS = 'id,duration,name,ccid,program_type,program_name_en,hd_flag,program_name_cn,last_modify,content_introduction,content,news_data,airdata,publish_time,program_name,from_where,full_text,rootid';
 
 method.ORDER_OPTIONS = ORDER_OPTIONS;
+method.CREATED_TIME_OPTIONS = CREATED_TIME_OPTIONS;
 method.HHIGHLIGHT_FIELDS1 = HHIGHLIGHT_FIELDS1;
 method.HHIGHLIGHT_FIELDS2 = HHIGHLIGHT_FIELDS2;
 method.FILETR_FIELDS = FILETR_FIELDS;

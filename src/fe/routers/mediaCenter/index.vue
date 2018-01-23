@@ -48,7 +48,7 @@
           <template v-for="config in searchSelectConfigs">
             <div class="media-category">
               <h4>{{config.label}}</h4>
-              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="dark" :controlLength="10" clearable multiple>
+              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" :controlLength="10" clearable multiple>
                 <fj-option
                   v-for="item in config.items"
                   :key="item.key"
@@ -76,6 +76,7 @@
             <h4>新聞日期</h4>
             <div id="media-category-date">
               <fj-date-picker
+                theme="fill"
                 :parent-el="(()=>{return this.$refs.mediaLeft})()"
                 type="datetimerange"
                 placeholder="请选择日期范围"
@@ -88,6 +89,7 @@
             <h4>首播日期</h4>
             <div id="media-category-date">
               <fj-date-picker
+                theme="fill"
                 :parent-el="(()=>{return this.$refs.mediaLeft})()"
                 type="datetimerange"
                 placeholder="请选择日期范围"
@@ -110,18 +112,25 @@
                 type="grid"
                 :width="listWidth"
                 :items="categoryItem.docs"
-                @currentItemChange="currentItemChange"
+                :current-item.sync="currentVideo"
               ></grid-list-view>
             </div>
           </div>
-          <template v-else>
-            <div class="media-center-result-bar">
+          <div :style="{ padding: '0 26px'}" v-else>
+            <div class="media-center-result-bar clearfix">
               <span class="media-center-result-count">
                 {{searchResult}}
               </span>
-              <div class="media-center-view-bar">
-                <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
-                --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
+              <div :class="['media-center-view-bar', {'media-center-view-bar-left': listWidth < MIN_RESULT_BAR_WIDTH}]">
+                <div class="order-select">
+                  <fj-select :parent-el="selectParentEl" v-model="createdTimeVal" size="small">
+                    <fj-option
+                      v-for="item in CREATED_TIME_OPTIONS"
+                      :key="item.value"
+                      :value="item.value"
+                      :label="item.label"></fj-option>
+                  </fj-select>
+                </div><!--
                 --><div class="order-select">
                   <fj-select :parent-el="selectParentEl" v-model="orderVal" size="small">
                     <fj-option
@@ -130,7 +139,9 @@
                       :value="item.value"
                       :label="item.label"></fj-option>
                   </fj-select>
-                </div>
+                </div><!--
+                --><span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
+                --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
               </div>
             </div>
 
@@ -144,13 +155,13 @@
               :type="viewType"
               :width="listWidth"
               :items="items"
-              @currentItemChange="currentItemChange"
+              :current-item.sync="currentVideo"
             ></grid-list-view>
 
             <div class="media-pagination" v-if="items.length > 1">
               <pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></pagination>
             </div>
-          </template>
+          </div>
         </div>
       </div>
     </template>
@@ -162,7 +173,7 @@
       ></media-right>
     </template>
 
-    <!--<im></im>-->
+    <!-- <im></im> -->
   </layout-three-column>
 </template>
 <script>
@@ -183,6 +194,7 @@
     formatMust,
     getHighLightFields,
     ORDER_OPTIONS,
+    CREATED_TIME_OPTIONS,
     HHIGHLIGHT_FIELDS1,
     HHIGHLIGHT_FIELDS2,
     FILETR_FIELDS
@@ -199,6 +211,9 @@
   const api = require('../../api/media');
   const userAPI = require('../../api/user');
 
+  const MIN_LIST_WIDTH = 448;
+  const MIN_RESULT_BAR_WIDTH = 612;
+
   export default {
     components: {
       'layout-three-column': threeColumn,
@@ -209,7 +224,9 @@
     },
     data() {
       return {
+        CREATED_TIME_OPTIONS: CREATED_TIME_OPTIONS,
         ORDER_OPTIONS: ORDER_OPTIONS,
+        createdTimeVal: 'all',
         orderVal: 'order1',
         defaultRoute: '/',
         keyword: '',
@@ -225,6 +242,8 @@
         items: [],
         offsetWidth: 0,
         offsetHeight: 0,
+        MIN_LIST_WIDTH: MIN_LIST_WIDTH,
+        MIN_RESULT_BAR_WIDTH: MIN_RESULT_BAR_WIDTH,
         listWidth: 0,
         itemSize: { width: 198, height: 180 },
         timeId: '',
@@ -234,6 +253,7 @@
 
         datetimerange1: [],
         datetimerange2: [],
+        datetimerangeCreated: [],
         displayMovieEditor: false,
 
         parentSize: { width: '100', height: '100' },
@@ -255,10 +275,23 @@
     },
     mounted() {
       this.selectParentEl = this.$refs.mediaLeft;
+      if (this.$refs.mediaCenter.offsetWidth < MIN_LIST_WIDTH) this.listWidth = MIN_LIST_WIDTH;
     },
     watch: {
       orderVal(val) {
         this.currentPage = 1;
+        this.getMediaList();
+      },
+      createdTimeVal(val) {
+        this.currentPage = 1;
+        const start = new Date();
+        const end = new Date();
+        if (val === 'lastMonth') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+        } else if (val === 'lastWeek') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
+        }
+        this.datetimerangeCreated = [start, end];
         this.getMediaList();
       }
     },
@@ -291,6 +324,9 @@
       getDefaultMedia() {
         api.defaultMedia().then((res) => {
           this.defaultList = res.data;
+          if (res.data.length > 0) {
+            this.currentVideo = res.data[0].docs[0];
+          }
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -329,7 +365,8 @@
         me.timer = setTimeout(() => {
           me.offsetWidth = me.$refs.mediaCenter.offsetWidth - 26 * 2;
           me.offsetHeight = document.body.clientHeight - 53;
-          me.listWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
+          let tempListWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
+          me.listWidth = tempListWidth < MIN_LIST_WIDTH ? MIN_LIST_WIDTH : tempListWidth;
           const pageSize = (me.offsetWidth / me.itemSize.width | 0) *
             (me.offsetHeight / me.itemSize.height | 0);
           me.pageSize = pageSize < 20 ? 20 : pageSize;
@@ -343,6 +380,8 @@
       },
       searchClick() {
         this.currentPage = 1;
+        this.createdTimeVal = 'all';
+        this.datetimerangeCreated = [];
         this.resize();
       },
       getSeachConfigs() {
@@ -358,12 +397,25 @@
           me.$message.error(error);
         });
       },
+      setDatetimerange(type) {
+        // const start = new Date();
+        // const end = new Date();
+        // if (type === 'lastMonth') {
+        //   start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+        // } else if (type === 'lastWeek') {
+        //   start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
+        // }
+        // this.datetimerangeCreated = [start, end];
+        // this.getMediaList();
+      },
       getMediaList() {
         this.listType = 'normal';
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
         const f_date_162 = getTimeRange(this.datetimerange1, 'news_data'); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2, 'airdata'); // 首播日期
+        const created = getTimeRange(this.datetimerangeCreated, 'created');
+        console.log(this.fl);
         const options = {
           source: this.fl,
           match: [],
@@ -377,6 +429,7 @@
         const must = options.match;
         options.range.push(f_date_162);
         options.range.push(f_date_36);
+        options.range.push(created);
         getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
@@ -428,6 +481,13 @@
 
         api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
+          if (res.data.docs.length > 0) {
+            if (me.listType === 'default' || (me.listType === "normal" && me.currentPage === 1)) {
+              me.currentVideo = res.data.docs[0];
+            }
+          } else {
+            me.currentVideo = {};
+          }
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
         }).catch((error) => {
@@ -465,6 +525,11 @@
         formatMust(options.match, obj);
         api.esSearch(options, me).then((res) => {
           me.items = res.data.docs;
+          if (res.data.docs.length > 0) {
+            me.currentVideo = res.data.docs[0];
+          } else {
+            me.currentVideo = {};
+          }
           me.total = res.data.numFound;
           me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
         }).catch((error) => {
@@ -473,9 +538,6 @@
       },
       handleCurrentPageChange(page) {
         this.getMediaList();
-      },
-      currentItemChange(item) {
-        this.currentVideo = item;
       }
     }
   };

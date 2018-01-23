@@ -1,4 +1,5 @@
 import Home from './home';
+
 const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter')), 'mediaCenter');
 const Login = resolve => require.ensure([], () => resolve(require('./login')), 'login');
@@ -20,51 +21,51 @@ export default [{
     meta: { title: '下载任务' },
     children: [],
     name: 'taskCenter'
-  },{
+  }, {
     path: 'account',
     component: Account,
     meta: { title: '个人信息', hideTabbar: true },
     children: [],
     name: 'account'
-  },{
+  }, {
     path: 'searchHistory',
     component: SearchHistory,
     meta: { title: '检索历史', hideTabbar: true },
     children: [],
     name: 'searchHistory'
-  },{
+  }, {
     path: 'history',
     component: History,
     meta: { title: '观看历史', hideTabbar: true },
     children: [],
     name: 'history'
-  },{
+  }, {
     path: 'personalCenter',
     component: PersonalCenter,
     meta: { title: '个人中心' },
     children: [],
     name: 'personalCenter'
-  },{
+  }, {
     path: 'trends',
     component: Trends,
     meta: { title: '舆情' },
     children: [],
     name: 'trends'
-  },{
+  }, {
     path: 'mediaCenter/:program_type?',
     component: MediaCenter,
     meta: { title: '媒体库' },
     children: [],
     name: 'mediaCenter'
-  },{
+  }, {
     path: 'watch/:objectId/:fromWhere',
     component: Watch,
     meta: { hideTabbar: true },
     name: 'watch'
   }]
-},{
-    path: '/login',
-    component: Login,
-    name: 'login',
-    meta: { title: '凤凰卫视全媒体平台' }
-  }];
+}, {
+  path: '/login',
+  component: Login,
+  name: 'login',
+  meta: { title: '凤凰卫视全媒体平台' }
+}];

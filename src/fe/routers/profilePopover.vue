@@ -10,8 +10,8 @@
         </template>
       </div>
       <div class="profile-info-box">
-        <p class="profile-info-name">{{name}}</p>
-        <p class="profile-info-email">{{email}}</p>
+        <p class="profile-info-name">{{name | valueLengthLimit(12)}}</p>
+        <p class="profile-info-email">{{email | valueLengthLimit(12)}}</p>
       </div>
     </div>
     <div class="profile-footer" @click="signOut">

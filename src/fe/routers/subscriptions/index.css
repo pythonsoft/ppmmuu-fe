@@ -323,7 +323,7 @@
   color: #4C637B;
 }
 
-.media-center-view-bar{
+.channel-view-bar{
   float: right;
   line-height: 30px;
   cursor: default;
@@ -333,20 +333,20 @@
   display: inline-block;
   width: 141px;
 }
-.media-center-view-grid,
-.media-center-view-list {
+.subscriptions-view-grid,
+.subscriptions-view-list {
   vertical-align: top;
   margin-right: 20px;
   cursor: default;
   color: #9FB3CA;
 }
 
-.media-center-view-grid:active,
-.media-center-view-list:active{
+.subscriptions-view-grid:active,
+.subscriptions-view-list:active{
   color: #1497D6;
 }
 
-.media-center-view-selected {
+.subscriptions-view-selected {
   color: #4C637B;
 }
 
@@ -362,27 +362,6 @@
 }
 
 
-.watchContent {
-  position: absolute;
-  top: 90px;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 100;
-  background: #F8FAFB;
-}
-
-.rightBox {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background: #F8FAFB;
-  border-left: 4px solid #F2F6FA;
-  font-size: 12px;
-  color: #2A3E52;
-  transition: width .4s cubic-bezier(0.23, 1, 0.32, 1) 100ms;
-}
 .rightBoxToggle {
   position: absolute;
   left: 0;
@@ -395,37 +374,6 @@
 .rightBoxToggle.folded {
   left: -34px;
 }
-.leftBox {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  overflow: auto;
-}
-.leftBoxContent {
-  margin: 0 auto;
-  padding: 14px 50px;
-}
-.footerTitle {
-  position: relative;
-  height: 20px;
-  margin-top: 20px;
-  margin-bottom: 14px;
-  padding-left: 9px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333333;
-}
-.footerTitle:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 4px;
-  background: #20A4F3;
-}
-
 .media-video-title-wrap {
   background: #4C637B;
   height: 42px;

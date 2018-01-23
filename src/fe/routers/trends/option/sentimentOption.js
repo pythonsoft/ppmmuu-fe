@@ -38,6 +38,12 @@ export const sentimentOption = {
       type: 'pie',
       radius: [0, '30%'],
       stillShowZeroSum: false,
+      itemStyle: {
+        normal: {
+          borderColor: '#fff',
+          borderWidth: 1
+        }
+      },
       label: {
         normal: {
           position: 'inner',
@@ -60,6 +66,12 @@ export const sentimentOption = {
       selectedMode: 'single',
       radius: ['40%', '55%'],
       stillShowZeroSum: false,
+      itemStyle: {
+        normal: {
+          borderColor: '#fff',
+          borderWidth: 1
+        }
+      },
       label: {
         normal: {
           formatter(params) {

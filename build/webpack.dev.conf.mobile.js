@@ -5,7 +5,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 var config = require('./config-mobile');
 var AssetsPlugin = require('assets-webpack-plugin');
-
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var baseWebpackConfig = require('./webpack.base.conf.mobile');
 
 // ......
@@ -21,7 +22,38 @@ module.exports = merge(baseWebpackConfig, {
     chunkFilename: path.join(config.dev.assetsSubDirectory, '/js/[name].[id].js')
   },
   devtool: '#cheap-module-eval-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader'
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: function() {
+                return [
+                  require('postcss-import'),
+                  require('autoprefixer'),
+                  require('postcss-custom-properties')
+                ]
+              }
+            }
+          }
+        ]
+      },
+    ]
+  },
   plugins: [
+    // new BundleAnalyzerPlugin(),
+    // new BrowserSyncPlugin({
+    //   port: 8001
+    // }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
