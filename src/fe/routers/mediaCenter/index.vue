@@ -102,10 +102,11 @@
     </template>
     <template slot="center">
       <div class="media-center-wrap" ref="mediaCenter">
-        <div class="media-center" :style="{ width: !listWidth ? '100%' : (listWidth - 6) + 'px', height: items.length === 0 ? '100%' : 'auto' }">
-          <div v-if="listType === 'default'">
-            <div :style="{ padding: '0 26px'}"
-              v-for="categoryItem in defaultList">
+        <div
+          class="media-center"
+          :style="{ width: !listWidth ? '100%' : listWidth + 'px' }">
+          <div v-if="listType === 'default'" :style="{ padding: '0 26px'}">
+            <template v-for="categoryItem in defaultList">
               <h3 class="category-title">{{ categoryItem.category }}</h3>
               <grid-list-view
                 class="media-center-category-list"
@@ -114,9 +115,9 @@
                 :items="categoryItem.docs"
                 :current-item.sync="currentVideo"
               ></grid-list-view>
-            </div>
+            </template>
           </div>
-          <div :style="{ padding: '0 26px'}" v-else>
+          <div v-else :style="{ padding: '0 26px'}">
             <div class="media-center-result-bar clearfix">
               <span class="media-center-result-count">
                 {{searchResult}}
@@ -275,7 +276,10 @@
     },
     mounted() {
       this.selectParentEl = this.$refs.mediaLeft;
-      if (this.$refs.mediaCenter.offsetWidth < MIN_LIST_WIDTH) this.listWidth = MIN_LIST_WIDTH;
+      // if (this.$refs.mediaCenter.offsetWidth < MIN_LIST_WIDTH) this.listWidth = MIN_LIST_WIDTH;
+      this.offsetWidth = this.$refs.mediaCenter.offsetWidth;
+      let tempListWidth = (this.offsetWidth / this.itemSize.width | 0) * this.itemSize.width + 26 * 2;
+      this.listWidth = tempListWidth < MIN_LIST_WIDTH ? MIN_LIST_WIDTH : tempListWidth;
     },
     watch: {
       orderVal(val) {
@@ -363,10 +367,11 @@
         clearTimeout(this.timer);
         const me = this;
         me.timer = setTimeout(() => {
-          me.offsetWidth = me.$refs.mediaCenter.offsetWidth - 26 * 2;
+          me.offsetWidth = me.$refs.mediaCenter.offsetWidth;
           me.offsetHeight = document.body.clientHeight - 53;
-          let tempListWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width;
+          let tempListWidth = (me.offsetWidth / me.itemSize.width | 0) * me.itemSize.width + 26 * 2;
           me.listWidth = tempListWidth < MIN_LIST_WIDTH ? MIN_LIST_WIDTH : tempListWidth;
+
           const pageSize = (me.offsetWidth / me.itemSize.width | 0) *
             (me.offsetHeight / me.itemSize.height | 0);
           me.pageSize = pageSize < 20 ? 20 : pageSize;
