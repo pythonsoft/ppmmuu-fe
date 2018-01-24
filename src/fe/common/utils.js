@@ -10,6 +10,18 @@ utils.FROM_WHERE = {
   HK_RUKU: 'HK_RUKU'
 };
 
+utils.loadScript = function (url) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.onload = function() {
+      resolve();
+    };
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  });
+};
+
 utils.fillupZero = function (v) {
   return v < 10 ? `0${v}` : v;
 };
@@ -647,7 +659,7 @@ utils.mergeRangeArray = function (intervals) {
 };
 
 utils.formatShortTime = function (time) {
-  const t = time.constructor === Number ? new Date(time) : time;
+  const t = new Date(time);
   const currentTime = new Date();
   const cn = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
   let formatString = '';

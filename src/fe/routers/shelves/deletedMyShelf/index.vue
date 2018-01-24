@@ -3,19 +3,21 @@
     <template slot="search-left">我的任务(已删除)</template>
     <template slot="search-right">
       <div class="permission-search-item">
-        <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
+        <fj-input theme="fill" placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
       </div>
       <div class="permission-search-item">
         <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
       </div>
     </template>
     <template slot="table">
+      <div :style="{borderTop:'1px solid #EBF3FB'}">
       <fj-table :data="tableData" name="table1" ref="table">
         <fj-table-column prop="name" label="节目名称"></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
         <fj-table-column prop="assignee" label="派发人" width="100"><template slot-scope="props">{{props.row.assignee.name}}</template></fj-table-column>
         <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
       </fj-table>
+      </div>
     </template>
     <template slot="pagination">
       <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>

@@ -3,7 +3,7 @@
     <template slot="search-left">部门任务(全部)</template>
     <template slot="search-right">
       <div class="permission-search-item">
-        <fj-select placeholder="请选择" v-model="status" size="small">
+        <fj-select theme="fill" placeholder="请选择" v-model="status" size="small">
           <fj-option
                   v-for="item in options"
                   :key="item.value"
@@ -13,7 +13,7 @@
         </fj-select>
       </div>
       <div class="permission-search-item">
-        <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
+        <fj-input theme="fill" placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
       </div>
       <div class="permission-search-item">
         <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
@@ -31,12 +31,12 @@
     <template slot="table">
       <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-        <fj-table-column prop="status" label="状态" width="90"><template slot.scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
+        <fj-table-column prop="status" label="状态" width="90"><template slot-scope="props"><div v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
         <fj-table-column prop="name" label="节目名称"></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
-        <fj-table-column prop="assignee" label="派发人" width="100"><template slot.scope="props">{{props.row.assignee.name}}</template></fj-table-column>
-        <fj-table-column prop="dealer" label="认领人" width="100"><template slot.scope="props">{{props.row.dealer.name}}</template></fj-table-column>
-        <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot.scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
+        <fj-table-column prop="assignee" label="派发人" width="100"><template slot-scope="props">{{props.row.assignee.name}}</template></fj-table-column>
+        <fj-table-column prop="dealer" label="认领人" width="100"><template slot-scope="props">{{props.row.dealer.name}}</template></fj-table-column>
+        <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
       </fj-table>
     </template>
     <template slot="pagination">
