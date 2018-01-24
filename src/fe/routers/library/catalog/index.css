@@ -35,10 +35,11 @@
   height: 46px;
   line-height: 46px;
   background: #EBF3FB;
+  padding: 0 20px;
 }
 .operation-btn-group {
   display: inline-block;
-  margin-left: 18px;
+  margin-right: 18px;
 }
 .operation-btn-group button {
   margin-right: 6px;

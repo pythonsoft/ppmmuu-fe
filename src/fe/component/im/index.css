@@ -31,10 +31,10 @@
 .im-main-trigger-red-point {
   height: 6px;
   width: 6px;
-  background: #3ab0eb;
+  background: #FF3366;
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: 8px;
   border-radius: 50%;
 }
 
@@ -67,7 +67,7 @@
   left:0;
   top:0;
   bottom: 0;
-  padding-top: 72px;
+  padding-top: 42px;
   box-sizing: border-box;
   width: 174px;
   overflow: hidden;
@@ -77,7 +77,8 @@
 
 .im-main-left-header{
   padding: 8px 8px 0;
-  height: 72px;
+  height: 32px;
+  /*height: 72px;*/
   box-sizing: border-box;
   overflow: hidden;
   position: absolute;
@@ -250,14 +251,30 @@
   color: #2A3E52;
   font-size: 12px;
 }
-
+.im-dialog-main-right-bar-icon {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 23px;
+}
 .im-dialog-main-right-bar-wrap .iconfont{
+  position: absolute;
+  top: 0;
+  left: 0;
   font-size: 12px;
   padding-left: 4px;
   color: #9FB3CA;
+  transition: transform .3s;
+}
+.im-dialog-main-right-bar-wrap .iconfont.is-reverse {
+  transform: rotate(180deg);
+}
+.im-dialog-main-right-bar-wrap-tip {
+  color: #9FB3CA;
 }
 
-.im-dialog-main-right-bar-wrap-tip {
+.im-dialog-main-right-tip {
+  text-align: center;
   color: #9FB3CA;
 }
 
@@ -319,6 +336,12 @@
   border-radius: 4px;
   color: #FF3366;
   cursor: pointer;
+}
+.im-dialog-main-right-content-item .loading{
+  padding: 4px 0;
+  font-size: 12px;
+  color: #4C637B;
+  cursor: default;
 }
 
 .im-dialog-main-right-content-item .body .message .resend .iconfont {
