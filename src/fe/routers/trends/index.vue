@@ -220,6 +220,7 @@
   import { spreadTrendOption, getTrendSeries } from './option/spreadTrendOption';
   import { sentimentOption, convertOpinionData, convertSentimentData } from './option/sentimentOption';
   import WebBrowser from "../../component/higherOrder/webBrowser/index.vue";
+  import userAPI from '../../api/user';
 
   const MEDIA_TYPE = [
     { label: '热门报道', name: '热门报道' },
@@ -272,11 +273,18 @@
           }
         }).catch((error) => {
         });
+
       BigdataAPI.getRealtimeBuzzWb()
         .then((response) => {
           this.realtimeBuzzWb = response.data;
         }).catch((error) => {
         });
+
+      userAPI.getUserDetail()
+        .then((res) => {
+        }).catch((error) => {
+      });
+
       this.refreshKeywordsStatus();
     },
     mounted() {
