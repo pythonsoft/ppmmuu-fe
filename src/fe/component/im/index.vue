@@ -103,6 +103,7 @@
         groupNameDialogVisible: false,
         groupName: '',
         departmentBrowserResult: [],
+        canNotify: false
       }
     },
     watch: {
@@ -123,6 +124,15 @@
       }
     },
     created() {
+      if (window.Notification) {
+        if (Notification.permission !== 'granted') {
+          Notification.requestPermission((status)=> {
+            if (status === 'granted') this.canNotify = true;
+          });
+        } else {
+          this.canNotify = true;
+        }
+      }
       this.myselfInfo = getItemFromLocalStorage('userInfo');
       this.myselfId = this.myselfInfo._id.replace(/-/g, '_');
       this.users[this.myselfId] = {
@@ -176,20 +186,25 @@
             console.log('onInviteMessage', message);
             const roomid = message.roomid;
             if (roomid) {
-              const item = {};
+              let item = {};
               this.listGroupMember(roomid).then((result)=> {
                 const { members, owner } = result;
                 item.members = members;
                 item.owner = owner;
                 const len = members.length > 4 ? 4 : members.length;
                 this.getUsers(members.slice(0, len));
-                this.getGroupname(roomid);
+                this.getGroupName(roomid);
 
                 item.groupid = roomid;
                 item._hasUnreadMessage = false;
-
-                this.messagesObj[roomid] = [];
+                const oldItem = this.contactObj[roomid];
+                if (oldItem && this.messagesObj[roomid]) {
+                  item = Object.assign(item, oldItem); // 在onTextMessage先初始化了
+                } else {
+                  this.messagesObj[roomid] = [];
+                }
                 this.$set(this.contactObj, roomid, item);
+                console.log('onInviteMessage this.messagesObj[roomid]', roomid, this.messagesObj[roomid]);
                 this.contactIds.unshift(roomid);
               });
             }
@@ -236,6 +251,7 @@
         let key = isGroupMsg ? message.to : message.from;
         let newArray = [];
         let tempItem = {};
+        let notification = null;
         if (!this.messagesObj[key]) this.messagesObj[key] = [];
         if (this.contactIds.indexOf(key) > -1) {
           flag = true;
@@ -245,22 +261,40 @@
           this.contactIds.splice(index, 1);
           newArray = this.messagesObj[key].slice();
           newArray.push(Object.assign({}, message, msg));
+          let name = isGroupMsg ? this.contactObj[key].name : this.contactObj[key].nickname;
+          let content = isGroupMsg ? `${this.users[message.from].nickname}: ${message.data}` : message.data;
+          if (this.canNotify) {
+            notification = new Notification(name, { body: content });
+          }
+          this.contactIds.unshift(key);
         }
         if (!flag) {
-          if (isGroupMsg) {
-            this.listGroupMember(key);
-          } else {
-            this.getUsers([key]);
-          }
           tempItem = {
-            name: key,
             _hasUnreadMessage: true
           };
+          if (isGroupMsg) {
+            this.getGroupName(key, (groupName) => {
+              this.getUsers([message.from], () => {
+                if (this.canNotify) {
+                  notification = new Notification(groupName, { body: `${this.users[message.from].nickname}: ${message.data}` });
+                }
+              });
+            });
+          } else {
+            tempItem.name = key;
+            this.getUsers([key], () => {
+              if (this.canNotify) {
+                notification = new Notification(this.contactObj[key].nickname, { body: message.data, icon: this.contactObj[key].avatar });
+              }
+            });
+            this.contactIds.unshift(key);
+          }
           newArray = [Object.assign({}, message, msg)];
         }
-        this.contactIds.unshift(key);
         this.$set(this.contactObj, key, tempItem);
         this.messagesObj = Object.assign({}, this.messagesObj, { [key]: newArray });
+        console.log('onTextMessage this.contactObj', key, this.contactObj[key]);
+        console.log('onTextMessage this.messagesObj', key, this.messagesObj[key]);
       },
       getRoster() {
         this.conn.getRoster({
@@ -317,7 +351,8 @@
                 item.name = item.groupname;
 
                 const oldItem = this.contactObj[item.groupid];
-                if (oldItem && this.messagesObj[item.groupid]) {
+                if (this.messagesObj[item.groupid]) {
+                  console.log('getgroup, already have message');
                   item = Object.assign(item, oldItem);
                 } else {
                   this.contactIds.push(item.groupid);
@@ -335,13 +370,14 @@
           }
         });
       },
-      getGroupname(groupid) {
+      getGroupName(groupid, cb) {
         this.conn.getGroup({
           success: (res)=> {
             const groups = res.data;
             for (let i = 0, len = groups.length; i < len; i++) {
               if (groups[i].groupid === groupid) {
-                Object.assign(this.contactObj[groupid], { name: groups[i].groupname });
+                this.contactObj[groupid] = Object.assign({}, this.contactObj[groupid], { name: groups[i].groupname });
+                cb & cb(groups[i].groupname);
                 break;
               }
             }
@@ -464,7 +500,7 @@
         };
         this.conn.changeGroupSubject(option);
       },
-      getUsers(ids) {
+      getUsers(ids, cb) {
         const reqIds = [];
         const keys = Object.keys(this.users);
         // 排除已经获取过的用户
@@ -472,7 +508,10 @@
           const id = ids[i];
           if (keys.indexOf(id) < 0) reqIds.push(id);
         }
-        if (reqIds.length === 0) return;
+        if (reqIds.length === 0) {
+          cb && cb();
+          return;
+        }
         userAPI.getUsers({ params: { _ids: reqIds.join(',') } }, this)
           .then((res)=>{
             const data = res.data;
@@ -491,6 +530,7 @@
                 this.users[id] = tempObj[id];
               }
             });
+            cb && cb();
           })
           .catch((error)=>{
             // this.$message.error(error);
