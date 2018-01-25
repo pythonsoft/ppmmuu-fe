@@ -37,6 +37,7 @@
             :conversation-id="talkToSession"
             @clear-unread-message="handleClearUnreadMessage"
             @send-message="sendMessage"
+            @update-group-name="changeGroupSubject"
             @show-department-browser="()=>{departmentBrowserVisible = true;departmentDialogOperation = 'edit';}"
             :users="users"></message-browser>
         </div>
@@ -291,7 +292,7 @@
         this.conn.getGroup({
           success: (res)=> {
             const group = res.data;
-            // console.log('group', group);
+            console.log('group', group);
 
             const tempObj = {};
             let tempUsers = [];
@@ -445,6 +446,18 @@
           }
         };
         this.conn.addGroupMembers(option);
+      },
+      changeGroupSubject(name) {
+        console.log('changeGroupSubject', name);
+        const option = {
+          roomId: this.talkToSession,
+          subject: name,
+          success: () => {
+            console.log('change success');
+            this.contactObj[this.talkToSession].name = name;
+          }
+        };
+        this.conn.changeGroupSubject(option);
       },
       getUsers(ids) {
         const reqIds = [];

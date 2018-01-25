@@ -1,6 +1,19 @@
 <template>
   <transition name="fj-zoom-in-top">
     <div :class="[$style.wrap, 'clearfix']" v-show="visible" v-clickoutside="handleClose">
+      <div>
+        <span :class="$style.groupLabel">群名</span>
+        <div :class="$style.groupName">
+          <fj-input
+            v-if="isEditGroupName"
+            size="small"
+            v-model="name"
+            @keyup.native.enter="handleUpdate"
+            v-clickoutside="handleUpdate"></fj-input>
+          <span v-else>{{ groupName }}</span>
+        </div>
+        <i v-if="!isEditGroupName" :class="['iconfont icon-edit-outline', $style.editIcon]" @click="isEditGroupName = true"></i>
+      </div>
       <i :class="[$style.addMemberBtn, 'iconfont icon-jia']" @click="showDepartmentBrowser"></i>
       <div v-for="member in members" :key="member" :class="$style.item" :title="(infos[member] && infos[member].nickname) || ''">
         <img :src="member.avatar" :class="['im-avatar im-img-style', $style.avatar]" width="24" height="24">
@@ -15,6 +28,7 @@
   export default {
     directives: { Clickoutside },
     props: {
+      groupName: String,
       visible: {
         type: Boolean,
         default: false
@@ -26,7 +40,15 @@
       infos: Object
     },
     data() {
-      return {};
+      return {
+        isEditGroupName: false,
+        name: this.groupName
+      };
+    },
+    watch: {
+      groupName(val) {
+        this.name = val;
+      }
     },
     methods: {
       showDepartmentBrowser() {
@@ -35,6 +57,11 @@
       handleClose(e) {
         if (e.id === 'show-group-member-btn') return;
         this.$emit('update:visible', false);
+      },
+      handleUpdate() {
+        console.log('handleUpdate');
+        this.isEditGroupName = false;
+        this.$emit('update-group-name', this.name);
       }
     }
   };
@@ -87,5 +114,22 @@
     line-height: 1;
     text-align: center;
     vertical-align: middle;
+  }
+  .groupLabel {
+    font-size: 12px;
+    color: #4C637B;
+  }
+  .groupName {
+    display: inline-block;
+    margin-left: 12px;
+    margin-right: 8px;
+    font-size: 12px;
+    color: #2A3E52;
+  }
+  .groupName input {
+    width: 228px;
+  }
+  .editIcon {
+    color: #344C67;
   }
 </style>
