@@ -16,6 +16,7 @@
         @update-group-name="(name)=>{ $emit('update-group-name', name) }"
         :visible.sync="groupMemberBrowserVisible"
         :group-name="conversation.name"
+        :is-owner="conversation.owner === myselfId"
         :members="conversation.members"
         :infos="users"></group-member-browser>
     </div>

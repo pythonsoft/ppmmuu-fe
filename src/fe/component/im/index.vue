@@ -177,8 +177,10 @@
             const roomid = message.roomid;
             if (roomid) {
               const item = {};
-              this.listGroupMember(roomid).then((members)=> {
+              this.listGroupMember(roomid).then((result)=> {
+                const { members, owner } = result;
                 item.members = members;
+                item.owner = owner;
                 const len = members.length > 4 ? 4 : members.length;
                 this.getUsers(members.slice(0, len));
                 this.getGroupname(roomid);
@@ -292,7 +294,7 @@
         this.conn.getGroup({
           success: (res)=> {
             const group = res.data;
-            console.log('group', group);
+            // console.log('group', group);
 
             const tempObj = {};
             let tempUsers = [];
@@ -305,8 +307,10 @@
                 return false;
               }
 
-              this.listGroupMember(item.groupid).then((members)=> {
+              this.listGroupMember(item.groupid).then((result)=> {
+                const { members, owner } = result;
                 item.members = members;
+                item.owner = owner;
                 const len = members.length > 4 ? 4 : members.length;
                 tempUsers = tempUsers.concat(members.slice(0, len));
 
@@ -352,10 +356,12 @@
             pageSize: 1000,
             groupId: groupId,
             success: (res) => {
+              let owner = '';
               const members = res.data.map(item => {
+                if (item.owner) owner = item.owner;
                 return item.member || item.owner;
               });
-              resolve(members);
+              resolve({members, owner});
             },
             error: (e) => reject(e)
           };
@@ -448,7 +454,6 @@
         this.conn.addGroupMembers(option);
       },
       changeGroupSubject(name) {
-        console.log('changeGroupSubject', name);
         const option = {
           roomId: this.talkToSession,
           subject: name,
@@ -523,10 +528,11 @@
           });
           console.log('groupid, members', groupid, members);
           this.addGroupMembers(groupid, members, ()=> {
-            this.listGroupMember(groupid).then((members)=> {
+            this.listGroupMember(groupid).then((result)=> {
+              const { members, owner } = result;
               const len = members.length > 4 ? 4 : members.length;
               this.getUsers(members.slice(0, len));
-              this.contactObj[groupid] = Object.assign({}, this.contactObj[groupid], { members: members });
+              this.contactObj[groupid] = Object.assign({}, this.contactObj[groupid], { members: members, owner: owner });
             });
           });
           return;

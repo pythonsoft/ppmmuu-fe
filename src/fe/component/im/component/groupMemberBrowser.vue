@@ -12,7 +12,7 @@
             v-clickoutside="handleUpdate"></fj-input>
           <span v-else>{{ groupName }}</span>
         </div>
-        <i v-if="!isEditGroupName" :class="['iconfont icon-edit-outline', $style.editIcon]" @click="isEditGroupName = true"></i>
+        <i v-if="isOwner && !isEditGroupName" :class="['iconfont icon-edit-outline', $style.editIcon]" @click="isEditGroupName = true"></i>
       </div>
       <i :class="[$style.addMemberBtn, 'iconfont icon-jia']" @click="showDepartmentBrowser"></i>
       <div v-for="member in members" :key="member" :class="$style.item" :title="(infos[member] && infos[member].nickname) || ''">
@@ -29,6 +29,7 @@
     directives: { Clickoutside },
     props: {
       groupName: String,
+      isOwner: Boolean,
       visible: {
         type: Boolean,
         default: false
