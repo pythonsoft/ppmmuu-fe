@@ -34,12 +34,7 @@
     </fj-menu>
     </div>
     <div class="app-profile-entry" ref="profileEntry" @click="showProfilePopover" v-clickoutside="closeProfilePopover">
-      <template v-if="userInfo.photo">
-        <img :src="userInfo.photo" class="app-profile-avatar" width="24" height="24">
-      </template>
-      <template v-else>
-        <img class="app-profile-avatar imgStyle" width="24" height="24">
-      </template>
+      <img :src="userInfo.photo || '/static/img/avatar.png'" class="app-profile-avatar" width="24" height="24">
       <div>{{ userInfo.name }}</div>
     </div>
   </div>
