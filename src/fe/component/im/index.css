@@ -39,14 +39,16 @@
 }
 
 .im-dialog {
-  width: 586px;
-  height: 428px;
   position: absolute;
   bottom: 0;
   right: 20px;
+  width: 586px;
+  height: 428px;
+
   background: #fff;
   border-radius: 4px 4px 0 0;
   box-shadow: 0 5px 27px rgba(0,0,0,.2);
+  z-index: 1000;
 }
 
 .im-dialog-wrap{

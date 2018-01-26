@@ -204,8 +204,9 @@
                   this.messagesObj[roomid] = [];
                 }
                 this.$set(this.contactObj, roomid, item);
-                console.log('onInviteMessage this.messagesObj[roomid]', roomid, this.messagesObj[roomid]);
+                // console.log('onInviteMessage this.messagesObj[roomid]', roomid, this.messagesObj[roomid]);
                 this.contactIds.unshift(roomid);
+                // console.log('onInviteMessage this.contactIds', this.contactIds);
               });
             }
           },
@@ -249,24 +250,23 @@
         let flag = false; // 判断这个人是否已经在列表中
         let isGroupMsg = message.type === 'groupchat';
         let key = isGroupMsg ? message.to : message.from;
-        let newArray = [];
+        if (!this.messagesObj[key]) this.messagesObj[key] = [];
+        let newArray = this.messagesObj[key].slice();
         let tempItem = {};
         let notification = null;
-        if (!this.messagesObj[key]) this.messagesObj[key] = [];
         if (this.contactIds.indexOf(key) > -1) {
           flag = true;
           tempItem = contactObj[key];
           tempItem._hasUnreadMessage = true;
           const index = this.contactIds.indexOf(key);
           this.contactIds.splice(index, 1);
-          newArray = this.messagesObj[key].slice();
-          newArray.push(Object.assign({}, message, msg));
           let name = isGroupMsg ? this.contactObj[key].name : this.contactObj[key].nickname;
           let content = isGroupMsg ? `${this.users[message.from].nickname}: ${message.data}` : message.data;
           if (this.canNotify) {
             notification = new Notification(name, { body: content });
           }
           this.contactIds.unshift(key);
+          // console.log('onTextMessage flag=false this.contactIds', this.contactIds);
         }
         if (!flag) {
           tempItem = {
@@ -288,13 +288,14 @@
               }
             });
             this.contactIds.unshift(key);
+            // console.log('onTextMessage flag=true this.contactIds', this.contactIds);
           }
-          newArray = [Object.assign({}, message, msg)];
         }
+        newArray.push(Object.assign({}, message, msg));
         this.$set(this.contactObj, key, tempItem);
         this.messagesObj = Object.assign({}, this.messagesObj, { [key]: newArray });
-        console.log('onTextMessage this.contactObj', key, this.contactObj[key]);
-        console.log('onTextMessage this.messagesObj', key, this.messagesObj[key]);
+        // console.log('onTextMessage this.contactObj', key, this.contactObj[key]);
+        // console.log('onTextMessage this.messagesObj', key, this.messagesObj[key]);
       },
       getRoster() {
         this.conn.getRoster({
@@ -310,6 +311,7 @@
                 } else {
                   // 初始化
                   this.contactIds.push(item.name);
+                  // console.log('getRoster this.contactIds', this.contactIds);
                   this.messagesObj[item.name] = [];
                   item._hasUnreadMessage = false;
                 }
@@ -352,10 +354,11 @@
 
                 const oldItem = this.contactObj[item.groupid];
                 if (this.messagesObj[item.groupid]) {
-                  console.log('getgroup, already have message');
+                  // console.log('getgroup, already have message');
                   item = Object.assign(item, oldItem);
                 } else {
                   this.contactIds.push(item.groupid);
+                  // console.log('getGroup this.contactIds', this.contactIds);
                   this.messagesObj[item.groupid] = [];
                   item._hasUnreadMessage = false;
                 }
@@ -464,6 +467,7 @@
             const item = {
               groupid: groupid,
               name: this.groupName,
+              owner: this.myselfId,
               members: members,
               _hasUnreadMessage: false
             };
