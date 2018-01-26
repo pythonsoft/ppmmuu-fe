@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.download = function download(data, scope) {
+api.download = function download(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/job/download', data).then((response) => {
@@ -15,7 +15,7 @@ api.download = function download(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.download = function download(data, scope) {
   });
 };
 
-api.multiDownload = function multiDownload(data, scope) {
+api.multiDownload = function multiDownload(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/job/multiDownload', data).then((response) => {
@@ -37,7 +37,7 @@ api.multiDownload = function multiDownload(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.multiDownload = function multiDownload(data, scope) {
   });
 };
 
-api.createTemplate = function createTemplate(data, scope) {
+api.createTemplate = function createTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/job/createTemplate', data).then((response) => {
@@ -59,7 +59,7 @@ api.createTemplate = function createTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.createTemplate = function createTemplate(data, scope) {
   });
 };
 
-api.updateTemplate = function updateTemplate(data, scope) {
+api.updateTemplate = function updateTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/job/updateTemplate', data).then((response) => {
@@ -81,7 +81,7 @@ api.updateTemplate = function updateTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.updateTemplate = function updateTemplate(data, scope) {
   });
 };
 
-api.listJob = function listJob(data, scope) {
+api.listJob = function listJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/list', data).then((response) => {
@@ -103,7 +103,7 @@ api.listJob = function listJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.listJob = function listJob(data, scope) {
   });
 };
 
-api.listTemplate = function listTemplate(data, scope) {
+api.listTemplate = function listTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/listTemplate', data).then((response) => {
@@ -125,7 +125,7 @@ api.listTemplate = function listTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.listTemplate = function listTemplate(data, scope) {
   });
 };
 
-api.queryJob = function queryJob(data, scope) {
+api.queryJob = function queryJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/query', data).then((response) => {
@@ -147,7 +147,7 @@ api.queryJob = function queryJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.queryJob = function queryJob(data, scope) {
   });
 };
 
-api.restartJob = function restartJob(data, scope) {
+api.restartJob = function restartJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/restart', data).then((response) => {
@@ -169,7 +169,7 @@ api.restartJob = function restartJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.restartJob = function restartJob(data, scope) {
   });
 };
 
-api.stopJob = function stopJob(data, scope) {
+api.stopJob = function stopJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/stop', data).then((response) => {
@@ -191,7 +191,7 @@ api.stopJob = function stopJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.stopJob = function stopJob(data, scope) {
   });
 };
 
-api.deleteJob = function deleteJob(data, scope) {
+api.deleteJob = function deleteJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/delete', data).then((response) => {
@@ -213,7 +213,7 @@ api.deleteJob = function deleteJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.deleteJob = function deleteJob(data, scope) {
   });
 };
 
-api.deleteTemplate = function deleteTemplate(data, scope) {
+api.deleteTemplate = function deleteTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/deleteTemplate', data).then((response) => {
@@ -235,7 +235,7 @@ api.deleteTemplate = function deleteTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -243,7 +243,7 @@ api.deleteTemplate = function deleteTemplate(data, scope) {
   });
 };
 
-api.mediaExpressDispatch = function mediaExpressDispatch(data, scope) {
+api.mediaExpressDispatch = function mediaExpressDispatch(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/job/mediaExpressDispatch', data).then((response) => {
@@ -257,7 +257,7 @@ api.mediaExpressDispatch = function mediaExpressDispatch(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

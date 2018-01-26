@@ -1,10 +1,10 @@
 const api = {};
 const axios = require('../config');
 
-api.list = function list(data, scope, needOriginResponse) {
+api.qrcodeQuery = function qrcodeQuery(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/list', data).then((response) => {
+    axios.get('/qrcode/query', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -23,10 +23,10 @@ api.list = function list(data, scope, needOriginResponse) {
   });
 };
 
-api.listChildTask = function listChildTask(data, scope, needOriginResponse) {
+api.qrcodeLogin = function qrcodeLogin(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/listChildTask', data).then((response) => {
+    axios.get('/qrcode/login', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -45,32 +45,10 @@ api.listChildTask = function listChildTask(data, scope, needOriginResponse) {
   });
 };
 
-api.restart = function restart(data, scope, needOriginResponse) {
+api.qrcodeScan = function qrcodeScan(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/restart', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(needOriginResponse ? res : res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.stop = function stop(data, scope, needOriginResponse) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/stop', data).then((response) => {
+    axios.post('/qrcode/scan', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;

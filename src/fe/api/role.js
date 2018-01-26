@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.getRoleList = function getRoleList(data, scope) {
+api.getRoleList = function getRoleList(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/role/list', data).then((response) => {
@@ -15,7 +15,7 @@ api.getRoleList = function getRoleList(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.getRoleList = function getRoleList(data, scope) {
   });
 };
 
-api.getRoleDetail = function getRoleDetail(data, scope) {
+api.getRoleDetail = function getRoleDetail(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/role/getDetail', data).then((response) => {
@@ -37,7 +37,7 @@ api.getRoleDetail = function getRoleDetail(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.getRoleDetail = function getRoleDetail(data, scope) {
   });
 };
 
-api.postAddRole = function postAddRole(data, scope) {
+api.postAddRole = function postAddRole(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/add', data).then((response) => {
@@ -59,7 +59,7 @@ api.postAddRole = function postAddRole(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.postAddRole = function postAddRole(data, scope) {
   });
 };
 
-api.postUpdateRole = function postUpdateRole(data, scope) {
+api.postUpdateRole = function postUpdateRole(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/update', data).then((response) => {
@@ -81,7 +81,7 @@ api.postUpdateRole = function postUpdateRole(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.postUpdateRole = function postUpdateRole(data, scope) {
   });
 };
 
-api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data, scope) {
+api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/updateRoleAddPermission', data).then((response) => {
@@ -103,7 +103,7 @@ api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data, sco
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.postUpdateRoleAddPermission = function postUpdateRoleAddPermission(data, sco
   });
 };
 
-api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(data, scope) {
+api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/updateRoleDeletePermission', data).then((response) => {
@@ -125,7 +125,7 @@ api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(dat
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.postUpdateRoleDeletePermission = function postUpdateRoleDeletePermission(dat
   });
 };
 
-api.postDeleteRole = function postDeleteRole(data, scope) {
+api.postDeleteRole = function postDeleteRole(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/delete', data).then((response) => {
@@ -147,7 +147,7 @@ api.postDeleteRole = function postDeleteRole(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.postDeleteRole = function postDeleteRole(data, scope) {
   });
 };
 
-api.getPermissionList = function getPermissionList(data, scope) {
+api.getPermissionList = function getPermissionList(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/role/listPermission', data).then((response) => {
@@ -169,7 +169,7 @@ api.getPermissionList = function getPermissionList(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.getPermissionList = function getPermissionList(data, scope) {
   });
 };
 
-api.postAssignRole = function postAssignRole(data, scope) {
+api.postAssignRole = function postAssignRole(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/assignRole', data).then((response) => {
@@ -191,7 +191,7 @@ api.postAssignRole = function postAssignRole(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.postAssignRole = function postAssignRole(data, scope) {
   });
 };
 
-api.postDeleteOwnerRole = function postDeleteOwnerRole(data, scope) {
+api.postDeleteOwnerRole = function postDeleteOwnerRole(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/deleteOwnerRole', data).then((response) => {
@@ -213,7 +213,7 @@ api.postDeleteOwnerRole = function postDeleteOwnerRole(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.postDeleteOwnerRole = function postDeleteOwnerRole(data, scope) {
   });
 };
 
-api.postEnablePermission = function postEnablePermission(data, scope) {
+api.postEnablePermission = function postEnablePermission(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/role/enablePermission', data).then((response) => {
@@ -235,7 +235,7 @@ api.postEnablePermission = function postEnablePermission(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -243,7 +243,7 @@ api.postEnablePermission = function postEnablePermission(data, scope) {
   });
 };
 
-api.getRoleOwners = function getRoleOwners(data, scope) {
+api.getRoleOwners = function getRoleOwners(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/role/getRoleOwners', data).then((response) => {
@@ -257,7 +257,7 @@ api.getRoleOwners = function getRoleOwners(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -265,7 +265,7 @@ api.getRoleOwners = function getRoleOwners(data, scope) {
   });
 };
 
-api.getRoleSearchUserOrGroup = function getRoleSearchUserOrGroup(data, scope) {
+api.getRoleSearchUserOrGroup = function getRoleSearchUserOrGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/role/search/userOrGroup', data).then((response) => {
@@ -279,7 +279,7 @@ api.getRoleSearchUserOrGroup = function getRoleSearchUserOrGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -287,7 +287,7 @@ api.getRoleSearchUserOrGroup = function getRoleSearchUserOrGroup(data, scope) {
   });
 };
 
-api.listPermissionGroup = function listPermissionGroup(data, scope) {
+api.listPermissionGroup = function listPermissionGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/role/listPermissionGroup', data).then((response) => {
@@ -301,7 +301,7 @@ api.listPermissionGroup = function listPermissionGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

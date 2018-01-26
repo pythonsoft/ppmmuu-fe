@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.createShelfTask = function createShelfTask(data, scope) {
+api.createShelfTask = function createShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/createShelfTask', data).then((response) => {
@@ -15,7 +15,7 @@ api.createShelfTask = function createShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.createShelfTask = function createShelfTask(data, scope) {
   });
 };
 
-api.getShelfDetail = function getShelfDetail(data, scope) {
+api.getShelfDetail = function getShelfDetail(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelves/getShelfDetail', data).then((response) => {
@@ -37,7 +37,7 @@ api.getShelfDetail = function getShelfDetail(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.getShelfDetail = function getShelfDetail(data, scope) {
   });
 };
 
-api.listDepartmentPrepareShelfTask = function listDepartmentPrepareShelfTask(data, scope) {
+api.listDepartmentPrepareShelfTask = function listDepartmentPrepareShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelves/listDepartmentPrepareShelfTask', data).then((response) => {
@@ -59,7 +59,7 @@ api.listDepartmentPrepareShelfTask = function listDepartmentPrepareShelfTask(dat
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.listDepartmentPrepareShelfTask = function listDepartmentPrepareShelfTask(dat
   });
 };
 
-api.claimShelfTask = function claimShelfTask(data, scope) {
+api.claimShelfTask = function claimShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/claimShelfTask', data).then((response) => {
@@ -81,7 +81,7 @@ api.claimShelfTask = function claimShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.claimShelfTask = function claimShelfTask(data, scope) {
   });
 };
 
-api.assignShelfTask = function assignShelfTask(data, scope) {
+api.assignShelfTask = function assignShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/assignShelfTask', data).then((response) => {
@@ -103,7 +103,7 @@ api.assignShelfTask = function assignShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.assignShelfTask = function assignShelfTask(data, scope) {
   });
 };
 
-api.deleteShelfTask = function deleteShelfTask(data, scope) {
+api.deleteShelfTask = function deleteShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/deleteShelfTask', data).then((response) => {
@@ -125,7 +125,7 @@ api.deleteShelfTask = function deleteShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.deleteShelfTask = function deleteShelfTask(data, scope) {
   });
 };
 
-api.listDepartmentShelfTask = function listDepartmentShelfTask(data, scope) {
+api.listDepartmentShelfTask = function listDepartmentShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelves/listDepartmentShelfTask', data).then((response) => {
@@ -147,7 +147,7 @@ api.listDepartmentShelfTask = function listDepartmentShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.listDepartmentShelfTask = function listDepartmentShelfTask(data, scope) {
   });
 };
 
-api.listMyselfShelfTask = function listMyselfShelfTask(data, scope) {
+api.listMyselfShelfTask = function listMyselfShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelves/listMyselfShelfTask', data).then((response) => {
@@ -169,7 +169,7 @@ api.listMyselfShelfTask = function listMyselfShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.listMyselfShelfTask = function listMyselfShelfTask(data, scope) {
   });
 };
 
-api.saveShelf = function saveShelf(data, scope) {
+api.saveShelf = function saveShelf(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/saveShelf', data).then((response) => {
@@ -191,7 +191,7 @@ api.saveShelf = function saveShelf(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.saveShelf = function saveShelf(data, scope) {
   });
 };
 
-api.submitShelf = function submitShelf(data, scope) {
+api.submitShelf = function submitShelf(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/submitShelf', data).then((response) => {
@@ -213,7 +213,7 @@ api.submitShelf = function submitShelf(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.submitShelf = function submitShelf(data, scope) {
   });
 };
 
-api.sendBackShelf = function sendBackShelf(data, scope) {
+api.sendBackShelf = function sendBackShelf(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/sendBackShelf', data).then((response) => {
@@ -235,7 +235,7 @@ api.sendBackShelf = function sendBackShelf(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -243,7 +243,7 @@ api.sendBackShelf = function sendBackShelf(data, scope) {
   });
 };
 
-api.listLineShelfTask = function listLineShelfTask(data, scope) {
+api.listLineShelfTask = function listLineShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelves/listLineShelfTask', data).then((response) => {
@@ -257,7 +257,7 @@ api.listLineShelfTask = function listLineShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -265,7 +265,7 @@ api.listLineShelfTask = function listLineShelfTask(data, scope) {
   });
 };
 
-api.onlineShelfTask = function onlineShelfTask(data, scope) {
+api.onlineShelfTask = function onlineShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/onlineShelfTask', data).then((response) => {
@@ -279,7 +279,7 @@ api.onlineShelfTask = function onlineShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -287,7 +287,7 @@ api.onlineShelfTask = function onlineShelfTask(data, scope) {
   });
 };
 
-api.offlineShelfTask = function offlineShelfTask(data, scope) {
+api.offlineShelfTask = function offlineShelfTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/offlineShelfTask', data).then((response) => {
@@ -301,7 +301,7 @@ api.offlineShelfTask = function offlineShelfTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -309,7 +309,7 @@ api.offlineShelfTask = function offlineShelfTask(data, scope) {
   });
 };
 
-api.editShelfTaskAgain = function editShelfTaskAgain(data, scope) {
+api.editShelfTaskAgain = function editShelfTaskAgain(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelves/editShelfTaskAgain', data).then((response) => {
@@ -323,7 +323,7 @@ api.editShelfTaskAgain = function editShelfTaskAgain(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -331,7 +331,7 @@ api.editShelfTaskAgain = function editShelfTaskAgain(data, scope) {
   });
 };
 
-api.searchUser = function searchUser(data, scope) {
+api.searchUser = function searchUser(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelves/searchUser', data).then((response) => {
@@ -345,7 +345,7 @@ api.searchUser = function searchUser(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -353,7 +353,7 @@ api.searchUser = function searchUser(data, scope) {
   });
 };
 
-api.listSubscribeType = function listSubscribeType(data, scope) {
+api.listSubscribeType = function listSubscribeType(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelves/listSubscribeType', data).then((response) => {
@@ -367,7 +367,7 @@ api.listSubscribeType = function listSubscribeType(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

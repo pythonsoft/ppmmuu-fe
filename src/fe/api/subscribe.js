@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.getSubscribeInfo = function getSubscribeInfo(data, scope) {
+api.getSubscribeInfo = function getSubscribeInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribe/getSubscribeInfo', data).then((response) => {
@@ -15,7 +15,7 @@ api.getSubscribeInfo = function getSubscribeInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.getSubscribeInfo = function getSubscribeInfo(data, scope) {
   });
 };
 
-api.getSubscribeTypeSummary = function getSubscribeTypeSummary(data, scope) {
+api.getSubscribeTypeSummary = function getSubscribeTypeSummary(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribe/getSubscribeTypeSummary', data).then((response) => {
@@ -37,7 +37,7 @@ api.getSubscribeTypeSummary = function getSubscribeTypeSummary(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.getSubscribeTypeSummary = function getSubscribeTypeSummary(data, scope) {
   });
 };
 
-api.esSearch = function esSearch(data, scope) {
+api.esSearch = function esSearch(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/subscribe/esSearch', data).then((response) => {
@@ -59,7 +59,7 @@ api.esSearch = function esSearch(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.esSearch = function esSearch(data, scope) {
   });
 };
 
-api.getEsMediaList = function getEsMediaList(data, scope) {
+api.getEsMediaList = function getEsMediaList(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribe/getEsMediaList', data).then((response) => {
@@ -81,7 +81,7 @@ api.getEsMediaList = function getEsMediaList(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.getEsMediaList = function getEsMediaList(data, scope) {
   });
 };
 
-api.getSubscribeSearchConfig = function getSubscribeSearchConfig(data, scope) {
+api.getSubscribeSearchConfig = function getSubscribeSearchConfig(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribe/getSubscribeSearchConfig', data).then((response) => {
@@ -103,7 +103,7 @@ api.getSubscribeSearchConfig = function getSubscribeSearchConfig(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.getSubscribeSearchConfig = function getSubscribeSearchConfig(data, scope) {
   });
 };
 
-api.getVideoInfo = function getVideoInfo(data, scope) {
+api.getVideoInfo = function getVideoInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribe/getVideoInfo', data).then((response) => {
@@ -125,7 +125,7 @@ api.getVideoInfo = function getVideoInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

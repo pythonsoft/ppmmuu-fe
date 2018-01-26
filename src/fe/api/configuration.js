@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.postAddConfig = function postAddConfig(data, scope) {
+api.postAddConfig = function postAddConfig(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/configuration/add', data).then((response) => {
@@ -15,7 +15,7 @@ api.postAddConfig = function postAddConfig(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.postAddConfig = function postAddConfig(data, scope) {
   });
 };
 
-api.postUpdateConfig = function postUpdateConfig(data, scope) {
+api.postUpdateConfig = function postUpdateConfig(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/configuration/update', data).then((response) => {
@@ -37,7 +37,7 @@ api.postUpdateConfig = function postUpdateConfig(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.postUpdateConfig = function postUpdateConfig(data, scope) {
   });
 };
 
-api.getListConfig = function getListConfig(data, scope) {
+api.getListConfig = function getListConfig(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/configuration/list', data).then((response) => {
@@ -59,7 +59,7 @@ api.getListConfig = function getListConfig(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.getListConfig = function getListConfig(data, scope) {
   });
 };
 
-api.postDeleteConfig = function postDeleteConfig(data, scope) {
+api.postDeleteConfig = function postDeleteConfig(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/configuration/delete', data).then((response) => {
@@ -81,7 +81,7 @@ api.postDeleteConfig = function postDeleteConfig(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.postDeleteConfig = function postDeleteConfig(data, scope) {
   });
 };
 
-api.postAddGroup = function postAddGroup(data, scope) {
+api.postAddGroup = function postAddGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/configuration/addGroup', data).then((response) => {
@@ -103,7 +103,7 @@ api.postAddGroup = function postAddGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.postAddGroup = function postAddGroup(data, scope) {
   });
 };
 
-api.postUpdateGroup = function postUpdateGroup(data, scope) {
+api.postUpdateGroup = function postUpdateGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/configuration/updateGroup', data).then((response) => {
@@ -125,7 +125,7 @@ api.postUpdateGroup = function postUpdateGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.postUpdateGroup = function postUpdateGroup(data, scope) {
   });
 };
 
-api.getListGroup = function getListGroup(data, scope) {
+api.getListGroup = function getListGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/configuration/listGroup', data).then((response) => {
@@ -147,7 +147,7 @@ api.getListGroup = function getListGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.getListGroup = function getListGroup(data, scope) {
   });
 };
 
-api.postDeleteGroup = function postDeleteGroup(data, scope) {
+api.postDeleteGroup = function postDeleteGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/configuration/deleteGroup', data).then((response) => {
@@ -169,7 +169,7 @@ api.postDeleteGroup = function postDeleteGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

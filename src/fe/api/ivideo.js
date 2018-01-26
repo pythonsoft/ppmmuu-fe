@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.init = function init(data, scope) {
+api.init = function init(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/ivideo/init', data).then((response) => {
@@ -15,7 +15,7 @@ api.init = function init(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.init = function init(data, scope) {
   });
 };
 
-api.listItem = function listItem(data, scope) {
+api.listItem = function listItem(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/ivideo/listItem', data).then((response) => {
@@ -37,7 +37,7 @@ api.listItem = function listItem(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.listItem = function listItem(data, scope) {
   });
 };
 
-api.createDirectory = function createDirectory(data, scope) {
+api.createDirectory = function createDirectory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/ivideo/createDirectory', data).then((response) => {
@@ -59,7 +59,7 @@ api.createDirectory = function createDirectory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.createDirectory = function createDirectory(data, scope) {
   });
 };
 
-api.createItem = function createItem(data, scope) {
+api.createItem = function createItem(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/ivideo/createItem', data).then((response) => {
@@ -81,7 +81,7 @@ api.createItem = function createItem(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.createItem = function createItem(data, scope) {
   });
 };
 
-api.removeItem = function removeItem(data, scope) {
+api.removeItem = function removeItem(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/ivideo/removeItem', data).then((response) => {
@@ -103,7 +103,7 @@ api.removeItem = function removeItem(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.removeItem = function removeItem(data, scope) {
   });
 };
 
-api.updateItem = function updateItem(data, scope) {
+api.updateItem = function updateItem(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/ivideo/updateItem', data).then((response) => {
@@ -125,7 +125,7 @@ api.updateItem = function updateItem(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.updateItem = function updateItem(data, scope) {
   });
 };
 
-api.createProject = function createProject(data, scope) {
+api.createProject = function createProject(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/ivideo/createProject', data).then((response) => {
@@ -147,7 +147,7 @@ api.createProject = function createProject(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.createProject = function createProject(data, scope) {
   });
 };
 
-api.removeProject = function removeProject(data, scope) {
+api.removeProject = function removeProject(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/ivideo/removeProject', data).then((response) => {
@@ -169,7 +169,7 @@ api.removeProject = function removeProject(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.removeProject = function removeProject(data, scope) {
   });
 };
 
-api.listProject = function listProject(data, scope) {
+api.listProject = function listProject(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/ivideo/listProject', data).then((response) => {
@@ -191,7 +191,7 @@ api.listProject = function listProject(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
