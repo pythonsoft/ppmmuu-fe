@@ -186,7 +186,9 @@
       checkQRCode() {
         if(!this.qrcodeInfo._id) { return false; }
         qrcodeAPI.qrcodeQuery({ params: { _id: this.qrcodeInfo._id } }, false, true).then((res) => {
-          if(this.isQRCode && res.data === 'waitingScan') {
+          if(!this.isQRCode) { return false; }
+
+          if(res.data === 'waitingScan') {
             setTimeout(() => {
               this.checkQRCode();
             }, 2000);
@@ -195,8 +197,10 @@
 
           this.loginSuccess(res);
         }).catch(res => {
-          this.$message.error(res.statusInfo.message);
-          this.showQRCodeRefreshView();
+          if(this.isQRCode) {
+            this.$message.error(res.statusInfo.message);
+            this.showQRCodeRefreshView();
+          }
         });
       }
     }
