@@ -183,7 +183,7 @@
             this.onTextMessage(message);
           },
           onInviteMessage: (message) => {
-            console.log('onInviteMessage', message);
+            // console.log('onInviteMessage', message);
             const roomid = message.roomid;
             if (roomid) {
               let item = {};
@@ -204,9 +204,7 @@
                   this.messagesObj[roomid] = [];
                 }
                 this.$set(this.contactObj, roomid, item);
-                // console.log('onInviteMessage this.messagesObj[roomid]', roomid, this.messagesObj[roomid]);
                 this.contactIds.unshift(roomid);
-                // console.log('onInviteMessage this.contactIds', this.contactIds);
               });
             }
           },
@@ -238,7 +236,7 @@
           pwd: pwd,
           appKey: WebIM.config.appkey
         };
-        console.log('openConn', option);
+        // console.log('openConn', option);
         this.conn.open(option);
       },
       onTextMessage(message) {
@@ -266,7 +264,6 @@
             notification = new Notification(name, { body: content });
           }
           this.contactIds.unshift(key);
-          // console.log('onTextMessage flag=false this.contactIds', this.contactIds);
         }
         if (!flag) {
           tempItem = {
@@ -288,14 +285,11 @@
               }
             });
             this.contactIds.unshift(key);
-            // console.log('onTextMessage flag=true this.contactIds', this.contactIds);
           }
         }
         newArray.push(Object.assign({}, message, msg));
         this.$set(this.contactObj, key, tempItem);
         this.messagesObj = Object.assign({}, this.messagesObj, { [key]: newArray });
-        // console.log('onTextMessage this.contactObj', key, this.contactObj[key]);
-        // console.log('onTextMessage this.messagesObj', key, this.messagesObj[key]);
       },
       getRoster() {
         this.conn.getRoster({
@@ -311,7 +305,6 @@
                 } else {
                   // 初始化
                   this.contactIds.push(item.name);
-                  // console.log('getRoster this.contactIds', this.contactIds);
                   this.messagesObj[item.name] = [];
                   item._hasUnreadMessage = false;
                 }
@@ -331,7 +324,6 @@
           success: (res)=> {
             const group = res.data;
             // console.log('group', group);
-
             const tempObj = {};
             let tempUsers = [];
             const loop = (index)=> {
@@ -354,11 +346,9 @@
 
                 const oldItem = this.contactObj[item.groupid];
                 if (this.messagesObj[item.groupid]) {
-                  // console.log('getgroup, already have message');
                   item = Object.assign(item, oldItem);
                 } else {
                   this.contactIds.push(item.groupid);
-                  // console.log('getGroup this.contactIds', this.contactIds);
                   this.messagesObj[item.groupid] = [];
                   item._hasUnreadMessage = false;
                 }
@@ -488,7 +478,7 @@
           roomId: groupid,
           success: (res) => {
             cb();
-            console.log('addGroupMembers', res);
+            // console.log('addGroupMembers', res);
           }
         };
         this.conn.addGroupMembers(option);
@@ -498,7 +488,6 @@
           roomId: this.talkToSession,
           subject: name,
           success: () => {
-            console.log('change success');
             this.contactObj[this.talkToSession].name = name;
           }
         };
@@ -570,7 +559,6 @@
           const members = items.map(item => {
             return item._id.replace(/-/g, '_');
           });
-          console.log('groupid, members', groupid, members);
           this.addGroupMembers(groupid, members, ()=> {
             this.listGroupMember(groupid).then((result)=> {
               const { members, owner } = result;
@@ -587,7 +575,7 @@
           info.name = info._id.replace(/-/g, '_');
           this.messagesObj[info.name] = [];
           info._hasUnreadMessage = false;
-          console.log('departmentBrowserConfirm-->', this.messagesObj[info.name]);
+          // console.log('departmentBrowserConfirm-->', this.messagesObj[info.name]);
           if (this.routers.indexOf(info.name) < 0) {
             this.conn.subscribe({
               to: info.name,
