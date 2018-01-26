@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.createSubscribeInfo = function createSubscribeInfo(data, scope) {
+api.createSubscribeInfo = function createSubscribeInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/subscribeManagement/create', data).then((response) => {
@@ -15,7 +15,7 @@ api.createSubscribeInfo = function createSubscribeInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.createSubscribeInfo = function createSubscribeInfo(data, scope) {
   });
 };
 
-api.updateSubscribeInfo = function updateSubscribeInfo(data, scope) {
+api.updateSubscribeInfo = function updateSubscribeInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/subscribeManagement/update', data).then((response) => {
@@ -37,7 +37,7 @@ api.updateSubscribeInfo = function updateSubscribeInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.updateSubscribeInfo = function updateSubscribeInfo(data, scope) {
   });
 };
 
-api.getSubscribeInfo = function getSubscribeInfo(data, scope) {
+api.getSubscribeInfo = function getSubscribeInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribeManagement/getSubscribeInfo', data).then((response) => {
@@ -59,7 +59,7 @@ api.getSubscribeInfo = function getSubscribeInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.getSubscribeInfo = function getSubscribeInfo(data, scope) {
   });
 };
 
-api.listSubscribeInfo = function listSubscribeInfo(data, scope) {
+api.listSubscribeInfo = function listSubscribeInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribeManagement/list', data).then((response) => {
@@ -81,7 +81,7 @@ api.listSubscribeInfo = function listSubscribeInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.listSubscribeInfo = function listSubscribeInfo(data, scope) {
   });
 };
 
-api.deleteSubscribeInfo = function deleteSubscribeInfo(data, scope) {
+api.deleteSubscribeInfo = function deleteSubscribeInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/subscribeManagement/delete', data).then((response) => {
@@ -103,7 +103,7 @@ api.deleteSubscribeInfo = function deleteSubscribeInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.deleteSubscribeInfo = function deleteSubscribeInfo(data, scope) {
   });
 };
 
-api.searchCompany = function searchCompany(data, scope) {
+api.searchCompany = function searchCompany(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribeManagement/searchCompany', data).then((response) => {
@@ -125,7 +125,7 @@ api.searchCompany = function searchCompany(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.searchCompany = function searchCompany(data, scope) {
   });
 };
 
-api.createSubscribeType = function createSubscribeType(data, scope) {
+api.createSubscribeType = function createSubscribeType(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/subscribeManagement/createSubscribeType', data).then((response) => {
@@ -147,7 +147,7 @@ api.createSubscribeType = function createSubscribeType(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.createSubscribeType = function createSubscribeType(data, scope) {
   });
 };
 
-api.updateSubscribeType = function updateSubscribeType(data, scope) {
+api.updateSubscribeType = function updateSubscribeType(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/subscribeManagement/updateSubscribeType', data).then((response) => {
@@ -169,7 +169,7 @@ api.updateSubscribeType = function updateSubscribeType(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.updateSubscribeType = function updateSubscribeType(data, scope) {
   });
 };
 
-api.getSubscribeType = function getSubscribeType(data, scope) {
+api.getSubscribeType = function getSubscribeType(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribeManagement/getSubscribeType', data).then((response) => {
@@ -191,7 +191,7 @@ api.getSubscribeType = function getSubscribeType(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.getSubscribeType = function getSubscribeType(data, scope) {
   });
 };
 
-api.listSubscribeType = function listSubscribeType(data, scope) {
+api.listSubscribeType = function listSubscribeType(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/subscribeManagement/listSubscribeType', data).then((response) => {
@@ -213,7 +213,7 @@ api.listSubscribeType = function listSubscribeType(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.listSubscribeType = function listSubscribeType(data, scope) {
   });
 };
 
-api.deleteSubscribeType = function deleteSubscribeType(data, scope) {
+api.deleteSubscribeType = function deleteSubscribeType(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/subscribeManagement/deleteSubscribeType', data).then((response) => {
@@ -235,7 +235,7 @@ api.deleteSubscribeType = function deleteSubscribeType(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

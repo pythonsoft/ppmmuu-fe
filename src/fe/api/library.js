@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.createCatalogTask = function createCatalogTask(data, scope) {
+api.createCatalogTask = function createCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/createCatalogTask', data).then((response) => {
@@ -15,7 +15,7 @@ api.createCatalogTask = function createCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.createCatalogTask = function createCatalogTask(data, scope) {
   });
 };
 
-api.updateCatalogTask = function updateCatalogTask(data, scope) {
+api.updateCatalogTask = function updateCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/updateCatalogTask', data).then((response) => {
@@ -37,7 +37,7 @@ api.updateCatalogTask = function updateCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.updateCatalogTask = function updateCatalogTask(data, scope) {
   });
 };
 
-api.listCatalogTask = function listCatalogTask(data, scope) {
+api.listCatalogTask = function listCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/listCatalogTask', data).then((response) => {
@@ -59,7 +59,7 @@ api.listCatalogTask = function listCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.listCatalogTask = function listCatalogTask(data, scope) {
   });
 };
 
-api.getCatalogTask = function getCatalogTask(data, scope) {
+api.getCatalogTask = function getCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/getCatalogTask', data).then((response) => {
@@ -81,7 +81,7 @@ api.getCatalogTask = function getCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.getCatalogTask = function getCatalogTask(data, scope) {
   });
 };
 
-api.listDepartmentCatalogTask = function listDepartmentCatalogTask(data, scope) {
+api.listDepartmentCatalogTask = function listDepartmentCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/listDepartmentCatalogTask', data).then((response) => {
@@ -103,7 +103,7 @@ api.listDepartmentCatalogTask = function listDepartmentCatalogTask(data, scope) 
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.listDepartmentCatalogTask = function listDepartmentCatalogTask(data, scope) 
   });
 };
 
-api.listMyCatalogTask = function listMyCatalogTask(data, scope) {
+api.listMyCatalogTask = function listMyCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/listMyCatalogTask', data).then((response) => {
@@ -125,7 +125,7 @@ api.listMyCatalogTask = function listMyCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.listMyCatalogTask = function listMyCatalogTask(data, scope) {
   });
 };
 
-api.assignCatalogTask = function assignCatalogTask(data, scope) {
+api.assignCatalogTask = function assignCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/assignCatalogTask', data).then((response) => {
@@ -147,7 +147,7 @@ api.assignCatalogTask = function assignCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.assignCatalogTask = function assignCatalogTask(data, scope) {
   });
 };
 
-api.applyCatalogTask = function applyCatalogTask(data, scope) {
+api.applyCatalogTask = function applyCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/applyCatalogTask', data).then((response) => {
@@ -169,7 +169,7 @@ api.applyCatalogTask = function applyCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.applyCatalogTask = function applyCatalogTask(data, scope) {
   });
 };
 
-api.sendBackCatalogTask = function sendBackCatalogTask(data, scope) {
+api.sendBackCatalogTask = function sendBackCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/sendBackCatalogTask', data).then((response) => {
@@ -191,7 +191,7 @@ api.sendBackCatalogTask = function sendBackCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.sendBackCatalogTask = function sendBackCatalogTask(data, scope) {
   });
 };
 
-api.submitCatalogTask = function submitCatalogTask(data, scope) {
+api.submitCatalogTask = function submitCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/submitCatalogTask', data).then((response) => {
@@ -213,7 +213,7 @@ api.submitCatalogTask = function submitCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.submitCatalogTask = function submitCatalogTask(data, scope) {
   });
 };
 
-api.deleteCatalogTask = function deleteCatalogTask(data, scope) {
+api.deleteCatalogTask = function deleteCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/deleteCatalogTask', data).then((response) => {
@@ -235,7 +235,7 @@ api.deleteCatalogTask = function deleteCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -243,7 +243,7 @@ api.deleteCatalogTask = function deleteCatalogTask(data, scope) {
   });
 };
 
-api.resumeCatalogTask = function resumeCatalogTask(data, scope) {
+api.resumeCatalogTask = function resumeCatalogTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/resumeCatalogTask', data).then((response) => {
@@ -257,7 +257,7 @@ api.resumeCatalogTask = function resumeCatalogTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -265,7 +265,7 @@ api.resumeCatalogTask = function resumeCatalogTask(data, scope) {
   });
 };
 
-api.getCatalog = function getCatalog(data, scope) {
+api.getCatalog = function getCatalog(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/getCatalog', data).then((response) => {
@@ -279,7 +279,7 @@ api.getCatalog = function getCatalog(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -287,7 +287,7 @@ api.getCatalog = function getCatalog(data, scope) {
   });
 };
 
-api.getCatalogInfoTranslation = function getCatalogInfoTranslation(data, scope) {
+api.getCatalogInfoTranslation = function getCatalogInfoTranslation(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/getCatalogInfoTranslation', data).then((response) => {
@@ -301,7 +301,7 @@ api.getCatalogInfoTranslation = function getCatalogInfoTranslation(data, scope) 
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -309,7 +309,7 @@ api.getCatalogInfoTranslation = function getCatalogInfoTranslation(data, scope) 
   });
 };
 
-api.listCatalog = function listCatalog(data, scope) {
+api.listCatalog = function listCatalog(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/listCatalog', data).then((response) => {
@@ -323,7 +323,7 @@ api.listCatalog = function listCatalog(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -331,7 +331,7 @@ api.listCatalog = function listCatalog(data, scope) {
   });
 };
 
-api.createCatalog = function createCatalog(data, scope) {
+api.createCatalog = function createCatalog(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/createCatalog', data).then((response) => {
@@ -345,7 +345,7 @@ api.createCatalog = function createCatalog(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -353,7 +353,7 @@ api.createCatalog = function createCatalog(data, scope) {
   });
 };
 
-api.updateCatalog = function updateCatalog(data, scope) {
+api.updateCatalog = function updateCatalog(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/updateCatalog', data).then((response) => {
@@ -367,7 +367,7 @@ api.updateCatalog = function updateCatalog(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -375,7 +375,7 @@ api.updateCatalog = function updateCatalog(data, scope) {
   });
 };
 
-api.createFile = function createFile(data, scope) {
+api.createFile = function createFile(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/createFile', data).then((response) => {
@@ -389,7 +389,7 @@ api.createFile = function createFile(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -397,7 +397,7 @@ api.createFile = function createFile(data, scope) {
   });
 };
 
-api.updateFile = function updateFile(data, scope) {
+api.updateFile = function updateFile(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/updateFile', data).then((response) => {
@@ -411,7 +411,7 @@ api.updateFile = function updateFile(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -419,7 +419,7 @@ api.updateFile = function updateFile(data, scope) {
   });
 };
 
-api.listFile = function listFile(data, scope) {
+api.listFile = function listFile(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/listFile', data).then((response) => {
@@ -433,7 +433,7 @@ api.listFile = function listFile(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -441,7 +441,7 @@ api.listFile = function listFile(data, scope) {
   });
 };
 
-api.getFile = function getFile(data, scope) {
+api.getFile = function getFile(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/getFile', data).then((response) => {
@@ -455,7 +455,7 @@ api.getFile = function getFile(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -463,7 +463,7 @@ api.getFile = function getFile(data, scope) {
   });
 };
 
-api.getSubtitles = function getSubtitles(data, scope) {
+api.getSubtitles = function getSubtitles(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/getSubtitles', data).then((response) => {
@@ -477,7 +477,7 @@ api.getSubtitles = function getSubtitles(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -485,7 +485,7 @@ api.getSubtitles = function getSubtitles(data, scope) {
   });
 };
 
-api.generateXML = function generateXML(data, scope) {
+api.generateXML = function generateXML(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/generateXML', data).then((response) => {
@@ -499,7 +499,7 @@ api.generateXML = function generateXML(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -507,7 +507,7 @@ api.generateXML = function generateXML(data, scope) {
   });
 };
 
-api.addTemplate = function addTemplate(data, scope) {
+api.addTemplate = function addTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/addTemplate', data).then((response) => {
@@ -521,7 +521,7 @@ api.addTemplate = function addTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -529,7 +529,7 @@ api.addTemplate = function addTemplate(data, scope) {
   });
 };
 
-api.getTemplateInfo = function getTemplateInfo(data, scope) {
+api.getTemplateInfo = function getTemplateInfo(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/getTemplateInfo', data).then((response) => {
@@ -543,7 +543,7 @@ api.getTemplateInfo = function getTemplateInfo(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -551,7 +551,7 @@ api.getTemplateInfo = function getTemplateInfo(data, scope) {
   });
 };
 
-api.getTemplateResult = function getTemplateResult(data, scope) {
+api.getTemplateResult = function getTemplateResult(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/getTemplateResult', data).then((response) => {
@@ -565,7 +565,7 @@ api.getTemplateResult = function getTemplateResult(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -573,7 +573,7 @@ api.getTemplateResult = function getTemplateResult(data, scope) {
   });
 };
 
-api.listTemplate = function listTemplate(data, scope) {
+api.listTemplate = function listTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/library/listTemplate', data).then((response) => {
@@ -587,7 +587,7 @@ api.listTemplate = function listTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -595,7 +595,7 @@ api.listTemplate = function listTemplate(data, scope) {
   });
 };
 
-api.removeTemplate = function removeTemplate(data, scope) {
+api.removeTemplate = function removeTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/removeTemplate', data).then((response) => {
@@ -609,7 +609,7 @@ api.removeTemplate = function removeTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -617,7 +617,7 @@ api.removeTemplate = function removeTemplate(data, scope) {
   });
 };
 
-api.updateTemplate = function updateTemplate(data, scope) {
+api.updateTemplate = function updateTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/library/updateTemplate', data).then((response) => {
@@ -631,7 +631,7 @@ api.updateTemplate = function updateTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

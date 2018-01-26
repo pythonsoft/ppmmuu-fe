@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.auditPass = function auditPass(data, scope) {
+api.auditPass = function auditPass(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/audit/pass', data).then((response) => {
@@ -15,7 +15,7 @@ api.auditPass = function auditPass(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.auditPass = function auditPass(data, scope) {
   });
 };
 
-api.listAudit = function listAudit(data, scope) {
+api.listAudit = function listAudit(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/audit/list', data).then((response) => {
@@ -37,7 +37,7 @@ api.listAudit = function listAudit(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.listAudit = function listAudit(data, scope) {
   });
 };
 
-api.listAuditRule = function listAuditRule(data, scope) {
+api.listAuditRule = function listAuditRule(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/audit/listAuditRule', data).then((response) => {
@@ -59,7 +59,7 @@ api.listAuditRule = function listAuditRule(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.listAuditRule = function listAuditRule(data, scope) {
   });
 };
 
-api.createAuditRule = function createAuditRule(data, scope) {
+api.createAuditRule = function createAuditRule(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/audit/createAuditRule', data).then((response) => {
@@ -81,7 +81,7 @@ api.createAuditRule = function createAuditRule(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.createAuditRule = function createAuditRule(data, scope) {
   });
 };
 
-api.updateAuditRule = function updateAuditRule(data, scope) {
+api.updateAuditRule = function updateAuditRule(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/audit/updateAuditRule', data).then((response) => {
@@ -103,7 +103,7 @@ api.updateAuditRule = function updateAuditRule(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.updateAuditRule = function updateAuditRule(data, scope) {
   });
 };
 
-api.removeAuditRule = function removeAuditRule(data, scope) {
+api.removeAuditRule = function removeAuditRule(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/audit/removeAuditRule', data).then((response) => {
@@ -125,7 +125,7 @@ api.removeAuditRule = function removeAuditRule(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

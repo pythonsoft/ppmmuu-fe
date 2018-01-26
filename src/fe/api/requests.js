@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.sendRequests = function sendRequests(data, scope) {
+api.sendRequests = function sendRequests(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/requests', data).then((response) => {
@@ -15,7 +15,7 @@ api.sendRequests = function sendRequests(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

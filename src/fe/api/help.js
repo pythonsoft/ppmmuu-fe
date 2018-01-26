@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.uploadPackage = function uploadPackage(data, scope) {
+api.uploadPackage = function uploadPackage(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/help/uploadPackage', data).then((response) => {
@@ -15,7 +15,7 @@ api.uploadPackage = function uploadPackage(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.uploadPackage = function uploadPackage(data, scope) {
   });
 };
 
-api.installPackage = function installPackage(data, scope) {
+api.installPackage = function installPackage(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/help/installPackage', data).then((response) => {
@@ -37,7 +37,7 @@ api.installPackage = function installPackage(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.installPackage = function installPackage(data, scope) {
   });
 };
 
-api.listPackage = function listPackage(data, scope) {
+api.listPackage = function listPackage(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/help/listPackage', data).then((response) => {
@@ -59,7 +59,7 @@ api.listPackage = function listPackage(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.listPackage = function listPackage(data, scope) {
   });
 };
 
-api.readFile = function readFile(data, scope) {
+api.readFile = function readFile(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/help/readFile', data).then((response) => {
@@ -81,7 +81,7 @@ api.readFile = function readFile(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.readFile = function readFile(data, scope) {
   });
 };
 
-api.detail = function detail(data, scope) {
+api.detail = function detail(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/help/detail', data).then((response) => {
@@ -103,7 +103,7 @@ api.detail = function detail(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
