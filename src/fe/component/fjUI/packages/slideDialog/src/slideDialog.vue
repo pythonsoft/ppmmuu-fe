@@ -7,7 +7,7 @@
         </slot>
         <i v-if="showClose" class="iconfont icon-close fj-dialog-closebtn" @click="handleClose"></i>
       </div>
-      <div class="fj-dialog-body"><slot></slot></div>
+      <div class="fj-slide-dialog-body"><slot></slot></div>
       <div class="fj-dialog-footer" v-if="$slots.footer">
         <slot name="footer"></slot>
       </div>
