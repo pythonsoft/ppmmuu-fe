@@ -43,7 +43,7 @@
           </div>
           <div v-else="isQRCodeExpired" class="qrcode-content">
             <div class="iconfont icon-circle-error qrcode-invalid"></div>
-            <fj-button type="primary" class="refresh-qrcode-btn" :loading="isReloadingQRCode" @click="refreshQRCode">刷新二维码</fj-button>
+            <fj-button type="primary" class="refresh-qrcode-btn" :loading="isReloadingQRCode" @click="refreshQRCode">验证码已失效，刷新二维码重新获取</fj-button>
           </div>
           <div class="qrcode-footer">
             <a href="javascript:;">下载记者云APP</a>
