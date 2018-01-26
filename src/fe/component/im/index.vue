@@ -37,6 +37,7 @@
             :conversation-id="talkToSession"
             @clear-unread-message="handleClearUnreadMessage"
             @send-message="sendMessage"
+            @update-group-name="changeGroupSubject"
             @show-department-browser="()=>{departmentBrowserVisible = true;departmentDialogOperation = 'edit';}"
             :users="users"></message-browser>
         </div>
@@ -102,6 +103,7 @@
         groupNameDialogVisible: false,
         groupName: '',
         departmentBrowserResult: [],
+        canNotify: false
       }
     },
     watch: {
@@ -122,6 +124,15 @@
       }
     },
     created() {
+      if (window.Notification) {
+        if (Notification.permission !== 'granted') {
+          Notification.requestPermission((status)=> {
+            if (status === 'granted') this.canNotify = true;
+          });
+        } else {
+          this.canNotify = true;
+        }
+      }
       this.myselfInfo = getItemFromLocalStorage('userInfo');
       this.myselfId = this.myselfInfo._id.replace(/-/g, '_');
       this.users[this.myselfId] = {
@@ -172,20 +183,26 @@
             this.onTextMessage(message);
           },
           onInviteMessage: (message) => {
-            console.log('onInviteMessage', message);
+            // console.log('onInviteMessage', message);
             const roomid = message.roomid;
             if (roomid) {
-              const item = {};
-              this.listGroupMember(roomid).then((members)=> {
+              let item = {};
+              this.listGroupMember(roomid).then((result)=> {
+                const { members, owner } = result;
                 item.members = members;
+                item.owner = owner;
                 const len = members.length > 4 ? 4 : members.length;
                 this.getUsers(members.slice(0, len));
-                this.getGroupname(roomid);
+                this.getGroupName(roomid);
 
                 item.groupid = roomid;
                 item._hasUnreadMessage = false;
-
-                this.messagesObj[roomid] = [];
+                const oldItem = this.contactObj[roomid];
+                if (oldItem && this.messagesObj[roomid]) {
+                  item = Object.assign(item, oldItem); // 在onTextMessage先初始化了
+                } else {
+                  this.messagesObj[roomid] = [];
+                }
                 this.$set(this.contactObj, roomid, item);
                 this.contactIds.unshift(roomid);
               });
@@ -219,7 +236,7 @@
           pwd: pwd,
           appKey: WebIM.config.appkey
         };
-        console.log('openConn', option);
+        // console.log('openConn', option);
         this.conn.open(option);
       },
       onTextMessage(message) {
@@ -231,31 +248,46 @@
         let flag = false; // 判断这个人是否已经在列表中
         let isGroupMsg = message.type === 'groupchat';
         let key = isGroupMsg ? message.to : message.from;
-        let newArray = [];
-        let tempItem = {};
         if (!this.messagesObj[key]) this.messagesObj[key] = [];
+        let newArray = this.messagesObj[key].slice();
+        let tempItem = {};
+        let notification = null;
         if (this.contactIds.indexOf(key) > -1) {
           flag = true;
           tempItem = contactObj[key];
           tempItem._hasUnreadMessage = true;
           const index = this.contactIds.indexOf(key);
           this.contactIds.splice(index, 1);
-          newArray = this.messagesObj[key].slice();
-          newArray.push(Object.assign({}, message, msg));
+          let name = isGroupMsg ? this.contactObj[key].name : this.contactObj[key].nickname;
+          let content = isGroupMsg ? `${this.users[message.from].nickname}: ${message.data}` : message.data;
+          if (this.canNotify) {
+            notification = new Notification(name, { body: content });
+          }
+          this.contactIds.unshift(key);
         }
         if (!flag) {
-          if (isGroupMsg) {
-            this.listGroupMember(key);
-          } else {
-            this.getUsers([key]);
-          }
           tempItem = {
-            name: key,
             _hasUnreadMessage: true
           };
-          newArray = [Object.assign({}, message, msg)];
+          if (isGroupMsg) {
+            this.getGroupName(key, (groupName) => {
+              this.getUsers([message.from], () => {
+                if (this.canNotify) {
+                  notification = new Notification(groupName, { body: `${this.users[message.from].nickname}: ${message.data}` });
+                }
+              });
+            });
+          } else {
+            tempItem.name = key;
+            this.getUsers([key], () => {
+              if (this.canNotify) {
+                notification = new Notification(this.contactObj[key].nickname, { body: message.data, icon: this.contactObj[key].avatar });
+              }
+            });
+            this.contactIds.unshift(key);
+          }
         }
-        this.contactIds.unshift(key);
+        newArray.push(Object.assign({}, message, msg));
         this.$set(this.contactObj, key, tempItem);
         this.messagesObj = Object.assign({}, this.messagesObj, { [key]: newArray });
       },
@@ -292,7 +324,6 @@
           success: (res)=> {
             const group = res.data;
             // console.log('group', group);
-
             const tempObj = {};
             let tempUsers = [];
             const loop = (index)=> {
@@ -304,15 +335,17 @@
                 return false;
               }
 
-              this.listGroupMember(item.groupid).then((members)=> {
+              this.listGroupMember(item.groupid).then((result)=> {
+                const { members, owner } = result;
                 item.members = members;
+                item.owner = owner;
                 const len = members.length > 4 ? 4 : members.length;
                 tempUsers = tempUsers.concat(members.slice(0, len));
 
                 item.name = item.groupname;
 
                 const oldItem = this.contactObj[item.groupid];
-                if (oldItem && this.messagesObj[item.groupid]) {
+                if (this.messagesObj[item.groupid]) {
                   item = Object.assign(item, oldItem);
                 } else {
                   this.contactIds.push(item.groupid);
@@ -330,13 +363,14 @@
           }
         });
       },
-      getGroupname(groupid) {
+      getGroupName(groupid, cb) {
         this.conn.getGroup({
           success: (res)=> {
             const groups = res.data;
             for (let i = 0, len = groups.length; i < len; i++) {
               if (groups[i].groupid === groupid) {
-                Object.assign(this.contactObj[groupid], { name: groups[i].groupname });
+                this.contactObj[groupid] = Object.assign({}, this.contactObj[groupid], { name: groups[i].groupname });
+                cb & cb(groups[i].groupname);
                 break;
               }
             }
@@ -351,10 +385,12 @@
             pageSize: 1000,
             groupId: groupId,
             success: (res) => {
+              let owner = '';
               const members = res.data.map(item => {
+                if (item.owner) owner = item.owner;
                 return item.member || item.owner;
               });
-              resolve(members);
+              resolve({members, owner});
             },
             error: (e) => reject(e)
           };
@@ -421,6 +457,7 @@
             const item = {
               groupid: groupid,
               name: this.groupName,
+              owner: this.myselfId,
               members: members,
               _hasUnreadMessage: false
             };
@@ -441,12 +478,22 @@
           roomId: groupid,
           success: (res) => {
             cb();
-            console.log('addGroupMembers', res);
+            // console.log('addGroupMembers', res);
           }
         };
         this.conn.addGroupMembers(option);
       },
-      getUsers(ids) {
+      changeGroupSubject(name) {
+        const option = {
+          roomId: this.talkToSession,
+          subject: name,
+          success: () => {
+            this.contactObj[this.talkToSession].name = name;
+          }
+        };
+        this.conn.changeGroupSubject(option);
+      },
+      getUsers(ids, cb) {
         const reqIds = [];
         const keys = Object.keys(this.users);
         // 排除已经获取过的用户
@@ -454,7 +501,10 @@
           const id = ids[i];
           if (keys.indexOf(id) < 0) reqIds.push(id);
         }
-        if (reqIds.length === 0) return;
+        if (reqIds.length === 0) {
+          cb && cb();
+          return;
+        }
         userAPI.getUsers({ params: { _ids: reqIds.join(',') } }, this)
           .then((res)=>{
             const data = res.data;
@@ -473,6 +523,7 @@
                 this.users[id] = tempObj[id];
               }
             });
+            cb && cb();
           })
           .catch((error)=>{
             // this.$message.error(error);
@@ -508,12 +559,12 @@
           const members = items.map(item => {
             return item._id.replace(/-/g, '_');
           });
-          console.log('groupid, members', groupid, members);
           this.addGroupMembers(groupid, members, ()=> {
-            this.listGroupMember(groupid).then((members)=> {
+            this.listGroupMember(groupid).then((result)=> {
+              const { members, owner } = result;
               const len = members.length > 4 ? 4 : members.length;
               this.getUsers(members.slice(0, len));
-              this.contactObj[groupid] = Object.assign({}, this.contactObj[groupid], { members: members });
+              this.contactObj[groupid] = Object.assign({}, this.contactObj[groupid], { members: members, owner: owner });
             });
           });
           return;
@@ -524,7 +575,7 @@
           info.name = info._id.replace(/-/g, '_');
           this.messagesObj[info.name] = [];
           info._hasUnreadMessage = false;
-          console.log('departmentBrowserConfirm-->', this.messagesObj[info.name]);
+          // console.log('departmentBrowserConfirm-->', this.messagesObj[info.name]);
           if (this.routers.indexOf(info.name) < 0) {
             this.conn.subscribe({
               to: info.name,

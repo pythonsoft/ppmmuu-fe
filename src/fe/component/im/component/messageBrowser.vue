@@ -13,7 +13,10 @@
       <group-member-browser
         v-if="conversation.groupid"
         @show-department-browser="$emit('show-department-browser')"
+        @update-group-name="(name)=>{ $emit('update-group-name', name) }"
         :visible.sync="groupMemberBrowserVisible"
+        :group-name="conversation.name"
+        :is-owner="conversation.owner === myselfId"
         :members="conversation.members"
         :infos="users"></group-member-browser>
     </div>

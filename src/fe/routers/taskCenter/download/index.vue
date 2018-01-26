@@ -3,7 +3,7 @@
     <template slot="search-left">下载任务({{ title }})</template>
     <template slot="search-right">
       <div v-if="isShowSelect" class="layout-four-row-search-item" :style="{ width: '88px' }">
-        <fj-select size="small" placeholder="请选择" v-model="formData.status">
+        <fj-select size="small" placeholder="请选择" v-model="formData.status" theme="fill">
           <fj-option
             v-for="item in status"
             :key="item.value"
@@ -47,10 +47,10 @@
         <fj-table-column prop="tasklist" width="80" label="进度">
           <template slot-scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).total }}</template>
         </fj-table-column>
-        <fj-table-column prop="createTime" width="160" align="center" label="创建时间">
+        <fj-table-column prop="createTime" width="160" label="创建时间">
           <template slot-scope="props">{{ props.row.createTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="lastModify" width="160" align="center" label="修改时间">
+        <fj-table-column prop="lastModify" width="160" label="修改时间">
           <template slot-scope="props">{{ props.row.lastModify | formatTime }}</template>
         </fj-table-column>
       </fj-table>

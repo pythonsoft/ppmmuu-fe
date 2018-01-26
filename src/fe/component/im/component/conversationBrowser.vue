@@ -42,7 +42,7 @@
             width="16" height="16"
             :style="getGroupMemberAvatarStyle(index, contactObj[id].members.length)"
           >
-          <img v-else class="im-avatar im-img-style" width="24" height="24">
+          <img v-else src="/static/img/avatar.png" class="im-avatar im-img-style" width="24" height="24">
           <div class="im-item-message-circle" v-if="contactObj[id]._hasUnreadMessage"></div>
         </div>
         <div class="content">

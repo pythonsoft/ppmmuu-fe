@@ -4,7 +4,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  padding-left: 24px;
+  padding-left: 40px;
   padding-right: 40px;
   border-left: 1px solid #CED9E5;
   background: #FFFFFF;
@@ -17,4 +17,7 @@
 .fj-slide-dialog-title {
   font-size: 14px;
   color: var(--dialog-title-color);
+}
+.fj-slide-dialog-body {
+  color: var(--dialog-body-color);
 }
