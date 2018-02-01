@@ -186,13 +186,13 @@ export default [{
       children: [],
       name: 'mediaCenter'
     },
-    {
-      path: 'trends',
-      component: Trends,
-      meta: { title: '舆情' },
-      children: [],
-      name: 'trends'
-    },
+    // {
+    //   path: 'trends',
+    //   component: Trends,
+    //   meta: { title: '舆情' },
+    //   children: [],
+    //   name: 'trends'
+    // },
     {
       path: 'movieEditor/:objectId/:fromWhere',
       component: MovieEditor,
