@@ -682,12 +682,16 @@ utils.formatShortTime = function (time) {
 };
 
 utils.getDefaultPageIndex = function getDefaultPageIndex(menu) {
+  let subscriptions = '';
   for (let i = 0, len = menu.length; i < len; i++) {
-    if (menu[i].index === 'trends') {
-      return 'trends';
+    if (menu[i].index === 'mediaCenter') {
+      return 'mediaCenter';
+    }
+    if (menu[i].index === 'subscriptions') {
+      subscriptions = 'subscriptions';
     }
   }
-  return 'personalCenter';
+  return subscriptions || 'personalCenter';
 };
 
 utils.formatTaskList = function (currentStep, taskList = []) {
