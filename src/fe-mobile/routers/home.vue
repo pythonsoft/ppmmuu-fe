@@ -157,7 +157,7 @@
   const userAPI = require('../../fe/api/user');
 
   const MENU = [
-    { text: '首页', route: 'trends', icon: 'icon-home' },
+    // { text: '首页', route: 'trends', icon: 'icon-home' },
     { text: '媒体库', route: 'mediaCenter', icon: 'icon-media-library' },
     { text: '任务', route: 'taskCenter', icon: 'icon-menu' },
     { text: '个人中心', route: 'personalCenter', icon: 'icon-person' },
