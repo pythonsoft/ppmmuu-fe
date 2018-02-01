@@ -81,12 +81,14 @@ class FileClient {
         _id: me._id
       });
       task.socketId = socket.id;
+      console.log('start send headpackage==>');
       socket.emit('headerPackage', task.headerPackage);
       me.transferTaskInstance = task;
       me.isConnect = true;
     });
 
     socket.on('transfer_start', () => {
+      console.log('start send content==>');
       me.sendPartOfFilePackage();
     });
 
