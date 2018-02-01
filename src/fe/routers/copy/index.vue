@@ -293,6 +293,7 @@
           viceTitle: copyContent.viceTitle,
           content: JSON.stringify(copyContent.editContent)
         };
+        console.log('copyContent', JSON.stringify(copyContent));
         manuscriptAPI.hongKongSimplified(data)
           .then((response) => {
             const resData = response.data;
