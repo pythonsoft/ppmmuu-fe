@@ -57,6 +57,7 @@ class FileClient {
     const isCrypto = me.settings.isCrypto ? '1' : '0';
 
     const socket = clientConnect(`ws://${config.socketDomain}/file`, {
+      transports: ['websocket'],
       query: {
         'im-ticket': ticket,
         'im-key': 'ump',
