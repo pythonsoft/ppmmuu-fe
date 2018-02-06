@@ -50,8 +50,8 @@ app.use(function(err, req, res, next) {
   res.end('error');
 });
 
-// app.use('/', index);
 const port = 8000;
 app.listen(port, function() {
   console.log('Listening on 1 port ' + port + '...');
+  app.use('/apps/journalistCloud', require('./apps/journalistCloud'));
 });
