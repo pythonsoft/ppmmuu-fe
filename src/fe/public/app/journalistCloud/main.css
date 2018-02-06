@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  font-size: 12px;
+  font-family: "PingFang SC", "Helvetica Neue", "Hiragino Sans GB", Helvetica, "Microsoft YaHei", Arial;
+}
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none outside none;
+}
+a {
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+  text-decoration: none;
+}
+
+a:active,
+a:hover {
+  outline-width: 0;
+}
+
+@font-face {font-family: "iconfont";
+  src: url('./font/iconfont.eot?t=1517812338668'); /* IE9*/
+  src: url('./font/iconfont.eot?t=1517812338668#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff;charset=utf-8;base64,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') format('woff'),
+  url('./font/iconfont.ttf?t=1517812338668') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('./font/iconfont.svg?t=1517812338668#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-5:before { content: "\e6db"; }
+
+.icon-arr:before { content: "\e6dc"; }
+
+.icon-7:before { content: "\e6dd"; }
+
+.icon-6:before { content: "\e6de"; }
+
+.icon-3:before { content: "\e6df"; }
+
+.icon-2:before { content: "\e6e0"; }
+
+.icon-4:before { content: "\e6e1"; }
+
+.icon-1:before { content: "\e6e2"; }
+
+.download-page-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: url(./img/download_bg.png);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100%;
+  overflow: hidden;
+}
+.logo {
+  /*position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);*/
+  display: block;
+  margin: 40% auto 0;
+  width: 81px;
+}
+.download-btn-wrap {
+  margin-top: 75px;
+}
+.download-btn, .open-btn {
+  display: block;
+  width: 80%;
+  margin: 0 auto 20px;
+  padding: 13px 0;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: 300;
+}
+.download-btn {
+  color: #fff;
+  background-color: #FF7F2D;
+  border: 1px solid #FF7F2D;
+}
+.open-btn {
+  color: #888888;
+  background-color: #fff;
+  border: 1px solid #CDCED3;
+}
+.download-page-wrap .arrow-wrap {
+  position: absolute;
+  right: 0;
+  bottom: 34px;
+  left: 0;
+  text-align: center;
+}
+.arrow-wrap .icon-arr {
+  color: #CED9E5;
+}
+.arrow-wrap .arrow-text {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #AAAAAA;
+  font-weight: 300;
+}
+.page-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 53px;
+  background-color: #fff;
+  text-align: center;
+}
+.feature-title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.6;
+  font-weight: 300;
+  color: #333333;
+}
+.feature-desc {
+  width: 70%;
+  margin: 0 auto 23px;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 300;
+  color: #AAAAAA;
+}
+.feature-list {
+  font-size: 0;
+}
+.feature-item {
+  display: inline-block;
+  padding: 0 17px;
+  font-weight: 300;
+  font-size: 12px;
+  color: #BDBDBD;
+}
+.feature-item .iconfont {
+  display: block;
+  margin-bottom: 5px;
+}
+.feature-item+.feature-item {
+  border-left: 1px solid #E5E5E8;
+}
+.feature-pic {
+  margin-top: 40px;
+  width: 60%;
+  box-shadow: 0 43px 49px 0 rgba(209,209,209,0.50);
+}
