@@ -225,7 +225,7 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
-  padding: 40px 0 84px;
+  padding: 40px 0 104px;
   box-sizing: border-box;
   background-color: #F3F5F6;
 }
@@ -332,6 +332,33 @@
   border-radius: 4px;
 }
 
+.im-dialog-main-right-content .right .body .message .detail {
+  background-color: #38B1EB;
+  color: #fff;
+}
+.audio-btn {
+  position: relative;
+  width: 72px;
+  height: 37px;
+  line-height: 35px;
+  color: #9FB3CA;
+  padding-left: 10px;
+  background: #FFFFFF;
+  border: 1px solid #EBF3FB;
+  border-radius: 4px;
+}
+.audio-length {
+  position: absolute;
+  left: 78px;
+  bottom: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #9FB3CA;
+}
+.message .pic-content {
+  width: 110px;
+  border-radius: 4px;
+}
 .im-dialog-main-right-content-item .body .message .resend{
   padding: 4px 13px;
   font-size: 12px;
@@ -373,11 +400,6 @@
   float: right;
 }
 
-.im-dialog-main-right-content .right .body .message .detail {
-  background-color: #38B1EB;
-  color: #fff;
-}
-
 .im-dialog-main-right-content .right .body .avatar{
   right: 0;
 }
@@ -387,7 +409,7 @@
 }
 
 .im-dialog-main-right-chat{
-  height: 86px;
+  height: 106px;
   position: absolute;
   left: 0;
   right:0;
@@ -451,4 +473,53 @@
   right: -4px;
   top: 0px;
   border-radius: 50%;
+}
+.im-toolbar {
+  height: 20px;
+  width: 100%;
+  padding: 4px 8px;
+  line-height: 1;
+}
+.im-toolbar .iconfont {
+  font-size: 12px;
+  cursor: pointer;
+}
+.hide-input {
+  display: none;
+}
+.audio-message {
+  display: none;
+}
+.image-dialog-wrap:hover .image-dialog-download-icon {
+  display: block;
+}
+
+.image-dialog-download-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  line-height: 59px;
+  text-align: center;
+  font-size: 32px;
+  color: #fff;
+  display: none;
+  background: rgba(0, 0, 0, .6);
+  border-radius: 50%;
+}
+.current-audio {
+  animation: audioBgA 2s ease-in-out infinite;
+}
+@keyframes audioBgA {
+  0% {
+    background: #fff;
+  }
+  50% {
+    background: #E3EAF3;
+  }
+  100% {
+    background: #fff;
+  }
 }

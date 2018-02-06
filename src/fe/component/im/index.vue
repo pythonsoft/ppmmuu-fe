@@ -37,6 +37,8 @@
             :conversation-id="talkToSession"
             @clear-unread-message="handleClearUnreadMessage"
             @send-message="sendMessage"
+            @send-picture="sendPicture"
+            @send-file="sendFile"
             @update-group-name="changeGroupSubject"
             @show-department-browser="()=>{departmentBrowserVisible = true;departmentDialogOperation = 'edit';}"
             :users="users"></message-browser>
@@ -176,6 +178,33 @@
             this.getRoster();
             this.getGroup();
           },
+          onAudioMessage: (message)=> {
+            console.log('onAudioMessage', message);
+            if (message.error) return;
+            if (!this.dialogVisible) this.message = '您收到了一条语音';
+
+            const option = {
+              url: message.url,
+              headers: { 'Accept': 'audio/mp3' },
+              onFileDownloadComplete: (response)=> {
+                const objectURL = WebIM.utils.parseDownloadResponse.call(this.conn, response);
+                message.type = 'audio';
+                message.src = objectURL;
+                this.onTextMessage(message);
+              },
+              onFileDownloadError: (error)=> {
+                this.$message.error('语音加载出错');
+              }
+            };
+            WebIM.utils.download.call(this.conn, option);
+          },
+          onPictureMessage: (message)=> {
+            console.log('onPictureMessage', message);
+            if (message.error) return;
+            if (!this.dialogVisible) this.message = '您收到了一张图片';
+            message.type = 'picture';
+            this.onTextMessage(message);
+          },
           onTextMessage: (message) => {
             console.log('onTextMessage', message);
             if (message.error) return;
@@ -236,7 +265,7 @@
           pwd: pwd,
           appKey: WebIM.config.appkey
         };
-        // console.log('openConn', option);
+        console.log('openConn', option);
         this.conn.open(option);
       },
       onTextMessage(message) {
@@ -397,6 +426,62 @@
           this.conn.listGroupMember(option);
         });
       },
+      sendFile(file) {
+        console.log('file', file);
+      },
+      sendPicture(file) {
+        const currentItem = this.contactObj[this.talkToSession];
+
+        const name = currentItem.name;
+        const groupid = currentItem.groupid;
+        const id = this.conn.getUniqueId();
+        const msg = new WebIM.message('img', id);
+        const now = new Date().getTime();
+        const newMessage = {
+          from: this.myselfId,
+          time: now,
+          url: file.url,
+          type: 'picture'
+        };
+        const messageIndex = this.loadingMessages.length - 1;
+        const option = {
+          apiUrl: this.conn.apiUrl,
+          file: file,
+          to: name,
+          roomType: false,
+          success: (id, serverMsgId)=> {
+          },
+          fail: (e)=> {
+            console.log('send error');
+          },
+          onFileUploadError: (error)=> {
+            this.loadingMessages.splice(messageIndex, 1);
+            newMessage.error = true;
+            console.log('file upload error', error);
+            this.$message.error('您上传的图片有问题，请重新上传');
+          },
+          onFileUploadComplete: (data)=> {
+            this.loadingMessages.splice(messageIndex, 1);
+            console.log('file upload complete', this.messagesObj[this.talkToSession]);
+          },
+          flashUpload: WebIM.flashUpload
+        };
+
+        if (groupid) {
+          option.to = groupid;
+          option.chatType = 'chatRoom';
+          msg.set(option);
+          msg.setGroup('groupchat');
+        } else {
+          msg.set(option);
+          msg.body.chatType = 'singleChat';
+        }
+        this.conn.send(msg.body);
+        const newMessageArr = this.messagesObj[this.talkToSession].slice();
+        newMessageArr.push(newMessage);
+        this.loadingMessages.push(now);
+        this.$set(this.messagesObj, this.talkToSession, newMessageArr);
+      },
       sendMessage(val) {
         const currentItem = this.contactObj[this.talkToSession];
 
@@ -411,8 +496,6 @@
           content: val
         };
         const messageIndex = this.loadingMessages.length - 1;
-        this.loadingMessages.push(now);
-        this.messagesObj[this.talkToSession].push(newMessage);
 
         const option = {
           msg: val,
@@ -420,14 +503,16 @@
           roomType: false,
           success: (id, serverMsgId)=> {
             this.loadingMessages.splice(messageIndex, 1);
-            console.log('sendMessage', this.talkToSession, this.messagesObj[this.talkToSession]);
+            console.log('sendMessage', this.messagesObj[this.talkToSession]);
           },
-          fail: function(e) {
+          fail: (e)=> {
             this.loadingMessages.splice(messageIndex, 1);
             newMessage.error = true;
             console.log('send error');
           }
         };
+        this.loadingMessages.push(now);
+        this.messagesObj[this.talkToSession].push(newMessage);
         if (groupid) {
           option.to = groupid;
           option.chatType = 'chatRoom';
