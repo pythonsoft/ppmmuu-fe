@@ -22,12 +22,12 @@
         >
           <template slot="0" slot-scope="props">
             <div class="shelf-edit-left">
-              <edit-left :shelfInfo="shelfInfo"></edit-left>
+              <edit-left :shelfInfo="shelfInfo" :vueInstance="vueInstance"></edit-left>
             </div>
           </template>
           <template slot="1" slot-scope="props">
             <div class="shelf-edit-right">
-              <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight"></edit-right>
+              <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight" :vueInstance="vueInstance"></edit-right>
             </div>
           </template>
         </panel-view>
@@ -36,6 +36,7 @@
   </four-row-layout-right-content>
 </template>
 <script>
+  import Vue from 'vue';
   import { formatQuery, formatTime} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import EditLeft from './editLeft';
@@ -57,11 +58,13 @@
     data() {
       return {
         defaultRoute: '/',
-        size: { width: document.body.clientWidth - 206, height: document.body.clientHeight }
+        size: { width: document.body.clientWidth - 206, height: document.body.clientHeight },
+        vueInstance: null
       };
     },
     created() {
       this.resize();
+      this.vueInstance = new Vue();
     },
     mounted() {
       window.addEventListener('resize', this.resize);

@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.addTemplateGroup = function addTemplateGroup(data, scope) {
+api.addTemplateGroup = function addTemplateGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/template/addGroup', data).then((response) => {
@@ -15,7 +15,7 @@ api.addTemplateGroup = function addTemplateGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.addTemplateGroup = function addTemplateGroup(data, scope) {
   });
 };
 
-api.listTemplateGroup = function listTemplateGroup(data, scope) {
+api.listTemplateGroup = function listTemplateGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/template/listGroup', data).then((response) => {
@@ -37,7 +37,7 @@ api.listTemplateGroup = function listTemplateGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.listTemplateGroup = function listTemplateGroup(data, scope) {
   });
 };
 
-api.removeTemplateGroup = function removeTemplateGroup(data, scope) {
+api.removeTemplateGroup = function removeTemplateGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/template/removeGroup', data).then((response) => {
@@ -59,7 +59,7 @@ api.removeTemplateGroup = function removeTemplateGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.removeTemplateGroup = function removeTemplateGroup(data, scope) {
   });
 };
 
-api.getGroup = function getGroup(data, scope) {
+api.getGroup = function getGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/template/getGroup', data).then((response) => {
@@ -81,7 +81,7 @@ api.getGroup = function getGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.getGroup = function getGroup(data, scope) {
   });
 };
 
-api.updateTemplateGroup = function updateTemplateGroup(data, scope) {
+api.updateTemplateGroup = function updateTemplateGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/template/updateGroup', data).then((response) => {
@@ -103,7 +103,7 @@ api.updateTemplateGroup = function updateTemplateGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.updateTemplateGroup = function updateTemplateGroup(data, scope) {
   });
 };
 
-api.list = function list(data, scope) {
+api.list = function list(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/template/list', data).then((response) => {
@@ -125,7 +125,7 @@ api.list = function list(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.list = function list(data, scope) {
   });
 };
 
-api.createDownloadTemplate = function createDownloadTemplate(data, scope) {
+api.createDownloadTemplate = function createDownloadTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/template/createDownloadTemplate', data).then((response) => {
@@ -147,7 +147,7 @@ api.createDownloadTemplate = function createDownloadTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.createDownloadTemplate = function createDownloadTemplate(data, scope) {
   });
 };
 
-api.remove = function remove(data, scope) {
+api.remove = function remove(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/template/remove', data).then((response) => {
@@ -169,7 +169,7 @@ api.remove = function remove(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.remove = function remove(data, scope) {
   });
 };
 
-api.update = function update(data, scope) {
+api.update = function update(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/template/update', data).then((response) => {
@@ -191,7 +191,7 @@ api.update = function update(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.update = function update(data, scope) {
   });
 };
 
-api.getDetail = function getDetail(data, scope) {
+api.getDetail = function getDetail(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/template/getDetail', data).then((response) => {
@@ -213,7 +213,7 @@ api.getDetail = function getDetail(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.getDetail = function getDetail(data, scope) {
   });
 };
 
-api.getTemplateSearchUserOrGroup = function getTemplateSearchUserOrGroup(data, scope) {
+api.getTemplateSearchUserOrGroup = function getTemplateSearchUserOrGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/template/search/userOrGroup', data).then((response) => {
@@ -235,7 +235,7 @@ api.getTemplateSearchUserOrGroup = function getTemplateSearchUserOrGroup(data, s
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -243,7 +243,7 @@ api.getTemplateSearchUserOrGroup = function getTemplateSearchUserOrGroup(data, s
   });
 };
 
-api.updateGroupUser = function updateGroupUser(data, scope) {
+api.updateGroupUser = function updateGroupUser(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/template/updateGroupUser', data).then((response) => {
@@ -257,7 +257,7 @@ api.updateGroupUser = function updateGroupUser(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

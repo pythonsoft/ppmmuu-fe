@@ -53,8 +53,7 @@
 }
 
 .fj-table-empty-block {
-  border: var(--table-th-border);
-  border-top: 0;
+  border-bottom: var(--table-th-border);
   text-align: center;
   height: 88px;
 }

@@ -24,9 +24,8 @@
       <div class="about-item">
         <div class="title">相关系统</div>
         <div class="about-system-item">
-          <div class="subtitle">ump系统</div>
-          <div class="about-system-item-title">
-            当前版本{{version}}
+          <div class="subtitle">
+            ump系统
             <div class="about-system-update-bar">
               <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="handleClick">
                 上传安装包(.zip)
@@ -35,7 +34,13 @@
             </div>
           </div>
           <div class="detail">
-            <div class="detail-title">版本更新</div>
+            <span class="version">{{version}}</span>
+
+            <h2>更新说明</h2>
+            <ul>
+              <li v-for="item in content">*.{{item}}</li>
+            </ul>
+            <h2>更新详细</h2>
             <ul>
               <li v-for="item in updateList">*.{{item}}</li>
             </ul>
@@ -71,6 +76,7 @@
         isBtnLoading: false,
         packageInfo: {},
         updateList: [],
+        content: [],
         version: '无',
       };
     },
@@ -120,6 +126,7 @@
           params: { id: this.packageInfo._id }
         }).then((res) => {
           me.updateList = res.data.updateList;
+          me.content = res.data.content;
           me.version = res.data.version;
         }).catch((error) => {
           me.$message.error(error);

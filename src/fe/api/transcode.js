@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.list = function list(data, scope) {
+api.list = function list(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/list', data).then((response) => {
@@ -15,7 +15,7 @@ api.list = function list(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.list = function list(data, scope) {
   });
 };
 
-api.listChildTask = function listChildTask(data, scope) {
+api.listChildTask = function listChildTask(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/listChildTask', data).then((response) => {
@@ -37,7 +37,7 @@ api.listChildTask = function listChildTask(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.listChildTask = function listChildTask(data, scope) {
   });
 };
 
-api.restart = function restart(data, scope) {
+api.restart = function restart(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/restart', data).then((response) => {
@@ -59,7 +59,7 @@ api.restart = function restart(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.restart = function restart(data, scope) {
   });
 };
 
-api.stop = function stop(data, scope) {
+api.stop = function stop(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/stop', data).then((response) => {
@@ -81,7 +81,7 @@ api.stop = function stop(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

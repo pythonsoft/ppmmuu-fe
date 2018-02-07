@@ -34,12 +34,7 @@
     </fj-menu>
     </div>
     <div class="app-profile-entry" ref="profileEntry" @click="showProfilePopover" v-clickoutside="closeProfilePopover">
-      <template v-if="userInfo.photo">
-        <img :src="userInfo.photo" class="app-profile-avatar" width="24" height="24">
-      </template>
-      <template v-else>
-        <img class="app-profile-avatar imgStyle" width="24" height="24">
-      </template>
+      <img :src="userInfo.photo || '/static/img/avatar.png'" class="app-profile-avatar" width="24" height="24">
       <div>{{ userInfo.name }}</div>
     </div>
   </div>
@@ -136,7 +131,7 @@
         const showMenuIndex = this.showMenuIndex;
         const showMenu = [];
         for (let i = 0, len = menu.length; i < len; i++) {
-          if (showMenuIndex.indexOf(menu[i].index) !== -1) {
+          if (showMenuIndex.indexOf(menu[i].index) !== -1 && menu[i].index !== 'trends') {
             showMenu.push(menu[i]);
           }
         }

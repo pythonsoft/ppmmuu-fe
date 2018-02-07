@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.listGroup = function listGroup(data, scope) {
+api.listGroup = function listGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/engine/listGroup', data).then((response) => {
@@ -15,7 +15,7 @@ api.listGroup = function listGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.listGroup = function listGroup(data, scope) {
   });
 };
 
-api.addGroup = function addGroup(data, scope) {
+api.addGroup = function addGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/addGroup', data).then((response) => {
@@ -37,7 +37,7 @@ api.addGroup = function addGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.addGroup = function addGroup(data, scope) {
   });
 };
 
-api.removeGroup = function removeGroup(data, scope) {
+api.removeGroup = function removeGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/removeGroup', data).then((response) => {
@@ -59,7 +59,7 @@ api.removeGroup = function removeGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.removeGroup = function removeGroup(data, scope) {
   });
 };
 
-api.getGroup = function getGroup(data, scope) {
+api.getGroup = function getGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/engine/getGroup', data).then((response) => {
@@ -81,7 +81,7 @@ api.getGroup = function getGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.getGroup = function getGroup(data, scope) {
   });
 };
 
-api.updateGroup = function updateGroup(data, scope) {
+api.updateGroup = function updateGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/updateGroup', data).then((response) => {
@@ -103,7 +103,7 @@ api.updateGroup = function updateGroup(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.updateGroup = function updateGroup(data, scope) {
   });
 };
 
-api.listEngine = function listEngine(data, scope) {
+api.listEngine = function listEngine(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/engine/listEngine', data).then((response) => {
@@ -125,7 +125,7 @@ api.listEngine = function listEngine(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.listEngine = function listEngine(data, scope) {
   });
 };
 
-api.addEngine = function addEngine(data, scope) {
+api.addEngine = function addEngine(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/addEngine', data).then((response) => {
@@ -147,7 +147,7 @@ api.addEngine = function addEngine(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.addEngine = function addEngine(data, scope) {
   });
 };
 
-api.getEngine = function getEngine(data, scope) {
+api.getEngine = function getEngine(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/engine/getEngine', data).then((response) => {
@@ -169,7 +169,7 @@ api.getEngine = function getEngine(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.getEngine = function getEngine(data, scope) {
   });
 };
 
-api.updateEngine = function updateEngine(data, scope) {
+api.updateEngine = function updateEngine(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/updateEngine', data).then((response) => {
@@ -191,7 +191,7 @@ api.updateEngine = function updateEngine(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.updateEngine = function updateEngine(data, scope) {
   });
 };
 
-api.removeEngine = function removeEngine(data, scope) {
+api.removeEngine = function removeEngine(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/removeEngine', data).then((response) => {
@@ -213,7 +213,7 @@ api.removeEngine = function removeEngine(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.removeEngine = function removeEngine(data, scope) {
   });
 };
 
-api.updateEngineConfiguration = function updateEngineConfiguration(data, scope) {
+api.updateEngineConfiguration = function updateEngineConfiguration(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/updateEngineConfiguration', data).then((response) => {
@@ -235,7 +235,7 @@ api.updateEngineConfiguration = function updateEngineConfiguration(data, scope) 
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -243,7 +243,7 @@ api.updateEngineConfiguration = function updateEngineConfiguration(data, scope) 
   });
 };
 
-api.listProcess = function listProcess(data, scope) {
+api.listProcess = function listProcess(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/engine/listProcess', data).then((response) => {
@@ -257,7 +257,7 @@ api.listProcess = function listProcess(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -265,7 +265,7 @@ api.listProcess = function listProcess(data, scope) {
   });
 };
 
-api.listAction = function listAction(data, scope) {
+api.listAction = function listAction(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/engine/listAction', data).then((response) => {
@@ -279,7 +279,7 @@ api.listAction = function listAction(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -287,7 +287,7 @@ api.listAction = function listAction(data, scope) {
   });
 };
 
-api.emitAction = function emitAction(data, scope) {
+api.emitAction = function emitAction(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/emitAction', data).then((response) => {
@@ -301,7 +301,7 @@ api.emitAction = function emitAction(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -309,7 +309,7 @@ api.emitAction = function emitAction(data, scope) {
   });
 };
 
-api.installMonitor = function installMonitor(data, scope) {
+api.installMonitor = function installMonitor(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/engine/installMonitor', data).then((response) => {
@@ -323,7 +323,7 @@ api.installMonitor = function installMonitor(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

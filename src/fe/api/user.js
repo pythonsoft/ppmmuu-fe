@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.postUserLogin = function postUserLogin(data, scope) {
+api.postUserLogin = function postUserLogin(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/login', data).then((response) => {
@@ -15,7 +15,7 @@ api.postUserLogin = function postUserLogin(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.postUserLogin = function postUserLogin(data, scope) {
   });
 };
 
-api.getToken = function getToken(data, scope) {
+api.getToken = function getToken(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/getToken', data).then((response) => {
@@ -37,7 +37,7 @@ api.getToken = function getToken(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.getToken = function getToken(data, scope) {
   });
 };
 
-api.postUserUpdate = function postUserUpdate(data, scope) {
+api.postUserUpdate = function postUserUpdate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/update', data).then((response) => {
@@ -59,7 +59,7 @@ api.postUserUpdate = function postUserUpdate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.postUserUpdate = function postUserUpdate(data, scope) {
   });
 };
 
-api.getUserDetail = function getUserDetail(data, scope) {
+api.getUserDetail = function getUserDetail(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/detail', data).then((response) => {
@@ -81,7 +81,7 @@ api.getUserDetail = function getUserDetail(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -89,7 +89,7 @@ api.getUserDetail = function getUserDetail(data, scope) {
   });
 };
 
-api.postUserLogout = function postUserLogout(data, scope) {
+api.postUserLogout = function postUserLogout(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/logout', data).then((response) => {
@@ -103,7 +103,7 @@ api.postUserLogout = function postUserLogout(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -111,7 +111,7 @@ api.postUserLogout = function postUserLogout(data, scope) {
   });
 };
 
-api.getUsers = function getUsers(data, scope) {
+api.getUsers = function getUsers(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/getUsers', data).then((response) => {
@@ -125,7 +125,7 @@ api.getUsers = function getUsers(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -133,7 +133,7 @@ api.getUsers = function getUsers(data, scope) {
   });
 };
 
-api.getUserAuth = function getUserAuth(data, scope) {
+api.getUserAuth = function getUserAuth(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/auth', data).then((response) => {
@@ -147,7 +147,7 @@ api.getUserAuth = function getUserAuth(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -155,7 +155,7 @@ api.getUserAuth = function getUserAuth(data, scope) {
   });
 };
 
-api.postUserChangePassword = function postUserChangePassword(data, scope) {
+api.postUserChangePassword = function postUserChangePassword(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/changePassword', data).then((response) => {
@@ -169,7 +169,7 @@ api.postUserChangePassword = function postUserChangePassword(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -177,7 +177,7 @@ api.postUserChangePassword = function postUserChangePassword(data, scope) {
   });
 };
 
-api.getSearchHistory = function getSearchHistory(data, scope) {
+api.getSearchHistory = function getSearchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/getSearchHistory', data).then((response) => {
@@ -191,7 +191,7 @@ api.getSearchHistory = function getSearchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -199,7 +199,7 @@ api.getSearchHistory = function getSearchHistory(data, scope) {
   });
 };
 
-api.removeSearchHistory = function removeSearchHistory(data, scope) {
+api.removeSearchHistory = function removeSearchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/removeSearchHistory', data).then((response) => {
@@ -213,7 +213,7 @@ api.removeSearchHistory = function removeSearchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -221,7 +221,7 @@ api.removeSearchHistory = function removeSearchHistory(data, scope) {
   });
 };
 
-api.clearSearchHistory = function clearSearchHistory(data, scope) {
+api.clearSearchHistory = function clearSearchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/clearSearchHistory', data).then((response) => {
@@ -235,7 +235,7 @@ api.clearSearchHistory = function clearSearchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -243,7 +243,7 @@ api.clearSearchHistory = function clearSearchHistory(data, scope) {
   });
 };
 
-api.getWatchHistory = function getWatchHistory(data, scope) {
+api.getWatchHistory = function getWatchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/getWatchHistory', data).then((response) => {
@@ -257,7 +257,7 @@ api.getWatchHistory = function getWatchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -265,7 +265,7 @@ api.getWatchHistory = function getWatchHistory(data, scope) {
   });
 };
 
-api.removeWatchHistory = function removeWatchHistory(data, scope) {
+api.removeWatchHistory = function removeWatchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/removeWatchHistory', data).then((response) => {
@@ -279,7 +279,7 @@ api.removeWatchHistory = function removeWatchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -287,7 +287,7 @@ api.removeWatchHistory = function removeWatchHistory(data, scope) {
   });
 };
 
-api.clearWatchHistory = function clearWatchHistory(data, scope) {
+api.clearWatchHistory = function clearWatchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/clearWatchHistory', data).then((response) => {
@@ -301,7 +301,7 @@ api.clearWatchHistory = function clearWatchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -309,7 +309,7 @@ api.clearWatchHistory = function clearWatchHistory(data, scope) {
   });
 };
 
-api.listJob = function listJob(data, scope) {
+api.listJob = function listJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/listJob', data).then((response) => {
@@ -323,7 +323,7 @@ api.listJob = function listJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -331,7 +331,7 @@ api.listJob = function listJob(data, scope) {
   });
 };
 
-api.listMyAuditJob = function listMyAuditJob(data, scope) {
+api.listMyAuditJob = function listMyAuditJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/listMyAuditJob', data).then((response) => {
@@ -345,7 +345,7 @@ api.listMyAuditJob = function listMyAuditJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -353,7 +353,7 @@ api.listMyAuditJob = function listMyAuditJob(data, scope) {
   });
 };
 
-api.listAuditJob = function listAuditJob(data, scope) {
+api.listAuditJob = function listAuditJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/listAuditJob', data).then((response) => {
@@ -367,7 +367,7 @@ api.listAuditJob = function listAuditJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -375,7 +375,7 @@ api.listAuditJob = function listAuditJob(data, scope) {
   });
 };
 
-api.passOrRejectAudit = function passOrRejectAudit(data, scope) {
+api.passOrRejectAudit = function passOrRejectAudit(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/user/passOrRejectAudit', data).then((response) => {
@@ -389,7 +389,7 @@ api.passOrRejectAudit = function passOrRejectAudit(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -397,7 +397,7 @@ api.passOrRejectAudit = function passOrRejectAudit(data, scope) {
   });
 };
 
-api.queryJob = function queryJob(data, scope) {
+api.queryJob = function queryJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/queryJob', data).then((response) => {
@@ -411,7 +411,7 @@ api.queryJob = function queryJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -419,7 +419,7 @@ api.queryJob = function queryJob(data, scope) {
   });
 };
 
-api.restartJob = function restartJob(data, scope) {
+api.restartJob = function restartJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/restartJob', data).then((response) => {
@@ -433,7 +433,7 @@ api.restartJob = function restartJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -441,7 +441,7 @@ api.restartJob = function restartJob(data, scope) {
   });
 };
 
-api.stopJob = function stopJob(data, scope) {
+api.stopJob = function stopJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/stopJob', data).then((response) => {
@@ -455,7 +455,7 @@ api.stopJob = function stopJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -463,7 +463,7 @@ api.stopJob = function stopJob(data, scope) {
   });
 };
 
-api.deleteJob = function deleteJob(data, scope) {
+api.deleteJob = function deleteJob(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/deleteJob', data).then((response) => {
@@ -477,7 +477,7 @@ api.deleteJob = function deleteJob(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -485,7 +485,7 @@ api.deleteJob = function deleteJob(data, scope) {
   });
 };
 
-api.directAuthorizeAcceptorList = function directAuthorizeAcceptorList(data, scope) {
+api.directAuthorizeAcceptorList = function directAuthorizeAcceptorList(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/directAuthorize/acceptorList', data).then((response) => {
@@ -499,7 +499,7 @@ api.directAuthorizeAcceptorList = function directAuthorizeAcceptorList(data, sco
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -507,7 +507,7 @@ api.directAuthorizeAcceptorList = function directAuthorizeAcceptorList(data, sco
   });
 };
 
-api.listUserByDepartment = function listUserByDepartment(data, scope) {
+api.listUserByDepartment = function listUserByDepartment(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/listUserByDepartment', data).then((response) => {
@@ -521,7 +521,7 @@ api.listUserByDepartment = function listUserByDepartment(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -529,7 +529,7 @@ api.listUserByDepartment = function listUserByDepartment(data, scope) {
   });
 };
 
-api.listUsableTemplate = function listUsableTemplate(data, scope) {
+api.listUsableTemplate = function listUsableTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/user/listUsableTemplate', data).then((response) => {
@@ -543,7 +543,7 @@ api.listUsableTemplate = function listUsableTemplate(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

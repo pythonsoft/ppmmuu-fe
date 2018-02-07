@@ -1,7 +1,7 @@
 const api = {};
 const axios = require('../config');
 
-api.esSearch = function esSearch(data, scope) {
+api.esSearch = function esSearch(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/media/esSearch', data).then((response) => {
@@ -15,7 +15,7 @@ api.esSearch = function esSearch(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -23,7 +23,7 @@ api.esSearch = function esSearch(data, scope) {
   });
 };
 
-api.getEsMediaList = function getEsMediaList(data, scope) {
+api.getEsMediaList = function getEsMediaList(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/getEsMediaList', data).then((response) => {
@@ -37,7 +37,7 @@ api.getEsMediaList = function getEsMediaList(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -45,7 +45,7 @@ api.getEsMediaList = function getEsMediaList(data, scope) {
   });
 };
 
-api.defaultMedia = function defaultMedia(data, scope) {
+api.defaultMedia = function defaultMedia(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/defaultMedia', data).then((response) => {
@@ -59,7 +59,7 @@ api.defaultMedia = function defaultMedia(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -67,7 +67,7 @@ api.defaultMedia = function defaultMedia(data, scope) {
   });
 };
 
-api.getSearchConfig = function getSearchConfig(data, scope) {
+api.getSearchConfig = function getSearchConfig(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/getSearchConfig', data).then((response) => {
@@ -81,7 +81,7 @@ api.getSearchConfig = function getSearchConfig(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -93,7 +93,7 @@ api.getIcon = function getIcon(id, fromWhere) {
   return axios.defaults.baseURL + '/media/getIcon?objectid=' + id + '&fromWhere=' + fromWhere;
 };
 
-api.getObject = function getObject(data, scope) {
+api.getObject = function getObject(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/getObject', data).then((response) => {
@@ -107,7 +107,7 @@ api.getObject = function getObject(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -115,7 +115,7 @@ api.getObject = function getObject(data, scope) {
   });
 };
 
-api.getStream = function getStream(data, scope) {
+api.getStream = function getStream(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/getStream', data).then((response) => {
@@ -129,7 +129,7 @@ api.getStream = function getStream(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -137,7 +137,7 @@ api.getStream = function getStream(data, scope) {
   });
 };
 
-api.getSearchHistory = function getSearchHistory(data, scope) {
+api.getSearchHistory = function getSearchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/getSearchHistory', data).then((response) => {
@@ -151,7 +151,7 @@ api.getSearchHistory = function getSearchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -159,7 +159,7 @@ api.getSearchHistory = function getSearchHistory(data, scope) {
   });
 };
 
-api.getWatchHistory = function getWatchHistory(data, scope) {
+api.getWatchHistory = function getWatchHistory(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/getWatchHistory', data).then((response) => {
@@ -173,7 +173,7 @@ api.getWatchHistory = function getWatchHistory(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);
@@ -181,7 +181,7 @@ api.getWatchHistory = function getWatchHistory(data, scope) {
   });
 };
 
-api.xml2srt = function xml2srt(data, scope) {
+api.xml2srt = function xml2srt(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/media/xml2srt', data).then((response) => {
@@ -195,7 +195,7 @@ api.xml2srt = function xml2srt(data, scope) {
         return resolve(res);
       }
       if (scope) { scope.$progress.fail(); }
-      return reject(res.statusInfo.message);
+      return reject(needOriginResponse ? res : res.statusInfo.message);
     }).catch((error) => {
       if (scope) { scope.$progress.fail(); }
       reject(error);

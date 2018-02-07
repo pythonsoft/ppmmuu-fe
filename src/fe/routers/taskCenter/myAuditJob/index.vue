@@ -4,7 +4,7 @@
       <template slot="search-left">下载审核任务</template>
       <template slot="search-right">
         <div class="permission-search-item">
-          <fj-select placeholder="请选择" v-model="status" size="small">
+          <fj-select placeholder="请选择" v-model="status" size="small" theme="fill">
             <fj-option
                     v-for="item in options"
                     :key="item.value"
@@ -14,7 +14,7 @@
           </fj-select>
         </div>
         <div class="permission-search-item">
-          <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
+          <fj-input placeholder="请输入关键词" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch" theme="fill"></fj-input>
         </div>
         <div class="permission-search-item">
           <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>

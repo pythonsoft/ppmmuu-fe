@@ -8,7 +8,8 @@
       :poster="getThumb({ id: objectId, from_where: fromWhere })"
       :url="url"
       :videoId="objectId"
-      :streamInfo="streamInfo"></player>
+      :streamInfo="streamInfo"
+      :fromWhere="fromWhere"></player>
     <fj-navbar v-model="navIndex">
       <fj-tab-item id="nav1">
         概述
@@ -99,6 +100,7 @@
     isEmptyObject,
     formatQuery,
     formatTime,
+    FROM_WHERE,
   } from '../../../fe/common/utils';
   import {
     formatMust,
@@ -137,7 +139,8 @@
         fromWhere: 'MAM',
         filename: '',
         ARCHIVETYPE: getConfig('ARCHIVETYPE'),
-        FILE_STATUS: getConfig('FILE_STATUS')
+        FILE_STATUS: getConfig('FILE_STATUS'),
+        UMP_FILETYPE_VALUE: getConfig('UMP_FILETYPE_VALUE'),
       };
     },
     watch: {
@@ -250,13 +253,24 @@
           return {};
         }
 
-        for(let i = 0, len = files.length; i < len; i++) {
-          for(let j = 0, l = ft.length; j < l; j++) {
-            if(files[i].FILETYPEID === ft[j]) {
-              return files[i];
+        if(this.from_where === this.FROM_WHERE.HK_RUKU){
+          for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {
+                return files[i];
+              }
+            }
+          }
+        }else {
+          for (let j = 0, l = ft.length; j < l; j++) {
+            for (let i = 0, len = files.length; i < len; i++) {
+              if (files[i].FILETYPEID === ft[j]) {
+                return files[i];
+              }
             }
           }
         }
+
 
         return {};
       },
@@ -310,12 +324,13 @@
         //如果不是打点下载，将inpoint，outpoint设置为'0'
         const param = {
           objectid: this.fileInfo.OBJECTID,
-          inpoint: inpoint,
-          outpoint: outpoint,
+          inpoint: this.fileInfo.INPOINT,
+          outpoint: this.fileInfo.OUTPOINT,
           filename: this.fileInfo.FILENAME,
-          filetypeid: this.fileInfo.FILETYPEID,
+          filetypeid: this.fileInfo.FILETYPEID || '',
           templateId: templateInfo._id,
-          source: this.fromWhere || 'MAM'
+          fromWhere: this.fromWhere,
+          fileId: this.fileInfo._id || ''
         };
 
         if(transferParams) {

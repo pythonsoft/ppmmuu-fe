@@ -204,9 +204,17 @@
         const content = [];
         const reg = /【([^【]+)】/g;
         const matchedLabels = selfContent.match(reg) || [];
+        let withoutTagContent = '';
+        if (matchedLabels.length === 0) {
+          withoutTagContent = selfContent;
+        }
         for (let i = 0, len = matchedLabels.length; i < len; i++) {
           const label = matchedLabels[i];
           if (this.labels.indexOf(label) > -1) {
+            // 在配置的标签内容前有别的内容
+            if (content.length === 0 && selfContent.indexOf(label) !== 0) {
+              withoutTagContent = withoutTagContent + selfContent.slice(0, selfContent.indexOf(label));
+            }
             const contentItem = { tag: this.labelsMap[label] };
             const index = selfContent.indexOf(label) + label.length;
             let endIndex = index;
@@ -223,9 +231,11 @@
             }
             contentItem.content = selfContent.slice(index, endIndex);
             selfContent = selfContent.slice(index);
-            // console.log(selfContent);
             content.push(contentItem);
           }
+        }
+        if (withoutTagContent.length > 0) {
+          content.unshift({ tag: '7', content: withoutTagContent });
         }
         this.updateContent({ editContent: content });
       }
@@ -237,7 +247,12 @@
         let content = '';
         editContent.forEach((item)=> {
           words += item.content.length;
-          content += `${this.tagsMap[item.tag]}${item.content}`;
+          // 无标签内容
+          if (item.tag === '7') {
+            content = content + `${item.content}`;
+          } else {
+            content = content + `${this.tagsMap[item.tag]}${item.content}`;
+          }
         });
         this.words = words;
         this.selfContent = content;
@@ -353,130 +368,5 @@
   };
 </script>
 <style module>
-  .editorWrap {
-    padding: 0 40px;
-  }
-  .title {
-    position: relative;
-    height: 40px;
-    line-height: 40px;
-    border-bottom: 1px solid #EBF3FB;
-  }
-  .collaborator {
-    position: relative;
-    line-height: 40px;
-    border-bottom: 1px solid #EBF3FB;
-  }
-  .collaboratorInputWrap {
-    float: left;
-  }
-  .savedText,
-  .words {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    color: #4C637B;
-  }
-  .words {
-    right: 0;
-    width: 80px;
-    text-align: right;
-  }
-  .savedText {
-    right: 80px;
-    width: 40px;
-    text-align: center;
-  }
-  .addCollaboratorBtn {
-    float: right;
-    /*position: absolute;
-    top: 0;
-    right: 0;*/
-    width: 110px;
-    /*height: 100%;*/
-    color: #4C637B;
-    text-align: right;
-    cursor: default;
-  }
-  .addCollaboratorBtn .iconAdd {
-    display: inline-block;
-    width: 26px;
-    height: 26px;
-    line-height: 26px;
-    font-size: 14px;
-    color: #4C637B;
-    background: #EBF3FB;
-    text-align: center;
-    border-radius: 4px;
-    margin-left: 6px;
-  }
-  .addCollaboratorBtn .iconAdd:hover {
-    color: #38B1EB;
-  }
-  .editorInputWrap,
-  .subTitleInputWrap {
-    position: absolute;
-    top: 0;
-    right: 140px;
-    bottom: 0;
-    left: 0;
-  }
-  .subTitleInputWrap {
-    right: 0;
-  }
-  .collaboratorInputWrap {
-    right: 130px;
-  }
-  .editorInput {
-    width: 100%;
-    font-size: 12px;
-    background-color: transparent;
-    border: 0;
-    outline: none;
-  }
-  .editorInputWrap .editorInput {
-    font-weight: bold;
-    font-size: 14px;
-  }
-  .editorInput::placeholder,
-  .placeholder {
-    color: #9FB3CA;
-  }
-  .editorMainWrap {
-    position: relative;
-    padding: 0 40px;
-    overflow: hidden;
-  }
-  .attachmentWrap {
-    height: 100%;
-    padding: 20px 0;
-    overflow: auto;
-  }
-  .attachmentWrap h3 {
-    font-size: 12px;
-    color: #4C637B;
-  }
-  .attachmentWrap h3 .iconfont {
-    display: inline-block;
-    margin-right: 7px;
-    color: #9FB3CA;
-  }
-  .attachmentTable {
-    position: relative;
-    margin-top: 12px;
-  }
-  .editor {
-    width: 100%;
-    height: 100%;
-    padding: 20px 0;
-    font-size: 14px;
-    color: #4C637B;
-    line-height: 21px;
-  }
-  .operatorBtn {
-    margin-right: 12px;
-    font-size: 12px;
-    color: #9FB3CA;
-    cursor: pointer;
-  }
+  @import './copyEditor.css';
 </style>

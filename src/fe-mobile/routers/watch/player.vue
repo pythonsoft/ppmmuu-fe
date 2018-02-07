@@ -43,6 +43,10 @@
     props: {
       poster: String,
       url: String,
+      fromWhere: {
+        type: String,
+        default: 'MAM'
+      },
       fps: {
         type: Number,
         default: 25

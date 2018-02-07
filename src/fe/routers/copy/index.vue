@@ -293,6 +293,7 @@
           viceTitle: copyContent.viceTitle,
           content: JSON.stringify(copyContent.editContent)
         };
+        console.log('copyContent', JSON.stringify(copyContent));
         manuscriptAPI.hongKongSimplified(data)
           .then((response) => {
             const resData = response.data;
@@ -365,7 +366,8 @@
               }
             }
             this.copyList.splice(index, 1);
-            this.activeCopyId = (index + 1) > this.copyList.length ? this.copyList[0]._id : this.copyList[index]._id;
+            const defaultActiveCopyId = this.copyList.length > 0 ? this.copyList[0]._id : '';
+            this.activeCopyId = (index + 1) > this.copyList.length ? defaultActiveCopyId : this.copyList[index]._id;
             this.getSummary();
           })
           .catch((error) => {

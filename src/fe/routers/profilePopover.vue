@@ -2,12 +2,7 @@
   <div class="profile-popover">
     <div class="profile-content clearfix">
       <div class="profile-avatar-box">
-        <template v-if="avatar">
-          <img :src="avatar" class="profile-avatar" width="24" height="24">
-        </template>
-        <template v-else>
-          <img class="profile-avatar imgStyle" width="24" height="24">
-        </template>
+        <img :src="avatar || '/static/img/avatar.png'" class="profile-avatar" width="24" height="24">
       </div>
       <div class="profile-info-box">
         <p class="profile-info-name">{{name | valueLengthLimit(12)}}</p>
