@@ -34,7 +34,15 @@
           </div>
           <div class="message">
             <div v-if="conversation.groupid && item.from !== myselfId" class="name">{{ users[item.from].nickname }}</div>
-            <div class="detail" v-html="formatContent(item.content)"></div>
+            <img v-if="item.type === 'picture'" :src="item.url" class="pic-content" width="110" @click="handleClickImage(item)">
+            <div v-else-if="item.type === 'audio'">
+              <div :class="['audio-btn', {'current-audio': playingAudioIndex === index}]" @click="playMessage(item, index)">
+                <i class="iconfont icon-voice"></i>
+                <span class="audio-length">{{ `${item.length}''` }}</span>
+              </div>
+              <audio ref="audioMsg" class="audio-message"></audio>
+            </div>
+            <div v-else class="detail" v-html="formatContent(item.content)"></div>
             <p v-if="item.error" class="resend">
               <span class="iconfont icon-info"></span>
               未发送成功
@@ -47,6 +55,10 @@
       </div>
     </div>
     <div class="im-dialog-main-right-chat">
+      <div class="im-toolbar">
+        <i class="iconfont icon-add-folder" @click="handlePicBtnClick"></i>
+        <input type="file" ref="pictureInput" class="hide-input" @change="handlePictureChange">
+      </div>
       <div class="im-dialog-main-right-chat-wrap">
         <textarea ref="contentInput" @focus="handleFocus" @keydown.enter="handleEnter" v-model="content"></textarea>
       </div>
@@ -55,6 +67,17 @@
         <fj-button size="small" @click="sendMessage">发送</fj-button>
       </div>
     </div>
+    <fj-dialog
+      :visible.sync="imageDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="true"
+      :width="`${imageWidth}px`"
+      type="basic">
+      <div class="image-dialog-wrap">
+        <img ref="image" :src="currentImg" :width="imageWidth">
+        <a class="iconfont icon-download image-dialog-download-icon" :href="currentImg" :download="currentImgTitle"></a>
+      </div>
+    </fj-dialog>
   </div>
 </template>
 <script>
@@ -79,15 +102,75 @@
       return {
         metaName: system.win ? 'Ctrl' : 'Cmd',
         content: '', //发送窗口内容
-        groupMemberBrowserVisible: false
+        groupMemberBrowserVisible: false,
+        imageDialogVisible: false,
+        currentImgTitle: '',
+        currentImg: '',
+        imageWidth: 640,
+        playingAudioIndex: -1
       };
     },
     watch: {
       messages() {
+        console.log('messages change');
         this.scrollToBottom();
       }
     },
+    mounted() {
+      const contentInput = this.$refs.contentInput;
+      contentInput.addEventListener('paste', (e)=> {
+        e.preventDefault();
+        const data = e.clipboardData;
+        if (data && data.types) {
+          const len = data.items.length;
+          if (len > 0) {
+            const item = data.items[len - 1];
+            if (/^image\/\w+$/.test(item.type)) {
+              const blob = item.getAsFile();
+              const url = window.URL.createObjectURL(blob);
+              const file = { data: blob, url: url };
+              this.$emit('send-picture', file);
+            }
+          }
+        }
+      });
+    },
     methods: {
+      playMessage(item, index) {
+        const audioMsg = this.$refs.audioMsg[index];
+        audioMsg.src = item.src;
+        if (this.playingAudioIndex === index) {
+          audioMsg.pause();
+          audioMsg.currentTime = 0;
+        } else {
+          audioMsg.play();
+          audioMsg.onended = () => {
+            this.playingAudioIndex = -1;
+          };
+          this.playingAudioIndex = index;
+        }
+      },
+      setImageWidth() {
+        if (!this.currentImg) return;
+        let width = 640;
+        let height = 640;
+        let newWidth = 640;
+        width = this.$refs.image && this.$refs.image.naturalWidth;
+        height = this.$refs.image && this.$refs.image.naturalHeight;
+        if (!width || !height) {
+          this.imageWidth = 640;
+          return;
+        }
+        const maxHeight = window.innerHeight - 200 - 20;
+        const maxWidth = window.innerWidth - 20 - 20;
+        if (height > maxHeight) {
+          newWidth = width * maxHeight / height;
+        }
+        if (newWidth > maxWidth) {
+          newWidth = maxWidth;
+        }
+        this.imageWidth = newWidth;
+      },
       handleFocus() {
         this.$emit('clear-unread-message');
       },
@@ -105,6 +188,14 @@
             contentInput.scrollTop += 14;
           });
         }
+      },
+      handleClickImage(item) {
+        this.currentImg = item.url;
+        this.currentImgTitle = item.filename;
+        this.$nextTick(() => {
+          this.setImageWidth();
+          this.imageDialogVisible = true;
+        });
       },
       sendMessage() {
         this.handleFocus();
@@ -152,6 +243,23 @@
             container.scrollTop = container.scrollHeight;
           }, 100);
         }
+      },
+      handlePicBtnClick() {
+        this.$refs.pictureInput.click();
+      },
+      handlePictureChange(e) {
+        const file = WebIM.utils.getFileUrl(this.$refs.pictureInput);
+        if (!file.filename) {
+          this.$refs.pictureInput.value = null;
+          return;
+        }
+
+        if (['gif','bmp','jpg','png'].indexOf(file.filetype.toLowerCase()) === -1) {
+          this.$refs.pictureInput.value = null;
+          this.$message.error('图片格式错误');
+          return;
+        }
+        this.$emit('send-picture', file);
       }
     },
     components: {

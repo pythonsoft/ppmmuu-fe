@@ -237,7 +237,6 @@
         if (withoutTagContent.length > 0) {
           content.unshift({ tag: '7', content: withoutTagContent });
         }
-        console.log('content', content);
         this.updateContent({ editContent: content });
       }
     },
@@ -248,6 +247,7 @@
         let content = '';
         editContent.forEach((item)=> {
           words += item.content.length;
+          // 无标签内容
           if (item.tag === '7') {
             content = content + `${item.content}`;
           } else {
