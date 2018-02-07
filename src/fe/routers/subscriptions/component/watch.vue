@@ -255,7 +255,7 @@
           return {};
         }
 
-        if(this.fromWhere === this.FROM_WHERE.MAM){
+        if(this.fromWhere === this.FROM_WHERE.HK_RUKU){
           for (let j = 0, l = this.UMP_FILETYPE_VALUE.length; j < l; j++) {
             for (let i = 0, len = files.length; i < len; i++) {
               if (files[i].type === this.UMP_FILETYPE_VALUE[j]) {
