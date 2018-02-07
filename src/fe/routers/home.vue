@@ -4,16 +4,19 @@
     <left-menu :showMenuIndex="showMenuIndex">
     </left-menu>
     <div class="main"><router-view></router-view></div>
+    <im></im>
   </div>
 </template>
 <script>
   import menu from './menu';
   import root from './root';
   import { getChildMenuByIndex, getItemFromLocalStorage, getDefaultPageIndex } from '../common/utils';
+  import Im from '../component/im/index';
 
   export default {
     name: 'home',
     components: {
+      Im,
       default: root,
       'left-menu': menu,
       showMenuIndex: []
