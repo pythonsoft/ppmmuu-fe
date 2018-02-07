@@ -78,7 +78,8 @@
       Player
     },
     props: {
-      shelfInfo: { type: Object, default: {}}
+      shelfInfo: { type: Object, default: {}},
+      vueInstance: {},
     },
     data() {
       return {
@@ -166,7 +167,10 @@
       screenshot() {
         this.screenshotURL = this.createImage();
         this.screenshotTitle = this.shelfInfo.name + transformSecondsToStr(this.currentTime) + '.png';
-        this.imageDialogVisible = true;
+        if(this.vueInstance) {
+          this.vueInstance.$emit('screenshot', this.screenshotURL);
+        }
+        // this.imageDialogVisible = true;
       },
       createImage() {
         const video = this.$refs.player.$refs.video;

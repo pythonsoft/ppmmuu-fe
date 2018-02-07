@@ -30,18 +30,21 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import UploadImg from './uploadImg';
   import { formatQuery } from '../../../common/utils';
   import { getSubScribeTypeOptions } from '../../management/subscribeManagement/subscribeInfo/config';
 
   const api = require('../../../api/shelves');
+  const uploadApi = require('../../../api/upload');
 
   export default {
     components: {
       'upload-img': UploadImg
     },
     props: {
-      editorInfo: { type: Object, default: function(){ return {} } }
+      editorInfo: { type: Object, default: function(){ return {} } },
+      vueInstance: {},
     },
     data() {
       return {
@@ -67,6 +70,16 @@
     },
     created() {
       this.initSubScribeType();
+      if(this.vueInstance) {
+        this.vueInstance.$on('screenshot', (base64) => {
+          uploadApi.uploadBase64({base64: base64})
+              .then((res) => {
+                this.editorInfo.cover = res.data;
+              }).catch((error) => {
+            this.$message.error(error);
+          })
+        })
+      }
     },
     methods: {
       imgChange(cover) {
