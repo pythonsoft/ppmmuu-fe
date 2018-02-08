@@ -48,7 +48,7 @@ api.qrcodeLogin = function qrcodeLogin(data, scope, needOriginResponse) {
 api.qrcodeScan = function qrcodeScan(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/qrcode/scan', data).then((response) => {
+    axios.get('/qrcode/scan', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
