@@ -84,7 +84,10 @@
           uploadApi.uploadBase64({base64: base64})
             .then((res) => {
               this.editorInfo.cover = res.data;
+              this.vueInstance.$emit('uploadComplete');
+              this.vueInstance.$emit('lastCover', this.editorInfo.cover);
             }).catch((error) => {
+              this.vueInstance.$emit('uploadComplete');
               this.$message.error(error);
             })
         })
