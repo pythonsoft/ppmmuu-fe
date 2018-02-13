@@ -96,11 +96,17 @@
         imageDialogVisible: false,
         screenshotURL: '',
         screenshotTitle: '',
+        canScreenshot: true,
       };
     },
     created(){
       this.initData();
       this.resize();
+      if(this.vueInstance) {
+        this.vueInstance.$on('uploadComplete', ()=>{
+          this.canScreenshot = true;
+        });
+      }
     },
     mounted() {
       window.addEventListener('resize', this.resize);
@@ -165,6 +171,10 @@
         return false;
       },
       screenshot() {
+        if(!this.canScreenshot){
+          return;
+        }
+        this.canScreenshot = false;
         this.screenshotURL = this.createImage();
         this.screenshotTitle = this.shelfInfo.name + transformSecondsToStr(this.currentTime) + '.png';
         if(this.vueInstance) {
