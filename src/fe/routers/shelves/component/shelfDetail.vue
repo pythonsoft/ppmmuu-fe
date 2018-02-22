@@ -114,7 +114,7 @@
           OUTPOINT: 0,
           FILENAME: ''
         },
-        programDetails: {},
+        programDetails: [],
         editorDetails: {},
         activeTabName: 'tab2',
         videoId: '',
@@ -205,19 +205,17 @@
           .then((res)=>{
             const data = res.data.result.detail.program;
             const programNOObj = {
-              'programNO': {
+                key: 'programNO',
                 cn: '节目编号',
                 value: me.programNO
-              }
             }
-            me.programDetails = Object.assign({}, programNOObj, data);
-            const keys = Object.keys(data);
-            for (let i = 0; i < keys.length; i++) {
-              const info = data[keys[i]];
+            data.push(programNOObj);
+            me.programDetails = data;
+            for (let i = 0; i < me.programDetails.length; i++) {
+              const info = me.programDetails[i];
               if (info.value.length > 60) {
                 info.isFoldedContent = true;
               }
-              me.programDetails[keys[i]] = info;
             }
           })
           .catch((error)=>{

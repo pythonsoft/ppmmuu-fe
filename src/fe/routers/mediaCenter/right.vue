@@ -35,15 +35,15 @@
           <div class="media-center-file-item">
             <template v-if="programEmpty">无</template>
             <table class="media-center-table" v-else>
-              <tr v-for="(info, key) in program" v-if="info.value" >
+              <tr v-for="(info, index) in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
                   <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
-                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
+                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, index)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-html="formatContent(info.value)"></span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
                 </td>
               </tr>
             </table>
@@ -194,7 +194,7 @@
     data() {
       return {
         title: '',
-        program: {},
+        program: [],
         basic: {},
         files: [], // 所有的文件信息
         poster: '',
@@ -236,7 +236,7 @@
         if(this.shelfName.indexOf('.') !== -1) {
           this.shelfName = this.shelfName.slice(0, this.shelfName.lastIndexOf('.'));
         }
-        this.program = {};
+        this.program = [];
         this.poster = this.getThumb(val);
         this.item = val;
         this.videoId = val.id;
@@ -245,15 +245,6 @@
         this.getStream();
         if(this.rootid) {
           this.getVideoFragments();
-        }
-      },
-      program(val) {
-        const keys = Object.keys(val);
-        for (let i = 0; i < keys.length; i++) {
-          const info = val[keys[i]];
-          if (info.value.length > 60) {
-            info.isFoldedContent = true;
-          }
         }
       }
     },
@@ -273,11 +264,8 @@
       },
       isProgramEmpty(){
         const program = this.program;
-        for(let key in program){
-          const info = program[key];
-          if(info.value){
-            return false;
-          }
+        if(program.length > 0){
+          return false;
         }
         return true;
       },
@@ -292,7 +280,16 @@
           me.programEmpty = me.isProgramEmpty();
           me.basic = res.data.result.basic;
           me.files = res.data.result.files;
-          delete me.program.OBJECTID;
+          for(let i =0, len = this.program.length; i < len; i++){
+            if(this.program[i].key === 'OBJECTID'){
+              this.program.splice(i, 1);
+              break;
+            }
+            const info = this.program[i];
+            if (info.value.length > 60) {
+              info.isFoldedContent = true;
+            }
+          }
         }).catch((error) => {
           me.$message.error(error);
         });

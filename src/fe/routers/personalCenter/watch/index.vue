@@ -135,7 +135,7 @@
           OUTPOINT: 0,
           FILENAME: ''
         },
-        program: {},
+        program: [],
         items: [],
         rightboxWidth: '452px',
         templateInfo: {},
@@ -223,7 +223,12 @@
         mediaAPI.getObject({ params: { objectid: this.objectId, fromWhere: this.fromWhere } }).then((res) => {
           this.program = res.data.result.detail.program;
           this.files = res.data.result.files;
-          delete this.program.OBJECTID;
+          for(let i =0, len = this.program.length; i < len; i++){
+            if(this.program[i].key === 'OBJECTID'){
+              this.program.splice(i, 1);
+              break;
+            }
+          }
         }).catch((error) => {
           this.$message.error(error);
         });

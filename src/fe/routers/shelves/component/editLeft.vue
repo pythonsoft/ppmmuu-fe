@@ -143,10 +143,9 @@
         const me = this;
         api.getObject(formatQuery({ objectid: me.videoId, fromWhere: me.shelfInfo.fromWhere || FROM_WHERE.MAM }, true))
           .then((res)=>{
-            me.programDetails = Object.assign({'programNO': {cn: '节目编号', value: me.shelfInfo.programNO}},res.data.result.detail.program);
-            const keys = Object.keys(me.programDetails);
-            for (let i = 0; i < keys.length; i++) {
-              const info = me.programDetails[keys[i]];
+            me.programDetails = Object.assign({key: 'programNO', cn: '节目编号', value: me.shelfInfo.programNO},res.data.result.detail.program);
+            for (let i = 0; i < me.programDetails.length; i++) {
+              const info = me.programDetails[i];
               if (info.value.length > 60) {
                 info.isFoldedContent = true;
               }
