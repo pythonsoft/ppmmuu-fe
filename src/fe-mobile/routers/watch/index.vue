@@ -124,7 +124,7 @@
         url: '',
         streamInfo: {},
         objectId: '',
-        program: {},
+        program: [],
         fileInfo: {},
         currentRow: {},
         basic: {},
@@ -233,7 +233,12 @@
           this.program = res.data.result.detail.program;
           this.files = res.data.result.files;
           this.basic = res.data.result.basic;
-          delete this.program.OBJECTID;
+          for(let i =0, len = this.program.length; i < len; i++){
+            if(this.program[i].key === 'OBJECTID'){
+              this.program.splice(i, 1);
+              break;
+            }
+          }
         }).catch((error) => {
           this.$toast.error(error);
         });

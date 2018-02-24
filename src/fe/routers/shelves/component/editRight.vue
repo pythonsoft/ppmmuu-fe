@@ -72,12 +72,24 @@
       this.initSubScribeType();
       if(this.vueInstance) {
         this.vueInstance.$on('screenshot', (base64) => {
+          const cover = this.editorInfo.cover;
+          if(cover){
+            uploadApi.remove({path: cover})
+              .then(() => {
+
+              }).catch(() => {
+
+              })
+          }
           uploadApi.uploadBase64({base64: base64})
-              .then((res) => {
-                this.editorInfo.cover = res.data;
-              }).catch((error) => {
-            this.$message.error(error);
-          })
+            .then((res) => {
+              this.editorInfo.cover = res.data;
+              this.vueInstance.$emit('uploadComplete');
+              this.vueInstance.$emit('lastCover', this.editorInfo.cover);
+            }).catch((error) => {
+              this.vueInstance.$emit('uploadComplete');
+              this.$message.error(error);
+            })
         })
       }
     },

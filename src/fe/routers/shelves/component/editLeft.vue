@@ -96,11 +96,17 @@
         imageDialogVisible: false,
         screenshotURL: '',
         screenshotTitle: '',
+        canScreenshot: true,
       };
     },
     created(){
       this.initData();
       this.resize();
+      if(this.vueInstance) {
+        this.vueInstance.$on('uploadComplete', ()=>{
+          this.canScreenshot = true;
+        });
+      }
     },
     mounted() {
       window.addEventListener('resize', this.resize);
@@ -137,10 +143,9 @@
         const me = this;
         api.getObject(formatQuery({ objectid: me.videoId, fromWhere: me.shelfInfo.fromWhere || FROM_WHERE.MAM }, true))
           .then((res)=>{
-            me.programDetails = Object.assign({'programNO': {cn: '节目编号', value: me.shelfInfo.programNO}},res.data.result.detail.program);
-            const keys = Object.keys(me.programDetails);
-            for (let i = 0; i < keys.length; i++) {
-              const info = me.programDetails[keys[i]];
+            me.programDetails = Object.assign({key: 'programNO', cn: '节目编号', value: me.shelfInfo.programNO},res.data.result.detail.program);
+            for (let i = 0; i < me.programDetails.length; i++) {
+              const info = me.programDetails[i];
               if (info.value.length > 60) {
                 info.isFoldedContent = true;
               }
@@ -165,6 +170,10 @@
         return false;
       },
       screenshot() {
+        if(!this.canScreenshot){
+          return;
+        }
+        this.canScreenshot = false;
         this.screenshotURL = this.createImage();
         this.screenshotTitle = this.shelfInfo.name + transformSecondsToStr(this.currentTime) + '.png';
         if(this.vueInstance) {

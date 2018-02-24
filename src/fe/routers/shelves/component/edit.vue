@@ -1,5 +1,5 @@
 <template>
-  <four-row-layout-right-content :isIncludeArrow="true" @back="handleClickCancel">
+  <four-row-layout-right-content :isIncludeArrow="true" @back="handleClickBack">
     <template slot="search-left">编辑中</template>
     <template slot="operation">
       <div class="operation-btn-group">
@@ -44,6 +44,7 @@
   import PanelView from '../../../component/layout/panel/index';
 
   const api = require('../../../api/shelves');
+  const uploadApi = require('../../../api/upload');
 
   export default {
     components: {
@@ -59,12 +60,16 @@
       return {
         defaultRoute: '/',
         size: { width: document.body.clientWidth - 206, height: document.body.clientHeight },
-        vueInstance: null
+        vueInstance: null,
+        cover: '',
       };
     },
     created() {
       this.resize();
       this.vueInstance = new Vue();
+      this.vueInstance.$on('lastCover', (cover)=>{
+        this.cover = cover;
+      });
     },
     mounted() {
       window.addEventListener('resize', this.resize);
@@ -109,9 +114,21 @@
           }
         });
       },
+      handleClickBack(){
+        this.$emit('update-list');
+        this.$emit('show-back');
+      },
       handleClickCancel(){
         this.$emit('update-list');
         this.$emit('show-back');
+        if(this.cover){
+          uploadApi.remove({path: this.cover})
+              .then(() => {
+
+              }).catch(() => {
+
+          })
+        }
       },
       showSuccessInfo(message) {
         this.$message.success(message);
