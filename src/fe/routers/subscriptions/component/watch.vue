@@ -192,9 +192,10 @@
           setTimeout(this.updatePlayerWidth, 400);
         }
       },
-      updateList() {
+      updateList(subscribeType) {
         const options = {};
         options.keyword = this.name;
+        options.subscribeType = subscribeType;
         options.isRelated = true;
         options.start = 0;
         options.pageSize = 13;
@@ -223,7 +224,7 @@
           this.name = data.name;
           this.fromWhere = data.fromWhere || FROM_WHERE.MAM;
           this.getStream(this.objectId, this.fromWhere);
-          this.updateList();
+          this.updateList(data.editorInfo.subscribeType);
           this.program = data.details;
           this.files = data.files;
 
