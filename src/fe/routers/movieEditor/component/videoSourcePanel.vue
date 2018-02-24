@@ -2,7 +2,11 @@
   <div
     :class="['video-source-wrap', {'active-panel':isActivePanel}]"
     @click="()=>{this.$emit('update:activePanel', 'sourcePanel')}">
-    <div class="video-source-title">{{ `源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}` }}</div>
+    <div
+      class="video-source-title"
+      :title="`源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}`"
+      v-html="`源：${title || videoInfo.FILENAME || '素材名称'} ${displayDuration}`"
+      ></div>
     <div class="video-source-box">
       <div class="videoSourceLoadingMask" v-if="loading"></div>
       <video v-on:contextmenu.prevent="contextMenuStop" :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }" crossorigin="anonymous"></video>

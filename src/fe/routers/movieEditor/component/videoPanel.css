@@ -23,6 +23,9 @@
   height: 37px;
   line-height: 37px;
   font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .video-source-box {
   position: absolute;
