@@ -26,9 +26,11 @@ app.use(function(req, res, next) {
     const deviceAgent = req.headers["user-agent"].toLowerCase();
     const agentID = deviceAgent.match(/(iphone|ipod|ipad|android|mobile)/);
     let filePath = pcDir;
+
     if(agentID){
       filePath = mobileDir;
     }
+
     res.sendfile(path.resolve(__dirname, filePath, 'public', 'index.html'));
   }
 });
