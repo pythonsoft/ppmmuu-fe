@@ -1,160 +1,93 @@
 <template>
-  <div>正在开发中，敬请期待...</div>
+  <three-row-layout-right-content>
+    <template slot="search-left">权限</template>
+    <template slot="search-right">
+      <div class="permission-search-item">
+        <fj-input placeholder="输入关键字" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
+      </div>
+      <div class="permission-search-item">
+        <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
+      </div>
+    </template>
+    <template slot="table">
+      <fj-table :data="tableData" name="table1" ref="table">
+        <fj-table-column prop="creator" label="反馈者" width="120"><template slot-scope="props">{{props.row.creator.name}}</template></fj-table-column>
+        <fj-table-column prop="content" label="内容"></fj-table-column>
+        <fj-table-column prop="createdTime" label="创建时间" width="160"><template slot-scope="props">{{ props.row.createdTime | formatTime }}</template></fj-table-column>
+      </fj-table>
+    </template>
+    <template slot="pagination">
+      <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
+    </template>
+  </three-row-layout-right-content>
 </template>
 <script>
-  import './index.css';
-  import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
-  import utils from '../../../../common/utils';
+  import { formatQuery } from '../../../../common/utils';
+  import ThreeRowLayoutRightContent from '../../../../component/layout/threeRowLayoutRightContent/index';
 
-  const api = require('../../../../api/transcode');
+  const api = require('../../../../api/faq');
 
   export default {
     components: {
-      'layout-four-row': fourRowLayout
+      'three-row-layout-right-content': ThreeRowLayoutRightContent
     },
     data() {
       return {
-        isDisabled: true,
-        stopDisable: true,
-        restartDisable: true,
-
-        formData: {
-          keyword: '',
-          status: '',
-          currentStep: ''
-        },
-        table: {
-          currentRowInfo: {}
-        },
+        defaultRoute: '/',
+        keyword: '',
         tableData: [],
-        /* bucket param */
-        page: 1,
-        pageSize: 20,
+        currentPage: 1,
         total: 0,
-
-        /* child task */
-        childTaskDialogVisible: false,
-
-        runTimer: false
+        pageSize: 15
       };
     },
     created() {
-      this.listTask();
-      this.runTimer = true;
-      this.autoRefreshList();
-    },
-    destroyed() {
-      this.runTimer = false;
+      this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
+      this.handleClickSearch();
     },
     methods: {
+      getActiveRoute(path, level) {
+        const pathArr = path.split('/');
+        return pathArr[level] || '';
+      },
       handleClickSearch() {
-        this.listTask();
-      },
-      stopClick() {
-        this.stop();
-      },
-      restartClick() {
-        this.restart();
-      },
-      childTaskClick() {
-        this.childTaskDialogVisible = true;
-      },
-      refreshClick() {
-        this.listTask();
-        this.isDisabled = true;
-        this.table.currentRowInfo = {};
-        this.childTaskDialogVisible = false;
-      },
-      /* table */
-      handleCurrentChange(current) {
-      },
-      getStatus(v) {
-      },
-      formatType(v) {
-        return v;
-      },
-      formatPermission(v) {
-        return v;
-      },
-      pageChange(val) {
-        this.page = val;
-        this.listTask();
-      },
-      autoRefreshList() {
         const me = this;
-        if (!me.runTimer) {
-          return false;
-        }
-        setTimeout(() => {
-          me.listTask(true, () => {
-            me.autoRefreshList();
-          });
-        }, 3000);
-
-        return false;
-      },
-      /* api */
-      listTask(notNeedProcess, completeFn) {
-        const me = this;
-
-        const param = {
-          page: this.page,
-          pageSize: this.pageSize
+        const searchObj = {
+          page: me.currentPage,
+          pageSize: me.pageSize,
+          keyword: me.keyword
         };
-
-        if (this.formData.status) {
-          param.status = this.formData.status;
-        }
-
-        if (this.formData.currentStep) {
-          param.currentStep = this.formData.currentStep;
-        }
-
-        api.list({ params: param }, notNeedProcess ? '' : me).then((res) => {
-          me.tableData = res.data.docs;
-          me.page = res.data.page;
-          me.total = res.data.total;
-          completeFn && completeFn();
-        }).catch((error) => {
-          if (!notNeedProcess) {
-            me.$message.error(error);
-          }
-          completeFn && completeFn();
-        });
+        api.list(formatQuery(searchObj, true), me)
+            .then((res) => {
+              const data = res.data;
+              me.tableData = data ? data.docs : [];
+              me.currentPage = data.page;
+              me.total = data.total;
+              me.pageSize = data.pageSize;
+            })
+            .catch((error) => {
+              me.showErrorInfo(error);
+            });
       },
-      stop() {
-        const me = this;
-
-        const param = {
-          parentId: this.table.currentRowInfo.id
-        };
-
-        api.stop({ params: param }).then((res) => {
-          me.$message.success('任务已成功停止');
-          me.listTask();
-        }).catch((error) => {
-          me.$message.error(error);
-        });
-
-        return false;
+      clearTableSelection() {
+        this.$refs.table.clearSelection();
       },
-
-      restart() {
-        const me = this;
-
-        const param = {
-          parentId: this.table.currentRowInfo.id
-        };
-
-        api.restart({ params: param }).then((res) => {
-          me.$message.success('任务已成功重启');
-          me.listTask();
-        }).catch((error) => {
-          me.$message.error(error);
-        });
-
-        return false;
+      handleCurrentPageChange(val) {
+        this.handleClickSearch();
+      },
+      showSuccessInfo(message) {
+        this.$message.success(message);
+      },
+      showErrorInfo(message) {
+        this.$message.error(message);
       }
     }
   };
 </script>
+<style scope>
+  .permission-search-item{
+    float: left;
+    margin-left: 10px;
+    line-height: 100%;
+  }
+</style>
