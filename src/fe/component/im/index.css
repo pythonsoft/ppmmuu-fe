@@ -312,7 +312,9 @@
   position: absolute;
   top: 0;
 }
-
+.im-dialog-main-right-content-item .message {
+  position: relative;
+}
 .im-dialog-main-right-content-item .body .message .name{
   color: #4f4f4f;
   font-size: 12px;
@@ -358,6 +360,21 @@
 .message .pic-content {
   width: 110px;
   border-radius: 4px;
+}
+.message .video-poster-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  padding-left: 3px;
+  text-align: center;
+  font-size: 16px;
+  color: #fff;
+  background: rgba(0, 0, 0, .6);
+  border-radius: 50%;
 }
 .im-dialog-main-right-content-item .body .message .resend{
   padding: 4px 13px;
