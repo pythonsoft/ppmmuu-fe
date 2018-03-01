@@ -34,7 +34,11 @@
           </div>
           <div class="message">
             <div v-if="conversation.groupid && item.from !== myselfId" class="name">{{ users[item.from].nickname }}</div>
-            <img v-if="item.type === 'picture'" :src="item.url" class="pic-content" width="110" @click="handleClickImage(item)">
+            <img v-if="item.type === 'picture'" :src="item.url" class="pic-content" width="110" @click="(e)=>{handleClickImage(item, e)}">
+            <div v-else-if="item.type === 'video'" class="message" @click="(e)=>{handleClickVideo(item, e)}">
+              <video :src="item.url" width="110" ref="video" preload="metadata" class="pic-content"></video>
+              <i class="iconfont icon-play video-poster-icon"></i>
+            </div>
             <div v-else-if="item.type === 'audio'">
               <div :class="['audio-btn', {'current-audio': playingAudioIndex === index}]" @click="playMessage(item, index)">
                 <i class="iconfont icon-voice"></i>
@@ -56,7 +60,7 @@
     </div>
     <div class="im-dialog-main-right-chat">
       <div class="im-toolbar">
-        <i class="iconfont icon-add-folder" @click="handlePicBtnClick"></i>
+        <i class="iconfont icon-picture" @click="handlePicBtnClick"></i>
         <input type="file" ref="pictureInput" class="hide-input" @change="handlePictureChange">
       </div>
       <div class="im-dialog-main-right-chat-wrap">
@@ -73,9 +77,12 @@
       :close-on-click-modal="true"
       :width="`${imageWidth}px`"
       type="basic">
-      <div class="image-dialog-wrap">
+      <div class="image-dialog-wrap" v-if="dialogContentType==='image'">
         <img ref="image" :src="currentImg" :width="imageWidth">
         <a class="iconfont icon-download image-dialog-download-icon" :href="currentImg" :download="currentImgTitle"></a>
+      </div>
+      <div v-else>
+        <video ref="dialogVideo" :src="currentVideo" autoplay loop preload="auto" :width="imageWidth"></video>
       </div>
     </fj-dialog>
   </div>
@@ -103,24 +110,33 @@
         metaName: system.win ? 'Ctrl' : 'Cmd',
         content: '', //发送窗口内容
         groupMemberBrowserVisible: false,
+        fileType: 'image',
         imageDialogVisible: false,
+        dialogContentType: 'image',
         currentImgTitle: '',
         currentImg: '',
+        currentVideo: '',
         imageWidth: 640,
         playingAudioIndex: -1
       };
     },
     watch: {
       messages() {
-        console.log('messages change');
+        // console.log('messages change');
         this.scrollToBottom();
+      },
+      imageDialogVisible(val) {
+        if (!val) {
+          this.currentVideo = '';
+        }
       }
     },
     mounted() {
       const contentInput = this.$refs.contentInput;
       contentInput.addEventListener('paste', (e)=> {
-        e.preventDefault();
         const data = e.clipboardData;
+        if (data.items.length === 1 && data.items[0].kind === 'string') return;
+        e.preventDefault();
         if (data && data.types) {
           const len = data.items.length;
           if (len > 0) {
@@ -150,17 +166,10 @@
           this.playingAudioIndex = index;
         }
       },
-      setImageWidth() {
-        if (!this.currentImg) return;
-        let width = 640;
-        let height = 640;
-        let newWidth = 640;
-        width = this.$refs.image && this.$refs.image.naturalWidth;
-        height = this.$refs.image && this.$refs.image.naturalHeight;
-        if (!width || !height) {
-          this.imageWidth = 640;
-          return;
-        }
+      setImageWidth(width = 640, height = 640) {
+        if (this.dialogContentType === 'video' && !this.currentVideo) return;
+        if (this.dialogContentType === 'image' && !this.currentImg) return;
+        let newWidth = width;
         const maxHeight = window.innerHeight - 200 - 20;
         const maxWidth = window.innerWidth - 20 - 20;
         if (height > maxHeight) {
@@ -189,11 +198,29 @@
           });
         }
       },
-      handleClickImage(item) {
+      handleClickImage(item, e) {
+        const target = e.target;
         this.currentImg = item.url;
         this.currentImgTitle = item.filename;
         this.$nextTick(() => {
-          this.setImageWidth();
+          const width = target.naturalWidth;
+          const height = target.naturalHeight;
+          this.setImageWidth(width, height);
+          this.imageDialogVisible = true;
+          this.dialogContentType = 'image';
+        });
+      },
+      handleClickVideo(item, e) {
+        let target = e.target;
+        if (target.tagName.toLowerCase() !== 'video') {
+          target = target.parentNode.getElementsByTagName('video')[0];
+        }
+        this.currentVideo = item.url;
+        this.$nextTick(() => {
+          this.dialogContentType = 'video';
+          const width = target.videoWidth;
+          const height = target.videoHeight;
+          this.setImageWidth(width, height);
           this.imageDialogVisible = true;
         });
       },
@@ -244,7 +271,8 @@
           }, 100);
         }
       },
-      handlePicBtnClick() {
+      handlePicBtnClick(fileType = 'image') {
+        this.fileType = fileType;
         this.$refs.pictureInput.click();
       },
       handlePictureChange(e) {
@@ -253,13 +281,21 @@
           this.$refs.pictureInput.value = null;
           return;
         }
-
-        if (['gif','bmp','jpg','png'].indexOf(file.filetype.toLowerCase()) === -1) {
-          this.$refs.pictureInput.value = null;
-          this.$message.error('图片格式错误');
-          return;
+        if (this.fileType === 'video') {
+          if (['mp4','wmv','avi','rmvb','mkv'].indexOf(file.filetype.toLowerCase()) === -1) {
+            this.$refs.pictureInput.value = null;
+            this.$message.error('视频格式错误');
+            return;
+          }
+          this.$emit('send-video', file);
+        } else {
+          if (['gif','bmp','jpg','png'].indexOf(file.filetype.toLowerCase()) === -1) {
+            this.$refs.pictureInput.value = null;
+            this.$message.error('图片格式错误');
+            return;
+          }
+          this.$emit('send-picture', file);
         }
-        this.$emit('send-picture', file);
       }
     },
     components: {
