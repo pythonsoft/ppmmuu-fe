@@ -108,6 +108,11 @@
         });
       }
     },
+    watch: {
+      shelfInfo(val){
+        this.initData();
+      },
+    },
     mounted() {
       window.addEventListener('resize', this.resize);
     },
@@ -127,6 +132,9 @@
         //this.videoId = this.shelfInfo.objectId;
         this.videoId = this.shelfInfo.objectId;
         this.editorInfo = this.shelfInfo.editorInfo;
+        if(this.editorInfo.subscribeType && this.editorInfo.subscribeType.constructor.name === 'String'){
+          this.editorInfo.subscribeType = this.editorInfo.subscribeType.split(',');
+        }
         this.poster = this.getThumb({id: this.videoId});
         this.getStream();
         this.getObject();

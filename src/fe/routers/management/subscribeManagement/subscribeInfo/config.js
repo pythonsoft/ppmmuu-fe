@@ -65,7 +65,7 @@ config.formatRows = function formatRows(rows) {
 config.getSubScribeTypeOptions = function getSubScribeTypeOptions(rows) {
   const options = [];
   rows.forEach((item) => {
-    const option = { value: item._id, label: item.name, key: item._id };
+    const option = { value: item._id, label: `${item._id}(${item.name})`, key: item._id };
     options.push(option);
   });
   return options;

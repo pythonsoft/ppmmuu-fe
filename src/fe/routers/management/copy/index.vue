@@ -74,22 +74,22 @@
           <fj-input :value="currentRow.editContent[0].content" :readonly="true" :rows="3" type="textarea"></fj-input>
         </fj-form-item>
         <fj-form-item label="创建者">
-          <fj-input :value="currentRow.creator.Name" :readonly="true"></fj-input>
+          <fj-input :value="currentRow.creator.name" :readonly="true"></fj-input>
         </fj-form-item>
         <fj-form-item label="协作人员">
           <div v-if="currentRow.collaborators && currentRow.collaborators.length" style="padding-top: 5px;">
             <fj-tag
                     v-for="item in currentRow.collaborators"
-                    :key="item.Id"
-                    type="primary">{{ item.Name }}</fj-tag>
+                    :key="item._id"
+                    type="primary">{{ item.name }}</fj-tag>
           </div>
           <fj-input value="" :readonly="true" v-else></fj-input>
         </fj-form-item>
         <fj-form-item label="创建时间">
-          <fj-input v-model="currentRow.createdTime" :readonly="true"></fj-input>
+          <fj-input :value="currentRow.createdTime | formatTime" :readonly="true"></fj-input>
         </fj-form-item>
         <fj-form-item label="修改时间">
-          <fj-input v-model="currentRow.modifyTime" :readonly="true"></fj-input>
+          <fj-input :value="currentRow.modifyTime | formatTime" :readonly="true"></fj-input>
         </fj-form-item>
       </fj-form>
       <div slot="footer" class="dialog-footer">
