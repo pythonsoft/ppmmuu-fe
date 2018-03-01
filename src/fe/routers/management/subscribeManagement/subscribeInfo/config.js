@@ -2,6 +2,7 @@
  * Created by steven on 2017/10/11.
  */
 const config = {};
+import { valueLengthLimit } from '../../../../common/utils';
 
 const STATUS = {
   UNUSED: '0',
@@ -65,7 +66,7 @@ config.formatRows = function formatRows(rows) {
 config.getSubScribeTypeOptions = function getSubScribeTypeOptions(rows) {
   const options = [];
   rows.forEach((item) => {
-    const option = { value: item._id, label: `${item._id}(${item.name})`, key: item._id };
+    const option = { value: item._id, label: valueLengthLimit(`${item.name}(${item._id})`, 30), key: item._id };
     options.push(option);
   });
   return options;
