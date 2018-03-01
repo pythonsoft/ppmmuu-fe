@@ -79,7 +79,7 @@
         const param = {
           objectid: this.fileInfo.OBJECTID,
           inpoint: this.fileInfo.INPOINT,
-          outpoint: this.fileInfo.OUTPOINT,
+          outpoint: 0,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: templateInfo._id,

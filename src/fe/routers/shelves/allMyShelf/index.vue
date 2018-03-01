@@ -22,7 +22,7 @@
       </template>
       <template slot="operation">
         <div class="operation-btn-group">
-          <fj-button type="primary" size="mini" v-bind:disabled="canEditRows.length !== 1" @click="handleClickEdit">编辑</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="canEditRows.length < 1" @click="handleClickEdit">编辑</fj-button>
           <fj-button type="primary" size="mini" v-bind:disabled="sendBackDisable" @click="handleClickSendBack">退回</fj-button>
         </div>
         <div class="operation-btn-group">
@@ -56,7 +56,7 @@
 
       </fj-dialog>
     </four-row-layout-right-content>
-    <edit v-else :shelfInfo="editRow" @show-back="handleShowBack" @update-list="handleClickSearch"></edit>
+    <edit v-else :shelfInfo="editRows" @show-back="handleShowBack" @update-list="handleClickSearch"></edit>
   </div>
 </template>
 <script>
@@ -101,7 +101,7 @@
         canSendBackIds: [],
         canDeleteIds: [],
         selectedRows: [],
-        editRow: {},
+        editRows: [],
         formatStatus: formatStatus,
         formatTime: formatTime
       };
@@ -148,7 +148,7 @@
         this.sendBackOrDelete = 'sendBack';
       },
       handleClickEdit() {
-        this.editRow = this.canEditRows[0];
+        this.editRows = this.canEditRows;
         this.showEdit = true;
       },
       handleClickDelete() {
