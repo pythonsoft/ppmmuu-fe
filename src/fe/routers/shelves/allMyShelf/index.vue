@@ -149,7 +149,6 @@
       },
       handleClickEdit() {
         this.editRows = this.canEditRows;
-        console.log("editRows==>", this.editRows);
         this.showEdit = true;
       },
       handleClickDelete() {
@@ -205,7 +204,6 @@
         this.canEditRows = [];
         this.canSendBackIds = [];
         this.canDeleteIds = [];
-        console.log("hello===>");
         if (rows && rows.length) {
           let flag1 = true;
           let flag2 = true;
@@ -230,7 +228,6 @@
           this.sendBackDisable = !flag1;
           this.deleteDisable = !flag2;
         }
-        console.log("select===>", this.canEditRows);
       },
       clearTableSelection() {
         this.$refs.table.clearSelection();
