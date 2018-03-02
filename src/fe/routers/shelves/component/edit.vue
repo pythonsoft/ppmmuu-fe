@@ -13,7 +13,7 @@
     <template slot="table">
       <div class="shelf-edit-list">
         <ul style="padding: 16px 0 0 20px;">
-          <li @click="handleClickShelfItem(item)" v-for="(item, index) in shelfInfo">
+          <li @click="handleClickShelfItem(item)" v-for="(item, index) in shelfInfos">
             <div :class="['shelf-edit-item', {'active': item === activeShelfInfo}]">
               <div class="shelf-edit-item-img">
                 <img style="width: 52px; height: 29px;" :src="getIcon(item)">
@@ -81,6 +81,8 @@
         cover: '',
         activeShelfInfo: {},
         isFirstSave: true,
+        _ids: '',
+        shelfInfos: []
       };
     },
     created() {
@@ -92,7 +94,13 @@
       this.isFirstSave = true;
       if( this.shelfInfo && this.shelfInfo.length){
         this.activeShelfInfo = this.shelfInfo[0];
+        const _idsArr = [];
+        this.shelfInfo.forEach((item)=>{
+          _idsArr.push(item._id);
+        })
+        this._ids = _idsArr.join(',');
       }
+      this.shelfInfos = this.shelfInfo;
     },
     mounted() {
       window.addEventListener('resize', this.resize);
@@ -106,22 +114,18 @@
         let postData = {};
         let func = '';
         if(this.isFirstSave){
-          const _ids = [];
-          me.shelfInfo.forEach((item)=>{
-            _ids.push(item._id);
-          })
           postData = {
-            _ids: _ids.join(','),
+            _ids: me._ids,
             editorInfo: me.activeShelfInfo.editorInfo,
             firstId: this.activeShelfInfo._id
           };
           const cloneEditorInfo = JSON.parse(JSON.stringify(this.activeShelfInfo.editorInfo));
           delete cloneEditorInfo.name;
-          for(let i = 0, len = this.shelfInfo.length; i < len; i++){
-            if(this.shelfInfo[i] !== this.activeShelfInfo) {
-              const name = this.shelfInfo[i].editorInfo.name;
-              this.shelfInfo[i].editorInfo = JSON.parse(JSON.stringify(cloneEditorInfo));
-              this.shelfInfo[i].editorInfo.name = name;
+          for(let i = 0, len = this.shelfInfos.length; i < len; i++){
+            if(this.shelfInfos[i] !== this.activeShelfInfo) {
+              const name = this.shelfInfos[i].editorInfo.name;
+              this.shelfInfos[i].editorInfo = JSON.parse(JSON.stringify(cloneEditorInfo));
+              this.shelfInfos[i].editorInfo.name = name;
             }
           }
           func = isSave ? api.batchSaveShelf : api.batchSubmitShelf;
@@ -140,8 +144,21 @@
         func(postData)
             .then((res) => {
               me.activeShelfInfo.name = me.activeShelfInfo.editorInfo.name;
+              if(me.isFirstSave){
+                me.getShelfInfos({ _ids: me._ids});
+              }
               me.isFirstSave = false;
               me.showSuccessInfo('已保存');
+            })
+            .catch((error) => {
+              me.showErrorInfo(error);
+            });
+      },
+      getShelfInfos(query) {
+        const me = this;
+        api.listMyselfShelfTask(formatQuery(query, true), me)
+            .then((res) => {
+              me.shelfInfos = res.data.docs;
             })
             .catch((error) => {
               me.showErrorInfo(error);
@@ -155,6 +172,9 @@
             func(postData)
               .then((res)=>{
                 me.isFirstSave = false;
+                if(me.isFirstSave){
+                  me.getShelfInfos({ _ids: me._ids});
+                }
                 me.showSuccessInfo('提交成功');
                 me.$emit('update-list');
                 me.$emit('show-back');
