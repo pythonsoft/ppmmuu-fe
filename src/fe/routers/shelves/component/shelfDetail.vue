@@ -178,7 +178,7 @@
             };
             me.editorDetails['subscribeType'] = {
               cn: '订阅类型',
-              value: editorInfo['subscribeType']
+              value: editorInfo['subscribeTypeText']
             };
             me.editorDetails['source'] = {
               cn: '来源',
