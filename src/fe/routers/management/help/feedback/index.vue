@@ -1,6 +1,6 @@
 <template>
   <three-row-layout-right-content>
-    <template slot="search-left">权限</template>
+    <template slot="search-left">反馈</template>
     <template slot="search-right">
       <div class="permission-search-item">
         <fj-input placeholder="输入关键字" v-model="keyword" size="small" @keydown.native.enter.prevent="handleClickSearch"></fj-input>
