@@ -6,7 +6,10 @@
         <fj-input v-model="editorInfo.name"></fj-input>
       </fj-form-item>
       <fj-form-item label="订阅类型" prop="subscribeType">
-        <fj-select v-model="editorInfo.subscribeType">
+        <fj-select
+                :remote-method="remoteMethod"
+                v-model="editorInfo.subscribeType"
+                multiple>
           <fj-option
                   v-for="item in subscribeType"
                   :key="item.key"
@@ -68,7 +71,21 @@
         },
       };
     },
+    watch: {
+      editorInfo(val) {
+        if(!val.subscribeType){
+          val.subscribeType = [];
+        }else if( val.subscribeType.constructor.name === 'String'){
+          val.subscribeType = val.subscribeType.split(',');
+        }
+      }
+    },
     created() {
+      if(!this.editorInfo.subscribeType){
+        this.editorInfo.subscribeType = [];
+      }else if( this.editorInfo.subscribeType.constructor.name === 'String'){
+        this.editorInfo.subscribeType = this.editorInfo.subscribeType.split(',');
+      }
       this.initSubScribeType();
       if(this.vueInstance) {
         this.vueInstance.$on('screenshot', (base64) => {
@@ -106,6 +123,9 @@
           .catch((error) => {
             this.$message.error(error);
           });
+      },
+      remoteMethod() {
+
       },
     }
   }

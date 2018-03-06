@@ -11,6 +11,22 @@
       </div>
     </template>
     <template slot="table">
+      <div class="shelf-edit-list">
+        <ul style="padding: 16px 0 0 20px;">
+          <li @click="handleClickShelfItem(item)" v-for="(item, index) in shelfInfos">
+            <div :class="['shelf-edit-item', {'active': item === activeShelfInfo}]">
+              <div class="shelf-edit-item-img">
+                <img style="width: 52px; height: 29px;" :src="getIcon(item)">
+              </div>
+              <div class="shelf-edit-item-content">
+                <span class>{{getTitle(item.name)}}</span>
+                <span>{{getDuration(item)}}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="shelf-edit-slider-bar"></div>
       <div class="shelf-edit" ref="shelfEdit">
         <panel-view
                 :limitResize="true"
@@ -22,12 +38,12 @@
         >
           <template slot="0" slot-scope="props">
             <div class="shelf-edit-left">
-              <edit-left :shelfInfo="shelfInfo" :vueInstance="vueInstance"></edit-left>
+              <edit-left :shelfInfo="activeShelfInfo" :vueInstance="vueInstance"></edit-left>
             </div>
           </template>
           <template slot="1" slot-scope="props">
             <div class="shelf-edit-right">
-              <edit-right :editorInfo="shelfInfo.editorInfo" ref="editRight" :vueInstance="vueInstance"></edit-right>
+              <edit-right :editorInfo="activeShelfInfo.editorInfo" ref="editRight" :vueInstance="vueInstance"></edit-right>
             </div>
           </template>
         </panel-view>
@@ -37,7 +53,7 @@
 </template>
 <script>
   import Vue from 'vue';
-  import { formatQuery, formatTime} from '../../../common/utils';
+  import { formatQuery, formatTime, valueLengthLimit, formatDuration} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import EditLeft from './editLeft';
   import EditRight from './editRight';
@@ -45,6 +61,7 @@
 
   const api = require('../../../api/shelves');
   const uploadApi = require('../../../api/upload');
+  const mediaApi = require('../../../api/media');
 
   export default {
     components: {
@@ -54,14 +71,18 @@
       'panel-view': PanelView
     },
     props: {
-      shelfInfo: { type: Object, default: {}}
+      shelfInfo: { type: Array, default: []}
     },
     data() {
       return {
         defaultRoute: '/',
-        size: { width: document.body.clientWidth - 206, height: document.body.clientHeight },
+        size: { width: document.body.clientWidth - 556, height: document.body.clientHeight },
         vueInstance: null,
         cover: '',
+        activeShelfInfo: {},
+        isFirstSave: true,
+        _ids: '',
+        shelfInfos: []
       };
     },
     created() {
@@ -70,40 +91,90 @@
       this.vueInstance.$on('lastCover', (cover)=>{
         this.cover = cover;
       });
+      this.isFirstSave = true;
+      if( this.shelfInfo && this.shelfInfo.length){
+        this.activeShelfInfo = this.shelfInfo[0];
+        const _idsArr = [];
+        this.shelfInfo.forEach((item)=>{
+          _idsArr.push(item._id);
+        })
+        this._ids = _idsArr.join(',');
+      }
+      this.shelfInfos = this.shelfInfo;
     },
     mounted() {
       window.addEventListener('resize', this.resize);
     },
     methods: {
       resize(e) {
-        this.size = { width: document.body.clientWidth - 206, height: document.body.clientHeight };
+        this.size = { width: document.body.clientWidth - 556, height: document.body.clientHeight };
+      },
+      getPostData(isSave) {
+        const me =this;
+        let postData = {};
+        let func = '';
+        if(this.isFirstSave){
+          postData = {
+            _ids: me._ids,
+            editorInfo: me.activeShelfInfo.editorInfo,
+            firstId: this.activeShelfInfo._id
+          };
+          const cloneEditorInfo = JSON.parse(JSON.stringify(this.activeShelfInfo.editorInfo));
+          delete cloneEditorInfo.name;
+          for(let i = 0, len = this.shelfInfos.length; i < len; i++){
+            if(this.shelfInfos[i] !== this.activeShelfInfo) {
+              const name = this.shelfInfos[i].editorInfo.name;
+              this.shelfInfos[i].editorInfo = JSON.parse(JSON.stringify(cloneEditorInfo));
+              this.shelfInfos[i].editorInfo.name = name;
+            }
+          }
+          func = isSave ? api.batchSaveShelf : api.batchSubmitShelf;
+        }else {
+          postData = {
+            _id: me.activeShelfInfo._id,
+            editorInfo: me.activeShelfInfo.editorInfo
+          };
+          func = isSave ? api.saveShelf : api.submitShelf;
+        }
+        return { postData, func};
       },
       handleClickSave() {
-        const me =this;
-        const postData = {
-          _id: me.shelfInfo._id,
-          editorInfo: me.shelfInfo.editorInfo
-        }
-        api.saveShelf(postData)
-          .then((res)=>{
-            me.shelfInfo.name = me.shelfInfo.editorInfo.name;
-            me.showSuccessInfo('已保存');
-          })
-          .catch((error)=>{
-            me.showErrorInfo(error);
-          });
+        const { postData, func } = this.getPostData(true);
+        const me = this;
+        func(postData)
+            .then((res) => {
+              me.activeShelfInfo.name = me.activeShelfInfo.editorInfo.name;
+              if(me.isFirstSave){
+                me.getShelfInfos({ _ids: me._ids});
+              }
+              me.isFirstSave = false;
+              me.showSuccessInfo('已保存');
+            })
+            .catch((error) => {
+              me.showErrorInfo(error);
+            });
+      },
+      getShelfInfos(query) {
+        const me = this;
+        api.listMyselfShelfTask(formatQuery(query, true), me)
+            .then((res) => {
+              me.shelfInfos = res.data.docs;
+            })
+            .catch((error) => {
+              me.showErrorInfo(error);
+            });
       },
       handleClickSubmit() {
-        const me =this;
-        const postData = {
-          _id: me.shelfInfo._id,
-          editorInfo: me.shelfInfo.editorInfo
-        }
-
+        const { postData, func } = this.getPostData(false);
+        const me = this;
         this.$refs.editRight.$refs.editorInfoForm.validate((valid) => {
           if (valid) {
-            api.submitShelf(postData)
+            func(postData)
               .then((res)=>{
+                me.isFirstSave = false;
+                if(me.isFirstSave){
+                  me.getShelfInfos({ _ids: me._ids});
+                }
                 me.showSuccessInfo('提交成功');
                 me.$emit('update-list');
                 me.$emit('show-back');
@@ -113,6 +184,19 @@
               });
           }
         });
+      },
+      handleClickShelfItem(item) {
+        this.activeShelfInfo = item;
+      },
+      getTitle(title) {
+        return valueLengthLimit(title, 24);
+      },
+      getIcon(item) {
+        return mediaApi.getIcon(item.objectId, item.fromWhere);
+      },
+      getDuration(item) {
+        const duration = (item.outpoint - item.inpoint) * 1000 / 25;
+        return formatDuration(duration);
       },
       handleClickBack(){
         this.$emit('update-list');
@@ -157,14 +241,39 @@
     margin-right: 6px;
   }
 
+  .shelf-edit-list {
+    width: 360px;
+    height: 100%;
+    padding: 16px 0 0 20px;
+    overflow-y: scroll;
+    position: absolute;
+    left: 0;
+    top: 90px;
+  }
+
   .shelf-edit {
     width: 100%;
     height: 100%;
-    position: relative;
+    position: absolute;
+    left: 350px;
+    top: 106px;
+  }
+
+  .shelf-edit-slider-bar {
+    overflow: auto;
+    background: none;
+    z-index: 10;
+    position: absolute;
+    cursor: default;
+    top: 90px;
+    left: 351px;
+    height: 100%;
+    width: 4px;
+    border-left: 4px solid #F2F6FA;
   }
 
   .shelf-edit-left {
-    padding: 16px 40px 0 20px;
+    padding: 16px 40px 0 40px;
     height: 100%;
     overflow: hidden;
   }
@@ -173,6 +282,55 @@
     padding: 16px 10% 0 10%;
     height: 100%;
     overflow: hidden;
+  }
+
+  .shelf-edit-item {
+    position: relative;
+    font-size: 12px;
+    height: 39px;
+    width: 100%;
+    margin-bottom: 5px;
+    color: #4C637B;
+  }
+
+  .shelf-edit-item:hover {
+    background-color: #EBF3FB;
+    color: #2A3E52;
+  }
+  .shelf-edit-item.active {
+    background-color: #EBF3FB;
+    color: #2A3E52;
+  }
+
+  shelf-edit-item-active {
+    background-color: #EBF3FB;
+    color: #2A3E52;
+  }
+
+  .shelf-edit-item-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 52px;
+    height: 29px;
+    margin-top: 5px;
+  }
+
+  .shelf-edit-item-content {
+    position: absolute;
+    left: 52px;
+    top: 0;
+    padding-top: 5px;
+    height: 100%;
+  }
+
+  .shelf-edit-item-content:hover {
+    color: #38B1EB;
+  }
+
+  .shelf-edit-item-content span {
+    display: inline-block;
+    margin-left: 12px;
   }
 
   /*@media screen and (max-width:1425px){*/

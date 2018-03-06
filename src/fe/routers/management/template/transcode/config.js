@@ -22,7 +22,10 @@ config.fields = [
       { text: 'mxf', value: 'mxf', key: 'mxf' },
       { text: 'ts', value: 'ts', key: 'ts' },
       { text: 'vob', value: 'vob', key: 'vob' },
-      { text: 'flv', value: 'flv', key: 'flv' }
+      { text: 'flv', value: 'flv', key: 'flv' },
+      { text: 'mp3', value: 'mp3', key: 'mp3' },
+      { text: 'wav', value: 'wav', key: 'wav' },
+      { text: 'wma', value: 'wma', key: 'wma' }
     ]
   },
   {
@@ -189,7 +192,8 @@ config.fields = [
       { text: 'mp2', value: 'mp2', key: 'mp2' },
       { text: 'libmp3lame', value: 'libmp3lame', key: 'libmp3lame' },
       { text: 'libfdk_aac', value: 'libfdk_aac', key: 'libfdk_aac' },
-      { text: 'pcm_s16le', value: 'pcm_s16le', key: 'pcm_s16le' }
+      { text: 'pcm_s16le', value: 'pcm_s16le', key: 'pcm_s16le' },
+      { text: 'wmav2', value: 'wmav2', key: 'wmav2' },
     ]
   },
   {

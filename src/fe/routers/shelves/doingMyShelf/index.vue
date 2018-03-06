@@ -12,7 +12,7 @@
       </template>
       <template slot="operation">
         <div class="operation-btn-group">
-          <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickEdit">编辑</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickEdit">编辑</fj-button>
           <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickSendBack">退回</fj-button>
         </div>
         <div class="operation-btn-group">
@@ -117,7 +117,7 @@
         this.sendBackOrDelete = 'sendBack';
       },
       handleClickEdit() {
-        this.editRow = this.selectedRows[0];
+        this.editRow = this.selectedRows;
         this.showEdit = true;
       },
       handleClickDelete() {

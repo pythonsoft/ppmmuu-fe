@@ -454,7 +454,7 @@ utils.getStringLength = function getStringLength(str) {
   let charCode = -1;
 
   for (let i = 0; i < len; i++) {
-    charCode = str.charCodeAt(i);
+    charCode = str[i].charCodeAt();
     if (charCode >= 0 && charCode <= 128) {
       realLength += 1;
     } else {
@@ -721,7 +721,7 @@ utils.formatTaskList = function (currentStep, taskList = []) {
 };
 
 utils.valueLengthLimit = function valueLengthLimit(value, len){
-  if(value && value.length > len){
+  if(value && utils.getStringLength(value) > len){
     value = value.substring(0,len);
     value += '...';
   }

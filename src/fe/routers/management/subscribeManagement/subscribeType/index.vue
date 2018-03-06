@@ -24,8 +24,9 @@
         <fj-table-column prop="photo" label="图标" width="50">
           <template slot-scope="props"><img class="subscribe-type-photo" :src="props.row.photo"></template>
         </fj-table-column>
-        <fj-table-column prop="name" label="类型名"></fj-table-column>
-        <fj-table-column prop="description" label="描述" width="200">
+        <fj-table-column prop="_id" label="标识" width="300"></fj-table-column>
+        <fj-table-column prop="name" label="类型名" width="200"></fj-table-column>
+        <fj-table-column prop="description" label="描述">
           <template slot-scope="props"><div class="subscribe-type-description">{{props.row.description}}</div></template>
         </fj-table-column>
       </fj-table>
