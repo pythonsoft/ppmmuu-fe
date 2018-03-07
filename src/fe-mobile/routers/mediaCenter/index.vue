@@ -15,7 +15,7 @@
             :key="item.id"
             :thumb="getThumb(item)"
             :title="getTitle(item)"
-            :time="formatTime(item.publish_time) || '无发布时间'"
+            :time="formatShowTime(item).value || '无发布时间'"
             :duration="getDuration(item)"
             :definition="getMediaFormat(item)"
             @click-card="linkToWatch(item)"></fj-card>
@@ -35,7 +35,7 @@
             :key="item.id"
             :thumb="getThumb(item)"
             :title="getTitle(item)"
-            :time="formatTime(item.publish_time) || '无发布时间'"
+            :time="formatShowTime(item).value || '无发布时间'"
             :duration="getDuration(item)"
             :definition="getMediaFormat(item)"
             @click-card="linkToWatch(item)"></fj-card>
@@ -60,7 +60,7 @@
           :key="item.id"
           :thumb="getThumb(item)"
           :title="getTitle(item)"
-          :time="formatTime(item.publish_time) || '无发布时间'"
+          :time="formatShowTime(item).value || '无发布时间'"
           :duration="getDuration(item)"
           :definition="getMediaFormat(item)"
           @click-card="linkToWatch(item)"></fj-card>
@@ -79,6 +79,7 @@
     getMediaFormat,
     getTitle,
     getThumb,
+    formatShowTime
   } from '../../../fe/routers/mediaCenter/common';
   import { formatTime, isEmptyObject } from '../../../fe/common/utils';
   import {
@@ -158,6 +159,7 @@
       getTitle,
       formatTime,
       getThumb,
+      formatShowTime,
       getDefaultMedia() {
         mediaAPI.defaultMedia({ params: { size: 4 } }, this)
         .then((res) => {
