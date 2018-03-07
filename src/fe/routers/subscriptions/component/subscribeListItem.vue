@@ -10,6 +10,9 @@
       <span v-html="getTitle(item)"></span>
       <span class="iconfont icon-download download-btn" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, item.files)}" v-clickoutside="handleCloseMenu"></span>
     </div>
+    <div class="subscribe-item-detail" :title="item.viceTitle">
+      节目副题(中文)：{{ item.viceTitle || '无' }}
+    </div>
     <div class="subscribe-item-detail">
       来源：{{ item.source }}
     </div>
