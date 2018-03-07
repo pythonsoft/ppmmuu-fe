@@ -382,7 +382,7 @@
           this.formData.chineseName = node.name;
           this.formData.duration = node.duration;
           this.programInfo.name = node.name;
-          this.programInfo.range = [node.inpoint, node.outpoint];
+          this.programInfo.range = node.range;
           this.programInfo.objectId = this.objectId;
           this.currentCatalogId = '';
           this.currentClip = node;
