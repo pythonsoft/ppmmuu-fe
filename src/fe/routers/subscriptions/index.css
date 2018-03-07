@@ -198,12 +198,12 @@
 }
 .subscribe-section-list {
   overflow: hidden;
-  height: 217px;
+  height: 237px;
   margin-bottom: 58px;
 }
 
 .subscribe-grid li {
-  height: 217px;
+  height: 237px;
   width: 192px;
   float: left;
   margin-top: 16px;
@@ -285,6 +285,9 @@
 }
 .subscribe-item-detail {
   color: #4C637B;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .search-wrap {
   position: absolute;
