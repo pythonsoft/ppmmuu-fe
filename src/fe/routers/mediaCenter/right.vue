@@ -518,7 +518,7 @@
         const me = this;
         const postData = {
           objectId: me.videoId,
-          name: me.shelfName,
+          name: me.videoInfo.program_name_cn || me.shelfName,
           fromWhere: me.videoInfo.from_where,
           force: force,
         };

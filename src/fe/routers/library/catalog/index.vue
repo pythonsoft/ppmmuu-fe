@@ -461,7 +461,8 @@
                 { _id: `${this.currentCatalogId}-${info.range[0]}-${info.range[1]}-${item.children.length + 1}` },
                 { name: `片段${item.children.length + 1} ${transformSecondsToStr(info.duration)}` },
                 { type: 'tempItem' },
-                { parentId: this.currentCatalogId }
+                { parentId: this.currentCatalogId },
+                { duration: transformSecondsToStr(info.duration)},
               )
             );
             break;
