@@ -31,11 +31,18 @@
             >
               <template slot="0" slot-scope="props">
                 <video-source-panel
+                  v-if="!programInfo.name"
                   :title="sourceTitle"
                   :videoId="sourceVideoId"
                   :videoSnippet="sourceSnippet"
                   :size="{ width: props.width, height: props.height }"
                   @insert="importSource"></video-source-panel>
+                <program-panel
+                  v-else
+                  :title="programInfo.title"
+                  :range="programInfo.range"
+                  :videoId="programInfo.objectId"
+                  :size="{ width: props.width, height: props.height }"></program-panel>
               </template>
               <template slot="1" slot-scope="props">
                 <div :style="{ width: '100%', height: '100%', overflow: 'auto' }">
@@ -139,6 +146,7 @@
   import { selectFields, dateFields, radioFields} from '../config';
   import FjDatePicker from "../../../component/fjUI/packages/datePicker/src/datePicker.vue";
   import FjFormItem from "../../../component/fjUI/packages/form/src/formItem.vue";
+  import ProgramPanel from '../../movieEditor/component/programPanel';
 
   const libraryAPI = require('../../../api/library');
 
@@ -245,7 +253,12 @@
         dateFields: dateFields,
         radioFields: radioFields,
         parentEl: '',
-        hasSelectedItem: false
+        hasSelectedItem: false,
+        programInfo: {
+          name: '',
+          range: [],
+          objectId: ''
+        }
       };
     },
     created() {
@@ -364,9 +377,13 @@
           const keys = Object.keys(this.formData);
           keys.forEach(key => {
             if (key === 'ownerName' || key === 'departmentName') return;
-            this.formData[key] = '';
+            // this.formData[key] = '';
           });
           this.formData.chineseName = node.name;
+          this.formData.duration = node.duration;
+          this.programInfo.name = node.name;
+          this.programInfo.range = [node.inpoint, node.outpoint];
+          this.programInfo.objectId = this.objectId;
           this.currentCatalogId = '';
           this.currentClip = node;
           return;
@@ -383,11 +400,22 @@
         libraryAPI.getCatalog({ params: { id: id } }).then((res) => {
           const keys = Object.keys(this.formData);
           keys.forEach(key => {
-            this.formData[key] = res.data[key];
+            if(res.data[key]) {
+              this.formData[key] = res.data[key];
+            }
           });
+          this.formData.duration = node.duration;
+          if(!res.data || res.data.parentId){
+            this.programInfo.name = node.name;
+            this.programInfo.range = [node.inpoint, node.outpoint];
+            this.programInfo.objectId = this.objectId;
+          }else{
+            this.programInfo.name = '';
+          }
           this.formData.ownerName = node.owner.name;
           this.formData.departmentName = node.department.name;
         }).catch((error) => {
+
           this.$message.error(error);
         });
       },
@@ -454,8 +482,7 @@
           if (this.catalogList[i]._id === this.currentCatalogId) {
             const item = this.catalogList[i];
             item.children = item.children ? item.children : [];
-            item.children.push(
-              Object.assign(
+            const newChild = Object.assign(
                 {},
                 info,
                 { _id: `${this.currentCatalogId}-${info.range[0]}-${info.range[1]}-${item.children.length + 1}` },
@@ -463,8 +490,8 @@
                 { type: 'tempItem' },
                 { parentId: this.currentCatalogId },
                 { duration: transformSecondsToStr(info.duration)},
-              )
             );
+            item.children.push(newChild);
             break;
           }
         }
@@ -475,7 +502,8 @@
       FjFormItem,
       FjDatePicker,
       VideoSourcePanel,
-      PanelView
+      PanelView,
+      ProgramPanel
     }
   };
 </script>
