@@ -72,7 +72,7 @@
                 <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
               </tr>
               <tr>
-                <td class="item-info-key">近线位置: </td>
+                <td class="item-info-key">存储位置: </td>
                 <td class="item-info-value">{{ file.ARCHIVETYPE ? ARCHIVETYPE[file.ARCHIVETYPE].text : '' }}</td>
               </tr>
               <tr>
