@@ -163,13 +163,16 @@
     created() {
       this.projectBus.$on('updateProgram', (program, programIndex, isAutoPlay) => {
         if (this.id === program.id) return;
-        console.log('updateProgram', program.id, programIndex);
         this.id = program.id;
         this.videoId = program.objectId;
         this.title = program.title;
         this.range = program.range;
         this.programIndex = programIndex;
-        if (isAutoPlay) this.updatePlayerStatus();
+        if (isAutoPlay) {
+          this.$nextTick(()=> {
+            this.updatePlayerStatus();
+          })
+        }
       });
     },
     mounted() {

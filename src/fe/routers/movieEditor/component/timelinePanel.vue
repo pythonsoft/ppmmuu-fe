@@ -144,15 +144,14 @@
     },
     created() {
       this.projectBus.$on('updateProgramIndex', (index) => {
-        console.log('updateProgramIndex', this.currentSequenceIndex, index);
         if (index > this.sequences.length - 1 || index < 0) {
           if (this.currentSequenceIndex === 0) return;
           this.currentSequenceIndex = 0;
         } else {
           if (this.currentSequenceIndex === index) return;
+          this.isAutoPlayProgram = true;
           this.currentSequenceIndex = index;
         }
-        this.isAutoPlayProgram = true;
         this.draw();
       });
     },
