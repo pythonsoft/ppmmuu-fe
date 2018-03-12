@@ -56,25 +56,12 @@
 
   export default {
     props: {
+      projectBus: {},
       activePanel: String,
       imageSize: {
         type: Object,
         default() {
           return { width: 640, height: 360 };
-        }
-      },
-      title: {
-        type: String,
-        default: ''
-      },
-      videoId: {
-        type: String,
-        default: ''
-      },
-      range: {
-        type: Array,
-        default() {
-          return [0, 0];
         }
       },
       size: {
@@ -94,7 +81,11 @@
     },
     data() {
       return {
-        currentTime: this.range[0],
+        id: '',
+        videoId: '',
+        title: '',
+        range: [0, 0],
+        currentTime: 0,
         controllerList: this.getControllerList(this.controller),
         offset: 0,
         isPlaying: false,
@@ -108,7 +99,8 @@
         imageDialogVisible: false,
         screenshotURL: '',
         screenshotTitle: '',
-        videoSource: ''
+        videoSource: '',
+        programIndex: 0
       };
     },
     computed: {
@@ -168,6 +160,18 @@
         this.offset = this.video.innerCurrentTime / this.innerDuration * progressBarWidth;
       }
     },
+    created() {
+      this.projectBus.$on('updateProgram', (program, programIndex, isAutoPlay) => {
+        if (this.id === program.id) return;
+        console.log('updateProgram', program.id, programIndex);
+        this.id = program.id;
+        this.videoId = program.objectId;
+        this.title = program.title;
+        this.range = program.range;
+        this.programIndex = programIndex;
+        if (isAutoPlay) this.updatePlayerStatus();
+      });
+    },
     mounted() {
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
@@ -189,6 +193,10 @@
       }
     },
     methods: {
+      updateProgramIndex() {
+        // 播放时间线上的下一个素材
+        this.projectBus.$emit('updateProgramIndex', this.programIndex + 1);
+      },
       contextMenuStop() {
         return false;
       },
@@ -272,6 +280,15 @@
       },
       updatePlayerStatus() {
         if (!this.isPlaying) {
+          // 如果此时为视频的出点时间则暂停播放
+          if (this.currentTime + 1 / this.fps >= this.range[1]
+              && this.currentTime <= this.range[1]) {
+            this.updateProgramIndex();
+            this.pause();
+            this.isPlaying = false;
+            clearInterval(this.moveIndicatorTimer);
+            return;
+          }
           this.play();
           this.isPlaying = true;
           this.moveIndicatorTimer = setInterval(() => {
@@ -280,6 +297,7 @@
             this.currentTime = this.video.currentTime;
             if (this.currentTime + 1 / this.fps >= this.range[1]
               && this.currentTime <= this.range[1]) {
+              this.updateProgramIndex();
               this.pause();
               this.isPlaying = false;
               clearInterval(this.moveIndicatorTimer);

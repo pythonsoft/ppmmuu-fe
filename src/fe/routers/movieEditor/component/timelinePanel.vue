@@ -127,7 +127,8 @@
         currentSequenceIndex: 0,
         dpr: 1,
         downloadDialogDisplay: false,
-        command: ''
+        command: '',
+        isAutoPlayProgram: false
       };
     },
     computed: {
@@ -140,6 +141,20 @@
       isDisabledControl() {
         return this.sequences.length === 0 || this.currentSequenceIndex < 0;
       }
+    },
+    created() {
+      this.projectBus.$on('updateProgramIndex', (index) => {
+        console.log('updateProgramIndex', this.currentSequenceIndex, index);
+        if (index > this.sequences.length - 1 || index < 0) {
+          if (this.currentSequenceIndex === 0) return;
+          this.currentSequenceIndex = 0;
+        } else {
+          if (this.currentSequenceIndex === index) return;
+          this.currentSequenceIndex = index;
+        }
+        this.isAutoPlayProgram = true;
+        this.draw();
+      });
     },
     mounted() {
       this.TIMELINE_CONFIG = this.theme === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG_DEFAULT;
@@ -392,7 +407,9 @@
         this.sequences.push(Object.assign(info, { id: `sequence-${new Date().getTime()}` }));
       },
       updateProgram() {
-        this.projectBus.$emit('updateProgram', this.sequences[this.currentSequenceIndex] || {});
+        this.projectBus.$emit('updateProgram', this.sequences[this.currentSequenceIndex] || {}, this.currentSequenceIndex, this.isAutoPlayProgram);
+        // 重置isAutoPlayProgram属性
+        this.isAutoPlayProgram = false;
       },
       moveSequence(sign = 1) {
         const sequencesLen = this.sequences.length;

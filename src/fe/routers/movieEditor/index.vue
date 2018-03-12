@@ -38,10 +38,8 @@
               </template>
               <template slot="1" slot-scope="props">
                 <program-panel
-                  :title="programInfo.title"
-                  :range="programInfo.range"
-                  :videoId="programInfo.objectId"
                   :activePanel.sync="activePanel"
+                  :projectBus="projectBus"
                   :size="{ width: props.width, height: props.height }"></program-panel>
               </template>
             </panel-view>
@@ -106,16 +104,12 @@
         sourceSnippet: {},
         activePanel: 'sourcePanel',
         size: { width: document.body.clientWidth, height: document.body.clientHeight - 32 },
-        programInfo: { id: '', objectId: '', title: '', range: [0, 0] }
+        sequences: []
       };
     },
     created() {
       this.resize();
       this.projectBus = new Vue();
-      this.projectBus.$on('updateProgram', (data) => {
-        if (this.programInfo && this.programInfo.id === data.id) return;
-        this.programInfo = data;
-      });
       // window.addEventListener('resize', this.resize);
       // document.body.removeEventListener('mouseup', this.mouseup);
     },
