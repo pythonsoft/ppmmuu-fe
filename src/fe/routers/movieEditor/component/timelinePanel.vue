@@ -2,6 +2,18 @@
   <div>
     <div class="task-list-controller-wrap" ref="controlMenu">
       <div class="player-control-item-wrap">
+        <div class="player-control-item" @click="moveSequence(-1)" :class="{'disabled-control-item': isDisabledControl}">
+          <i class="iconfont icon-d-arrow-left"></i>
+        </div>
+        <div class="player-control-tooltip">前移</div>
+      </div>
+      <div class="player-control-item-wrap">
+        <div class="player-control-item" @click="moveSequence(1)" :class="{'disabled-control-item': isDisabledControl}">
+          <i class="iconfont icon-d-arrow-right"></i>
+        </div>
+        <div class="player-control-tooltip">后移</div>
+      </div>
+      <div class="player-control-item-wrap">
         <div class="player-control-item" @click="handleDeleteSequence" :class="{'disabled-control-item': isDisabledControl}">
           <i class="iconfont icon-delete"></i>
         </div>
@@ -33,7 +45,7 @@
   import { getPosition } from '../../../component/fjUI/utils/position';
   import jobAPI from '../../../api/job';
 
-  const TIMELINE_CONFIG = {
+  const TIMELINE_CONFIG_DEFAULT = {
     sequenceHeight: 91,
     marginTop: 64,
     marginLeft: 4,
@@ -105,7 +117,7 @@
         this.updateProgram();
       },
       theme(val) {
-        this.TIMELINE_CONFIG = val === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
+        this.TIMELINE_CONFIG = val === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG_DEFAULT;
         this.isDark = val === 'dark' ? true : false;
       }
     },
@@ -130,7 +142,7 @@
       }
     },
     mounted() {
-      this.TIMELINE_CONFIG = this.theme === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
+      this.TIMELINE_CONFIG = this.theme === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG_DEFAULT;
       this.isDark = this.theme === 'dark' ? true : false;
       this.timeline = this.$refs.timeline;
       this.ctx = this.timeline.getContext('2d');
@@ -381,6 +393,16 @@
       },
       updateProgram() {
         this.projectBus.$emit('updateProgram', this.sequences[this.currentSequenceIndex] || {});
+      },
+      moveSequence(sign = 1) {
+        const sequencesLen = this.sequences.length;
+        const newIndex = this.currentSequenceIndex + sign;
+        if (sequencesLen === 0
+          || this.currentSequenceIndex < 0
+          || newIndex > sequencesLen - 1
+          || newIndex < 0) return;
+        this.sequences.splice(newIndex, 0, this.sequences.splice(this.currentSequenceIndex, 1)[0]);
+        this.currentSequenceIndex = newIndex;
       },
       handleDeleteSequence() {
         if (this.sequences.length === 0 || this.currentSequenceIndex < 0) return;
