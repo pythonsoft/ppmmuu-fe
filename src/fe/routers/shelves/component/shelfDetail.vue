@@ -51,7 +51,7 @@
               </tr>
             </table>
           </fj-tab-pane>
-          <fj-tab-pane label="状态信息" name="tab3" v-if="showEditInfo">
+          <fj-tab-pane label="状态信息" name="tab3">
             暂无
           </fj-tab-pane>
         </fj-tabs>
