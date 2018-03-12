@@ -72,9 +72,10 @@
         const menu = [];
         const me = this;
         const firstMenu = getChildMenuByIndex('shelf', false, me);
-        for(let i = 0, len = firstMenu.length; i < len; i++){
-          if(MENU[firstMenu[i]]) {
-            menu.push(MENU[firstMenu[i]]);
+        const menuIndexes = ['departmentShelf', 'myShelf', 'lineShelf'];
+        for(let i = 0, len = menuIndexes.length; i < len; i++){
+          if(firstMenu.indexOf(menuIndexes[i]) !== -1) {
+            menu.push(MENU[menuIndexes[i]]);
           }
         }
         return menu;

@@ -12,6 +12,8 @@
     <template slot="operation">
       <div class="operation-btn-group">
         <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickEdit">查看详情</fj-button>
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
