@@ -3,13 +3,13 @@
     <div class="task-list-controller-wrap" ref="controlMenu">
       <div class="player-control-item-wrap">
         <div class="player-control-item" @click="moveSequence(-1)" :class="{'disabled-control-item': isDisabledControl}">
-          <i class="iconfont icon-d-arrow-left"></i>
+          <i class="iconfont icon-move-to-left"></i>
         </div>
         <div class="player-control-tooltip">前移</div>
       </div>
       <div class="player-control-item-wrap">
         <div class="player-control-item" @click="moveSequence(1)" :class="{'disabled-control-item': isDisabledControl}">
-          <i class="iconfont icon-d-arrow-right"></i>
+          <i class="iconfont icon-move-to-right"></i>
         </div>
         <div class="player-control-tooltip">后移</div>
       </div>
@@ -25,6 +25,12 @@
         </div>
         <div class="player-control-tooltip">下载</div>
       </div>
+      <div class="player-control-item-wrap">
+        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" ref="downloadBtn" @click="isDisabledControl?null:isShowSubmitInfoDialog=true">
+          <i class="iconfont icon-submit"></i>
+        </div>
+        <div class="player-control-tooltip">提交</div>
+      </div>
     </div>
     <div class="timeline-title">{{ timelineTitle }}</div>
     <div class="timeline-content">
@@ -34,6 +40,9 @@
       :visible.sync="downloadDialogDisplay"
       @confirm="downloadListConfirm"
     ></download-list-view>
+    <submit-info-dialog
+      :dialogVisible.sync="isShowSubmitInfoDialog"
+    ></submit-info-dialog>
   </div>
 </template>
 <script>
@@ -41,6 +50,7 @@
   import { transformSecondsToStr, isEmptyObject, FROM_WHERE, formatDuration } from '../../../common/utils';
   import DownloadListView from '../../management/template/download/component/downloadDialog';
   import DropDownMenu from './dropdownMenu.vue';
+  import SubmitInfoDialog from './submitInfoDialog';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import { getPosition } from '../../../component/fjUI/utils/position';
   import jobAPI from '../../../api/job';
@@ -76,7 +86,8 @@
 
   export default {
     components: {
-      DownloadListView
+      DownloadListView,
+      SubmitInfoDialog
     },
     props: {
       projectBus: {},
@@ -128,6 +139,7 @@
         dpr: 1,
         downloadDialogDisplay: false,
         command: '',
+        isShowSubmitInfoDialog: false,
         isAutoPlayProgram: false
       };
     },
@@ -461,8 +473,8 @@
           const position = this.getDropdownMenu();
           this.dropdownMenu.menuStyle = {
             top: `${position.top + 30}px`,
-            left: `${position.left - 144}px`,
-            minWidth: '166px'
+            left: `${position.left - 43}px`,
+            minWidth: '76px'
           };
         }
       },

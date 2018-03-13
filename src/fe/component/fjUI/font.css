@@ -207,3 +207,8 @@
 
 .icon-voice:before { content: "\e6de"; }
 
+.icon-move-to-right:before { content: "\e6e0"; }
+
+.icon-submit:before { content: "\e6e1"; }
+
+.icon-move-to-left:before { content: "\e6e2"; }
