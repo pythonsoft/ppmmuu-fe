@@ -16,7 +16,7 @@
       </div>
       <div class="shelf-detail-video-panel">
         <fj-tabs v-model="activeTabName" class="media-video-panel-wrap">
-          <fj-tab-pane label="上架信息" name="tab2">
+          <fj-tab-pane label="上架信息" name="tab2" v-if="showEditInfo">
             <table class="media-center-table">
               <tr v-for="(info, key) in editorDetails" v-if="info.cn && info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
@@ -50,6 +50,9 @@
                 </td>
               </tr>
             </table>
+          </fj-tab-pane>
+          <fj-tab-pane label="状态信息" name="tab3" v-if="showPackageInfo">
+            暂无
           </fj-tab-pane>
         </fj-tabs>
         <div class="detail-operation" v-if="btnShow">
@@ -104,6 +107,14 @@
       btnShow: {
         type: Boolean,
         default: true
+      },
+      showEditInfo: {
+        type: Boolean,
+        default: true
+      },
+      showPackageInfo: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
@@ -121,6 +132,11 @@
         FILE_TYPE_MAP: FILE_TYPE_MAP,
         fromWhere: ''
       };
+    },
+    created() {
+      if (!this.showEditInfo){
+        this.activeTabName = 'tab1';
+      }
     },
     watch: {
       id(val) {
@@ -164,7 +180,7 @@
 
           this.streamInfo = res.result;
           this.url = url;
-        }, this);
+        });
       },
       getShelfDetail(){
         const me = this;

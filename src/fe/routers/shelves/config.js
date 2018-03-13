@@ -20,4 +20,11 @@ config.SUBSCRIBE_TYPE = {
   1: '体育',
   2: '娱乐'
 };
+
+config.formatPacakgeStatus = {
+  0: '<span class="permission-status-span prepare">待处理</span>',
+  1: '<span class="permission-status-span doing">处理中</span>',
+  2: '<span class="permission-status-span submitted">已完成</span>',
+  3: '<span class="permission-status-span deleted">出错</span>'
+};
 module.exports = config;

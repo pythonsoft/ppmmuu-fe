@@ -11,6 +11,9 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickDetail">查看详情</fj-button>
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickDelete">删除</fj-button>
       </div>
     </template>
@@ -39,12 +42,22 @@
       </div>
 
     </fj-dialog>
+    <shelf-detail
+            :btnShow="false"
+            :showPackageInfo="false"
+            :title="videoTitle"
+            :programNO="programNO"
+            :id="editId"
+            :objectId="objectId"
+            :visible.sync="detailDialogVisible">
+    </shelf-detail>
   </four-row-layout-right-content>
 </template>
 <script>
   import { formatQuery, formatTime} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import AddUser from '../../management/role/searchAddUser';
+  import ShelfDetail from '../component/shelfDetail';
   import { STATUS } from '../config';
 
   const api = require('../../../api/shelves');
@@ -52,7 +65,8 @@
   export default {
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'add-user': AddUser
+      'add-user': AddUser,
+      ShelfDetail
     },
     data() {
       return {
@@ -69,7 +83,13 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
-        formatTime: formatTime
+        selectedRows: [],
+        formatTime: formatTime,
+        videoTitle: '',
+        programNO: '',
+        editId: '',
+        objectId: '',
+        detailDialogVisible: false
       };
     },
     created() {
@@ -101,6 +121,14 @@
           .catch((error) => {
             me.showErrorInfo(error);
           });
+      },
+      handleClickDetail() {
+        this.detailDialogVisible = true;
+        const row = this.selectedRows[0];
+        this.objectId = row.objectId;
+        this.programNO = row.programNO;
+        this.videoTitle = row.name;
+        this.editId = row._id;
       },
       handleClickDelete() {
         this.dialogMessage = '您确定要删除这些节目吗?';
@@ -149,6 +177,7 @@
       },
       handleSelectionChange(rows) {
         this.selectedIds = [];
+        this.selectedRows = rows;
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];

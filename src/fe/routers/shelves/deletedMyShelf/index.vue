@@ -1,5 +1,5 @@
 <template>
-  <three-row-layout-right-content>
+  <four-row-layout-right-content>
     <template slot="search-left">我的任务(已删除)</template>
     <template slot="search-right">
       <div class="permission-search-item">
@@ -9,9 +9,15 @@
         <fj-button type="primary" @click="handleClickSearch" size="small">查询</fj-button>
       </div>
     </template>
+    <template slot="operation">
+      <div class="operation-btn-group">
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickDetail">查看详情</fj-button>
+      </div>
+    </template>
     <template slot="table">
       <div :style="{borderTop:'1px solid #EBF3FB'}">
-      <fj-table :data="tableData" name="table1" ref="table">
+      <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
+        <fj-table-column type="selection" width="20" align="center"></fj-table-column>
         <fj-table-column prop="name" label="节目名称"></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
         <fj-table-column prop="assignee" label="派发人" width="100"><template slot-scope="props">{{props.row.assignee.name}}</template></fj-table-column>
@@ -22,18 +28,28 @@
     <template slot="pagination">
       <fj-pagination :page-size="pageSize" :total="total" :current-page.sync="currentPage" @current-change="handleCurrentPageChange"></fj-pagination>
     </template>
-  </three-row-layout-right-content>
+    <shelf-detail
+            :btnShow="false"
+            :title="videoTitle"
+            :programNO="programNO"
+            :id="editId"
+            :objectId="objectId"
+            :visible.sync="detailDialogVisible">
+    </shelf-detail>
+  </four-row-layout-right-content>
 </template>
 <script>
   import { formatQuery, formatTime} from '../../../common/utils';
-  import ThreeRowLayoutRightContent from '../../../component/layout/threeRowLayoutRightContent/index';
+  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
+  import ShelfDetail from '../component/shelfDetail';
   import { STATUS } from '../config';
 
   const api = require('../../../api/shelves');
 
   export default {
     components: {
-      'three-row-layout-right-content': ThreeRowLayoutRightContent,
+      'four-row-layout-right-content': FourRowLayoutRightContent,
+      ShelfDetail
     },
     data() {
       return {
@@ -50,7 +66,14 @@
         total: 0,
         pageSize: 15,
         selectedIds: [],
-        formatTime: formatTime
+        formatTime: formatTime,
+        selectedIds: [],
+        selectedRows: [],
+        videoTitle: '',
+        programNO: '',
+        editId: '',
+        objectId: '',
+        detailDialogVisible: false
       };
     },
     created() {
@@ -77,10 +100,30 @@
             me.currentPage = data.page;
             me.total = data.total;
             me.pageSize = data.pageSize;
+            me.handleSelectionChange();
           })
           .catch((error) => {
             me.showErrorInfo(error);
           });
+      },
+      handleClickDetail() {
+        this.detailDialogVisible = true;
+        const row = this.selectedRows[0];
+        this.objectId = row.objectId;
+        this.programNO = row.programNO;
+        this.videoTitle = row.name;
+        this.editId = row._id;
+      },
+      handleSelectionChange(rows) {
+        this.selectedIds = [];
+        this.selectedRows = [];
+        if (rows && rows.length) {
+          for (let i = 0, len = rows.length; i < len; i++) {
+            const row = rows[i];
+            this.selectedIds.push(row._id);
+            this.selectedRows.push(row);
+          }
+        }
       },
       handleCurrentPageChange(val) {
         this.handleClickSearch();

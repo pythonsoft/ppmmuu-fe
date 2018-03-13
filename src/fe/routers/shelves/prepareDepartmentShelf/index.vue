@@ -11,6 +11,9 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
+        <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickEdit">查看详情</fj-button>
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="primary" size="mini" v-bind:disabled="claimDisable" @click="handleClickClaim">认领</fj-button>
         <fj-button type="primary" size="mini" v-bind:disabled="assignDisable" @click="handleClickAssign">派发</fj-button>
       </div>
@@ -42,6 +45,15 @@
       </div>
 
     </fj-dialog>
+    <shelf-detail
+            :btnShow="false"
+            :showEditInfo="false"
+            :title="videoTitle"
+            :programNO="programNO"
+            :id="editId"
+            :objectId="objectId"
+            :visible.sync="detailDialogVisible">
+    </shelf-detail>
     <add-user :visible.sync="assignDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick" title="选择用户"></add-user>
   </four-row-layout-right-content>
 </template>
@@ -49,13 +61,15 @@
   import { formatQuery, formatTime} from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import AddUser from '../../management/role/searchAddUser';
+  import ShelfDetail from '../component/shelfDetail';
 
   const api = require('../../../api/shelves');
 
   export default {
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'add-user': AddUser
+      'add-user': AddUser,
+      ShelfDetail
     },
     data() {
       return {
@@ -74,7 +88,14 @@
         currentPage: 1,
         total: 0,
         pageSize: 15,
-        formatTime: formatTime
+        formatTime: formatTime,
+        selectedIds: [],
+        selectedRows: [],
+        videoTitle: '',
+        programNO: '',
+        editId: '',
+        objectId: '',
+        detailDialogVisible: false
       };
     },
     created() {
@@ -105,6 +126,14 @@
           .catch((error) => {
             me.showErrorInfo(error);
           });
+      },
+      handleClickEdit() {
+        this.detailDialogVisible = true;
+        const row = this.selectedRows[0];
+        this.objectId = row.objectId;
+        this.programNO = row.programNO;
+        this.videoTitle = row.name;
+        this.editId = row._id;
       },
       handleClickClaim() {
         this.dialogMessage = '您确定要认领这些任务吗?';
@@ -161,6 +190,7 @@
       },
       handleSelectionChange(rows) {
         this.selectedIds = [];
+        this.selectedRows = rows;
         if (rows && rows.length) {
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];

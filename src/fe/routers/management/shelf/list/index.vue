@@ -1,7 +1,7 @@
 <template>
   <div>
     <four-row-layout-right-content v-if="!showEdit">
-      <template slot="search-left">我的任务(全部)</template>
+      <template slot="search-left">上架任务</template>
       <template slot="search-right">
         <div class="permission-search-item">
           <fj-select theme="fill" placeholder="请选择" v-model="status" size="small">
@@ -25,10 +25,6 @@
           <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickDetail">查看详情</fj-button>
         </div>
         <div class="operation-btn-group">
-          <fj-button type="primary" size="mini" v-bind:disabled="canEditRows.length < 1" @click="handleClickEdit">编辑</fj-button>
-          <fj-button type="primary" size="mini" v-bind:disabled="sendBackDisable" @click="handleClickSendBack">退回</fj-button>
-        </div>
-        <div class="operation-btn-group">
           <fj-button type="primary" size="mini" v-bind:disabled="deleteDisable" @click="handleClickDelete">删除</fj-button>
         </div>
       </template>
@@ -38,6 +34,7 @@
           <fj-table-column prop="status" label="状态" width="90"><template slot-scope="props"><div  v-html="formatStatus[props.row.status]"></div></template></fj-table-column>
           <fj-table-column prop="name" label="节目名称"></fj-table-column>
           <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
+          <fj-table-column prop="packageStatus" label="打包状态" width="50"><template slot-scope="props"><div v-html="getPackageStatus(props.row)"></div></template></fj-table-column>
           <fj-table-column prop="assignee" label="派发人" width="100"><template slot-scope="props">{{props.row.assignee.name}}</template></fj-table-column>
           <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
         </fj-table>
@@ -71,14 +68,14 @@
   </div>
 </template>
 <script>
-  import { formatQuery, formatTime} from '../../../common/utils';
-  import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
-  import { STATUS, formatStatus } from '../config';
-  import Edit from '../component/edit.vue';
-  import ShelfDetail from '../component/shelfDetail';
-  import '../index.css';
+  import { formatQuery, formatTime} from '../../../../common/utils';
+  import FourRowLayoutRightContent from '../../../../component/layout/fourRowLayoutRightContent/index';
+  import { STATUS, formatStatus, formatPacakgeStatus } from '../../../shelves/config';
+  import Edit from '../../../shelves/component/edit.vue';
+  import ShelfDetail from '../../../shelves/component/shelfDetail';
+  import '../../../shelves/index.css';
 
-  const api = require('../../../api/shelves');
+  const api = require('../../../../api/shelfManage');
   const OPTIONS = [
     {value: '', label: '全部'},
     {value: '1', label: '处理中'},
@@ -140,6 +137,9 @@
         const pathArr = path.split('/');
         return pathArr[level] || '';
       },
+      getPackageStatus(row) {
+        return formatPacakgeStatus['2'];
+      },
       handleClickSearch() {
         const me = this;
         const searchObj = {
@@ -148,7 +148,7 @@
           keyword: me.keyword,
           status: me.status
         };
-        api.listMyselfShelfTask(formatQuery(searchObj, true), me)
+        api.listShelfManageTask(formatQuery(searchObj, true), me)
           .then((res) => {
             const data = res.data;
             me.tableData = data ? data.docs : [];
@@ -270,34 +270,6 @@
         this.programNO = row.programNO;
         this.videoTitle = row.name;
         this.editId = row._id;
-      },
-      addOwner(row) {
-        row = row.info ? row.info : row;
-        const type = row.type || '3';
-        const postData = {
-          _ids: this.selectedIds.join(','),
-          dealer: {
-            _id: row._id,
-            name: row.name
-          }
-        }
-        api.assignShelfTask(postData)
-          .then((res) => {
-            this.showSuccessInfo('派发成功');
-            this.assignDialogVisible = false;
-            this.handleClickSearch();
-          }).catch((error) => {
-          this.showErrorInfo(error);
-        });
-      },
-      searchOwnerClick(query) {
-        const me = this;
-        api.searchUser(formatQuery(query, true))
-          .then((res) => {
-            me.searchOwner = res.data;
-          }).catch((error) => {
-          me.showErrorInfo(error);
-        });
       },
       showSuccessInfo(message) {
         this.$message.success(message);

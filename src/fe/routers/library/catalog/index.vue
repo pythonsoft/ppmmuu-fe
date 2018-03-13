@@ -474,10 +474,10 @@
         this.$router.push({ name: 'personal_catalog_task_doing' });
       },
       importSource(info) {
-        if (this.currentCatalogType !== 'video') {
-          this.$message.error('所选条目不是视频，无法插入');
-          return;
-        }
+//        if (this.currentCatalogType !== 'video') {
+//          this.$message.error('所选条目不是视频，无法插入');
+//          return;
+//        }
         for (var i = 0; i < this.catalogList.length; i++) {
           if (this.catalogList[i]._id === this.currentCatalogId) {
             const item = this.catalogList[i];
