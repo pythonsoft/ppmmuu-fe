@@ -46,6 +46,7 @@
     <shelf-detail
             btnText="下架"
             btnType="danger"
+            :showPackageInfo="false"
             :title="videoTitle"
             :programNO="programNO"
             :id="editId"

@@ -51,7 +51,7 @@
               </tr>
             </table>
           </fj-tab-pane>
-          <fj-tab-pane label="状态信息" name="tab3">
+          <fj-tab-pane label="状态信息" name="tab3" v-if="showPackageInfo">
             暂无
           </fj-tab-pane>
         </fj-tabs>
@@ -109,6 +109,10 @@
         default: true
       },
       showEditInfo: {
+        type: Boolean,
+        default: true
+      },
+      showPackageInfo: {
         type: Boolean,
         default: true
       }

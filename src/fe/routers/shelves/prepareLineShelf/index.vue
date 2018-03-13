@@ -48,6 +48,7 @@
     <shelf-detail
             btnText="上架"
             btnType="info"
+            :showPackageInfo="false"
             :title="videoTitle"
             :programNO="programNO"
             :id="editId"

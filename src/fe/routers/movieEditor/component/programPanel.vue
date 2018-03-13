@@ -135,6 +135,11 @@
         return transformSecondsToStr(this.innerCurrentTime);
       }
     },
+    created() {
+      if(this.videoId){
+        this.getStream(this.videoId);
+      }
+    },
     watch: {
       range(val) {
         this.currentTime = val[0];

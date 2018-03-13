@@ -44,6 +44,7 @@
     </fj-dialog>
     <shelf-detail
             :btnShow="false"
+            :showPackageInfo="false"
             :title="videoTitle"
             :programNO="programNO"
             :id="editId"

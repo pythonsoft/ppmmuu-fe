@@ -45,6 +45,7 @@
     <shelf-detail
             btnText="再编辑"
             btnType="info"
+            :showPackageInfo="false"
             :title="videoTitle"
             :programNO="programNO"
             :id="editId"
