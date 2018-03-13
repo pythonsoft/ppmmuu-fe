@@ -147,6 +147,7 @@
   import FjDatePicker from "../../../component/fjUI/packages/datePicker/src/datePicker.vue";
   import FjFormItem from "../../../component/fjUI/packages/form/src/formItem.vue";
   import ProgramPanel from '../../movieEditor/component/programPanel';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const libraryAPI = require('../../../api/library');
 
@@ -277,10 +278,10 @@
     },
     mounted() {
       this.updateSize();
-      window.addEventListener('resize', this.updateSize);
+      window.addEventListener('resize', throttle(this.updateSize));
     },
     beforDestroy() {
-      window.removeEventListener('resize', this.updateSize);
+      window.removeEventListener('resize', throttle(this.updateSize));
     },
     methods: {
       sendBackCatalogTask() {

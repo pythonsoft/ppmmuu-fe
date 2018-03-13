@@ -80,6 +80,7 @@
   import ProgramPanel from './component/programPanel';
   import MediaBrowser from './component/mediaBrowser';
   import WorkspacePanel from './component/workspacePanel';
+  import throttle from '../../component/fjUI/utils/throttle';
 
   export default {
     name: 'movieEditor',
@@ -114,7 +115,10 @@
       // document.body.removeEventListener('mouseup', this.mouseup);
     },
     mounted() {
-      window.addEventListener('resize', this.resize);
+      window.addEventListener('resize', throttle(this.resize));
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', throttle(this.resize));
     },
     methods: {
       resize(e) {

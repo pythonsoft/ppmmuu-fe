@@ -66,6 +66,7 @@
   import { getPosition } from '../../../component/fjUI/utils/position';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import ivideoAPI from '../../../api/ivideo';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const api = require('../../../api/media');
   const shelfAPI = require('../../../api/shelves');
@@ -114,7 +115,10 @@
       },
     },
     mounted() {
-      window.addEventListener('resize', this.resize);
+      window.addEventListener('resize', throttle(this.resize));
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', throttle(this.resize));
     },
     methods: {
       resize(e) {

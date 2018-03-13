@@ -70,6 +70,7 @@
   import DropdownMenu from './dropdownMenu';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import { getPosition } from '../../../component/fjUI/utils/position';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const config = require('../../mediaCenter/config');
   const jobAPI = require('../../../api/job');
@@ -139,10 +140,10 @@
       }
       // this.updatePlayerWidth();
       this.initRightBoxStatus();
-      window.addEventListener('resize', this.updatePlayerWidth);
+      window.addEventListener('resize', throttle(this.updatePlayerWidth));
     },
-    beforDestroy() {
-      window.removeEventListener('resize', this.updatePlayerWidth);
+    beforeDestroy() {
+      window.removeEventListener('resize', throttle(this.updatePlayerWidth));
     },
     methods: {
       formatSize,

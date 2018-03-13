@@ -92,6 +92,7 @@
   import RequestsAPI from '../../../api/requests';
   import { pieOption, convertPieData, convertPieLegend } from './option/pieOption';
   import { lineOption, convertLineSeries } from './option/lineOption';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const emptyGraphic = {
     type: 'text',
@@ -189,11 +190,11 @@
       this.getReport();
       this.bodyWrap = document.getElementsByClassName('right-content')[0];
       this.bodyWrap.addEventListener('scroll', this.scrollHandler);
-      window.addEventListener('resize', this.resizeHandler);
+      window.addEventListener('resize', throttle(this.resizeHandler));
     },
     beforeDestroy() {
       this.bodyWrap.removeEventListener('scroll', this.scrollHandler);
-      window.removeEventListener('resize', this.resizeHandler);
+      window.removeEventListener('resize', throttle(this.resizeHandler));
     },
     methods: {
       scrollHandler() {
