@@ -141,6 +141,10 @@
 }
 .player-control-item i {
   font-size: 14px;
+  vertical-align: middle;
+}
+.player-control-item .icon-more {
+  font-size: 18px;
 }
 .player-control-tooltip {
   display: none;

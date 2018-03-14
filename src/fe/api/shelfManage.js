@@ -158,6 +158,7 @@ api.removeTemplate = function removeTemplate(data, scope, needOriginResponse) {
 api.updateTemplate = function updateTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
+<<<<<<< HEAD
     axios.post('/shelfManage/updateTemplate', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
@@ -269,6 +270,9 @@ api.updateFastEditTemplate = function updateFastEditTemplate(data, scope, needOr
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/updateFastEditTemplate', data).then((response) => {
+=======
+    axios.post('/shelfMange/updateTemplate', data).then((response) => {
+>>>>>>> fix issue 957
       if (!response) {
         reject('返回数据格式不正确');
         return false;

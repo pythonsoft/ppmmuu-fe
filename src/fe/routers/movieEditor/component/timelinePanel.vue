@@ -26,7 +26,7 @@
         <div class="player-control-tooltip">下载</div>
       </div>
       <div class="player-control-item-wrap">
-        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" ref="downloadBtn" @click="isDisabledControl?null:isShowSubmitInfoDialog=true">
+        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" @click="isDisabledControl?null:isShowSubmitInfoDialog=true">
           <i class="iconfont icon-submit"></i>
         </div>
         <div class="player-control-tooltip">提交</div>

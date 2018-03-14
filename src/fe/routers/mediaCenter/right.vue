@@ -442,7 +442,7 @@
         ivideoAPI.createItem(reqData).then((response) => {
           this.unmountMenu();
           if (leaveOrNot) {
-            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
+            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id, fromWhere: this.videoInfo.from_where } });
           }
         }).catch((error) => {
           this.$message.error(error);

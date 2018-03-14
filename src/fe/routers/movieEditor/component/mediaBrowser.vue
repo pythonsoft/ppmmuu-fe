@@ -3,10 +3,16 @@
     :class="['media-browser-wrap', {'active-panel': activePanel === 'mediaBrowser'}]"
     @click="()=>{this.$emit('update:activePanel', 'mediaBrowser')}">
     <div class="media-browser-header clearfix">
-      <h3 class="media-browser-title">我的资源</h3>
+      <h3 class="media-browser-title">素材库</h3>
       <div class="media-browser-controller-wrap">
         <div class="player-control-item-wrap">
-          <div class="player-control-item" @click="addFolderInput">
+          <div class="player-control-item" ref="showMenuBtn" :class="{'disabled-control-item': !currentNodeId}" @click="mountDropdownMenu" v-clickoutside="handleCloseMenu">
+            <i class="iconfont icon-more"></i>
+          </div>
+          <!-- <div class="player-control-tooltip"></div> -->
+        </div>
+        <div class="player-control-item-wrap">
+          <div class="player-control-item" :class="{'disabled-control-item': !isFolderEditable}" @click="addFolderInput">
             <i class="iconfont icon-add-folder"></i>
           </div>
           <div class="player-control-tooltip">添加文件夹</div>
@@ -26,7 +32,7 @@
         :showUpper="false"
         :default-expanded-key="defaultExpandedKey"
         :vue-instance="vueInstance"
-        :list-group="listGroup"
+        :list-group="listSourceItem"
         :renderContent="renderContent"
         :tree-node-current-change="treeNodeCurrentChange"
       ></tree-view>
@@ -44,6 +50,7 @@
       </div>
 
     </fj-dialog>
+    <source-menu-dialog :visible.sync="sourceMenuDialogVisible" @addto-menu="changePath"></source-menu-dialog>
   </div>
 </template>
 <script>
@@ -51,6 +58,10 @@
   import TreeNodeContent from './sourceTreeNode';
   import TreeView from '../../../component/higherOrder/tree/_index';
   import ivideoAPI from '../../../api/ivideo';
+  import Clickoutside from '../../../component/fjUI/utils/clickoutside';
+  import DropDownMenu from './dropdownMenu.vue';
+  import SourceMenuDialog from './sourceMenuDialog';
+  import { getPosition } from '../../../component/fjUI/utils/position';
 
   const TYPE_CONFIG = {
     0: 'folder',
@@ -66,31 +77,118 @@
     },
     data() {
       return {
-        _id: '',
+        // _id: '',
+        rootIds: {},
         currentNodeId: '',
         currentNodeInfo: {},
         deleteNodeDialogVisible: false,
+        sourceMenuDialogVisible: false,
         isDeleteBtnLoading: false,
+        command: '',
         defaultExpandedKey: ''
       };
     },
+    computed: {
+      isFolderEditable() {
+        return this.currentNodeId && (this.currentNodeInfo.ownerType !== '1' && this.currentNodeInfo.ownerType !== '2') && TYPE_CONFIG[this.currentNodeInfo.type] === 'folder';
+      }
+    },
+    mounted() {
+      this.isDark = this.theme === 'dark' ? true : false;
+    },
+    watch: {
+      theme(val) {
+        this.isDark = val === 'dark' ? true : false;
+      }
+    },
     methods: {
-      listGroup(id = '', cb) {
-        if (id) {
-          this.listSourceItem(id, cb);
+      changePath(data) {
+        const reqData = data;
+        reqData.srcIds = this.currentNodeId;
+        reqData.srcOwnerType = this.currentNodeInfo.ownerType;
+        if (this.command === 'move') {
+          this.moveFile(reqData);
         } else {
-          ivideoAPI.init().then((res) => {
-            const data = res.data;
-            this._id = data._id;
-            if (this._id) {
-              this.listSourceItem(this._id, (data) => {
-                if (data.length > 0) this.defaultExpandedKey = data[0]._id;
-                cb(data);
-              });
-            }
-          }).catch((error) => {
+          this.copyFile(reqData);
+        }
+      },
+      moveFile(reqData) {
+        const {srcOwnerType, destId, destOwnerType} = reqData;
+        const oldParentId = this.currentNodeInfo.parentId;
+        ivideoAPI.move(reqData)
+          .then((response) => {
+            this.vueInstance.$emit('tree.removeNode', this.currentNodeId);
+            this.vueInstance.$emit('tree.listGroup', destId, { ownerType: destOwnerType });
+            this.vueInstance.$emit('tree.listGroup', oldParentId, { ownerType: srcOwnerType });
+            this.currentNodeId = '';
+            this.currentNodeInfo = {};
+            this.$message.success('移动成功');
+          })
+          .catch((error) => {
             this.$message.error(error);
           });
+      },
+      copyFile(reqData) {
+        const {destId, destOwnerType} = reqData;
+        const oldParentId = this.currentNodeInfo.parentId;
+        ivideoAPI.copy(reqData)
+          .then((response) => {
+            this.vueInstance.$emit('tree.listGroup', destId, { ownerType: destOwnerType });
+            this.currentNodeId = '';
+            this.currentNodeInfo = {};
+            this.$message.success('复制成功');
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      mountDropdownMenu(e, files) {
+        if (!this.currentNodeId) return;
+        this.dropdownMenu = new Vue(DropDownMenu).$mount();
+        document.body.appendChild(this.dropdownMenu.$el);
+        const parentEl = this.parentEl || document.body;
+        parentEl.addEventListener('scroll', this.updateMenuPosition);
+        this.updateMenuPosition();
+        const menus = [
+          { command: 'move', key: 'move', name: '移动到'},
+          { command: 'copy', key: 'copy', name: '复制到'},
+        ];
+        this.dropdownMenu.menus = menus;
+        this.dropdownMenu.isDark = this.isDark;
+        this.dropdownMenu.$on('item-click', this.handleItemClick);
+      },
+      updateMenuPosition() {
+        if (this.dropdownMenu) {
+          const position = this.getDropdownMenu();
+          this.dropdownMenu.menuStyle = {
+            top: `${position.top + 30}px`,
+            left: `${position.left - 43}px`,
+            minWidth: '76px'
+          };
+        }
+      },
+      getDropdownMenu() {
+        const btnPosition = getPosition(this.$refs.showMenuBtn);
+        const position = { top: btnPosition.y, left: btnPosition.x };
+        const parentElScrollTop = this.parentEl ? this.parentEl.scrollTop : 0;
+        position.top = position.top - parentElScrollTop;
+        return position;
+      },
+      handleItemClick(item, command) {
+        this.command = command;
+        this.sourceMenuDialogVisible = true;
+        this.unmountDropdownMenu();
+      },
+      handleCloseMenu(target) {
+        if (this.dropdownMenu && this.dropdownMenu.$el.contains(target)) return;
+        this.unmountDropdownMenu();
+      },
+      unmountDropdownMenu() {
+        if (this.dropdownMenu) {
+          document.body.removeChild(this.dropdownMenu.$el);
+          const parentEl = this.parentEl || document.body;
+          parentEl.removeEventListener('scroll', this.updateMenuPosition);
+          this.dropdownMenu = null;
         }
       },
       treeNodeCurrentChange(node) {
@@ -106,7 +204,7 @@
       },
       handleDeleteNode() {
         this.isDeleteBtnLoading = true;
-        ivideoAPI.removeItem({ id: this.currentNodeId })
+        ivideoAPI.removeItem({ id: this.currentNodeId, ownerType: this.currentNodeInfo.ownerType })
           .then((response) => {
             this.vueInstance.$emit('tree.removeNode', this.currentNodeId);
             this.currentNodeId = '';
@@ -120,12 +218,29 @@
             this.$message.error(error);
           });
       },
-      listSourceItem(id, cb) {
-        ivideoAPI.listItem({ params: { parentId: id } }).then((res) => {
-          res.data.forEach((item) => {
+      listSourceItem(id = '', cb, node) {
+        const params = { parentId: id };
+        if (node && node.ownerType) {
+          params.ownerType = node.ownerType;
+        }
+        ivideoAPI.listItem({ params: params }).then((res) => {
+          const resData = res.data;
+          const data = [];
+          if (!id) {
+            resData.sort((a, b)=> {
+              return a.ownerType - b.ownerType;
+            });
+          }
+          for (let i = 0; i < resData.length; i++) {
+            const item = resData[i];
+            if (item.type === '2') {
+              this.rootIds[item.ownerType] = item._id;
+              if (item.ownerType === '4') this.defaultExpandedKey = item._id;
+            }
             if (TYPE_CONFIG[item.type] === 'folder') item.isFolder = true;
-          });
-          cb && cb(res.data);
+            data.push(item);
+          }
+          cb && cb(data);
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -134,7 +249,6 @@
         return h(TreeNodeContent, {
           props: {
             node: node,
-            rootId: this._id,
             currentNodeId: this.currentNodeId
           },
           on: {
@@ -151,9 +265,10 @@
       createDirectory(reqData, removeNodeId) {
         ivideoAPI.createDirectory(reqData)
           .then((response) => {
-            const id = reqData.parentId === this._id ? '' : reqData.parentId;
+            // const id = reqData.parentId === this._id ? '' : reqData.parentId;
+            const id = reqData.parentId;
             this.vueInstance.$emit('tree.removeNode', removeNodeId);
-            this.vueInstance.$emit('tree.listGroup', id);
+            this.vueInstance.$emit('tree.listGroup', id, { ownerType: this.currentNodeInfo.ownerType });
             // this.$message.success('删除成功');
           })
           .catch((error) => {
@@ -170,12 +285,14 @@
           });
       },
       addFolderInput() {
+        if (!this.isFolderEditable) return;
         const node = {
           _id: `new${new Date().getTime()}`,
           name: 'new',
           type: 'new',
           isFolder: true,
-          parentId: this._id
+          ownerType: this.currentNodeInfo.ownerType,
+          parentId: this.currentNodeId // this._id
         };
         this.vueInstance.$emit('tree.insertNode', this.currentNodeId, node);
       }
@@ -186,9 +303,16 @@
         name: 'mediaBrowser'
       });
     },
+    beforDestroy() {
+      if (this.dropdownMenu) {
+        this.unmountDropdownMenu();
+      }
+    },
+    directives: { Clickoutside },
     components: {
       TreeNodeContent,
-      TreeView
+      TreeView,
+      SourceMenuDialog
     }
   };
 </script>
