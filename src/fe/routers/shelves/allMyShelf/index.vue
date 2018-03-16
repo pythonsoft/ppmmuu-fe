@@ -22,6 +22,9 @@
       </template>
       <template slot="operation">
         <div class="operation-btn-group">
+          <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickDetail">查看详情</fj-button>
+        </div>
+        <div class="operation-btn-group">
           <fj-button type="primary" size="mini" v-bind:disabled="canEditRows.length < 1" @click="handleClickEdit">编辑</fj-button>
           <fj-button type="primary" size="mini" v-bind:disabled="sendBackDisable" @click="handleClickSendBack">退回</fj-button>
         </div>
@@ -55,6 +58,14 @@
         </div>
 
       </fj-dialog>
+      <shelf-detail
+              :btnShow="false"
+              :title="videoTitle"
+              :programNO="programNO"
+              :id="editId"
+              :objectId="objectId"
+              :visible.sync="detailDialogVisible">
+      </shelf-detail>
     </four-row-layout-right-content>
     <edit v-else :shelfInfo="editRows" @show-back="handleShowBack" @update-list="handleClickSearch"></edit>
   </div>
@@ -64,6 +75,8 @@
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import { STATUS, formatStatus } from '../config';
   import Edit from '../component/edit.vue';
+  import ShelfDetail from '../component/shelfDetail';
+  import '../index.css';
 
   const api = require('../../../api/shelves');
   const OPTIONS = [
@@ -76,7 +89,8 @@
   export default {
     components: {
       'four-row-layout-right-content': FourRowLayoutRightContent,
-      'edit': Edit
+      'edit': Edit,
+      ShelfDetail
     },
     data() {
       return {
@@ -103,7 +117,12 @@
         selectedRows: [],
         editRows: [],
         formatStatus: formatStatus,
-        formatTime: formatTime
+        formatTime: formatTime,
+        videoTitle: '',
+        programNO: '',
+        editId: '',
+        objectId: '',
+        detailDialogVisible: false
       };
     },
     created() {
@@ -141,6 +160,14 @@
           .catch((error) => {
             me.showErrorInfo(error);
           });
+      },
+      handleClickDetail() {
+        this.detailDialogVisible = true;
+        const row = this.selectedRows[0];
+        this.objectId = row.objectId;
+        this.programNO = row.programNO;
+        this.videoTitle = row.name;
+        this.editId = row._id;
       },
       handleClickSendBack() {
         this.dialogMessage = '您确定要退回这些任务吗?';
@@ -204,6 +231,7 @@
         this.canEditRows = [];
         this.canSendBackIds = [];
         this.canDeleteIds = [];
+        this.selectedRows = rows;
         if (rows && rows.length) {
           let flag1 = true;
           let flag2 = true;
@@ -234,6 +262,14 @@
       },
       handleCurrentPageChange(val) {
         this.handleClickSearch();
+      },
+      handleClickEdit() {
+        this.detailDialogVisible = true;
+        const row = this.selectedRows[0];
+        this.objectId = row.objectId;
+        this.programNO = row.programNO;
+        this.videoTitle = row.name;
+        this.editId = row._id;
       },
       addOwner(row) {
         row = row.info ? row.info : row;
@@ -272,44 +308,3 @@
     }
   };
 </script>
-<style>
-  .permission-search-item{
-    float: left;
-    margin-left: 10px;
-    line-height: 100%;
-  }
-
-  .permission-table-pagination {
-    margin-top: 30px;
-    text-align: center;
-    height: 28px;
-    line-height: 28px;
-    color: #4C637B;
-  }
-
-  .permission-status-span {
-    font-size: 12px;
-    color: #FFFFFF;
-    width: 60px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 2px;
-    text-align:center;
-    display: block;
-  }
-  .deleted {
-    background: #AAAAAA;
-  }
-
-  .prepare {
-    background: #38B1EB;
-  }
-
-  .doing {
-    background: #C0C003;
-  }
-
-  .submitted {
-    background: #2EC4B6;
-  }
-</style>

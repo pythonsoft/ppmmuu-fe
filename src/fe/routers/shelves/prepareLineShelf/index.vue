@@ -12,6 +12,8 @@
     <template slot="operation">
       <div class="operation-btn-group">
         <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length !== 1" @click="handleClickEdit">查看详情</fj-button>
+      </div>
+      <div class="operation-btn-group">
         <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickOnline">上架</fj-button>
       </div>
       <div class="operation-btn-group">
@@ -46,6 +48,7 @@
     <shelf-detail
             btnText="上架"
             btnType="info"
+            :showPackageInfo="false"
             :title="videoTitle"
             :programNO="programNO"
             :id="editId"

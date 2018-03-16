@@ -58,6 +58,7 @@
   import EditLeft from './editLeft';
   import EditRight from './editRight';
   import PanelView from '../../../component/layout/panel/index';
+  import { PACKAGE_STATUS } from '../config';
 
   const api = require('../../../api/shelves');
   const uploadApi = require('../../../api/upload');
@@ -121,12 +122,21 @@
           };
           const cloneEditorInfo = JSON.parse(JSON.stringify(this.activeShelfInfo.editorInfo));
           delete cloneEditorInfo.name;
+          let canSubmit = true;
           for(let i = 0, len = this.shelfInfos.length; i < len; i++){
             if(this.shelfInfos[i] !== this.activeShelfInfo) {
               const name = this.shelfInfos[i].editorInfo.name;
               this.shelfInfos[i].editorInfo = JSON.parse(JSON.stringify(cloneEditorInfo));
               this.shelfInfos[i].editorInfo.name = name;
             }
+
+            if(this.shelfInfos[i].packageStatus !== PACKAGE_STATUS.COMPLETED){
+              canSubmit = false;
+            }
+          }
+          if (!isSave && !canSubmit) {
+            me.showErrorInfo('存在打包状态不是完成的任务，不能提交');
+            return { postData: null, func: null};
           }
           func = isSave ? api.batchSaveShelf : api.batchSubmitShelf;
         }else {
@@ -134,6 +144,14 @@
             _id: me.activeShelfInfo._id,
             editorInfo: me.activeShelfInfo.editorInfo
           };
+          let canSubmit = true;
+          if(me.activeShelfInfo.packageStatus !== PACKAGE_STATUS.COMPLETED){
+            canSubmit = false;
+          }
+          if (!isSave && !canSubmit) {
+            me.showErrorInfo('存在打包状态不是完成的任务，不能提交');
+            return { postData: null, func: null};
+          }
           func = isSave ? api.saveShelf : api.submitShelf;
         }
         return { postData, func};
@@ -166,6 +184,9 @@
       },
       handleClickSubmit() {
         const { postData, func } = this.getPostData(false);
+        if (!postData || !func) {
+          return;
+        }
         const me = this;
         this.$refs.editRight.$refs.editorInfoForm.validate((valid) => {
           if (valid) {

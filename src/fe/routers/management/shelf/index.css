@@ -1,0 +1,42 @@
+.layout-four-row-search-item{
+  float: left;
+  margin-left: 10px;
+}
+
+.layout-btn-mini-margin {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.layout-btn-margin {
+  margin-left: 18px;
+  font-size: 12px;
+}
+.library-radio-item{
+  padding: 4px 0;
+}
+
+.library-dialog-footer{
+  text-align: right;
+}
+
+.library-bucket-input {
+  float: left;
+  width: 215px;
+  margin-right: 10px;
+}
+
+.group-input {
+  float: left;
+  width: 215px;
+  margin-right: 10px;
+}
+
+.template-subtitle-checkbox {
+  margin-right: 10px;
+}
+
+.template-subtitle {
+  margin-left: -22px;
+  padding-top: 7px;
+}

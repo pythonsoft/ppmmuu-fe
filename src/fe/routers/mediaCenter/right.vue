@@ -18,7 +18,7 @@
               <li @click.stop="showSourceMenu" ref="addtoBtn" v-clickoutside="closeSourceMenu">
                 <span title="添加" class="iconfont icon-addto"></span>
               </li>
-              <li @click.stop="createShelf">
+              <li @click.stop="createAskShelf">
                 <span title="上架" class="iconfont icon-shangjialine"></span>
               </li>
             </ul>
@@ -132,6 +132,15 @@
       </fj-tabs>
     </div>
     <fj-dialog
+            title="提示"
+            :visible.sync="shelfAskDialogVisible">
+      <p>请确认此节目的视频、信息和版权符合售卖要求，若要继续，请点击确认</p>
+      <div slot="footer" class="dialog-footer">
+        <fj-button @click.stop="shelfAskDialogVisible=false">取消</fj-button><!--
+        --><fj-button type="primary" :loading="shelfAskDialogBtnLoading" @click.stop="createShelf">确定</fj-button>
+      </div>
+    </fj-dialog>
+    <fj-dialog
         title="上架"
         :visible.sync="shelfDialogVisible">
       <p>已添加至上架，确定再次添加</p>
@@ -213,6 +222,8 @@
         downloadDialogDisplay: false,
         shelfDialogVisible: false,
         shelfDialogBtnLoading: false,
+        shelfAskDialogVisible: false,
+        shelfAskDialogBtnLoading: false,
         videoId: '',
         shelfName: '',
         programEmpty: false,
@@ -232,9 +243,14 @@
           return;
         }
         this.title = this.getTitle(val);
-        this.shelfName = this.title.replace(/<em>/g,'').replace(/<\/em>/g,'');
-        if(this.shelfName.indexOf('.') !== -1) {
-          this.shelfName = this.shelfName.slice(0, this.shelfName.lastIndexOf('.'));
+        const programMameCN = val.program_name_cn;
+        if(programMameCN){
+          this.shelfName = programMameCN.replace(/<em>/g, '').replace(/<\/em>/g, '');
+        }else {
+          this.shelfName = this.title.replace(/<em>/g, '').replace(/<\/em>/g, '');
+          if (this.shelfName.indexOf('.') !== -1) {
+            this.shelfName = this.shelfName.slice(0, this.shelfName.lastIndexOf('.'));
+          }
         }
         this.program = [];
         this.poster = this.getThumb(val);
@@ -511,26 +527,36 @@
         this.shelfDialogBtnLoading = true;
         this.createShelfTask(true);
       },
+      createAskShelf() {
+        this.shelfAskDialogVisible = true;
+        this.shelfAskDialogBtnLoading = false;
+      },
       createShelf(){
+        this.shelfAskDialogBtnLoading = true;
         this.createShelfTask();
       },
       createShelfTask(force=false){
         const me = this;
         const postData = {
           objectId: me.videoId,
-          name: me.videoInfo.program_name_cn || me.shelfName,
+          name: me.shelfName,
           fromWhere: me.videoInfo.from_where,
           force: force,
         };
         shelfApi.createShelfTask(postData).then((res) => {
           me.shelfDialogBtnLoading = false;
           me.shelfDialogVisible = false;
+          me.shelfAskDialogBtnLoading = false;
+          me.shelfAskDialogVisible = false;
           me.$message.success('已经加入到上架中，请前去查看');
         }).catch((error) => {
           if(error === '之前上架过'){
+            me.shelfAskDialogBtnLoading = false;
+            me.shelfAskDialogVisible = false;
             me.shelfDialogVisible = true;
             me.shelfDialogVisible = true;
           }else {
+            me.shelfAskDialogBtnLoading = false;
             me.$message.error(error);
           }
         });

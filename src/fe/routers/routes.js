@@ -69,6 +69,10 @@ const LibraryTemplate = resolve => require.ensure([], () => resolve(require('./m
 
 const CopyManagement = resolve => require.ensure([], () => resolve(require('./management/copy/index')), 'copyManagement');
 
+const ShelfListManagement = resolve => require.ensure([], () => resolve(require('./management/shelf/list/index')), 'shelfList');
+const ShelfTemplate = resolve => require.ensure([], () => resolve(require('./management/shelf/template/index')), 'shelfTemplate');
+const FastEditTemplate = resolve => require.ensure([], () => resolve(require('./management/shelf/fastEditTemplate/index')), 'fastEditTemplate');
+
 export default [{
   path: '/',
   component: Home,
@@ -103,7 +107,10 @@ export default [{
         { path: 'auditDownload', component: AuditDownload, meta: { title: '下载审核' }, name: 'auditDownload' },
         { path: 'auditEmpower', component: AuditEmpower, meta: { title: '下载审核' }, name: 'auditEmpower' },
         { path: 'libraryTemplate', component: LibraryTemplate, meta: { title: '入库模板' }, name: 'libraryTemplate' },
-        { path: 'copyManagement', component: CopyManagement, meta: { title: '大洋稿件入库' }, name: 'copyManagement' }
+        { path: 'copyManagement', component: CopyManagement, meta: { title: '大洋稿件入库' }, name: 'copyManagement' },
+        { path: 'shelfTemplate', component: ShelfTemplate, meta: { title: '上架模板' }, name: 'shelfTemplate' },
+        { path: 'shelfList', component: ShelfListManagement, meta: { title: '上架任务' }, name: 'shelfList' },
+        { path: 'fastEditTemplate', component: FastEditTemplate, meta: { title: '快编模板' }, name: 'fastEditTemplate' }
       ]
     },
     {
