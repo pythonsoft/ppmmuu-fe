@@ -111,7 +111,8 @@
         return pathArr[level] || '';
       },
       getPackageStatus(row) {
-        return formatPacakgeStatus['2'];
+        const packageStatus = row.packageStatus || '2';
+        return formatPacakgeStatus[packageStatus];
       },
       handleClickSearch() {
         const me = this;

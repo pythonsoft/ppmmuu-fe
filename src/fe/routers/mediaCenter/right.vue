@@ -539,7 +539,7 @@
         const me = this;
         const postData = {
           objectId: me.videoId,
-          name: me.videoInfo.program_name_cn || me.shelfName,
+          name: me.shelfName,
           fromWhere: me.videoInfo.from_where,
           force: force,
         };

@@ -57,6 +57,7 @@
       index: 'shelfManager',
       children: [
         { text: '上架任务', index: 'shelfList', route: 'shelfList' },
+        { text: '快编模板', index: 'fastEditTemplate', route: 'fastEditTemplate' },
         { text: '上架模板', index: 'shelfTemplate', route: 'shelfTemplate' },
       ]
     },

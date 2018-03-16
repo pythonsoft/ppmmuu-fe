@@ -21,6 +21,13 @@ config.SUBSCRIBE_TYPE = {
   2: '娱乐'
 };
 
+config.PACKAGE_STATUS = {
+  PREPARE: '0',   // 待处理
+  DEALING: '1',   // 处理中
+  COMPLETED: '2', // 已完成
+  ERROR: '3',     // 出错
+};
+
 config.formatPacakgeStatus = {
   0: '<span class="permission-status-span prepare">待处理</span>',
   1: '<span class="permission-status-span doing">处理中</span>',
