@@ -1,6 +1,6 @@
 <template>
   <fj-slide-dialog
-    title="上架模板"
+    title="快编模板"
     :visible.sync="dialogVisible"
     width="500px"
     @close="close"
