@@ -35,6 +35,7 @@
           <fj-table-column prop="name" label="节目名称"></fj-table-column>
           <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
           <fj-table-column prop="packageStatus" label="打包状态" width="50"><template slot-scope="props"><div v-html="getPackageStatus(props.row)"></div></template></fj-table-column>
+          <fj-table-column prop="dealer" label="认领人" width="100"><template slot-scope="props">{{props.row.dealer.name}}</template></fj-table-column>
           <fj-table-column prop="assignee" label="派发人" width="100"><template slot-scope="props">{{props.row.assignee.name}}</template></fj-table-column>
           <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
         </fj-table>
@@ -138,7 +139,8 @@
         return pathArr[level] || '';
       },
       getPackageStatus(row) {
-        return formatPacakgeStatus['2'];
+        const packageStatus = row.packageStatus || '2';
+        return formatPacakgeStatus[packageStatus];
       },
       handleClickSearch() {
         const me = this;

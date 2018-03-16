@@ -25,3 +25,18 @@
   width: 215px;
   margin-right: 10px;
 }
+
+.group-input {
+  float: left;
+  width: 215px;
+  margin-right: 10px;
+}
+
+.template-subtitle-checkbox {
+  margin-right: 10px;
+}
+
+.template-subtitle {
+  margin-left: -22px;
+  padding-top: 7px;
+}

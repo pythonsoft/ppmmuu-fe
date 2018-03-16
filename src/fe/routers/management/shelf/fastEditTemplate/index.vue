@@ -1,6 +1,6 @@
 <template>
   <layout-four-row>
-    <template slot="search-left">上架模板</template>
+    <template slot="search-left">快编模板</template>
     <template slot="operation">
       <div class="operation-btn-group">
         <fj-button type="primary" size="mini" @click="addClick">添加</fj-button>
@@ -137,7 +137,7 @@
       confirmDialog() {
         const me = this;
 
-        api.removeTemplate({ _id: this.table.currentRowInfo._id }, me).then((res) => {
+        api.removeFastEditTemplate({ _id: this.table.currentRowInfo._id }, me).then((res) => {
           me.$message.success('删除成功');
           me.listTemplate();
           me.confirmDialogDisplay = false;
@@ -153,7 +153,7 @@
           pageSize: this.pageSize,
         };
 
-        api.listTemplate({ params: param }, me).then((res) => {
+        api.listFastEditTemplate({ params: param }, me).then((res) => {
           me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
