@@ -294,6 +294,8 @@
           start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
         } else if (val === 'lastWeek') {
           start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
+        } else if (val === 'lastDate') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24);
         }
         this.datetimerangeCreated = [start, end];
         this.getMediaList();
