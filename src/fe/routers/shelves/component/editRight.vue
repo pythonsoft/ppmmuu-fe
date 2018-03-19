@@ -1,8 +1,11 @@
 <template>
   <div>
     <h1 class="shelf-edit-title">填写内容</h1>
-    <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="90px">
-      <fj-form-item label="节目名称" prop="name">
+    <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="100px">
+      <fj-form-item label="文件名" prop="fileName">
+        <fj-input v-model="editorInfo.fileName" :disabled="true"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="节目名称(中文)" prop="name">
         <fj-input v-model="editorInfo.name"></fj-input>
       </fj-form-item>
       <fj-form-item label="订阅类型" prop="subscribeType">

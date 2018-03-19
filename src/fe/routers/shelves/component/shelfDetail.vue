@@ -35,7 +35,7 @@
               </tr>
             </table>
           </fj-tab-pane>
-          <fj-tab-pane label="编目信息" name="tab1">
+          <fj-tab-pane label="媒体库信息" name="tab1">
             <table class="media-center-table">
               <tr v-for="(info, key) in programDetails" v-if="info.cn && info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
@@ -188,17 +188,17 @@
           .then((res)=>{
             const editorInfo = res.data.editorInfo || {};
             me.fromWhere = res.data.fromWhere || FROM_WHERE.MAM;
+            me.editorDetails['fileName'] = {
+              cn: '文件名',
+              value: editorInfo['fileName']
+            };
             me.editorDetails['subscribeName'] = {
-              cn: '节目名称',
+              cn: '节目名称(中文)',
               value: editorInfo['name'] || ''
             };
             me.editorDetails['subscribeType'] = {
               cn: '订阅类型',
               value: editorInfo['subscribeTypeText']
-            };
-            me.editorDetails['source'] = {
-              cn: '来源',
-              value: editorInfo['source']
             };
             me.editorDetails['limit'] = {
               cn: '限制',

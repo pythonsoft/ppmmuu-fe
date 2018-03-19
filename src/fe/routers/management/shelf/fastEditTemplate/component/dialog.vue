@@ -8,10 +8,16 @@
 
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
       <fj-form-item label="标志">
-        <fj-input v-model="formData._id" :disabled="true"></fj-input>
+        <fj-input v-model="formData._id" :disabled="type!=='add'"></fj-input>
       </fj-form-item>
       <fj-form-item label="名称" prop="name">
         <fj-input v-model="formData.name"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="存储" prop="bucketId">
+        <div class="group-input">
+          <fj-input v-model="formData.bucketId" :readonly="true"></fj-input>
+        </div>
+        <fj-button @click.stop.prevent="bucketBrowserVisible=true">修改</fj-button>
       </fj-form-item>
       <fj-form-item label="字幕合成" prop="subtitleType">
         <div class="template-subtitle">
@@ -26,14 +32,9 @@
         </div>
         <fj-button @click.stop.prevent="transcodeBrowserVisible=true">修改</fj-button>
       </fj-form-item>
-      <fj-form-item label="下载路径" prop="downloadWorkPath">
-        <fj-input v-model="formData.downloadWorkPath"></fj-input>
-      </fj-form-item>
-      <fj-form-item label="转码路径" prop="transcodeWorkPath">
-        <fj-input v-model="formData.transcodeWorkPath"></fj-input>
-      </fj-form-item>
-      <fj-form-item label="存储路径" prop="storagePath">
-        <fj-input v-model="formData.storagePath"></fj-input>
+      <fj-form-item label="路径脚本" prop="script">
+        <fj-input type="textarea" :rows="7" v-model="formData.script"></fj-input>
+        <p class="template-download-link" @click="scriptDialogVisible=true">* 查看脚本说明</p>
       </fj-form-item>
       <fj-form-item label="描述">
         <fj-input type="textarea" :rows="3" v-model="formData.description"></fj-input>
@@ -43,25 +44,32 @@
       <fj-button @click="close">取消</fj-button>
       <fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
     </div>
+    <bucket-browser-view
+            :visible.sync="bucketBrowserVisible"
+            @confirm="bucketConfirm"
+    ></bucket-browser-view>
     <transcode-browser-view
             :visible.sync="transcodeBrowserVisible"
             @confirm="transcodeConfirm"
     ></transcode-browser-view>
+    <script-dialog-view
+            :visible.sync="scriptDialogVisible"
+    ></script-dialog-view>
   </fj-slide-dialog>
 </template>
 <script>
+  import BucketBrowserView from '../../../bucket/component/browser';
   import TranscodeBrowserView from '../../../template/download/component/transcodeBrowser';
-
+  import ScriptDialogView from '../../../template/download/component/scriptDialog';
 
   const api = require('../../../../../api/shelfManage');
 
   const templateInfo = {
     _id: '',
     name: '',
+    bucketId: '',
     description: '',
-    downloadWorkPath: '',
-    transcodeWorkPath: '',
-    storagePath: '',
+    script: '',
     transcodeTemplateId: '',
     transcodeTemplateName: '',
     subtitleType: []
@@ -82,6 +90,8 @@
     },
     components: {
       TranscodeBrowserView,
+      BucketBrowserView,
+      ScriptDialogView
     },
     watch: {
       visible(val) {
@@ -123,14 +133,11 @@
           name: [
             { required: true, message: '请输入名称' }
           ],
-          downloadWorkPath: [
-            { required: true, message: '请输入下载路径' }
+          bucketId: [
+            { required: true, message: '请选择存储区' }
           ],
-          transcodeWorkPath: [
-            { required: true, message: '请输入转码路径' }
-          ],
-          storagePath: [
-            { required: true, message: '请输入存储路径' }
+          script: [
+            { required: true, message: '请输入路径脚本' }
           ],
           transcodeTemplateName: [
             { required: true, message: '请选择转码模板' }
@@ -184,6 +191,9 @@
       transcodeConfirm(val) {
         this.formData.transcodeTemplateId = val._id;
         this.formData.transcodeTemplateName = val.name;
+      },
+      bucketConfirm(val) {
+        this.formData.bucketId = val._id;
       },
     }
   };

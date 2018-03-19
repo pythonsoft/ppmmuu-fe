@@ -24,7 +24,8 @@
     <template slot="table">
       <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-        <fj-table-column prop="name" label="节目名称"></fj-table-column>
+        <fj-table-column prop="name" label="节目名称(中文)"></fj-table-column>
+        <fj-table-column prop="editorInfo" label="文件名"><template slot-scope="props">{{props.row.editorInfo.fileName}}</template></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
         <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
       </fj-table>

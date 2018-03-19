@@ -23,7 +23,8 @@
     <template slot="table">
       <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
         <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-        <fj-table-column prop="name" label="节目名称"></fj-table-column>
+        <fj-table-column prop="name" label="节目名称(中文)"></fj-table-column>
+        <fj-table-column prop="editorInfo" label="文件名"><template slot-scope="props">{{props.row.editorInfo.fileName}}</template></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
         <fj-table-column prop="dealer" label="编目人" width="100"><template slot-scope="props">{{props.row.dealer.name}}</template></fj-table-column>
         <fj-table-column prop="lastModifyTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.lastModifyTime)}}</template></fj-table-column>
@@ -41,7 +42,7 @@
 
       <div slot="footer" class="dialog-footer">
         <fj-button @click="cancelDialog">取消</fj-button><!--
-        --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
+        --><fj-button type="primary" :loading="isLoading" @click="confirmDialog">确定</fj-button>
       </div>
 
     </fj-dialog>
@@ -76,6 +77,7 @@
         defaultRoute: '/',
         dialogVisible: false,
         detailDialogVisible: false,
+        isLoading: false,
         dialogMessage: '',
         departmentId: '',
         operation: '',
@@ -174,14 +176,17 @@
           return;
         }
 
+        me.isLoading = true;
         apiFunc(postData)
           .then((response) => {
             me.showSuccessInfo(`${message}成功!`);
             me.detailDialogVisible = false;
+            me.isLoading = false;
             me.resetDialog();
             me.handleClickSearch();
           })
           .catch((error) => {
+            me.isLoading = false;
             me.showErrorInfo(error);
             me.resetDialog();
           });
