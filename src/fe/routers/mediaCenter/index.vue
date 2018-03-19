@@ -290,12 +290,8 @@
         this.currentPage = 1;
         const start = new Date();
         const end = new Date();
-        if (val === 'lastMonth') {
-          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 30);
-        } else if (val === 'lastWeek') {
-          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 7);
-        } else if (val === 'lastDate') {
-          start.setTime(start.getTime() - 1000 * 60 * 60 * 24);
+        if (val !== 'all') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * Number(val));
         }
         this.datetimerangeCreated = [start, end];
         this.getMediaList();

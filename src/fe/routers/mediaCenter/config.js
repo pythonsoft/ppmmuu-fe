@@ -201,9 +201,10 @@ const ORDER_OPTIONS = [
 
 const CREATED_TIME_OPTIONS = [
   { value: 'all', label: '时间不限' },
-  { value: 'lastDate', label: '最近一天' },
-  { value: 'lastWeek', label: '最近一周' },
-  { value: 'lastMonth', label: '最近一月' }
+  { value: 1, label: '最近一天' },
+  { value: 7, label: '最近一周' },
+  { value: 30, label: '最近一月' },
+  { value: 356, label: '最近一年' }
 ];
 
 // 从哪个接口拿的数据
