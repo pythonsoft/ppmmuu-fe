@@ -6,7 +6,7 @@
       <h3 class="media-browser-title">素材库</h3>
       <div class="media-browser-controller-wrap">
         <div class="player-control-item-wrap">
-          <div class="player-control-item" ref="showMenuBtn" :class="{'disabled-control-item': !currentNodeId}" @click="mountDropdownMenu" v-clickoutside="handleCloseMenu">
+          <div class="player-control-item" ref="showMenuBtn" :class="{'disabled-control-item': !isShowSourceMenu}" @click="mountDropdownMenu" v-clickoutside="handleCloseMenu">
             <i class="iconfont icon-more"></i>
           </div>
           <!-- <div class="player-control-tooltip"></div> -->
@@ -18,7 +18,7 @@
           <div class="player-control-tooltip">添加文件夹</div>
         </div>
         <div class="player-control-item-wrap">
-          <div class="player-control-item" @click="showDeleteNodeDialog" :class="{'disabled-control-item': !currentNodeId}">
+          <div class="player-control-item" @click="showDeleteNodeDialog" :class="{'disabled-control-item': !isFolderDeletable}">
             <i class="iconfont icon-delete"></i>
           </div>
           <div class="player-control-tooltip">删除</div>
@@ -69,6 +69,12 @@
     1: 'video',
     new: 'input'
   };
+  const EDITABLE_OWNERTYPE_CONFIG = {
+    1: false,
+    2: false,
+    3: true,
+    4: true
+  };
 
   export default {
     props: {
@@ -91,6 +97,14 @@
     computed: {
       isFolderEditable() {
         return this.currentNodeId && (this.currentNodeInfo.ownerType !== '1' && this.currentNodeInfo.ownerType !== '2') && TYPE_CONFIG[this.currentNodeInfo.type] === 'folder';
+      },
+      isFolderDeletable() {
+        const currentNodeInfo = this.currentNodeInfo;
+        return this.currentNodeId && currentNodeInfo.type !== '2' && EDITABLE_OWNERTYPE_CONFIG[currentNodeInfo.ownerType];
+      },
+      isShowSourceMenu() {
+        const currentNodeInfo = this.currentNodeInfo;
+        return this.currentNodeId && currentNodeInfo.type !== '2';
       }
     },
     mounted() {
@@ -143,7 +157,7 @@
           });
       },
       mountDropdownMenu(e, files) {
-        if (!this.currentNodeId) return;
+        if (!this.isShowSourceMenu) return;
         this.dropdownMenu = new Vue(DropDownMenu).$mount();
         document.body.appendChild(this.dropdownMenu.$el);
         const parentEl = this.parentEl || document.body;
@@ -175,6 +189,13 @@
         return position;
       },
       handleItemClick(item, command) {
+        if (command === 'move') {
+          const currentNodeInfo = this.currentNodeInfo;
+          if (currentNodeInfo.type === '2' || !EDITABLE_OWNERTYPE_CONFIG[currentNodeInfo.ownerType]) {
+            this.$message.error('存在不能移动的目录或文件夹');
+            return;
+          }
+        }
         this.command = command;
         this.sourceMenuDialogVisible = true;
         this.unmountDropdownMenu();
@@ -196,7 +217,7 @@
         this.currentNodeInfo = node;
       },
       showDeleteNodeDialog() {
-        if (!this.currentNodeId) return;
+        if (!this.isFolderDeletable) return;
         this.deleteNodeDialogVisible = true;
       },
       cancelCreate(node) {

@@ -57,7 +57,7 @@
     { text: '上架', index: 'shelf', route: '/shelf', icon: 'icon-shangjia' },
     { text: '订阅', index: 'subscriptions', route: '/subscriptions', icon: 'icon-subscription' },
     { text: '任务', index: 'taskCenter', route: '/taskCenter', icon: 'icon-menu' },
-    { text: '个人中心', index: 'personalCenter', route: '/personalCenter', icon: 'icon-person' },
+    // { text: '个人中心', index: 'personalCenter', route: '/personalCenter', icon: 'icon-person' },
     { text: '管理', index: 'management', route: '/management', icon: 'icon-setting' }
   ];
   export default {
@@ -114,6 +114,7 @@
         this.popover.avatar = this.userInfo.photo;
         this.popover.name = this.userInfo.name;
         this.popover.email = this.userInfo.email;
+        this.popover.router = this.$router;
         document.body.appendChild(this.popover.$el);
       },
       unmountMenu() {

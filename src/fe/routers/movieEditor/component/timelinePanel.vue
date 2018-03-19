@@ -41,6 +41,7 @@
       @confirm="downloadListConfirm"
     ></download-list-view>
     <submit-info-dialog
+      :sequences="sequences"
       :dialogVisible.sync="isShowSubmitInfoDialog"
     ></submit-info-dialog>
   </div>
