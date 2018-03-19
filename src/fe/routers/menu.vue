@@ -115,6 +115,8 @@
         this.popover.name = this.userInfo.name;
         this.popover.email = this.userInfo.email;
         this.popover.router = this.$router;
+        this.popover.parent = this;
+        this.$on('unmount-menu', this.unmountMenu);
         document.body.appendChild(this.popover.$el);
       },
       unmountMenu() {
