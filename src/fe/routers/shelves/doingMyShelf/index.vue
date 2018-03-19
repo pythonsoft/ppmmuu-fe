@@ -25,7 +25,8 @@
       <template slot="table">
         <fj-table :data="tableData" name="table1" ref="table" @selection-change="handleSelectionChange">
           <fj-table-column type="selection" width="20" align="center"></fj-table-column>
-          <fj-table-column prop="name" label="节目名称"></fj-table-column>
+          <fj-table-column prop="name" label="节目名称(中文)"></fj-table-column>
+          <fj-table-column prop="editorInfo" label="文件名"><template slot-scope="props">{{props.row.editorInfo.fileName}}</template></fj-table-column>
           <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
           <fj-table-column prop="packageStatus" label="打包状态" width="50"><template slot-scope="props"><div v-html="getPackageStatus(props.row)"></div></template></fj-table-column>
           <fj-table-column prop="assignee" label="派发人" width="100"><template slot-scope="props">{{props.row.assignee.name}}</template></fj-table-column>
