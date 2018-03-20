@@ -20,14 +20,14 @@
             <table class="media-center-table">
               <tr v-for="(info, key) in editorDetails" v-if="info.cn && info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                <td class="item-info-value clearfix" v-if="key!=='cover'">
+                <td class="item-info-value clearfix" v-if="info.key!=='cover'">
                   <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
-                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
+                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand('editorDetails', info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
                     <span v-else>{{ formatValue(info.value) }}</span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded('editorDetails', info, key)">收起<i class="tri-top"></i></span>
                 </td>
                 <td class="item-info-value " v-else>
                   <img :src="info.value" class="shelf-editor-cover" height="108px" width="192px">
@@ -41,12 +41,12 @@
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
                   <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
-                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, key)">详细<i class="tri-bottom"></i></span>
+                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand('programDetails', info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
                     <span v-else>{{ formatValue(info.value) }}</span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, key)">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded('programDetails', info, key)">收起<i class="tri-top"></i></span>
                 </td>
               </tr>
             </table>
@@ -142,19 +142,10 @@
       id(val) {
         if (this.visible) {
           this.getShelfDetail();
+          this.getDetail();
+          this.getStream();
         }
       },
-      objectId(val) {
-        if (this.visible) {
-          this.getShelfDetail();
-        }
-      },
-      visible(val) {
-        if (!val) return;
-        if (this.objectId) {
-          this.getShelfDetail();
-        }
-      }
     },
     methods: {
       isEmptyObject,
@@ -163,13 +154,13 @@
       formatContent,
       getStreamURL,
       formatTime,
-      expand(info, key) {
-        const newInfo = Object.assign({}, this.programDetails[key], { isFoldedContent: false });
-        this.$set(this.programDetails, key, newInfo);
+      expand(source, info, key) {
+        const newInfo = Object.assign({}, this[source][key], { isFoldedContent: false });
+        this.$set(this[source], key, newInfo);
       },
-      folded(info, key) {
-        const newInfo = Object.assign({}, this.programDetails[key], { isFoldedContent: true });
-        this.$set(this.programDetails, key, newInfo);
+      folded(source, info, key) {
+        const newInfo = Object.assign({}, this[source][key], { isFoldedContent: true });
+        this.$set(this[source], key, newInfo);
       },
       getStream() {
         getStreamURL(this.objectId, this.fromWhere, (err, url, res) => {
@@ -188,31 +179,16 @@
           .then((res)=>{
             const editorInfo = res.data.editorInfo || {};
             me.fromWhere = res.data.fromWhere || FROM_WHERE.MAM;
-            me.editorDetails['fileName'] = {
-              cn: '文件名',
-              value: editorInfo['fileName']
-            };
-            me.editorDetails['subscribeName'] = {
-              cn: '节目名称(中文)',
-              value: editorInfo['name'] || ''
-            };
-            me.editorDetails['subscribeType'] = {
-              cn: '订阅类型',
-              value: editorInfo['subscribeTypeText']
-            };
-            me.editorDetails['limit'] = {
-              cn: '限制',
-              value: editorInfo['limit']
-            };
-            me.editorDetails['cover'] = {
-              cn: '封面',
-              value: editorInfo['cover']
-            };
-            me.getDetail();
-            me.getStream();
+            me.editorDetails = res.data.details;
+            for (let i = 0; i < me.editorDetails.length; i++) {
+              const info = me.editorDetails[i];
+              if (info.value.length > 60) {
+                info.isFoldedContent = true;
+              }
+            }
           })
           .catch((error)=>{
-            me.showErrorInfo(error);
+            me.$message.error(error);
           })
       },
       getDetail() {
@@ -235,7 +211,7 @@
             }
           })
           .catch((error)=>{
-            me.showErrorInfo(error);
+            me.$message.error(error);
           })
       },
       handleClose() {
