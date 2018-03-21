@@ -41,7 +41,7 @@
 
   const api = require('../../../../../api/job');
   const config = require('../config');
-  const templateApi = require('../../../../../api/template')
+  const templateApi = require('../../../../../api/template');
 
   export default {
     name: 'templateDownloadForm',
@@ -65,11 +65,11 @@
     },
     data() {
       return {
-        fields: Object.assign({}, config.basicFields, config.videoFields),
+        fields: Object.assign({}, config.basicFields, config.videoFields, config.audioFields),
         formData: config.getFormData(),
         isBtnLoading: false,
         watermarkUrl: '',
-        rules: config.getFormRules(['basicFields', 'videoFields']),
+        rules: config.getFormRules(),
         fieldsType: 'video'
       };
     },
@@ -77,7 +77,7 @@
       'formData.fileformat'(val) {
         if (config.videoType.indexOf(val) > -1 && this.fieldsType !== 'video') {
           this.fields = Object.assign({}, config.basicFields, config.videoFields);
-          this.rules = config.getFormRules(['basicFields', 'videoFields']);
+          this.rules = config.getFormRules();
           this.fieldsType = 'video';
         } else if(config.audioType.indexOf(val) > -1 && this.fieldsType !== 'audio') {
           this.fields = Object.assign({}, config.basicFields, config.audioFields);
@@ -99,7 +99,7 @@
           if (valid) {
             let fieldNames = [];
             if (this.fieldsType === 'video') {
-              fieldNames = Object.keys(config.getFormData(['basicFields', 'videoFields']));
+              fieldNames = Object.keys(config.getFormData());
             } else {
               fieldNames = Object.keys(config.getFormData(['basicFields', 'audioFields']));
             }
