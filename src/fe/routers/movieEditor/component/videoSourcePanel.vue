@@ -554,6 +554,10 @@
       },
       updatePlayerStatus() {
         if (!this.isPlaying) {
+          // 如果此时为视频的出点时间则暂停播放
+          if (this.currentTime <= this.videoInfo.OUTPOINT && this.currentTime + 1 / this.fps >= this.videoInfo.OUTPOINT) {
+            this.video.currentTime = this.videoInfo.INPOINT;
+          }
           this.play();
           this.isPlaying = true;
           this.moveIndicatorTimer = setInterval(() => {
