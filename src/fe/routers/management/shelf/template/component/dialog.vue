@@ -8,7 +8,7 @@
 
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
       <fj-form-item label="标志">
-        <fj-input v-model="formData._id" :disabled="true"></fj-input>
+        <fj-input v-model="formData._id" :disabled="type!=='add'"></fj-input>
       </fj-form-item>
       <fj-form-item label="名称" prop="name">
         <fj-input v-model="formData.name"></fj-input>
@@ -25,12 +25,6 @@
             <fj-checkbox class="template-subtitle-checkbox" v-for="item in subtitleType" :label="item.value" :key="item.value">{{item.label}}</fj-checkbox>
           </fj-checkbox-group>
         </div>
-      </fj-form-item>
-      <fj-form-item label="下载路径" prop="downloadWorkPath">
-        <fj-input v-model="formData.downloadWorkPath"></fj-input>
-      </fj-form-item>
-      <fj-form-item label="转码路径" prop="transcodeWorkPath">
-        <fj-input v-model="formData.transcodeWorkPath"></fj-input>
       </fj-form-item>
       <fj-form-item label="快编模板" prop="editorTemplate">
         <div class="group-input">
@@ -106,8 +100,7 @@
     libraryTemplate: { _id: '', name: '' },
     transcodeTemplateDetail: { transcodeTemplates: [], transcodeTemplateSelector: '' },
     subtitleType: [],
-    downloadWorkPath: '',
-    transcodeWorkPath: '',
+    script: ' '
   };
 
   const subtitleType = [
@@ -174,7 +167,7 @@
             { required: true, message: '请输入名称' }
           ],
           bucketId: [
-            { required: true, message: '请选择存储' }
+            { required: true, message: '请选择存储区' }
           ],
           editorTemplate: [
             { required: true, message: '请选择快编模板' }
@@ -182,11 +175,8 @@
           libraryTemplate: [
             { required: true, message: '请选择入库模板' }
           ],
-          downloadWorkPath: [
-            { required: true, message: '请输入下载路径' }
-          ],
-          transcodeWorkPath: [
-            { required: true, message: '请输入转码路径' }
+          script: [
+            { required: true, message: '请输入路径脚本' }
           ],
         }
       };

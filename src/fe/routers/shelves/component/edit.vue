@@ -129,8 +129,8 @@
               this.shelfInfos[i].editorInfo = JSON.parse(JSON.stringify(cloneEditorInfo));
               this.shelfInfos[i].editorInfo.name = name;
             }
-
-            if(this.shelfInfos[i].packageStatus !== PACKAGE_STATUS.COMPLETED){
+            const pt = this.shelfInfos[i].packageStatus;
+            if (pt === PACKAGE_STATUS.PREPARE || pt === PACKAGE_STATUS.DEALING || pt === PACKAGE_STATUS.ERROR) {
               canSubmit = false;
             }
           }
@@ -145,7 +145,8 @@
             editorInfo: me.activeShelfInfo.editorInfo
           };
           let canSubmit = true;
-          if(me.activeShelfInfo.packageStatus !== PACKAGE_STATUS.COMPLETED){
+          const pt = me.activeShelfInfo.packageStatus ;
+          if (pt === PACKAGE_STATUS.PREPARE || pt === PACKAGE_STATUS.DEALING || pt === PACKAGE_STATUS.ERROR) {
             canSubmit = false;
           }
           if (!isSave && !canSubmit) {
