@@ -1,5 +1,8 @@
 <template>
-  <div v-show="visible" class="source-menu-dialog" :style="menuPosition">
+  <fj-dialog
+    title="请选择目标目录"
+    :visible.sync="dialogVisible"
+    @close="handleClose">
     <div class="source-menu-tree">
       <tree-view
         :showUpper="false"
@@ -8,11 +11,11 @@
         :tree-node-current-change="treeNodeCurrentChange"
       ></tree-view>
     </div>
-    <div class="source-menu-footer">
-      <fj-button type="primary" size="mini" @click="submit" :disabled="!currentNodeId">添加</fj-button>
-      <fj-button type="primary" size="mini" @click="submitAndLeave" :disabled="!currentNodeId">添加并前往编辑</fj-button>
+    <div slot="footer" class="dialog-footer">
+      <fj-button @click.stop="handleClose">取消</fj-button><!--
+      --><fj-button type="primary" @click.stop="submit">确定</fj-button>
     </div>
-  </div>
+  </fj-dialog>
 </template>
 <script>
   import Vue from 'vue';
@@ -21,15 +24,20 @@
 
   export default {
     props: {
-      visible: Boolean,
-      menuPosition: {}
+      visible: Boolean
     },
     data() {
       return {
         _id: '',
         currentNodeId: '',
-        currentNodeOwnerType: ''
+        currentNodeOwnerType: '',
+        dialogVisible: this.visible
       };
+    },
+    watch: {
+      visible(val) {
+        this.dialogVisible = val;
+      }
     },
     created() {
       this.vueInstance = new Vue({
@@ -62,10 +70,11 @@
         this.currentNodeOwnerType = node.ownerType;
       },
       submit() {
-        this.$emit('addto-menu', { parentId: this.currentNodeId, ownerType: this.currentNodeOwnerType });
+        this.$emit('addto-menu', { destId: this.currentNodeId, destOwnerType: this.currentNodeOwnerType });
+        this.handleClose();
       },
-      submitAndLeave() {
-        this.$emit('addto-menu', { parentId: this.currentNodeId, ownerType: this.currentNodeOwnerType }, true);
+      handleClose() {
+        this.$emit('update:visible', false);
       }
     },
     components: {
@@ -73,3 +82,13 @@
     }
   };
 </script>
+<style>
+.source-menu-tree {
+  width: 100%;
+  height: 195px;
+  overflow: auto;
+  border: 1px solid #CED9E5;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+</style>

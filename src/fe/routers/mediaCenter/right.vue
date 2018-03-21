@@ -72,7 +72,7 @@
                 <td class="item-info-value">{{ formatDuration(file.INPOINT, file.OUTPOINT) }}</td>
               </tr>
               <tr>
-                <td class="item-info-key">近线位置: </td>
+                <td class="item-info-key">存储位置: </td>
                 <td class="item-info-value">{{ file.ARCHIVETYPE ? ARCHIVETYPE[file.ARCHIVETYPE].text : '' }}</td>
               </tr>
               <tr>
@@ -442,7 +442,7 @@
         ivideoAPI.createItem(reqData).then((response) => {
           this.unmountMenu();
           if (leaveOrNot) {
-            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id } });
+            this.$router.push({ name: 'movieEditor', params: { objectId: this.item.id, fromWhere: this.videoInfo.from_where } });
           }
         }).catch((error) => {
           this.$message.error(error);

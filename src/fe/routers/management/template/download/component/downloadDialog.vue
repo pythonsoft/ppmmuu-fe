@@ -177,11 +177,11 @@
     font-size: 12px;
     color: #4C637B;
   }
-  .list li.active .itemName,
-  .list li:hover .itemName {
-    color: #38B1EB;
+  .list li.active,
+  .list li:hover {
+    background: #EBF3FB;
   }
   .list li.active {
-    background-color: #f8fafb;
+    background-color: rgba(56, 177, 235, .25);
   }
 </style>

@@ -7,8 +7,8 @@
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="name"></div>
             <ul class="video-title-bar">
-              <li>
-                <span title="下载" class="iconfont icon-video-download" @click.stop="prepareDownload()"></span>
+              <li ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e)}" v-clickoutside="handleCloseMenu">
+                <span title="下载" class="iconfont icon-video-download"></span>
               </li>
             </ul>
           </div>
@@ -51,6 +51,7 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import {
     formatSize,
     formatDuration,
@@ -66,6 +67,10 @@
   import Player from '../../mediaCenter/components/player';
   import { getTitle, getThumb } from '../../mediaCenter/common';
   import downloadListView from '../../management/template/download/component/downloadDialog';
+  import DropdownMenu from './dropdownMenu';
+  import Clickoutside from '../../../component/fjUI/utils/clickoutside';
+  import { getPosition } from '../../../component/fjUI/utils/position';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const config = require('../../mediaCenter/config');
   const jobAPI = require('../../../api/job');
@@ -135,15 +140,60 @@
       }
       // this.updatePlayerWidth();
       this.initRightBoxStatus();
-      window.addEventListener('resize', this.updatePlayerWidth);
+      window.addEventListener('resize', throttle(this.updatePlayerWidth));
     },
-    beforDestroy() {
-      window.removeEventListener('resize', this.updatePlayerWidth);
+    beforeDestroy() {
+      window.removeEventListener('resize', throttle(this.updatePlayerWidth));
     },
     methods: {
       formatSize,
       formatDuration,
       formatContent,
+      mountDropdownMenu(e) {
+        this.dropdownMenu = new Vue(DropdownMenu).$mount();
+        document.body.appendChild(this.dropdownMenu.$el);
+        const parentEl = this.parentEl || document.body;
+        parentEl.addEventListener('scroll', this.updateMenuPosition);
+        this.updateMenuPosition();
+        const menus = this.files.map(file => {
+          return { command: file, key: file.FILETYPEID, name: file.FILETYPENAME };
+        });
+        this.dropdownMenu.menus = menus;
+        this.dropdownMenu.$on('item-click', this.handleItemClick);
+      },
+      handleItemClick(item, command) {
+        this.showDownloadList(command);
+        this.unmountDropdownMenu();
+      },
+      handleCloseMenu(target) {
+        if (this.dropdownMenu && this.dropdownMenu.$el.contains(target)) return;
+        this.unmountDropdownMenu();
+      },
+      unmountDropdownMenu() {
+        if (this.dropdownMenu) {
+          document.body.removeChild(this.dropdownMenu.$el);
+          const parentEl = this.parentEl || document.body;
+          parentEl.removeEventListener('scroll', this.updateMenuPosition);
+          this.dropdownMenu = null;
+        }
+      },
+      updateMenuPosition() {
+        if (this.dropdownMenu) {
+          const position = this.getDropdownMenu();
+          this.dropdownMenu.menuStyle = {
+            top: `${position.top + 44}px`,
+            left: `${position.left - 134}px`,
+            minWidth: '166px'
+          };
+        }
+      },
+      getDropdownMenu() {
+        const downloadBtnPosition = getPosition(this.$refs.downloadBtn);
+        const position = { top: downloadBtnPosition.y, left: downloadBtnPosition.x };
+        const parentElScrollTop = this.parentEl ? this.parentEl.scrollTop : 0;
+        position.top = position.top - parentElScrollTop;
+        return position;
+      },
       refresh() {
         this._id = this.query._id;
         this.getDetail();
@@ -277,6 +327,7 @@
         return {};
       },
       prepareDownload(fileInfo) {
+        console.log('files', this.files);
         if(fileInfo) {
           this.fileInfo = fileInfo;
           // console.log(this.fileInfo);
@@ -337,7 +388,8 @@
       MoreView,
       GridListView,
       'download-list-view': downloadListView
-    }
+    },
+    directives: { Clickoutside }
   };
 </script>
 <style module>

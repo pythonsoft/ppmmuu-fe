@@ -34,7 +34,6 @@
     directives: { Clickoutside },
     props: {
       node: {},
-      rootId: String,
       currentNodeId: String
     },
     data() {
@@ -84,8 +83,9 @@
       },
       submit() {
         const reqData = {
-          parentId: this.node.parentId || this.rootId,
-          name: this.inputValue
+          parentId: this.node.parentId,
+          name: this.inputValue,
+          ownerType: this.node.ownerType
         };
         if (this.nodeStatus === 'editing') {
           reqData.id = this.node._id;
