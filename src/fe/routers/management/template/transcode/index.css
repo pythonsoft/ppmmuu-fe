@@ -40,7 +40,18 @@
 .task-slide-dialog-item-bar {
   float: right;
 }
-
+.template-dialog-section-item {
+  position: relative;
+  padding-right: 36px;
+}
+.template-dialog-unit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 36px;
+  padding-left: 5px;
+  line-height: 36px;
+}
 .template-dialog-select-wrap {
   padding-bottom: 24px;
 }
@@ -50,7 +61,10 @@
   width: 215px;
   margin-right: 10px;
 }
-
+.template-dialog-section-title {
+  margin: 10px 0;
+  font-weight: bold;
+}
 .template-dialog-footer{
   text-align: right;
 }
