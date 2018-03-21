@@ -165,6 +165,7 @@
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import { formatTime, getItemFromLocalStorage, formatSize } from '../../common/utils';
   import { MENU, STATUS_CONFIG, CREATETYPE_CONFIG, getSubmitStatus, SUBMIT_MENUS } from './config';
+  import throttle from '../../component/fjUI/utils/throttle';
 
   const fileClient = require('../../common/client');
 
@@ -224,7 +225,10 @@
     mounted() {
       this.selectParentEl = this.$refs.copyList;
       this.resizeToolbar();
-      window.addEventListener('resize', this.resizeToolbar);
+      window.addEventListener('resize', throttle(this.resizeToolbar));
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', throttle(this.resizeToolbar));
     },
     watch: {
       '$route.params'(val) {

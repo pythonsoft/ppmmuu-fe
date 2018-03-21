@@ -185,8 +185,8 @@
     },
     created() {
       this.treeDataBaseInstance = new TreeDataBase(this.nodeKey);
-      this.vueInstance.$on('tree.listGroup', (parentId) => {
-        this._listGroup(parentId);
+      this.vueInstance.$on('tree.listGroup', (parentId, ...args) => {
+        this._listGroup(parentId, ()=>{}, args[0]);
       });
       this.vueInstance.$on('tree.removeNode', (id) => {
         this.removeNode(id);
@@ -257,13 +257,13 @@
       },
       loadChildren(node, resolve) {
         // this.selectedNodeInfo = node;
-        this._listGroup(node[this.nodeKey], resolve);
+        this._listGroup(node[this.nodeKey], resolve, node);
       },
-      _listGroup(parentId = '', resolve) {
+      _listGroup(parentId = '', resolve, node) {
         this.listGroup && this.listGroup(parentId, (data) => {
           this.insert(parentId, data);
           resolve && resolve();
-        });
+        }, node);
       },
       insert(parentId, data) {
         // 更新parentid下的所有节点

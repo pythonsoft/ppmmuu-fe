@@ -35,6 +35,7 @@
   import GridListView from '../../mediaCenter/gridAndList';
   import userAPI from '../../../api/user';
   import { formatQuery } from '../../../common/utils';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   export default {
     data() {
@@ -53,6 +54,9 @@
     mounted() {
       this.updateVisible();
     },
+    beforeDestroy() {
+      window.removeEventListener('resize', throttle(this.updateListWidth));
+    },
     watch: {
       '$route.path'(val) {
         this.updateVisible();
@@ -66,7 +70,7 @@
           this.visible = true;
           this.updateList();
           this.updateListWidth();
-          window.addEventListener('resize', this.updateListWidth);
+          window.addEventListener('resize', throttle(this.updateListWidth));
         }
       },
       showClearHistoryDialog() {

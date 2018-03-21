@@ -105,6 +105,7 @@
   import Player from '../../mediaCenter/components/player';
   import { getTitle, getThumb } from '../../mediaCenter/common';
   import downloadListView from '../../management/template/download/component/downloadDialog';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const config = require('../../mediaCenter/config');
   const jobAPI = require('../../../api/job');
@@ -164,7 +165,10 @@
         this.refresh();
       }
       this.updatePlayerWidth();
-      window.addEventListener('resize', this.updatePlayerWidth);
+      window.addEventListener('resize', throttle(this.updatePlayerWidth));
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', throttle(this.updatePlayerWidth));
     },
     methods: {
       formatSize,

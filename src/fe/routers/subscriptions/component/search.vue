@@ -41,6 +41,7 @@
     formatQuery
   } from '../../../common/utils';
   import { getPosition } from '../../../component/fjUI/utils/position';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const subscribeAPI = require('../../../api/subscribe');
   const jobAPI = require('../../../api/job');
@@ -93,14 +94,14 @@
     },
     mounted() {
       this.resetListWidth();
-      window.addEventListener('resize', this.resetListWidth);
+      window.addEventListener('resize', throttle(this.resetListWidth));
       this.parentEl = this.$refs.searchWrap;
     },
     beforeDestroy() {
       if (this.dropdownMenu) {
         this.unmountDropdownMenu();
       }
-      window.removeEventListener('resize', this.resetListWidth);
+      window.removeEventListener('resize', throttle(this.resetListWidth));
     },
     methods: {
       handleFilterBtnClick() {

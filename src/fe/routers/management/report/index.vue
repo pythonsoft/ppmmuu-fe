@@ -12,7 +12,7 @@
       </div>
     </div>
     <div :class="[$style.titleWrap, $style.panel]">
-      <h3>媒资报表总览</h3>
+      <h3>{{ `${dateToStr(new Date(this.daterange[0]), '-')} 至 ${dateToStr(new Date(this.daterange[1]), '-')} ` }}大洋媒资用量报表</h3>
       <div :class="[$style.overviewWrap, 'clearfix']">
         <div :class="$style.overviewItem" v-for="item in PIE_DATA_TYPES">
           <span :class="$style.label">{{ item.label }}</span>
@@ -92,6 +92,7 @@
   import RequestsAPI from '../../../api/requests';
   import { pieOption, convertPieData, convertPieLegend } from './option/pieOption';
   import { lineOption, convertLineSeries } from './option/lineOption';
+  import throttle from '../../../component/fjUI/utils/throttle';
 
   const emptyGraphic = {
     type: 'text',
@@ -189,11 +190,11 @@
       this.getReport();
       this.bodyWrap = document.getElementsByClassName('right-content')[0];
       this.bodyWrap.addEventListener('scroll', this.scrollHandler);
-      window.addEventListener('resize', this.resizeHandler);
+      window.addEventListener('resize', throttle(this.resizeHandler));
     },
     beforeDestroy() {
       this.bodyWrap.removeEventListener('scroll', this.scrollHandler);
-      window.removeEventListener('resize', this.resizeHandler);
+      window.removeEventListener('resize', throttle(this.resizeHandler));
     },
     methods: {
       scrollHandler() {
@@ -204,11 +205,11 @@
           if (this.fixLineChartsHeader) this.fixLineChartsHeader = false;
         }
       },
-      dateToStr(date) {
+      dateToStr(date, separator = '') {
         const year = date.getFullYear();
         const month = fillupZero(date.getMonth() + 1);
         const day = fillupZero(date.getDate());
-        return `${year}${month}${day}`;
+        return `${year}${separator}${month}${separator}${day}`;
       },
       getSummary(item) {
         return this.incrementSummary[item.value] ? item.formatFn(this.incrementSummary[item.value]) : 0;
