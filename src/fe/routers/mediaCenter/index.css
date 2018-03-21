@@ -8,7 +8,7 @@
 }
 
 .media-search {
-  padding: 20px 0;
+  padding-top: 20px;
 }
 
 .media-left .fj-input-inner,
@@ -32,7 +32,7 @@
   font-size: 12px;
 }
 
-.category-checkbox {
+.category-checkbox, .category-checkbox-l {
   margin-left: 0px;
   height: 20px;
   line-height: 20px;
@@ -40,6 +40,10 @@
   color: #2A3E52;
   float: left;
   width: 55px;
+}
+.category-checkbox-l {
+  width: 50%;
+  margin: 16px 0;
 }
 
 .media-center-wrap {

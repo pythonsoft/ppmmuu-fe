@@ -32,6 +32,14 @@
                 :value="item.value">
               </fj-option>
             </fj-select>
+            <fj-radio-group v-model="isAccurate">
+              <div class="category-checkbox-l">
+                <fj-radio :label="true">精确搜索</fj-radio>
+              </div>
+              <div class="category-checkbox-l">
+                <fj-radio :label="false">模糊搜索</fj-radio>
+              </div>
+            </fj-radio-group>
           </div>
           <div class="media-category">
             <h4>HOUSENO</h4>
@@ -225,6 +233,7 @@
     },
     data() {
       return {
+        isAccurate: true,
         CREATED_TIME_OPTIONS: CREATED_TIME_OPTIONS,
         ORDER_OPTIONS: ORDER_OPTIONS,
         createdTimeVal: 'all',
@@ -427,7 +436,8 @@
           hl: HHIGHLIGHT_FIELDS1,
           sort: {},
           start: start,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          isAccurate: this.isAccurate
         };
         const must = options.match;
         options.range.push(f_date_162);

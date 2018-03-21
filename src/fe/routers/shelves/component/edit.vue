@@ -58,6 +58,7 @@
   import EditLeft from './editLeft';
   import EditRight from './editRight';
   import PanelView from '../../../component/layout/panel/index';
+  import { PACKAGE_STATUS } from '../config';
 
   const api = require('../../../api/shelves');
   const uploadApi = require('../../../api/upload');
@@ -103,10 +104,7 @@
       this.shelfInfos = this.shelfInfo;
     },
     mounted() {
-      window.addEventListener('resize', throttle(this.resize));
-    },
-    beforeDestroy() {
-      window.removeEventListener('resize', throttle(this.resize));
+      window.addEventListener('resize', this.resize);
     },
     methods: {
       resize(e) {
