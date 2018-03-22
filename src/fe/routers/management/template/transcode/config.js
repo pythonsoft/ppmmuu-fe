@@ -260,7 +260,6 @@ config.getFormData = function getFormData(types = ['basicFields', 'videoFields',
       form[item.field] = item.type === 'select' ? item.selected : item.value;
     }
   }
-  console.log(JSON.stringify(form));
   return form;
 };
 
