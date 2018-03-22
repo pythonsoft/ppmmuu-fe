@@ -264,7 +264,7 @@
           const docs = res.data.docs || [];
           if (docs.length === 0) {
             me.groupBrowserVisible = false;
-            me.$message.error('没有部门信息');
+            me.$message.error('没有分组信息');
           }
           cb && cb(res.data.docs);
         }).catch((err) => {

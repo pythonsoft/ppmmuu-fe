@@ -61,6 +61,12 @@
         { text: '上架模板', index: 'shelfTemplate', route: 'shelfTemplate' },
       ]
     },
+    { title: '流程管理',
+      index: 'processManager',
+      children: [
+        { text: '流程模板', index: 'processTemplate', route: 'processTemplate' },
+      ]
+    },
     { title: '任务管理',
       index: 'taskManager',
       children: [

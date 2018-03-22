@@ -73,6 +73,8 @@ const ShelfListManagement = resolve => require.ensure([], () => resolve(require(
 const ShelfTemplate = resolve => require.ensure([], () => resolve(require('./management/shelf/template/index')), 'shelfTemplate');
 const FastEditTemplate = resolve => require.ensure([], () => resolve(require('./management/shelf/fastEditTemplate/index')), 'fastEditTemplate');
 
+const ProcessTemplate = resolve => require.ensure([], () => resolve(require('./management/process/template/index')), 'processTemplate');
+
 export default [{
   path: '/',
   component: Home,
@@ -110,7 +112,8 @@ export default [{
         { path: 'copyManagement', component: CopyManagement, meta: { title: '大洋稿件入库' }, name: 'copyManagement' },
         { path: 'shelfTemplate', component: ShelfTemplate, meta: { title: '上架模板' }, name: 'shelfTemplate' },
         { path: 'shelfList', component: ShelfListManagement, meta: { title: '上架任务' }, name: 'shelfList' },
-        { path: 'fastEditTemplate', component: FastEditTemplate, meta: { title: '快编模板' }, name: 'fastEditTemplate' }
+        { path: 'fastEditTemplate', component: FastEditTemplate, meta: { title: '快编模板' }, name: 'fastEditTemplate' },
+        { path: 'processTemplate', component: ProcessTemplate, meta: { title: '流程模板' }, name: 'processTemplate' }
       ]
     },
     {
