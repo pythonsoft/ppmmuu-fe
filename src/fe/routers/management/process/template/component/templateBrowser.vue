@@ -3,6 +3,16 @@
     :title="title"
     :visible.sync="dialogVisible"
     @close="closeDialog">
+    <fj-form-item label="模板类型" prop="type">
+      <fj-select placeholder="请选择" v-model="type">
+        <fj-option
+                v-for="item in TYPE"
+                :key="item.key"
+                :label="item.text"
+                :value="item.value">
+        </fj-option>
+      </fj-select>
+    </fj-form-item>
     <div class="transcode-browser-content">
       <fj-table style="font-size: 12px;" :data="tableData" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" label="标识"></fj-table-column>
@@ -16,7 +26,7 @@
   </fj-dialog>
 </template>
 <script>
-  import { TYPE_MAP } from '../config';
+  import { TYPE_MAP, TYPE } from '../config';
   const templateAPI = require('../../../../../api/processTemplate');
 
   export default {
@@ -26,20 +36,20 @@
         type: Boolean,
         default: false
       },
-      type: { type: String },
     },
     data() {
       return {
         dialogVisible: false,
         tableData: [],
         currentRow: {},
-        title: '模板',
+        title: '快编模板',
+        TYPE: TYPE,
+        type: '1',
       };
     },
     watch: {
       dialogVisible(val) {
         if (val) {
-          this.title = TYPE_MAP[this.type] + '模板';
           this.listTemplate();
           this.selectedRows = [];
         }
@@ -47,6 +57,10 @@
       visible(val) {
         this.dialogVisible = val;
       },
+      type(val) {
+        this.title = TYPE_MAP[val] + '模板';
+        this.listTemplate();
+      }
     },
     methods: {
       listTemplate() {

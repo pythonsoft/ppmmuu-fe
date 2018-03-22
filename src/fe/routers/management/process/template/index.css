@@ -94,3 +94,15 @@
   margin-left: -22px;
   padding-top: 7px;
 }
+
+.template-add-col {
+  margin-left: -380px;
+  position: absolute;
+  color: #38B1EB;
+  cursor: pointer;
+}
+
+.template-delete-col {
+  color: #38B1EB;
+  cursor: pointer;
+}

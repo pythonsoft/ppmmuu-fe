@@ -7,43 +7,38 @@
     <fj-form-item label="名称" prop="name">
       <fj-input v-model="formData.name"></fj-input>
     </fj-form-item>
-    <fj-form-item label="流程id" prop="processId">
-      <fj-input placeholder="对应java流程id" v-model="formData.processId"></fj-input>
-    </fj-form-item>
-    <fj-form-item label="模板类型" prop="type">
-      <fj-select placeholder="请选择" v-model="formData.type">
-        <fj-option
-                v-for="item in TYPE"
-                :key="item.key"
-                :label="item.text"
-                :value="item.value">
-        </fj-option>
-      </fj-select>
-    </fj-form-item>
-    <fj-form-item label="模板" prop="templateName">
-      <div class="group-input">
-        <fj-input v-model="formData.templateName" :readonly="true"></fj-input>
-      </div>
-      <fj-button @click.stop.prevent="templateBrowserVisible=true">修改</fj-button>
-    </fj-form-item>
     <fj-form-item label="分组" prop="groupName">
       <div class="group-input">
         <fj-input v-model="formData.groupName" :readonly="true"></fj-input>
       </div>
       <fj-button @click.stop.prevent="groupBrowserVisible=true">修改</fj-button>
     </fj-form-item>
+    <template v-for="(item, index) in params" label="键">
+      <fj-form-item label="键">
+        <div class="group-input">
+          <fj-input v-model="item.key"></fj-input>
+        </div>
+        <i class="iconfont icon-delete template-delete-col" @click="deleteCol(index)"></i>
+      </fj-form-item>
+      <fj-form-item label="值">
+        <div class="group-input">
+          <fj-input v-model="item.value"></fj-input>
+        </div>
+        <fj-button @click.stop.prevent="changeValue(item)">修改</fj-button>
+      </fj-form-item>
+    </template>
     <fj-form-item label="描述">
       <fj-input type="textarea" :rows="3" v-model="formData.description"></fj-input>
     </fj-form-item>
   </fj-form>
 
     <div class="template-dialog-footer">
+      <i class="iconfont icon-jia template-add-col" @click="addCol"></i>
       <fj-button @click="close">取消</fj-button>
       <fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
     </div>
     <template-browser
             :visible.sync="templateBrowserVisible"
-            :type="formData.type"
             @confirm="addTemplate"
     ></template-browser>
     <add-group :visible.sync="groupBrowserVisible"  @add-owner="addOwner" @list-group="listGroup" title="修改分组"></add-group>
@@ -65,10 +60,7 @@
     groupId: '',
     groupName: '',
     description: '',
-    type: '',
-    templateId: '',
-    templateName: '',
-    processId: '',
+    params: []
   };
 
   export default {
@@ -86,8 +78,12 @@
       TemplateBrowser
     },
     created() {
+      console.log('gghafasg');
       if (this.type !== 'add') {
         this.formData = JSON.parse(JSON.stringify(this.templateInfo));
+        if (this.formData.params) {
+          this.params = this.formData.params;
+        }
       }
     },
     data() {
@@ -97,20 +93,16 @@
         TYPE: TYPE,
         formData: templateInfo,
         isBtnLoading: false,
+        currentItem: '',
         rules: {
           name: [
             { required: true, message: '请输入名称' }
           ],
-          type: [
-            { required: true, message: '请选择模板类型' }
-          ],
           groupName: [
             { required: true, message: '请选择分组' }
           ],
-          templateName: [
-            { required: true, message: '请选择模板' }
-          ],
-        }
+        },
+        params: [],
       };
     },
     methods: {
@@ -131,6 +123,7 @@
       },
       add() {
         const me = this;
+        this.formData.params = this.params;
         const data = Object.assign({}, this.formData);
         api.createTemplate(data, me).then((res) => {
           me.$message.success('保存成功');
@@ -144,6 +137,7 @@
       },
       update() {
         const me = this;
+        this.formData.params = this.params;
         const data = Object.assign({}, this.formData);
         api.update(data, me).then((res) => {
           me.$message.success('保存成功');
@@ -167,8 +161,7 @@
         this.groupBrowserVisible = false;
       },
       addTemplate(row) {
-        this.formData.templateId = row._id;
-        this.formData.templateName = row.name;
+        this.currentItem.value = row._id;
       },
       listGroup(query, cb){
         const me = this;
@@ -182,6 +175,19 @@
         }).catch((err) => {
           me.$message.error(err);
         });
+      },
+      changeValue(item){
+        this.currentItem = item;
+        this.templateBrowserVisible = true;
+      },
+      addCol() {
+        this.params.push({
+          key: '',
+          value: ''
+        });
+      },
+      deleteCol(index) {
+        this.params.splice(index, 1);
       }
     }
   };
