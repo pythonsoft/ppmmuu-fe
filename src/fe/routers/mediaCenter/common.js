@@ -39,20 +39,8 @@ const common = {
   },
   formatShowTime(item) {
     const timeConfig = [{
-      key: 'news_data',
-      name: '新闻时间',
-      value: ''
-    }, {
-      key: 'airdata',
-      name: '首播时间',
-      value: ''
-    }, {
-      key: 'publish_time',
-      name: '发布时间',
-      value: ''
-    }, {
-      key: 'last_modify',
-      name: '入库时间',
+      key: 'full_name',
+      name: '',
       value: ''
     }];
     for (let i = 0, len = timeConfig.length; i < len; i++) {

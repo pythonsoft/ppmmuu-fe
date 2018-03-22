@@ -4,8 +4,7 @@
     :visible.sync="dialogVisible"
     @close="closeDialog">
     <div class="transcode-browser-content">
-      <fj-table style="font-size: 12px;" :data="tableData" @selection-change="handleSelectionChange">
-        <fj-table-column type="selection" width="20"></fj-table-column>
+      <fj-table style="font-size: 12px;" :data="tableData"  @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="_id" label="标识"></fj-table-column>
         <fj-table-column prop="name" label="名称"></fj-table-column>
       </fj-table>
@@ -20,7 +19,7 @@
   const templateAPI = require('../../../api/processTemplate');
 
   export default {
-    name: 'transcodeBrowserView',
+    name: 'processTemplateBrowserView',
     props: {
       visible: {
         type: Boolean,
@@ -31,7 +30,7 @@
       return {
         dialogVisible: false,
         tableData: [],
-        currentRows: [],
+        currentRow: [],
       };
     },
     watch: {
@@ -59,17 +58,15 @@
         });
       },
       addTemplate() {
-        if(!this.currentRows || !this.currentRows.length){
+        if(!this.currentRow || !this.currentRow._id){
           this.$message.error('请先选中一个模板');
         }else {
-          this.$emit('confirm', this.currentRows);
+          this.$emit('confirm', this.currentRow);
           this.closeDialog();
         }
       },
-      handleSelectionChange(rows) {
-        if (rows.length > 0) {
-          this.currentRows = rows;
-        }
+      handleCurrentChange(row) {
+        this.currentRow = row;
       },
       closeDialog() {
         this.$emit('update:visible', false);

@@ -73,7 +73,7 @@
 </template>
 <script>
   import TemplateBrowser from './templateBrowser';
-  import { transformSecondsToStr } from '../../../common/utils';
+  import { transformSecondsToStr, formatDuration } from '../../../common/utils';
   import { selectFields, dateFields, radioFields} from '../../library/config';
   import { getItemFromLocalStorage } from '../../../common/utils';
 
@@ -230,15 +230,8 @@
           }
         });
       },
-      warehouse(rows) {
-        const processes = [];
-        rows.forEach((item)=>{
-          processes.push({
-            processId: item.processId,
-            apiTemplateUrl: item.apiTemplateUrl
-          })
-        });
-        const reqData = { processes };
+      warehouse(row) {
+        const reqData = { processParams: row.params };
 
         // 根据sequences封装fileinfos
         const fileInfos = [];
@@ -248,15 +241,15 @@
           const index = objectIds.indexOf(objectId);
           if (index < 0) {
             objectIds.push(objectId);
-            fileInfos.push({ objectId, fromWhere, fileName, inpoint: [range[0]], outpoint: [range[1]] });
+            fileInfos.push({ objectId, fromWhere, fileName, startTime: [formatDuration(range[0]*1000, true)], endTime: [formatDuration(range[1]*1000, true)] });
           } else {
-            fileInfos[index].inpoint.push(range[0]);
-            fileInfos[index].outpoint.push(range[1]);
+            fileInfos[index].startTime.push(formatDuration(range[0]*1000, true));
+            fileInfos[index].endTime.push(formatDuration(range[1]*1000, true));
           }
         }
-        reqData.fileInfos = fileInfos;
+        reqData.originalFileInfo = fileInfos;
 
-        reqData.catalogInfo = Object.assign({}, this.formData, { owner: this.owner });
+        reqData.catalogInfo = Object.assign({}, this.formData, { ownerId: this.owner._id, ownerName: this.owner.name });
         this.isBtnLoading = true;
         this.templateBrowserVisible = false;
         api.warehouse(reqData)

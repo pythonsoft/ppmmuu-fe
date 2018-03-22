@@ -31,7 +31,7 @@
             <span title="资源所属部门" class="media-center-list-bar-color-span">{{ item.resource_location }}</span>
           </li>
           <li>
-            <span :title="formatShowTime(item).name">{{ formatShowTime(item).value || '无发布时间' }}</span>
+            <span>{{ formatShowTime(item).value}}</span>
           </li>
         </ul>
       </div>
@@ -51,8 +51,8 @@
         <div class="media-item-category">
           <span v-html="item.program_type || '无分类'"></span>
         </div>
-        <p class="media-item-category media-item-time" :title="formatShowTime(item).name">
-          {{ formatShowTime(item).value || '无发布时间' }}
+        <p class="media-item-category media-item-time">
+          {{ formatShowTime(item).value}}
         </p>
       </li>
     </ul>
