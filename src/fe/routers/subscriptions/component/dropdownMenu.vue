@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown-menu" :style="menuStyle">
+  <div :class='[ isDark ? "dropdown-menu-dark": "dropdown-menu"]' :style="menuStyle">
     <fj-dropdown-item
       v-for="item in menus"
       :command="item.command"
@@ -11,6 +11,7 @@
 <script>
   export default {
     props: {
+      isDark: {},
       menuStyle: {},
       menus: []
     }
@@ -25,6 +26,15 @@
     border-radius: 2px;
     z-index: 201;
     color: #2A3E52;
+  }
+  .dropdown-menu-dark {
+    position: absolute;
+    padding: 4px 0;
+    z-index: 201;
+    color: #CED9E5;
+    background: #021120;
+    border: 1px solid #2A3E52;
+    border-radius: 2px;
   }
   .dropdown-menu:after {
     content: '';
@@ -53,6 +63,10 @@
   }
   .showButton button {
     display: inline-block !important;
+  }
+  .dropdown-menu-dark .fj-dropdown-item:hover {
+    background: #2A3E52;
+    color: #CED9E5;
   }
 
 </style>
