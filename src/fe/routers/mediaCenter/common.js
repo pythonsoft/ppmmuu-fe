@@ -26,8 +26,8 @@ const common = {
     let name = common.getTitle(item);
 
     if (name) {
-      name = name.replace('<em>', '');
-      name = name.replace('</em>', '');
+      name = name.replace(/<em>/g, '');
+      name = name.replace(/<\/em>/g, '');
     }
     return name;
   },

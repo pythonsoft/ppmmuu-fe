@@ -17,7 +17,7 @@
       限制：{{ item.limit }}
     </p>
     <p class="subscribe-item-detail">
-      入库时间：{{ item.storageTime | formatTime }}
+      上架时间：{{ item.storageTime | formatTime }}
     </p>
   </li>
   <div class="subscribe-list-item" v-else-if="item && listType === 'list'" @click="linkToWatchFn(item._id)">
@@ -37,7 +37,7 @@
         <span title="限制">限制：{{ item.limit }}</span>
       </li>
       <li>
-        <span title="限制">入库时间：{{ item.storageTime | formatTime }}</span>
+        <span title="限制">上架时间：{{ item.storageTime | formatTime }}</span>
       </li>
     </ul>
   </div>

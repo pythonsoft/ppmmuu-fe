@@ -161,8 +161,8 @@ config.videoFields = {
       required: true,
       selected: '0',
       options: [
-        { text: '不启用', value: '0', key: 'isUsed0' },
-        { text: '启用', value: '1', key: 'isUsed1' }
+        { text: '否', value: '0', key: 'isUsed0' },
+        { text: '是', value: '1', key: 'isUsed1' }
       ]
     },
     position: {
@@ -195,8 +195,8 @@ config.audioFields = {
       required: true,
       selected: 'true',
       options: [
-        { text: 'true', value: 'true', key: 'enableaudio1' },
-        { text: 'false', value: 'false', key: 'enableaudio2' }
+        { text: '是', value: 'true', key: 'enableaudio1' },
+        { text: '否', value: 'false', key: 'enableaudio2' }
       ]
     },
     acodec: {
