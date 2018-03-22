@@ -51,7 +51,7 @@
   import fourRowLayout from '../../../../component/layout/fourRowLayoutRightContent/index';
   import dialog from './dialog';
   import utils from '../../../../common/utils';
-  import { fields } from './config';
+  import { getFields } from './config';
 
   const templateAPI = require('../../../../api/job');
   const config = require('../../task/config');
@@ -64,7 +64,7 @@
     data() {
       return {
         isDisabled: true,
-        fields: fields,
+        fields: getFields(),
 
         table: {
           currentRowInfo: {},

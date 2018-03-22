@@ -39,7 +39,7 @@ const common = {
   },
   formatShowTime(item) {
     const timeConfig = [{
-      key: 'full_name',
+      key: 'full_time',
       name: '',
       value: ''
     }];

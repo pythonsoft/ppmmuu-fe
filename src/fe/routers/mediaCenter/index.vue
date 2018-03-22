@@ -69,7 +69,7 @@
           </template>
 
           <div class="media-category">
-            <h4>新聞日期</h4>
+            <h4>日期范围</h4>
             <div id="media-category-date">
               <fj-date-picker
                 theme="fill"
@@ -77,19 +77,6 @@
                 type="datetimerange"
                 placeholder="请选择日期范围"
                 v-model="datetimerange1"
-              ></fj-date-picker>
-            </div>
-          </div>
-
-          <div class="media-category">
-            <h4>首播日期</h4>
-            <div id="media-category-date">
-              <fj-date-picker
-                theme="fill"
-                :parent-el="(()=>{return this.$refs.mediaLeft})()"
-                type="datetimerange"
-                placeholder="请选择日期范围"
-                v-model="datetimerange2"
               ></fj-date-picker>
             </div>
           </div>
@@ -412,7 +399,7 @@
         this.listType = 'normal';
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        const f_date_162 = getTimeRange(this.datetimerange1, 'news_data'); // 新聞日期
+        const f_date_162 = getTimeRange(this.datetimerange1, 'full_time'); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2, 'airdata'); // 首播日期
         const created = getTimeRange(this.datetimerangeCreated, 'created');
         const options = {
@@ -474,7 +461,7 @@
         } else {
           if (!options.sort.length) {
             options.sort = [{
-              key: 'publish_time',
+              key: 'full_time',
               value: 'desc'
             }];
           }
