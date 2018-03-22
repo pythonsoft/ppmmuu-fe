@@ -10,9 +10,9 @@
       </div>
       <ul class="subscribe-grid subscribe-section-list">
         <SubscribeListItem
-          v-for="item in categoryItem.docs"
+          v-for="(item, index) in categoryItem.docs"
           :item="item"
-          :key="item.objectId"
+          :key="item.objectId+index"
           :download-fn="showDownloadList"
           :link-to-watch-fn="linkToWatch"
           :parent-el="parentEl"></SubscribeListItem>

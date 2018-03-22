@@ -1,0 +1,276 @@
+.playerWrap {
+  position: relative;
+  background: #021120;
+  color: #fff;
+}
+.playerWrap:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+}
+.videoLoadingMask {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 36px;
+  left: 0;
+  z-index: 100;
+}
+.videoLoadingMask:before {
+  content: "\e69a";
+  display: inline-block;
+  font-family:"iconfont" !important;
+  font-size:40px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #ddd;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.videoTitle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: 18px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #EBF3FB;
+  line-height: 44px;
+}
+.videoBox {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 36px;
+}
+.playerBigMode .videoBox,
+.playerBigMode .videoLoadingMask {
+  bottom: 56px;
+}
+.playerBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.progressBarWrap {
+  position: relative;
+  height: 12px;
+  background: #021120;
+  cursor: pointer;
+}
+.playerBigMode .progressBarWrap {
+  height: 16px;
+}
+.progressBarList {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: rgba(204, 204, 204, .5);
+}
+.playerBigMode .progressBarList {
+  bottom: 6px;
+  height: 4px;
+}
+.playProgress {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  background: #38B1EB;
+  transform-origin: 0 0;
+}
+.hoverProgress {
+  left: 0;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  background: rgba(244, 244, 244, .3);
+  transform-origin: 0 0;
+}
+.playerPullIndicator {
+  position: absolute;
+  top: 4px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+.playerBigMode .playerPullIndicator {
+  top: 1px;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+}
+.progressBarWrap:hover .playerPullIndicator {
+  top: 3px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+}
+.playerBigMode .progressBarWrap:hover .playerPullIndicator {
+  top: 1px;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+}
+.controllerWrap {
+  height: 24px;
+  line-height: 24px;
+  background: #021120;
+  text-align: left;
+}
+.playerBigMode .controllerWrap {
+  height: 40px;
+  line-height: 40px;
+}
+.playerBtn {
+  display: inline-block;
+  width: 36px;
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+}
+.playerBigMode .playerBtn {
+  width: 50px;
+  text-align: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+.playerBtn:hover {
+  background: #38B1EB;
+}
+.playerTime {
+  display: inline-block;
+  vertical-align: bottom;
+}
+.playerBigMode .playerTime {
+  font-size: 14px;
+  line-height: 44px;
+}
+.leftControl {
+  float: left;
+}
+.rightControl {
+  float: right;
+}
+.playerTooltip {
+  position: absolute;
+  top: -28px;
+  z-index: 10;
+}
+.playerTooltipText {
+  background: #021120;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #CED9E5;
+  padding: 0 6px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+.volumeBox {
+  height: 100%;
+  display: inline-block;
+}
+.volumeBox .volumeBtn {
+  display: inline-block;
+  height: 100%;
+  font-size: 12px;
+  cursor: pointer;
+}
+.playerBigMode .volumeBtn {
+  font-size: 18px;
+}
+.volumeBox:hover .volumePanel {
+  width: 38px;
+  margin: 0 8px;
+}
+.playerBigMode .volumeBox:hover .volumePanel {
+  width: 76px;
+}
+.volumePanel {
+  display: inline-block;
+  width: 0;
+  vertical-align: top;
+  height: 100%;
+  cursor: pointer;
+  transition: margin .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+}
+.volumeSlider {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+.volumeSliderHandle {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: #fff;
+}
+.playerBigMode .volumeSliderHandle {
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+}
+.volumeSliderHandle:before,
+.volumeSliderHandle:after {
+  content: '';
+  position: absolute;
+  display: block;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  width: 38px;
+}
+.playerBigMode .volumeSliderHandle:before,
+.playerBigMode .volumeSliderHandle:after {
+  width: 76px;
+}
+.volumeSliderHandle:before {
+  left: -38px;
+  background: #38B1EB;
+}
+.playerBigMode .volumeSliderHandle:before {
+  left: -76px;
+}
+.volumeSliderHandle:after {
+  left: 4px;
+  background: #F2F2F2;
+}
+.playerBigMode .volumeSliderHandle:after {
+  left: 8px;
+}
+.video-srt {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  left: 20px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+.video-srt-text {
+  background: rgba(0, 0, 0, .5);
+  padding: 3px;
+}
+.playerBigMode .video-srt {
+  font-size: 26px;
+}

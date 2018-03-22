@@ -461,11 +461,11 @@
   overflow: auto;
 }
 
-.media-center-table {
-  width: 383px;
+.subscriptions-program-table {
+  width: 270px;
 }
 
-.media-center-table td{
+.subscriptions-program-table td{
   padding: 2px 4px;
 }
 
@@ -477,15 +477,16 @@
 .item-info-key {
   text-align: right;
   line-height: 150%;
-  color: #4C637B;
+  color: #2A3E52;
   vertical-align: top;
   width: 80px;
 }
 
-.item-info-value {
+.subscriptions-program-table .item-info-value {
   line-height: 150%;
-  width: 303px;
+  width: 190px;
   display: block;
+  word-break: break-all;
 }
 
 .media-center-file-item {
@@ -533,4 +534,43 @@
 }
 .search-sub-menu .button-group {
   float: right;
+}
+.item-info-value .inline-info {
+  float: left;
+  display: inline-block;
+  width: 178px;
+  height: 21px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.item-expand-btn {
+  float: left;
+  font-style: italic;
+  cursor: pointer;
+  color: #2B6DBA;
+}
+.item-folded-btn {
+  position: relative;
+  display: block;
+  font-style: italic;
+  cursor: pointer;
+  color: #2B6DBA;
+}
+.item-expand-btn .tri-bottom {
+  vertical-align: middle;
+  margin: 5px;
+  border: 4px solid #4C637B;
+  border-color: #4C637B transparent transparent transparent;
+}
+.item-folded-btn .tri-top {
+  position: absolute;
+  top: -2px;
+  margin: 5px;
+  border: 4px solid #4C637B;
+  border-color: transparent transparent #4C637B transparent;
+}
+.load-list-button {
+  padding: 15px 20px;
+  text-align: center;
 }
