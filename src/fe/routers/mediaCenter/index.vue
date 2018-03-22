@@ -41,18 +41,6 @@
               </div>
             </fj-radio-group>
           </div>
-          <div class="media-category">
-            <h4>HOUSENO</h4>
-            <fj-input
-              placeholder="请输入HOUSENO"
-              size="small"
-              theme="fill"
-              v-model="houseNo"
-              icon="icon-search input-search-icon"
-              @on-icon-click="searchHouseNoClick"
-              @keydown.native.enter.prevent="searchHouseNoClick"
-            ></fj-input>
-          </div>
           <template v-for="config in searchSelectConfigs">
             <div class="media-category">
               <h4>{{config.label}}</h4>
@@ -427,7 +415,6 @@
         const f_date_162 = getTimeRange(this.datetimerange1, 'news_data'); // 新聞日期
         const f_date_36 = getTimeRange(this.datetimerange2, 'airdata'); // 首播日期
         const created = getTimeRange(this.datetimerangeCreated, 'created');
-        console.log(this.fl);
         const options = {
           source: this.fl,
           match: [],
@@ -443,6 +430,7 @@
         options.range.push(f_date_162);
         options.range.push(f_date_36);
         options.range.push(created);
+
         getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
@@ -498,48 +486,6 @@
             if (me.listType === 'default' || (me.listType === "normal" && me.currentPage === 1)) {
               me.currentVideo = res.data.docs[0];
             }
-          } else {
-            me.currentVideo = {};
-          }
-          me.total = res.data.numFound;
-          me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
-        }).catch((error) => {
-          me.$message.error(error);
-        });
-      },
-      searchHouseNoClick() {
-        this.currentPage = 1;
-        const me = this;
-        this.listType = 'normal';
-        if (!me.houseNo) {
-          return;
-        }
-        let searchNotice = `检索词: ${me.houseNo}`;
-        const noticeLength = getStringLength(searchNotice);
-        if (noticeLength > 15) {
-          searchNotice = searchNotice.substr(0, 15);
-          searchNotice += '...';
-        } else {
-          searchNotice += '   ';
-        }
-        const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        const options = {
-          source: this.fl,
-          match: [],
-          should: [],
-          sort: {},
-          start: start,
-          pageSize: this.pageSize
-        };
-        const obj = {
-          house_num: me.houseNo,
-          publish_status: 1,
-        };
-        formatMust(options.match, obj);
-        api.esSearch(options, me).then((res) => {
-          me.items = res.data.docs;
-          if (res.data.docs.length > 0) {
-            me.currentVideo = res.data.docs[0];
           } else {
             me.currentVideo = {};
           }
