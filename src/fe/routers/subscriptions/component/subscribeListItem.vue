@@ -13,9 +13,6 @@
     <div class="subscribe-item-detail" :title="item.viceTitle">
       节目副题(中文)：{{ item.viceTitle || '无' }}
     </div>
-    <div class="subscribe-item-detail">
-      来源：{{ item.source }}
-    </div>
     <p class="subscribe-item-detail">
       限制：{{ item.limit }}
     </p>
@@ -36,9 +33,6 @@
       <span :class="setThumbClass(item.id, 'subscribe-list-title')" v-html="getTitle(item)"></span>
     </div>
     <ul class="subscribe-list-bar">
-      <li>
-        <span title="来源">来源：{{ item.source }}</span>
-      </li>
       <li>
         <span title="限制">限制：{{ item.limit }}</span>
       </li>

@@ -63,15 +63,21 @@
       <div :class="$style.showMoreBtn">
         <fj-button type="text" @click="isShowMore=!isShowMore">{{ isShowMore ? '取消高级信息编辑' : '高级信息编辑' }}</fj-button>
       </div>
-      <fj-button type="primary" :loading="isBtnLoading" @click="warehouse('1')">入库</fj-button><!--
-      --><fj-button type="primary" :loading="isBtnLoading" @click="warehouse('2')">入库并上架</fj-button>
+      <fj-button type="primary" @click="showTemplate" :loading="isBtnLoading">入库</fj-button>
     </div>
+    <template-browser
+            :visible.sync="templateBrowserVisible"
+            @confirm="warehouse"
+    ></template-browser>
   </fj-dialog>
 </template>
 <script>
+  import TemplateBrowser from './templateBrowser';
   import { transformSecondsToStr } from '../../../common/utils';
   import { selectFields, dateFields, radioFields} from '../../library/config';
   import { getItemFromLocalStorage } from '../../../common/utils';
+
+  const api = require('../../../api/ivideo');
   const FORM_ITEM_BASE = [
     { label: '节目类型', propName: 'type', valueName: 'type', type: 'select', options: [] },
     { label: '名称(中文)', propName: 'chineseName', valueName: 'chineseName', type: 'text' },
@@ -105,8 +111,12 @@
       dialogVisible: Boolean,
       sequences: Array
     },
+    components: {
+      TemplateBrowser,
+    },
     data() {
       return {
+        templateBrowserVisible: false,
         parentEl: '',
         FORM_ITEM_BASE: FORM_ITEM_BASE,
         FORM_ITEM_MORE: FORM_ITEM_MORE,
@@ -213,8 +223,22 @@
       handleClose() {
         this.$emit('update:dialogVisible', false);
       },
-      warehouse(warehouseType) {
-        const reqData = { warehouseType };
+      showTemplate() {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.templateBrowserVisible = true;
+          }
+        });
+      },
+      warehouse(rows) {
+        const processes = [];
+        rows.forEach((item)=>{
+          processes.push({
+            processId: item.processId,
+            apiTemplateUrl: item.apiTemplateUrl
+          })
+        });
+        const reqData = { processes };
 
         // 根据sequences封装fileinfos
         const fileInfos = [];
@@ -233,13 +257,20 @@
         reqData.fileInfos = fileInfos;
 
         reqData.catalogInfo = Object.assign({}, this.formData, { owner: this.owner });
-        console.log('reqData', reqData);
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            console.log('validate');
-          }
-        });
-      }
+        this.isBtnLoading = true;
+        this.templateBrowserVisible = false;
+        api.warehouse(reqData)
+            .then((res) => {
+              this.isBtnLoading = false;
+              this.visible = false;
+              this.$message.success('入库成功');
+            })
+            .catch((error) => {
+              this.isBtnLoading = false;
+              this.visible = false;
+              this.$message.error(error);
+            })
+      },
     }
   };
 </script>

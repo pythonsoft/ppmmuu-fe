@@ -1,10 +1,10 @@
 const api = {};
 const axios = require('../config');
 
-api.init = function init(data, scope, needOriginResponse) {
+api.addGroup = function addGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/ivideo/init', data).then((response) => {
+    axios.post('/processTemplate/addGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -23,10 +23,10 @@ api.init = function init(data, scope, needOriginResponse) {
   });
 };
 
-api.listItem = function listItem(data, scope, needOriginResponse) {
+api.listGroup = function listGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/ivideo/listItem', data).then((response) => {
+    axios.get('/processTemplate/listGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -45,10 +45,10 @@ api.listItem = function listItem(data, scope, needOriginResponse) {
   });
 };
 
-api.createDirectory = function createDirectory(data, scope, needOriginResponse) {
+api.removeGroup = function removeGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/createDirectory', data).then((response) => {
+    axios.post('/processTemplate/removeGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -67,10 +67,10 @@ api.createDirectory = function createDirectory(data, scope, needOriginResponse) 
   });
 };
 
-api.createItem = function createItem(data, scope, needOriginResponse) {
+api.getGroup = function getGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/createItem', data).then((response) => {
+    axios.get('/processTemplate/getGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -89,10 +89,10 @@ api.createItem = function createItem(data, scope, needOriginResponse) {
   });
 };
 
-api.removeItem = function removeItem(data, scope, needOriginResponse) {
+api.updateGroup = function updateGroup(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/removeItem', data).then((response) => {
+    axios.post('/processTemplate/updateGroup', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -111,10 +111,10 @@ api.removeItem = function removeItem(data, scope, needOriginResponse) {
   });
 };
 
-api.updateItem = function updateItem(data, scope, needOriginResponse) {
+api.list = function list(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/updateItem', data).then((response) => {
+    axios.get('/processTemplate/list', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -133,10 +133,10 @@ api.updateItem = function updateItem(data, scope, needOriginResponse) {
   });
 };
 
-api.createProject = function createProject(data, scope, needOriginResponse) {
+api.createTemplate = function createTemplate(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/createProject', data).then((response) => {
+    axios.post('/processTemplate/createTemplate', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -155,10 +155,10 @@ api.createProject = function createProject(data, scope, needOriginResponse) {
   });
 };
 
-api.removeProject = function removeProject(data, scope, needOriginResponse) {
+api.remove = function remove(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/removeProject', data).then((response) => {
+    axios.post('/processTemplate/remove', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -177,10 +177,10 @@ api.removeProject = function removeProject(data, scope, needOriginResponse) {
   });
 };
 
-api.listProject = function listProject(data, scope, needOriginResponse) {
+api.update = function update(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/ivideo/listProject', data).then((response) => {
+    axios.post('/processTemplate/update', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -199,10 +199,10 @@ api.listProject = function listProject(data, scope, needOriginResponse) {
   });
 };
 
-api.copy = function copy(data, scope, needOriginResponse) {
+api.getDetail = function getDetail(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/copy', data).then((response) => {
+    axios.get('/processTemplate/getDetail', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -221,32 +221,10 @@ api.copy = function copy(data, scope, needOriginResponse) {
   });
 };
 
-api.move = function move(data, scope, needOriginResponse) {
+api.getTemplateListByType = function getTemplateListByType(data, scope, needOriginResponse) {
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/move', data).then((response) => {
-      if (!response) {
-        reject('返回数据格式不正确');
-        return false;
-      }
-      const res = response.data;
-      if (res.status === '0') {
-        if (scope) { scope.$progress.finish(); }
-        return resolve(res);
-      }
-      if (scope) { scope.$progress.fail(); }
-      return reject(needOriginResponse ? res : res.statusInfo.message);
-    }).catch((error) => {
-      if (scope) { scope.$progress.fail(); }
-      reject(error);
-    });
-  });
-};
-
-api.warehouse = function warehouse(data, scope, needOriginResponse) {
-  return new Promise((resolve, reject) => {
-    if (scope) { scope.$progress.start(); }
-    axios.post('/ivideo/warehouse', data).then((response) => {
+    axios.get('/processTemplate/getTemplateListByType', data).then((response) => {
       if (!response) {
         reject('返回数据格式不正确');
         return false;
