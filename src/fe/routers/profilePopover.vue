@@ -1,6 +1,6 @@
 <template>
   <div class="profile-popover">
-    <div class="profile-content clearfix">
+    <div class="profile-content clearfix" @click="linkToPersonalCenter">
       <div class="profile-avatar-box">
         <img :src="avatar || '/static/img/avatar.png'" class="profile-avatar" width="24" height="24">
       </div>
@@ -25,9 +25,12 @@
       email: String
     },
     methods: {
+      linkToPersonalCenter() {
+        this.parent.$emit('unmount-menu');
+        this.router.push('/personalCenter');
+      },
       signOut() {
         userAPI.postUserLogout({}, this).then((res) => {
-          this.display = false;
           localStorage.setItem('menu', '');
           localStorage.setItem('userInfo', '');
           this.$message.success('成功退出当前帐户，期待下次光临.');
@@ -51,6 +54,7 @@
   }
   .profile-content {
     height: 55px;
+    cursor: pointer;
   }
   .profile-footer {
     border-top: 1px solid #EBF3FB;

@@ -428,8 +428,12 @@ utils.formatSize = function formatSize(size) {
     str = `${Math.round(100 * (size / 1024)) / 100} KB`;
   } else if (size < 1000 * 1000 * 1000) {
     str = `${Math.round(100 * (size / (1024 * 1024))) / 100} MB`;
-  } else {
+  } else if (size < 1000 * 1000 * 1000 * 1000) {
     str = `${Math.round(100 * (size / (1024 * 1024 * 1024))) / 100} GB`;
+  } else if (size < 1000 * 1000 * 1000 * 1000 * 1000) {
+    str = `${Math.round(100 * (size / (1024 * 1024 * 1024 * 1024))) / 100} TB`;
+  } else {
+    str = `${Math.round(100 * (size / (1024 * 1024 * 1024 * 1024 * 1024))) / 100} PB`;
   }
   return str;
 };

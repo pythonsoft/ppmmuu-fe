@@ -17,8 +17,8 @@ export function getStatusByCode(code) {
   return {};
 }
 
-export const selectFields = [
-  {
+export const selectFields = {
+  type: {
     key: 'type',
     label: '節目類型',
     items: [
@@ -32,7 +32,7 @@ export const selectFields = [
     ],
     selected: ''
   },
-  {
+  ccid: {
     key: 'ccid',
     label: '編目類',
     items: [
@@ -44,7 +44,7 @@ export const selectFields = [
     ],
     selected: ''
   },
-  {
+  newsType: {
     key: 'newsType',
     label: '新聞類型',
     items: [
@@ -69,7 +69,7 @@ export const selectFields = [
     ],
     selected: ''
   },
-  {
+  occurCountry: {
     key: 'occurCountry',
     label: '事發國家',
     items: [
@@ -257,7 +257,7 @@ export const selectFields = [
     ],
     selected: ''
   },
-  {
+  version: {
     key: 'version',
     label: '版本',
     items: [
@@ -276,7 +276,7 @@ export const selectFields = [
     ],
     selected: ''
   },
-  {
+  madeLocation: {
     key: 'madeLocation',
     label: '製作地點',
     items: [
@@ -289,7 +289,7 @@ export const selectFields = [
     ],
     selected: ''
   },
-  {
+  resourceDepartment: {
     key: 'resourceDepartment',
     label: '資源所屬部門',
     items: [
@@ -307,25 +307,25 @@ export const selectFields = [
     ],
     selected: ''
   }
-];
+};
 
-export const dateFields = [
-  {
+export const dateFields = {
+  newsTime: {
     key: 'newsTime',
     label: '新闻日期',
     selected: '',
     type: 'date'
   },
-  {
+  airTime: {
     key: 'airTime',
     label: '首播日期',
     selected: '',
     type: 'date'
   }
-];
+};
 
-export const radioFields = [
-  {
+export const radioFields = {
+  hdFlag: {
     key: 'hdFlag',
     label: '高標清',
     items: [
@@ -334,13 +334,13 @@ export const radioFields = [
     ],
     selected: 1
   },
-  {
+  pigeonhole: {
     key: 'pigeonhole',
     label: '是否歸檔',
     items: [
       { value: '是', label: '是' },
       { value: '否', label: '否' }
     ],
-    selected: 'all'
+    selected: '是'
   }
-];
+};

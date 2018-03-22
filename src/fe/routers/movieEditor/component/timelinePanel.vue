@@ -2,6 +2,18 @@
   <div>
     <div class="task-list-controller-wrap" ref="controlMenu">
       <div class="player-control-item-wrap">
+        <div class="player-control-item" @click="moveSequence(-1)" :class="{'disabled-control-item': isDisabledControl}">
+          <i class="iconfont icon-move-to-left"></i>
+        </div>
+        <div class="player-control-tooltip">前移</div>
+      </div>
+      <div class="player-control-item-wrap">
+        <div class="player-control-item" @click="moveSequence(1)" :class="{'disabled-control-item': isDisabledControl}">
+          <i class="iconfont icon-move-to-right"></i>
+        </div>
+        <div class="player-control-tooltip">后移</div>
+      </div>
+      <div class="player-control-item-wrap">
         <div class="player-control-item" @click="handleDeleteSequence" :class="{'disabled-control-item': isDisabledControl}">
           <i class="iconfont icon-delete"></i>
         </div>
@@ -13,6 +25,12 @@
         </div>
         <div class="player-control-tooltip">下载</div>
       </div>
+      <div class="player-control-item-wrap">
+        <div class="player-control-item" :class="{'disabled-control-item': isDisabledControl}" @click="isDisabledControl?null:isShowSubmitInfoDialog=true">
+          <i class="iconfont icon-submit"></i>
+        </div>
+        <div class="player-control-tooltip">提交</div>
+      </div>
     </div>
     <div class="timeline-title">{{ timelineTitle }}</div>
     <div class="timeline-content">
@@ -22,6 +40,10 @@
       :visible.sync="downloadDialogDisplay"
       @confirm="downloadListConfirm"
     ></download-list-view>
+    <submit-info-dialog
+      :sequences="sequences"
+      :dialogVisible.sync="isShowSubmitInfoDialog"
+    ></submit-info-dialog>
   </div>
 </template>
 <script>
@@ -29,11 +51,12 @@
   import { transformSecondsToStr, isEmptyObject, FROM_WHERE, formatDuration } from '../../../common/utils';
   import DownloadListView from '../../management/template/download/component/downloadDialog';
   import DropDownMenu from './dropdownMenu.vue';
+  import SubmitInfoDialog from './submitInfoDialog';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import { getPosition } from '../../../component/fjUI/utils/position';
   import jobAPI from '../../../api/job';
 
-  const TIMELINE_CONFIG = {
+  const TIMELINE_CONFIG_DEFAULT = {
     sequenceHeight: 91,
     marginTop: 64,
     marginLeft: 4,
@@ -64,7 +87,8 @@
 
   export default {
     components: {
-      DownloadListView
+      DownloadListView,
+      SubmitInfoDialog
     },
     props: {
       projectBus: {},
@@ -105,7 +129,7 @@
         this.updateProgram();
       },
       theme(val) {
-        this.TIMELINE_CONFIG = val === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
+        this.TIMELINE_CONFIG = val === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG_DEFAULT;
         this.isDark = val === 'dark' ? true : false;
       }
     },
@@ -115,7 +139,9 @@
         currentSequenceIndex: 0,
         dpr: 1,
         downloadDialogDisplay: false,
-        command: ''
+        command: '',
+        isShowSubmitInfoDialog: false,
+        isAutoPlayProgram: false
       };
     },
     computed: {
@@ -129,8 +155,21 @@
         return this.sequences.length === 0 || this.currentSequenceIndex < 0;
       }
     },
+    created() {
+      this.projectBus.$on('updateProgramIndex', (index) => {
+        if (index > this.sequences.length - 1 || index < 0) {
+          if (this.currentSequenceIndex === 0) return;
+          this.currentSequenceIndex = 0;
+        } else {
+          if (this.currentSequenceIndex === index) return;
+          this.isAutoPlayProgram = true;
+          this.currentSequenceIndex = index;
+        }
+        this.draw();
+      });
+    },
     mounted() {
-      this.TIMELINE_CONFIG = this.theme === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG;
+      this.TIMELINE_CONFIG = this.theme === 'dark' ? TIMELINE_CONFIG_DARK : TIMELINE_CONFIG_DEFAULT;
       this.isDark = this.theme === 'dark' ? true : false;
       this.timeline = this.$refs.timeline;
       this.ctx = this.timeline.getContext('2d');
@@ -380,7 +419,19 @@
         this.sequences.push(Object.assign(info, { id: `sequence-${new Date().getTime()}` }));
       },
       updateProgram() {
-        this.projectBus.$emit('updateProgram', this.sequences[this.currentSequenceIndex] || {});
+        this.projectBus.$emit('updateProgram', this.sequences[this.currentSequenceIndex] || {}, this.currentSequenceIndex, this.isAutoPlayProgram);
+        // 重置isAutoPlayProgram属性
+        this.isAutoPlayProgram = false;
+      },
+      moveSequence(sign = 1) {
+        const sequencesLen = this.sequences.length;
+        const newIndex = this.currentSequenceIndex + sign;
+        if (sequencesLen === 0
+          || this.currentSequenceIndex < 0
+          || newIndex > sequencesLen - 1
+          || newIndex < 0) return;
+        this.sequences.splice(newIndex, 0, this.sequences.splice(this.currentSequenceIndex, 1)[0]);
+        this.currentSequenceIndex = newIndex;
       },
       handleDeleteSequence() {
         if (this.sequences.length === 0 || this.currentSequenceIndex < 0) return;
@@ -423,8 +474,8 @@
           const position = this.getDropdownMenu();
           this.dropdownMenu.menuStyle = {
             top: `${position.top + 30}px`,
-            left: `${position.left - 144}px`,
-            minWidth: '166px'
+            left: `${position.left - 43}px`,
+            minWidth: '76px'
           };
         }
       },

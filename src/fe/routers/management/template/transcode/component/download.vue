@@ -1,32 +1,36 @@
 <template>
   <div>
     <fj-form :model="formData" :rules="rules" ref="editForm" label-width="120px">
-      <template v-for="item in fields">
-        <fj-form-item :label="item.text" :prop="item.field">
-          <template v-if="item.type==='select'">
-            <fj-select v-model="formData[item.field]">
-              <fj-option
-                v-for="option in item.options"
-                :key="option.key"
-                :value="option.value"
-                :label="option.text"></fj-option>
-            </fj-select>
-          </template>
-          <template v-else>
-            <div class="template-transcode-watermark" v-if="item.field==='watermarkFile'">
-              <upload-img
-                :maxSize="4"
-                :imgPath="watermarkUrl"
-                @img-change="imgChange"></upload-img>
-            </div>
-            <fj-input v-model="formData[item.field]" v-else></fj-input>
-          </template>
-        </fj-form-item>
+      <template v-for="(section, key) in fields">
+        <h3 class="template-dialog-section-title">{{ key }}</h3>
+        <div v-for="item in section" class="template-dialog-section-item">
+          <fj-form-item :label="item.text" :prop="item.field">
+            <template v-if="item.type==='select'">
+              <fj-select v-model="formData[item.field]">
+                <fj-option
+                  v-for="option in item.options"
+                  :key="option.key"
+                  :value="option.value"
+                  :label="option.text"></fj-option>
+              </fj-select>
+            </template>
+            <template v-else>
+              <div class="template-transcode-watermark" v-if="item.field==='watermarkFile'">
+                <upload-img
+                  :maxSize="4"
+                  :imgPath="watermarkUrl"
+                  @img-change="imgChange"></upload-img>
+              </div>
+              <fj-input v-model="formData[item.field]" v-else></fj-input>
+            </template>
+          </fj-form-item>
+          <span v-if="item.unit" class="template-dialog-unit">{{ item.unit }}</span>
+        </div>
       </template>
     </fj-form>
-    <div class="template-dialog-footer">
-      <fj-button @click="close">取消</fj-button>
-      <fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
+    <div class="dialog-footer template-dialog-footer">
+      <fj-button @click="close">取消</fj-button><!--
+      --><fj-button type="primary" :loading="isBtnLoading" @click="submitForm">保存</fj-button>
     </div>
   </div>
 </template>
@@ -37,7 +41,7 @@
 
   const api = require('../../../../../api/job');
   const config = require('../config');
-  const templateApi = require('../../../../../api/template')
+  const templateApi = require('../../../../../api/template');
 
   export default {
     name: 'templateDownloadForm',
@@ -61,12 +65,26 @@
     },
     data() {
       return {
-        fields: config.fields,
+        fields: Object.assign({}, config.basicFields, config.videoFields, config.audioFields),
         formData: config.getFormData(),
         isBtnLoading: false,
         watermarkUrl: '',
-        rules: config.getFormRules()
+        rules: config.getFormRules(),
+        fieldsType: 'video'
       };
+    },
+    watch: {
+      'formData.fileformat'(val) {
+        if (config.videoType.indexOf(val) > -1 && this.fieldsType !== 'video') {
+          this.fields = Object.assign({}, config.basicFields, config.videoFields);
+          this.rules = config.getFormRules();
+          this.fieldsType = 'video';
+        } else if(config.audioType.indexOf(val) > -1 && this.fieldsType !== 'audio') {
+          this.fields = Object.assign({}, config.basicFields, config.audioFields);
+          this.rules = config.getFormRules(['basicFields', 'audioFields']);
+          this.fieldsType = 'audio';
+        }
+      }
     },
     methods: {
       initParam() {
@@ -79,21 +97,44 @@
         const me = this;
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            if (me.type === 'add') {
-              this.add();
+            let fieldNames = [];
+            if (this.fieldsType === 'video') {
+              fieldNames = Object.keys(config.getFormData());
             } else {
-              this.update();
+              fieldNames = Object.keys(config.getFormData(['basicFields', 'audioFields']));
+            }
+
+            const reqData = {};
+            const formData = this.formData;
+            const fields = this.fields;
+            const fieldKeys = Object.keys(fields);
+            fieldNames.forEach(key => {
+              reqData[key] = formData[key];
+              for (let i = 0, len = fieldKeys.length; i < len; i++) {
+                const field = fields[fieldKeys[i]];
+                if (field[key]) {
+                  if (field[key].formatter) {
+                    reqData[key] = field[key].formatter(formData[key]);
+                  }
+                  break;
+                }
+              }
+            });
+            if (me.type === 'add') {
+              this.add(reqData);
+            } else {
+              this.update(reqData);
             }
           }
         });
       },
-      add() {
+      add(reqData) {
         const me = this;
-        const wh = this.formData.wh.split('x');
-        this.formData.w = wh[0];
-        this.formData.h = wh[1];
+        const wh = reqData.wh.split('x');
+        reqData.w = wh[0];
+        reqData.h = wh[1];
 
-        api.createTemplate({createJson: this.formData}, me).then((res) => {
+        api.createTemplate({createJson: reqData}, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
           me.close();
@@ -103,13 +144,13 @@
 
         return false;
       },
-      update() {
+      update(reqData) {
         const me = this;
-        const wh = this.formData.wh.split('x');
-        this.formData.w = wh[0];
-        this.formData.h = wh[1];
+        const wh = reqData.wh.split('x');
+        reqData.w = wh[0];
+        reqData.h = wh[1];
 
-        api.updateTemplate({updateJson: this.formData}, me).then((res) => {
+        api.updateTemplate({updateJson: reqData}, me).then((res) => {
           me.$message.success('保存成功');
           me.$emit('listTemplate');
           me.close();
