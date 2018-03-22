@@ -285,4 +285,20 @@ config.getFormRules = function getFormRules(types = ['basicFields', 'videoFields
   return rules;
 };
 
+config.getFields = function getFields(){
+  const fields = {};
+  for(let key in config.basicFields['基本信息']) {
+    fields[key] = config.basicFields['基本信息'][key];
+  }
+  for(let key in config.videoFields['视频参数']) {
+    fields[key] = config.videoFields['视频参数'][key];
+  }
+  for(let key in config.videoFields['水印参数']) {
+    fields[key] = config.videoFields['水印参数'][key];
+  }
+  for(let key in config.audioFields['音频参数']) {
+    fields[key] = config.audioFields['音频参数'][key];
+  }
+  return fields;
+}
 module.exports = config;
