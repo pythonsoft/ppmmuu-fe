@@ -41,10 +41,10 @@
               </div>
             </fj-radio-group>
           </div>
-          <template v-for="config in searchSelectConfigs">
-            <div class="media-category">
+          <template v-for="config in searchConfig">
+            <div class="media-category" v-if="getType(config) === 'select'">
               <h4>{{config.label}}</h4>
-              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-model="config.selected" size="small" theme="fill" :controlLength="10" clearable multiple>
+              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-if="config.key==='program_type'" v-model="programType" size="small" theme="fill" :controlLength="10" clearable multiple>
                 <fj-option
                   v-for="item in config.items"
                   :key="item.key"
@@ -52,11 +52,16 @@
                   :value="item.value">
                 </fj-option>
               </fj-select>
+              <fj-select :parent-el="selectParentEl" placeholder="请选择" v-else v-model="config.selected" size="small" theme="fill" :controlLength="10" clearable multiple>
+                <fj-option
+                        v-for="item in config.items"
+                        :key="item.key"
+                        :label="item.label"
+                        :value="item.value">
+                </fj-option>
+              </fj-select>
             </div>
-          </template>
-
-          <template v-for="config in searchRadioboxConfigs">
-            <div class="media-category clearfix">
+            <div class="media-category clearfix" v-else-if="getType(config) === 'radio'">
               <h4>{{config.label}}</h4>
               <fj-radio-group v-model="config.selected">
                 <template v-for="item in config.items">
@@ -66,20 +71,19 @@
                 </template>
               </fj-radio-group>
             </div>
-          </template>
-
-          <div class="media-category">
-            <h4>日期范围</h4>
-            <div id="media-category-date">
-              <fj-date-picker
-                theme="fill"
-                :parent-el="(()=>{return this.$refs.mediaLeft})()"
-                type="datetimerange"
-                placeholder="请选择日期范围"
-                v-model="datetimerange1"
-              ></fj-date-picker>
+            <div class="media-category" v-else-if="getType(config) === 'daterange'">
+              <h4>{{config.label}}</h4>
+              <div id="media-category-date">
+                <fj-date-picker
+                        theme="fill"
+                        :parent-el="selectParentEl"
+                        type="datetimerange"
+                        placeholder="请选择日期范围"
+                        v-model="config.selected"
+                ></fj-date-picker>
+              </div>
             </div>
-          </div>
+          </template>
         </div>
       </div>
     </template>
@@ -167,7 +171,7 @@
     formatDuration,
     getPosition,
     appendToBody,
-    getStringLength
+    getStringLength,
   } from '../../common/utils';
   import './index.css';
   import {
@@ -177,6 +181,7 @@
     getOrder,
     formatMust,
     getHighLightFields,
+    fillOptions,
     ORDER_OPTIONS,
     CREATED_TIME_OPTIONS,
     HHIGHLIGHT_FIELDS1,
@@ -190,10 +195,11 @@
   import gridAndList from './gridAndList';
   import mediaRight from './right';
 
- import im from '../../component/im/index';
+  import im from '../../component/im/index';
 
   const api = require('../../api/media');
   const userAPI = require('../../api/user');
+  const searchConfig = require('./searchConfig');
 
   const MIN_LIST_WIDTH = 448;
   const MIN_RESULT_BAR_WIDTH = 612;
@@ -204,7 +210,7 @@
       'media-right': mediaRight,
       'grid-list-view': gridAndList,
       Pagination,
-     im
+      im
     },
     data() {
       return {
@@ -216,6 +222,8 @@
         defaultRoute: '/',
         keyword: '',
         houseNo: '',
+        programType: [],
+        searchConfig: searchConfig,
         searchSelectConfigs: [],
         searchRadioboxConfigs: [],
         pageSize: 24,
@@ -252,10 +260,15 @@
     created() {
       const me = this;
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
-      this.getSeachConfigs();
+      // this.getSeachConfigs();
       this.getDefaultMedia();
       bubble.on('mediaCenterDefaultViewType', function(v) {
         me.listType = v;
+      });
+      searchConfig.forEach((item) => {
+        if (item.key === 'program_type') {
+          me.programType = item.selected;
+        }
       });
     },
     mounted() {
@@ -279,6 +292,13 @@
         }
         this.datetimerangeCreated = [start, end];
         this.getMediaList();
+      },
+      programType(val) {
+        searchConfig.forEach((item) => {
+          if (item.key === 'program_type') {
+            item.selected = val;
+          }
+        });
       }
     },
     methods: {
@@ -371,19 +391,6 @@
         this.datetimerangeCreated = [];
         this.resize();
       },
-      getSeachConfigs() {
-        const me = this;
-        api.getSearchConfig().then((res) => {
-          const searchSelectConfigs = res.data.searchSelectConfigs;
-          for(let i = 0; i < searchSelectConfigs.length; i++){
-            searchSelectConfigs[i].selected = [];
-          }
-          me.searchSelectConfigs = searchSelectConfigs;
-          me.searchRadioboxConfigs = res.data.searchRadioboxConfigs;
-        }).catch((error) => {
-          me.$message.error(error);
-        });
-      },
       setDatetimerange(type) {
         // const start = new Date();
         // const end = new Date();
@@ -399,9 +406,6 @@
         this.listType = 'normal';
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        const f_date_162 = getTimeRange(this.datetimerange1, 'full_time'); // 新聞日期
-        const f_date_36 = getTimeRange(this.datetimerange2, 'airdata'); // 首播日期
-        const created = getTimeRange(this.datetimerangeCreated, 'created');
         const options = {
           source: this.fl,
           match: [],
@@ -413,14 +417,13 @@
           pageSize: this.pageSize,
           isAccurate: this.isAccurate
         };
-        const must = options.match;
-        options.range.push(f_date_162);
-        options.range.push(f_date_36);
-        options.range.push(created);
-
-        getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
+        fillOptions(this.programType, options, this.searchConfig);
+        if (this.datetimerangeCreated.length) {
+          const created = getTimeRange(this.datetimerangeCreated, 'created');
+          options.range.push(created);
+        }
         let searchNotice = `检索词: ${this.keyword}`;
-        const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
+        const searchChoose = getSearchNotice(this.searchConfig).join(',');
         if (this.keyword && searchChoose) {
           searchNotice += `,${searchChoose}`;
         } else {
@@ -437,11 +440,10 @@
 
         const obj = {
           house_num: me.houseNo,
-          publish_status: 1,
           full_text: this.keyword
         };
 
-        formatMust(must, obj);
+        formatMust(options.match, obj);
 
         options.sort = getOrder(this.orderVal);
 
@@ -484,7 +486,13 @@
       },
       handleCurrentPageChange(page) {
         this.getMediaList();
-      }
+      },
+      getType(item) {
+        if (item.show === true || (item.show && item.show(this.programType))) {
+          return item.type;
+        }
+        return '';
+      },
     }
   };
 </script>

@@ -172,13 +172,32 @@ method.formatMust = function (must, obj) {
   }
 };
 
+method.fillOptions = function fillOptions(programType, options, searchConfig) {
+  const match = options.match;
+  const range = options.range;
+  searchConfig.forEach((item) => {
+    if (item.show === true || (item.show && item.show(programType))) {
+      if (item.type === 'daterange') {
+        range.push(method.getTimeRange(item.selected, item.key));
+      } else {
+        if (item.selected !== undefined && item.selected !== '' && item.selected !== 'all' && item.selected.length) {
+          match.push({
+            key: item.key,
+            value: item.selected
+          });
+        }
+      }
+    }
+  });
+}
+
 method.getSearchNotice = function getSearchNotice(configs) {
   const q = [];
   for (let i = 0, len = configs.length; i < len; i++) {
     const temp = configs[i];
     const key = temp.key;
-    if (temp.selected !== undefined && temp.selected !== 'all' && temp.selected !== '') {
-      const items = temp.items;
+    const items = temp.items;
+    if (temp.selected !== undefined && temp.selected !== 'all' && temp.selected !== '' && items) {
       for (let j = 0, len1 = items.length; j < len1; j++) {
         if (items[j].value === temp.selected) {
           q.push(items[j].label);
@@ -193,8 +212,8 @@ method.getSearchNotice = function getSearchNotice(configs) {
 
 const ORDER_OPTIONS = [
   { value: 'order1', label: '关联度排序', sort: '' },
-  { value: 'order3', label: '时间由近到远', sort: 'desc', key: 'full_time' },
-  { value: 'order2', label: '时间由远到近', sort: 'asc', key: 'full_time' },
+  { value: 'order2', label: '时间由近到远', sort: 'desc', key: 'full_time' },
+  { value: 'order3', label: '时间由远到近', sort: 'asc', key: 'full_time' },
 ];
 
 const CREATED_TIME_OPTIONS = [

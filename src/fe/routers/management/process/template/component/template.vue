@@ -1,7 +1,7 @@
 <template>
   <div>
   <fj-form :model="formData" :rules="rules" ref="editForm" label-width="90px">
-    <fj-form-item label="标志">
+    <fj-form-item label="标识">
       <fj-input v-model="formData._id" :disabled="type==='update'"></fj-input>
     </fj-form-item>
     <fj-form-item label="名称" prop="name">
@@ -78,12 +78,13 @@
       TemplateBrowser
     },
     created() {
-      console.log('gghafasg');
       if (this.type !== 'add') {
         this.formData = JSON.parse(JSON.stringify(this.templateInfo));
         if (this.formData.params) {
           this.params = this.formData.params;
         }
+      } else {
+
       }
     },
     data() {
