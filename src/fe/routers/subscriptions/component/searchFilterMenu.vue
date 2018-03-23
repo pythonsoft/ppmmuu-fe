@@ -17,7 +17,7 @@
           type="datetimerange"
           direction="horizontal"
           placeholder="请选择日期范围"
-          v-model="datetimerange[menu.key]"
+          v-model="fullTime"
         ></fj-date-picker>
         </div>
       </div>
@@ -34,42 +34,22 @@
       menuStyle: {},
       filterList: {},
       menus: [],
-      defaultDatetimerange: {}
     },
     data() {
       return {
-        datetimerange: {
-          FIELD162: [],
-          FIELD36: []
-        },
+        fullTime: [],
         selfFilterList: {}
       };
     },
     watch: {
-      defaultDatetimerange(val) {
-        if (val && val.FIELD162) {
-          this.datetimerange.FIELD162 = val.FIELD162.split(',');
-        }
-        if (val && val.FIELD36) {
-          this.datetimerange.FIELD36 = val.FIELD36.split(',');
-        }
-      },
-      'datetimerange.FIELD36'(val) {
+      fullTime(val) {
         if (val.length > 0) {
           const time = val[0]
             ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString()
             : '';
-          this.selfFilterList.FIELD36 = time;
+          this.selfFilterList.full_time = time;
         }
       },
-      'datetimerange.FIELD162'(val) {
-        if (val.length > 0) {
-          const time = val[0]
-            ? new Date(val[0]).toISOString() + ',' + new Date(val[1]).toISOString()
-            : '';
-          this.selfFilterList.FIELD162 = time;
-        }
-      }
     },
     methods: {
       handleClick() {
