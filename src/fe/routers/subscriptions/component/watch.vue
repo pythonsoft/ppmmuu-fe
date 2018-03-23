@@ -179,7 +179,7 @@
         if (this.loadListBtnText === '加载中...') return;
         this.loadListBtnText = '加载中...';
         const options = {};
-        options.subscribeType = this.subscribeType;
+        options.subscribeType = this.subscribeType.split(',').join(' ');
         options.start = (this.currentPage - 1) * this.pageSize;
         options.pageSize = this.pageSize;
         subscribeAPI.esSearch(options, this).then((res) => {
