@@ -74,9 +74,6 @@
   import throttle from '../../../component/fjUI/utils/throttle';
 
   const config = require('../../mediaCenter/config');
-  const mediaAPI = require('../../../api/media');
-  const ivideoAPI = require('../../../api/ivideo');
-  const userAPI = require('../../../api/user');
   const subscribeAPI = require('../../../api/subscribe');
 
   const RIGHTBOX_WIDTH = 320;
@@ -135,10 +132,10 @@
         this.refresh();
       }
       this.updateLeftBoxSize();
-      window.addEventListener('resize', throttle(this.updateLeftBoxSize, 1000));
+      window.addEventListener('resize', throttle(this.updateLeftBoxSize, 200));
     },
     beforeDestroy() {
-      window.removeEventListener('resize', throttle(this.updateLeftBoxSize, 1000));
+      window.removeEventListener('resize', throttle(this.updateLeftBoxSize, 200));
     },
     methods: {
       formatSize,
