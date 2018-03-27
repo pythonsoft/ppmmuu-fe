@@ -88,6 +88,7 @@
   import transcodeScriptDialogView from '../../../template/download/component/transcodeScriptDialog';
 
   const api = require('../../../../../api/subscribeManagement');
+  const configurationAPI = require('../../../../../api/configuration');
   const config = require('../config');
 
   export default {
