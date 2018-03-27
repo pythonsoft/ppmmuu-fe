@@ -7,7 +7,7 @@
           <div class="media-video-title-wrap">
             <div class="media-video-title" v-html="name"></div>
             <ul class="video-title-bar">
-              <li ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e)}" v-clickoutside="handleCloseMenu">
+              <li ref="downloadBtn" v-if="files.length > 0" @click.stop="(e)=>{mountDropdownMenu(e)}" v-clickoutside="handleCloseMenu">
                 <span title="下载" class="iconfont icon-video-download"></span>
               </li>
             </ul>
@@ -156,7 +156,7 @@
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
         const menus = this.files.map(file => {
-          return { command: file, key: file.FILETYPEID, name: file.FILETYPENAME };
+          return { command: file, key: file.type, name: file.typeName };
         });
         this.dropdownMenu.menus = menus;
         this.dropdownMenu.$on('item-click', this.handleItemClick);

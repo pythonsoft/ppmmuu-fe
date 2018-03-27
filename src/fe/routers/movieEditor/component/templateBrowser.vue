@@ -49,7 +49,7 @@
         const param = {
           page: 1,
           pageSize: 999,
-          groupName: '入库'
+          groupName: 'media_editor_export'
         };
         templateAPI.list({ params: param }, this).then((res) => {
           this.tableData = res.data.docs;

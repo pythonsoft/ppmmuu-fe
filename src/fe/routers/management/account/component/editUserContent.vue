@@ -29,7 +29,7 @@
         <fj-input v-model="formData.password"></fj-input>
       </fj-form-item>
       <fj-form-item label="部门／小组">
-        <div class="group-input"><fj-input v-model="groupName" :readonly="true"></fj-input></div>
+        <div class="edit-user-group-input"><fj-input v-model="groupName" :readonly="true"></fj-input></div>
         <fj-button @click.stop.prevent="addGroupDialogVisible=true">修改</fj-button>
       </fj-form-item>
       <fj-form-item label="有效日期" prop="expiredTime">
@@ -250,9 +250,9 @@
   .edit-user-dialog-footer button {
     margin-left: 10px;
   }
-  .group-input {
+  .edit-user-group-input {
     float: left;
-    width: 215px;
+    width: 198px;
     margin-right: 4px;
   }
 </style>

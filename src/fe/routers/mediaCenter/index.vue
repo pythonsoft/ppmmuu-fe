@@ -218,7 +218,7 @@
         CREATED_TIME_OPTIONS: CREATED_TIME_OPTIONS,
         ORDER_OPTIONS: ORDER_OPTIONS,
         createdTimeVal: 'all',
-        orderVal: 'order1',
+        orderVal: 'order2',
         defaultRoute: '/',
         keyword: '',
         houseNo: '',
@@ -299,6 +299,9 @@
             item.selected = val;
           }
         });
+      },
+      isAccurate(val) {
+        this.orderVal = val ? 'order2' : 'order1';
       }
     },
     methods: {

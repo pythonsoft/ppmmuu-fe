@@ -8,7 +8,7 @@
     </div>
     <div class="subscribe-item-name" :title="getReplaceName(item)">
       <span v-html="getTitle(item)"></span>
-      <span class="iconfont icon-download download-btn" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, item.files)}" v-clickoutside="handleCloseMenu"></span>
+      <span v-if="item.files.length > 0" class="iconfont icon-download download-btn" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, item.files)}" v-clickoutside="handleCloseMenu"></span>
     </div>
     <div class="subscribe-item-detail" :title="item.viceTitle">
       节目副题(中文)：{{ item.viceTitle || '无' }}
@@ -37,7 +37,10 @@
         <span title="限制">限制：{{ item.limit }}</span>
       </li>
       <li>
-        <span title="限制">上架时间：{{ item.storageTime | formatTime }}</span>
+        <span title="上架时间">上架时间：{{ item.storageTime | formatTime }}</span>
+      </li>
+      <li>
+        <span :title="item.content">内容介绍：{{ formatContent(item.content) }}</span>
       </li>
     </ul>
   </div>
@@ -57,7 +60,7 @@
     getTitle,
     getDescription
   } from '../../mediaCenter/common';
-  import { isEmptyObject, deepClone, formatSize, getStringLength } from '../../../common/utils';
+  import { isEmptyObject, deepClone, formatSize, getStringLength, valueLengthLimit } from '../../../common/utils';
 
   Vue.use(VueLazyload, {
     preLoad: 1.3,
@@ -110,7 +113,7 @@
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
         const menus = files.map(file => {
-          return { command: file, key: file.FILETYPEID, name: file.FILETYPENAME };
+          return { command: file, key: file.type, name: file.typeName };
         });
         this.dropdownMenu.menus = menus;
         this.dropdownMenu.$on('item-click', this.handleItemClick);
@@ -148,6 +151,12 @@
         position.top = position.top - parentElScrollTop;
         return position;
       },
+      formatContent(content) {
+        if (!content) {
+          return '无';
+        }
+        return valueLengthLimit(content, 70);
+      }
     },
     beforDestroy() {
       if (this.dropdownMenu) {
