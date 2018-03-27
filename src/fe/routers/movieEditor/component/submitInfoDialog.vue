@@ -249,7 +249,7 @@
         }
         reqData.originalFileInfo = fileInfos;
 
-        reqData.catalogInfo = Object.assign({}, this.formData, { ownerId: this.owner._id, ownerName: this.owner.name });
+        reqData.catalogInfo = Object.assign({}, this.formData, { ownerId: this.owner._id, ownerName: this.owner.name, inpoint: 0, outpoint: 0 });
         this.isBtnLoading = true;
         this.templateBrowserVisible = false;
         api.warehouse(reqData)
