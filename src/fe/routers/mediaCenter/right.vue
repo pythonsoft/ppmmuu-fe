@@ -38,12 +38,12 @@
               <tr v-for="(info, index) in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
+                  <span v-if="info.isFoldedContent" class="inline-info" v-html="formatContent(info.value).slice(0, 68) + '...'"></span>
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, index)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-html="formatContent(info.value)"></span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
                 </td>
               </tr>
             </table>
@@ -302,7 +302,7 @@
               break;
             }
             const info = this.program[i];
-            if (info.value.length > 60) {
+            if (this.formatContent(info.value).length > 68) {
               info.isFoldedContent = true;
             }
           }
