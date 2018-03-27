@@ -52,6 +52,19 @@
           </fj-radio-group>
         </div>
       </fj-form-item>
+      <!--<fj-form-item label="下载格式" prop="subscribeType">-->
+        <!--<fj-select placeholder="请选择" v-model="formData.downloadType" multiple v-if="status !== STATUS.EXPIRED">-->
+          <!--<fj-option-->
+            <!--v-for="item in SUBSCRIBE_TYPE"-->
+            <!--:key="item.value"-->
+            <!--:label="item.label"-->
+            <!--:value="item.key">-->
+          <!--</fj-option>-->
+        <!--</fj-select>-->
+        <!--<div class="subscribe-type-tag" v-else>-->
+          <!--<fj-tag v-for="tag in formData.downloadType" :key="tag">{{getLabelByValue(tag, SUBSCRIBE_TYPE)}}</fj-tag>-->
+        <!--</div>-->
+      <!--</fj-form-item>-->
       <fj-form-item label="转码模版">
         <transcode-template-list
           :data="formData.transcodeTemplates"
@@ -88,6 +101,7 @@
   import transcodeScriptDialogView from '../../../template/download/component/transcodeScriptDialog';
 
   const api = require('../../../../../api/subscribeManagement');
+  const configurationAPI = require('../../../../../api/configuration');
   const config = require('../config');
 
   export default {
@@ -127,6 +141,7 @@
           autoPush: true,
           transcodeTemplateSelector: '',
           transcodeTemplates: [],
+          downloadType: [],
         },
         rules: {
           companyName: [
@@ -189,6 +204,7 @@
     },
     created() {
       this.initSubScribeType();
+      this.initSubscriptDownloadType();
     },
     methods: {
       addTemplate(rows) {
@@ -246,6 +262,13 @@
           .catch((error) => {
             this.$message.error(error);
           });
+      },
+      initSubscriptDownloadType() {
+        configurationAPI.getListConfig({ params: { name: 'subscribe_download_type' } }).then((res) => {
+          console.log('fe -->', res.data);
+        }).catch(err => {
+          this.$message.error(err);
+        });
       },
       resetFormData() {
         this.$refs.editForm.clearErrors();
