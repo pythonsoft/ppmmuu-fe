@@ -7,7 +7,7 @@
         v-for="(item, index) in bars"
         :style="item"
         :class="getBarClass()"
-        @mousedown="(e) => mousedown(e, index)"
+        @mousedown="(e) => {mousedown(e, index)}"
       ></div>
   </div>
 </template>
@@ -204,6 +204,8 @@
         return false;
       },
       mousemove(e) {
+        e.preventDefault();
+        e.stopPropagation();
         if (!this.isStartMove) { return false; }
         if(this.limitResize){
           if(this.direction == 'x' && e.pageX < this.limitResizeScale) {
