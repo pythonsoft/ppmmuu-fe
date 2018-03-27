@@ -267,6 +267,13 @@ method.getHighLightFields = function getHighLightFields(fields) {
   return obj;
 };
 
+/**
+ * 判断当前文件在哪个存储位置
+ * @param fileTypeId 文件类型ID
+ * @param status 文件状态
+ * @param archiveType 文件归档类型
+ * @returns {String} 在线|带库|UDS
+ */
 method.getVideoPosition = function(fileTypeId, status, archiveType) {
   const st = status + '';
   let flag = false;
