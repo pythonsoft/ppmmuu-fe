@@ -25,7 +25,7 @@
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand('editorDetails', info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else v-html="formatValue(info.value)"></span>
+                    <span v-else v-html="formatContent(info.value)"></span>
                   </template>
                   <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded('editorDetails', info, key)">收起<i class="tri-top"></i></span>
                 </td>
