@@ -11,7 +11,7 @@ const searchConfig = [
       { value: '墊播', label: '墊播' },
       { value: '素材', label: '素材' },
     ],
-    selected: ['包裝'],
+    selected: [],
     show: true,
     type: 'select',
   },
@@ -303,7 +303,7 @@ const searchConfig = [
     show: function(program_type){
       if (program_type) {
         for(let i = 0, len = program_type.length; i < len; i++) {
-          if (['包裝', '素材'].indexOf(program_type[i]) !== -1) {
+          if (['包裝', '自製', '墊播', '素材'].indexOf(program_type[i]) !== -1) {
             return true
           }
         }
@@ -333,7 +333,7 @@ const searchConfig = [
     show: function(program_type){
       if (program_type) {
         for(let i = 0, len = program_type.length; i < len; i++) {
-          if (['包裝', '採購', '宣傳'].indexOf(program_type[i]) !== -1) {
+          if (['包裝', '採購', '自製', '墊播', '宣傳'].indexOf(program_type[i]) !== -1) {
             return true
           }
         }
@@ -357,7 +357,7 @@ const searchConfig = [
     show: function(program_type){
       if (program_type) {
         for(let i = 0, len = program_type.length; i < len; i++) {
-          if (['包裝', '採購'].indexOf(program_type[i]) !== -1) {
+          if (['包裝', '自製', '墊播', '採購'].indexOf(program_type[i]) !== -1) {
             return true
           }
         }

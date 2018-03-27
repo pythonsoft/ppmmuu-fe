@@ -449,8 +449,8 @@
 
         if (this.keyword) {
           if (options.sort.length) {
-            for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
-              if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
+            for (let k = 0, len = this.programType.length; k < len; k++) {
+              if (this.programType[k] === this.keyword) {
                 options.hl = HHIGHLIGHT_FIELDS2;
               }
             }
