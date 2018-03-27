@@ -48,9 +48,6 @@
           <span :class="getMediaFormatStyle(item)">{{ getMediaFormat(item) }}</span>
           <span :class="setThumbClass(item.id)" v-html="getTitle(item)"></span>
         </div>
-        <div class="media-item-category">
-          <span v-html="item.program_type || '无分类'"></span>
-        </div>
         <p class="media-item-category media-item-time">
           {{ formatShowTime(item).value}}
         </p>
@@ -326,7 +323,7 @@
 }
 
 .media-item-time{
-  margin-top: 2px;
+  margin-top: 9px;
 }
 
 .media-center-color-span {

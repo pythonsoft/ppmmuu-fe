@@ -173,7 +173,6 @@
         });
       },
       showDownloadList(fileInfo) {
-        console.log("afasf");
         this.fileInfo = fileInfo;
         this.downloadDialogDisplay = true;
       },

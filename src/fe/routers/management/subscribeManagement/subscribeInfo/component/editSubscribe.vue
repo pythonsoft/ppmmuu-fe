@@ -20,7 +20,7 @@
         <div class="subscribe-type-tag" v-else><fj-tag v-for="tag in formData.subscribeType" :key="tag">{{getLabelByValue(tag, SUBSCRIBE_TYPE)}}</fj-tag></div>
       </fj-form-item>
       <fj-form-item label="下载时长" prop="downloadSeconds">
-        <div class="group-input">
+        <div class="subscribe-group-input">
           <fj-input v-model="formData.downloadSeconds" :disabled="status === STATUS.EXPIRED"></fj-input>
         </div>
         <div class="group-input-unit">小时</div>
@@ -351,9 +351,9 @@
   };
 </script>
 <style scope>
-  .group-input {
+  .subscribe-group-input {
     float: left;
-    width: 246px;
+    width: 230px;
   }
 
   .group-input-unit {

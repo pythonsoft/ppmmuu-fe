@@ -41,7 +41,7 @@
         </div>
         <div :class="$style.playerTime">{{ displayCurrentTime }} / {{ displayDuration }}</div>
         <i :class="[$style.playerBtn, $style.rightControl, 'iconfont', isFullscreen ? 'icon-esc-fullscreen' : 'icon-fullscreen']" @click="fullscreen"></i>
-        <i :class="[$style.playerBtn, $style.rightControl, 'iconfont icon-video-download']" @click.stop="(e)=>{mountDropdownMenu(e)}" v-clickoutside="handleCloseMenu" ref="downloadBtn"></i>
+        <i v-if="files.length > 0" :class="[$style.playerBtn, $style.rightControl, 'iconfont icon-video-download']" @click.stop="(e)=>{mountDropdownMenu(e)}" v-clickoutside="handleCloseMenu" ref="downloadBtn"></i>
       </div>
     </div>
     <download-list-view
@@ -514,7 +514,7 @@
         document.body.appendChild(this.dropdownMenu.$el);
         this.updateMenuPosition();
         const menus = this.files.map(file => {
-          return { command: file, key: file.FILETYPEID, name: file.FILETYPENAME };
+          return { command: file, key: file.type, name: file.typeName };
         });
         this.dropdownMenu.isDark = true;
         this.dropdownMenu.menus = menus;

@@ -115,7 +115,7 @@ const searchConfig = [
   },
   {
     key: 'occur_country',
-    label: '事發國家',
+    label: '事發地区',
     items: [
       { value: '安哥拉 Angola AO', label: 'Angola AO安哥拉' },
       { value: '阿富汗 Afghanistan AF', label: 'Afghanistan AF阿富汗' },
