@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="shelf-edit-title">填写内容</h1>
-    <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="100px">
+    <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="120px">
       <fj-form-item label="节目名称(中文)" prop="name">
         <fj-input v-model="editorInfo.name"></fj-input>
       </fj-form-item>
