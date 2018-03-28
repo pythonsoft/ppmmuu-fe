@@ -539,10 +539,10 @@
   float: left;
   display: inline-block;
   width: 178px;
-  height: 21px;
+  /*height: 21px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: nowrap;*/
 }
 .item-expand-btn {
   float: left;

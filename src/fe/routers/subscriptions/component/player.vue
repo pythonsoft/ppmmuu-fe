@@ -220,17 +220,13 @@
         }, 500);
       },
       width(val) {
-        setTimeout(() => {
-          const progressBarWidth = this.getProgressBarStyle().width;
-          this.indicatorOffset = this.innerCurrentTime / this.duration * progressBarWidth;
-          this.playProgressPercent = this.innerCurrentTime / this.duration;
-          this.updateVideoTitlePosition();
-        }, 500);
+        const progressBarWidth = val;
+        this.indicatorOffset = this.innerCurrentTime / this.duration * progressBarWidth;
+        this.playProgressPercent = this.innerCurrentTime / this.duration;
+        this.updateVideoTitlePosition();
       },
       height(val) {
-        setTimeout(() => {
-          this.updateVideoTitlePosition();
-        }, 500);
+        this.updateVideoTitlePosition();
       }
     },
     mounted() {
@@ -592,8 +588,9 @@
       updateVideoTitlePosition() {
         const videoWidth = this.video.videoWidth;
         const videoHeight = this.video.videoHeight;
-        const wrapWidth = this.$refs.video.getBoundingClientRect().width;
-        const wrapHeight = this.$refs.video.getBoundingClientRect().height;
+        const wrapWidth = this.isFullscreen ? this.$refs.video.getBoundingClientRect().width: this.width;
+        const wrapHeight = this.isFullscreen ? this.$refs.video.getBoundingClientRect().height: this.height - 100;
+
         if (videoHeight * wrapWidth / videoWidth <= wrapHeight) {
           this.videoTitleTop = (wrapHeight - videoHeight * wrapWidth / videoWidth) / 2;
           this.videoTitleLeft = 0;

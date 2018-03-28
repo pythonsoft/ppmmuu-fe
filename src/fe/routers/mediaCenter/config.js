@@ -291,11 +291,27 @@ method.getHighLightFields = function getHighLightFields(fields) {
 };
 
 /**
+ * 判断节目是否在磁带上
+ * @param {Array} files
+ * @return {Boolean}
+ */
+method.isOnTape = function(files = []) {
+  if (!files.length) return true;
+  const file = files[0];
+  const keys = Object.keys(file);
+  if (keys.indexOf('STATUS') === -1
+    || keys.indexOf('FILETYPEID') === -1
+    || keys.indexOf('ARCHIVETYPE') === -1) return true;
+  if (method.getVideoPosition(file.FILETYPEID, file.STATUS, file.ARCHIVETYPE) === '带库') return true;
+  return false;
+};
+
+/**
  * 判断当前文件在哪个存储位置
  * @param fileTypeId 文件类型ID
  * @param status 文件状态
  * @param archiveType 文件归档类型
- * @returns {String} 在线|带库|UDS
+ * @returns {String} 在线|带库|UDS|未知
  */
 method.getVideoPosition = function(fileTypeId, status, archiveType) {
   const st = status + '';

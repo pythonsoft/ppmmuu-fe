@@ -13,16 +13,24 @@
       v-clickoutside="handleCancel">
     <div v-else :class="[$style.mediaWrap, currentNodeId === node._id ? $style.currentMedia : '']" @dblclick="updateCurrentSource">
       <div :class="$style.mediaLeft" class="clearfix">
-        <img :class="$style.mediaImg" :src="node.snippet && node.snippet.thumb" height="29px">
-        <p :class="$style.mediaName">{{ node.name }}</p>
+        <img :class="$style.mediaImg"  v-lazy="node.snippet && node.snippet.thumb" height="29px">
+        <p :class="$style.mediaName" :title="node.name">{{ node.name }}</p>
       </div>
       <span :class="$style.mediaDuration">{{ formatTime(node.snippet.duration) }}</span>
     </div>
   </div>
 </template>
 <script>
+  import Vue from 'vue';
+  import VueLazyload from 'vue-lazyload';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import { transformSecondsToStr } from '../../../common/utils';
+
+  Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: '/static/source/photoBreak.png',
+    attempt: 1
+  });
 
   const TYPE_CONFIG = {
     0: 'folder',
