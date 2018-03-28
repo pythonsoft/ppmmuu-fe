@@ -25,6 +25,7 @@
         type: Boolean,
         default: false
       },
+      groupName: { type: String }
     },
     data() {
       return {
@@ -49,7 +50,7 @@
         const param = {
           page: 1,
           pageSize: 999,
-          groupName: 'media_editor_export'
+          groupName: this.groupName
         };
         templateAPI.list({ params: param }, this).then((res) => {
           this.tableData = res.data.docs;

@@ -26,18 +26,6 @@
           </fj-checkbox-group>
         </div>
       </fj-form-item>
-      <fj-form-item label="快编模板" prop="editorTemplate">
-        <div class="group-input">
-          <fj-input v-model="formData.editorTemplate.name" :readonly="true"></fj-input>
-        </div>
-        <fj-button @click.stop.prevent="transcodeBrowserVisible=true">修改</fj-button>
-      </fj-form-item>
-      <fj-form-item label="入库模板" prop="libraryTemplate">
-        <div class="group-input">
-          <fj-input v-model="formData.libraryTemplate.name" :readonly="true"></fj-input>
-        </div>
-        <fj-button @click.stop.prevent="libraryTemplateBrowserVisible=true">修改</fj-button>
-      </fj-form-item>
       <fj-form-item label="转码模版">
         <transcode-template-list
                 :data="formData.transcodeTemplateDetail.transcodeTemplates"
@@ -52,6 +40,10 @@
         <fj-input type="textarea" :rows="7" v-model="formData.script"></fj-input>
         <p class="template-download-link" @click="scriptDialogVisible=true">* 查看脚本说明</p>
       </fj-form-item>
+      <fj-form-item label="格式脚本" prop="typeScript">
+        <fj-input type="textarea" :rows="7" v-model="formData.typeScript"></fj-input>
+        <p class="template-download-link" @click="typeScriptDialogVisible=true">* 查看脚本说明</p>
+      </fj-form-item>
       <fj-form-item label="描述">
         <fj-input type="textarea" :rows="3" v-model="formData.description"></fj-input>
       </fj-form-item>
@@ -64,30 +56,24 @@
             :visible.sync="bucketBrowserVisible"
             @confirm="bucketConfirm"
     ></bucket-browser-view>
-    <transcode-browser-view
-            :visible.sync="transcodeBrowserVisible"
-            @confirm="transcodeConfirm"
-    ></transcode-browser-view>
-    <library-template-browser-view
-            :visible.sync="libraryTemplateBrowserVisible"
-            @confirm="libraryTemplateConfirm"
-    ></library-template-browser-view>
     <transcode-script-dialog-view
             :visible.sync="transcodeScriptDialogVisible"
     ></transcode-script-dialog-view>
     <script-dialog-view
             :visible.sync="scriptDialogVisible"
     ></script-dialog-view>
+    <type-script-dialog-view
+            :visible.sync="typeScriptDialogVisible"
+    ></type-script-dialog-view>
   </fj-slide-dialog>
 </template>
 <script>
   import BucketBrowserView from '../../../bucket/component/browser';
-  import TranscodeBrowserView from './fastEditTemplateBrowser';
   import TranscodeTemplateList from '../../../template/download/component/transcodeTemplateList';
   import FjCheckboxGroup from '../../../../../component/fjUI/packages/checkboxGroup/src/checkboxGroup';
   import ScriptDialogView from './scriptDialog';
+  import TypeScriptDialogView from './typeScriptDialog';
   import TranscodeScriptDialogView from './transcodeScriptDialog';
-  import LibraryTemplateBrowserView from './libraryTemplateBrowser';
 
   const api = require('../../../../../api/shelfManage');
 
@@ -96,11 +82,10 @@
     bucketId: '',
     name: '',
     description: '',
-    editorTemplate: { _id: '', name: '' },
-    libraryTemplate: { _id: '', name: '' },
     transcodeTemplateDetail: { transcodeTemplates: [], transcodeTemplateSelector: '' },
     subtitleType: [],
-    script: ' '
+    script: '',
+    typeScript: '',
   };
 
   const subtitleType = [
@@ -119,12 +104,11 @@
     components: {
       TranscodeScriptDialogView,
       FjCheckboxGroup,
+      TypeScriptDialogView,
       'bucket-browser-view': BucketBrowserView,
       'script-dialog-view': ScriptDialogView,
       'transcode-script-dialog-view': TranscodeScriptDialogView,
       TranscodeTemplateList,
-      TranscodeBrowserView,
-      LibraryTemplateBrowserView
     },
     watch: {
       visible(val) {
@@ -155,9 +139,8 @@
       return {
         dialogVisible: false,
         scriptDialogVisible: false,
-        transcodeBrowserVisible: false,
+        typeScriptDialogVisible: false,
         transcodeScriptDialogVisible: false,
-        libraryTemplateBrowserVisible: false,
         bucketBrowserVisible: false,
         formData: templateInfo,
         isBtnLoading: false,
@@ -169,14 +152,11 @@
           bucketId: [
             { required: true, message: '请选择存储区' }
           ],
-          editorTemplate: [
-            { required: true, message: '请选择快编模板' }
-          ],
-          libraryTemplate: [
-            { required: true, message: '请选择入库模板' }
-          ],
           script: [
             { required: true, message: '请输入路径脚本' }
+          ],
+          typeScript: [
+            { required: true, message: '请输入格式脚本' }
           ],
         }
       };
@@ -246,12 +226,6 @@
           name: val.name
         };
       },
-      libraryTemplateConfirm(val) {
-        this.formData.libraryTemplate = {
-          _id: val._id,
-          name: val.department.name
-        };;
-      }
     }
   };
 </script>
