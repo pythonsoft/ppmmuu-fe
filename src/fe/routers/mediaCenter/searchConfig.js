@@ -57,7 +57,7 @@ const searchConfig = [
       { value: 1, label: '高清' },
       { value: 0, label: '標清' },
     ],
-    selected: 1,
+    selected: 'all',
     show: true,
     type: 'radio'
   },
@@ -69,7 +69,7 @@ const searchConfig = [
       { value: '是', label: '是' },
       { value: '否', label: '否' },
     ],
-    selected: '是',
+    selected: 'all',
     show: true,
     type: 'radio',
   },
