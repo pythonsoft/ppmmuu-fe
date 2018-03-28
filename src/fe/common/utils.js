@@ -594,18 +594,20 @@ utils.getStreamURL = function getStreamURL(objectId, fromWhere, cb, scope) {
 };
 
 utils.getItemFromLocalStorage = function getItemFromLocalStorage(key, scope) {
-  try {
-    const item = JSON.parse(localStorage.getItem(key));
-    if (!item && scope) {
-      window.location.href = '/login';
-    }
-    return item;
-  } catch (e) {
-    if (scope) {
-      window.location.href = '/login';
-    }
-    return null;
-  }
+  const localData = window._umpLocalData_ || {};
+  return localData[key] ? localData[key] : null;
+  // try {
+  //   const item = JSON.parse(localStorage.getItem(key));
+  //   if (!item && scope) {
+  //     window.location.href = '/login';
+  //   }
+  //   return item;
+  // } catch (e) {
+  //   if (scope) {
+  //     window.location.href = '/login';
+  //   }
+  //   return null;
+  // }
 };
 
 utils.getChildMenuByIndex = function getChildMenuByIndex(index, isGetObject = false, scope) {

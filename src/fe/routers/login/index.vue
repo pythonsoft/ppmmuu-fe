@@ -92,7 +92,6 @@
       };
     },
     created() {
-      const me = this;
       this.defaultRoute = this.getActiveRoute(this.$route.path, 1);
       this.isLogin();
     },
@@ -111,11 +110,18 @@
         return pathArr[level] || '';
       },
       isLogin() {
-        api.getUserAuth().then(() => {
-          const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
-          const index = getDefaultPageIndex(showMenuIndex);
+        api.getUserAuth().then((res) => {
+
+          // const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
+          const index = getDefaultPageIndex(res.data.menu);
           this.$router.push({ name: index });
         }).catch(() => {});
+
+        // api.getUserAuth().then(() => {
+        //   const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
+        //   const index = getDefaultPageIndex(showMenuIndex);
+        //   this.$router.push({ name: index });
+        // }).catch(() => {});
       },
       login() {
         const me = this;
