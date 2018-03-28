@@ -21,13 +21,13 @@
               <tr v-for="(info, key) in editorDetails" v-if="info.cn && info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix" v-if="info.key!=='cover'">
-                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
+                  <span v-if="info.isFoldedContent" class="inline-info" v-html="formatContent(info.value).slice(0, 68) + '...'"></span>
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand('editorDetails', info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ formatValue(info.value) }}</span>
+                    <span v-else v-html="formatContent(info.value)"></span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded('editorDetails', info, key)">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded('editorDetails', info, key)">收起<i class="tri-top"></i></span>
                 </td>
                 <td class="item-info-value " v-else>
                   <img :src="info.value" class="shelf-editor-cover" height="108px" width="192px">
@@ -40,13 +40,13 @@
               <tr v-for="(info, key) in programDetails" v-if="info.cn && info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
+                  <span v-if="info.isFoldedContent" class="inline-info" v-html="formatContent(info.value).slice(0, 68) + '...'"></span>
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand('programDetails', info, key)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
                     <span v-else>{{ formatValue(info.value) }}</span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded('programDetails', info, key)">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded('programDetails', info, key)">收起<i class="tri-top"></i></span>
                 </td>
               </tr>
             </table>
@@ -151,9 +151,17 @@
       isEmptyObject,
       formatSize,
       formatDuration,
-      formatContent,
       getStreamURL,
       formatTime,
+      formatContent(v) {
+        let r = v;
+
+        if(typeof r === 'string') {
+          r = formatContent(this.formatValue(v));
+        }
+
+        return r;
+      },
       expand(source, info, key) {
         const newInfo = Object.assign({}, this[source][key], { isFoldedContent: false });
         this.$set(this[source], key, newInfo);
@@ -182,7 +190,7 @@
             me.editorDetails = res.data.details;
             for (let i = 0; i < me.editorDetails.length; i++) {
               const info = me.editorDetails[i];
-              if (info.value.length > 60) {
+              if (formatContent(info.value).length > 68) {
                 info.isFoldedContent = true;
               }
             }
@@ -205,7 +213,7 @@
             me.programDetails = data;
             for (let i = 0; i < me.programDetails.length; i++) {
               const info = me.programDetails[i];
-              if (info.value.length > 60) {
+              if (formatContent(info.value).length > 68) {
                 info.isFoldedContent = true;
               }
             }

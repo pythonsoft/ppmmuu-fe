@@ -38,6 +38,54 @@ html,body,#app {
   height: 100%;
   overflow: hidden;
 }
+#app-loading-bar-mask {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+.app-loading-bar-wrap,
+.app-refresh-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 336px;
+  /*height: 20px;*/
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #9FB3CA;
+}
+.app-refresh-wrap .iconfont {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  margin-bottom: 16px;
+  font-size: 30px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.app-refresh-wrap .iconfont:hover {
+  color: #4C637B;
+  background: #EBF3FB;
+}
+.app-loading-text {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #9FB3CA;
+}
+.app-loading-bar {
+  animation: move_to_left 4s linear 0s infinite;
+}
+
+@keyframes move_to_left {
+  from {
+    transform: translateX(0);
+  } to {
+    transform: translateX(-100%);
+  }
+}
+
 .menu {
   position: absolute;
   top: 0;

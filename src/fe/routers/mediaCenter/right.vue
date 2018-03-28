@@ -1,6 +1,7 @@
 <template>
   <div class="media-right">
     <div class="media-video">
+      <div v-if="url && isOnTape" class="iconfont icon-tape media-video-wrap-bg"></div>
       <div v-if="url" class="media-video-wrap">
         <div class="media-video-content" id="video" ref="video">
           <player :videoId="videoId" :height="288" :width="448" :url="url" :streamInfo="streamInfo" :fromWhere="videoInfo.from_where"></player>
@@ -30,7 +31,8 @@
       </div>
     </div>
     <div class="media-video-panel">
-      <fj-tabs v-if="!isEmptyObject(item)" v-model="activeTabName" @tab-click="handleTabClick" class="media-video-panel-wrap">
+      <p v-if="isOnTape" class="media-video-empty-text">此节目在磁带上，请联系PMD部门采集</p>
+      <fj-tabs v-else-if="!isEmptyObject(item)" v-model="activeTabName" @tab-click="handleTabClick" class="media-video-panel-wrap">
         <fj-tab-pane label="条目信息" name="tab1">
           <div class="media-center-file-item">
             <template v-if="programEmpty">无</template>
@@ -38,12 +40,12 @@
               <tr v-for="(info, index) in program" v-if="info.value" >
                 <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
                 <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info">{{ formatValue(info.value) }}</span>
+                  <span v-if="info.isFoldedContent" class="inline-info" v-html="formatContent(info.value).slice(0, 68) + '...'"></span>
                   <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, index)">详细<i class="tri-bottom"></i></span>
                   <template v-else>
                     <span v-html="formatContent(info.value)"></span>
                   </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
+                  <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
                 </td>
               </tr>
             </table>
@@ -73,11 +75,11 @@
               </tr>
               <tr>
                 <td class="item-info-key">存储位置: </td>
-                <td class="item-info-value">{{ file.ARCHIVETYPE ? ARCHIVETYPE[file.ARCHIVETYPE].text : '' }}</td>
+                <td class="item-info-value">{{ getArchivetype(file) }}</td>
               </tr>
               <tr>
                 <td class="item-info-key">文件状态: </td>
-                <td class="item-info-value">{{ file.STATUS ? FILE_STATUS[file.STATUS].text : '' }}</td>
+                <td class="item-info-value">{{ FILE_STATUS[file.STATUS].text }}</td>
               </tr>
             </table>
             <more-view
@@ -230,7 +232,8 @@
         FROM_WHERE: config.getConfig('FROM_WHERE'),
         UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE'),
         ARCHIVETYPE: config.getConfig('ARCHIVETYPE'),
-        FILE_STATUS: config.getConfig('FILE_STATUS')
+        FILE_STATUS: config.getConfig('FILE_STATUS'),
+        isOnTape: false
       };
     },
     watch: {
@@ -262,11 +265,17 @@
         if(this.rootid) {
           this.getVideoFragments();
         }
+      },
+      files(val) {
+        this.isOnTape = config.isOnTape(val);
       }
     },
     created() {
     },
     methods: {
+      getArchivetype(file) {
+        return config.getVideoPosition(file.FILETYPEID, file.STATUS, file.ARCHIVETYPE);
+      },
       expand(info, key) {
         const newInfo = Object.assign({}, this.program[key], { isFoldedContent: false });
         this.$set(this.program, key, newInfo);
@@ -302,7 +311,7 @@
               break;
             }
             const info = this.program[i];
-            if (info.value.length > 60) {
+            if (this.formatContent(info.value).length > 68) {
               info.isFoldedContent = true;
             }
           }
