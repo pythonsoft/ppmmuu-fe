@@ -19,6 +19,17 @@
         </fj-select>
         <div class="subscribe-type-tag" v-else><fj-tag v-for="tag in formData.subscribeType" :key="tag">{{getLabelByValue(tag, SUBSCRIBE_TYPE)}}</fj-tag></div>
       </fj-form-item>
+      <fj-form-item label="下载文件类型" prop="downloadFileTypes">
+        <fj-select placeholder="请选择" v-model="downloadFileTypes" multiple v-if="status !== STATUS.EXPIRED">
+          <fj-option
+                  v-for="item in configFileTypes"
+                  :key="item.key"
+                  :label="item.key"
+                  :value="item.value">
+          </fj-option>
+        </fj-select>
+        <div class="subscribe-type-tag" v-else><fj-tag v-for="tag in formData.downloadFileTypes" :key="tag.key">{{tag.key}}</fj-tag></div>
+      </fj-form-item>
       <fj-form-item label="下载时长" prop="downloadSeconds">
         <div class="subscribe-group-input">
           <fj-input v-model="formData.downloadSeconds" :disabled="status === STATUS.EXPIRED"></fj-input>
@@ -88,6 +99,7 @@
   import transcodeScriptDialogView from '../../../template/download/component/transcodeScriptDialog';
 
   const api = require('../../../../../api/subscribeManagement');
+  const configApi = require('../../../../../api/configuration');
   const configurationAPI = require('../../../../../api/configuration');
   const config = require('../config');
 
@@ -118,6 +130,8 @@
         PERIOD_OF_USE: config.PERIOD_OF_USE,
         STATUS: config.STATUS,
         oldExpiredTime: '',
+        configFileTypes: [],
+        downloadFileTypes: [],
         formData: {
           _id: '',
           companyName: '',
@@ -128,6 +142,7 @@
           autoPush: true,
           transcodeTemplateSelector: '',
           transcodeTemplates: [],
+          downloadFileTypes: []
         },
         rules: {
           companyName: [
@@ -189,6 +204,7 @@
       }
     },
     created() {
+      this.getConfigFileTypes();
       this.initSubScribeType();
     },
     methods: {
@@ -207,6 +223,15 @@
       },
       mediaExpressListConfirm(row) {
         this.formData.mediaExpressWhite = row.sender;
+      },
+      getConfigFileTypes() {
+        api.getSearchConfig(formatQuery({}, true))
+          .then((res) => {
+            this.configFileTypes = res.data;
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
       },
       initEditUser() {
         this.$refs.editForm.clearErrors();
@@ -232,6 +257,11 @@
             const templateDetail = me.formData.transcodeTemplateDetail;
             me.formData.transcodeTemplates = templateDetail ? templateDetail.transcodeTemplates : [];
             me.formData.transcodeTemplateSelector = templateDetail ? templateDetail.transcodeTemplateSelector : '';
+            me.formData.downloadFileTypes = me.formData.downloadFileTypes || [];
+            me.downloadFileTypes = [];
+            me.formData.downloadFileTypes.forEach((item) => {
+              me.downloadFileTypes.push(item.value);
+            });
           })
           .catch((error) => {
             this.$message.error(error);
@@ -264,7 +294,6 @@
         this.rules['startTime'] = [
           { required: true, message: '请选择开始时间' },
           { message: '开始时间不得早于当前时间', validator: (rule, value, callback) => {
-            console.log(value);
             if (new Date(value) < new Date()) return false;
             return true;
           } }];
@@ -286,7 +315,8 @@
         me.formData.transcodeTemplateDetail = {
           transcodeTemplates: me.formData.transcodeTemplates,
           transcodeTemplateSelector: me.formData.transcodeTemplateSelector
-        }
+        };
+        me.formData.downloadFileTypes = me.getFormDataDownloadFileTypes();
         api.createSubscribeInfo(this.formData)
           .then((response) => {
             me.dialogVisible = false;
@@ -301,6 +331,16 @@
             me.$message.error(error);
           });
       },
+      getFormDataDownloadFileTypes() {
+        const arr = [];
+        for (let i = 0, len = this.configFileTypes.length; i < len; i++) {
+          const index = this.downloadFileTypes.indexOf(this.configFileTypes[i].value);
+          if ( index !== -1) {
+            arr.push(this.configFileTypes[i]);
+          }
+        }
+        return arr;
+      },
       edit() {
         this.isBtnLoading = true;
         const me = this;
@@ -308,6 +348,7 @@
           transcodeTemplates: me.formData.transcodeTemplates,
           transcodeTemplateSelector: me.formData.transcodeTemplateSelector
         }
+        me.formData.downloadFileTypes = me.getFormDataDownloadFileTypes();
         api.updateSubscribeInfo(this.formData)
           .then((response) => {
             me.dialogVisible  = false;

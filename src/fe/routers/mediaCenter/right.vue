@@ -155,6 +155,11 @@
       :visible.sync="downloadDialogDisplay"
       @confirm="downloadListConfirm"
     ></download-list-view>
+    <template-browser
+            :visible.sync="templateBrowserVisible"
+            groupName="media_direct_shelf"
+            @confirm="warehouse"
+    ></template-browser>
   </div>
 </template>
 <script>
@@ -184,6 +189,7 @@
   import Clickoutside from '../../component/fjUI/utils/clickoutside';
   import ivideoAPI from '../../api/ivideo';
   import downloadListView from '../management/template/download/component/downloadDialog';
+  import TemplateBrowser from '../movieEditor/component/templateBrowser';
 
   const api = require('../../api/media');
   const jobAPI = require('../../api/job');
@@ -197,7 +203,8 @@
     components: {
       'more-view': moreView,
       'download-list-view': downloadListView,
-      Player
+      Player,
+      TemplateBrowser
     },
     props: {
       videoInfo: { type: Object, default: {} },
@@ -226,12 +233,16 @@
         shelfDialogBtnLoading: false,
         shelfAskDialogVisible: false,
         shelfAskDialogBtnLoading: false,
+        templateBrowserVisible: false,
         videoId: '',
         shelfName: '',
         programEmpty: false,
         FROM_WHERE: config.getConfig('FROM_WHERE'),
         UMP_FILETYPE_VALUE: config.getConfig('UMP_FILETYPE_VALUE'),
         ARCHIVETYPE: config.getConfig('ARCHIVETYPE'),
+        FILE_STATUS: config.getConfig('FILE_STATUS'),
+        force: false,
+        warehouseData: {},
         FILE_STATUS: config.getConfig('FILE_STATUS'),
         isOnTape: false
       };
@@ -532,43 +543,65 @@
 
         return {};
       },
-      confirmCreateShelf(){
-        this.shelfDialogBtnLoading = true;
-        this.createShelfTask(true);
+      warehouse(row) {
+        if (row) {
+          const params = row.params;
+          const file = this.getDefaultFileInfo();
+          const reqData = {
+            processId: params.processId,
+            shelveTemplateId: params.shelveTemplateId,
+            fileName: file.FILENAME,
+            objectId: file.OBJECTID,
+            name: this.shelfName,
+            fromWhere:  this.videoInfo.from_where,
+            force: this.force,
+          };
+
+          for (let i = 0, len = params.length; i < len; i++) {
+            if (params[i].key === 'processId') {
+              reqData.processId = params[i].value;
+            } else if (params[i].key === 'shelveTemplateId') {
+              reqData.shelveTemplateId = params[i].value;
+            }
+          }
+          this.warehouseData = reqData;
+        }
+        this.warehouseData.force = this.force;
+
+        const loading = !this.force ? 'shelfAskDialogBtnLoading' : 'shelfDialogBtnLoading';
+        const visible = !this.force ? 'shelfAskDialogVisible' : 'shelfDialogVisible';
+
+        this[loading] = true;
+        this.templateBrowserVisible = false;
+        shelfApi.warehouse(this.warehouseData)
+            .then((res) => {
+              this[loading] = false;
+              this[visible] = false;
+              this.$message.success('上架成功');
+            })
+            .catch((error) => {
+              if(error === '之前上架过') {
+                this[loading] = false;
+                this[visible] = false;
+                this.shelfDialogVisible = true;
+              } else {
+                this[loading] = false;
+                this[visible] = false;
+                this.$message.error(error);
+              }
+            })
+      },
+      confirmCreateShelf() {
+        this.force = true;
+        this.warehouse();
       },
       createAskShelf() {
         this.shelfAskDialogVisible = true;
         this.shelfAskDialogBtnLoading = false;
       },
       createShelf(){
-        this.shelfAskDialogBtnLoading = true;
-        this.createShelfTask();
-      },
-      createShelfTask(force=false){
-        const me = this;
-        const postData = {
-          objectId: me.videoId,
-          name: me.shelfName,
-          fromWhere: me.videoInfo.from_where,
-          force: force,
-        };
-        shelfApi.createShelfTask(postData).then((res) => {
-          me.shelfDialogBtnLoading = false;
-          me.shelfDialogVisible = false;
-          me.shelfAskDialogBtnLoading = false;
-          me.shelfAskDialogVisible = false;
-          me.$message.success('已经加入到上架中，请前去查看');
-        }).catch((error) => {
-          if(error === '之前上架过'){
-            me.shelfAskDialogBtnLoading = false;
-            me.shelfAskDialogVisible = false;
-            me.shelfDialogVisible = true;
-            me.shelfDialogVisible = true;
-          }else {
-            me.shelfAskDialogBtnLoading = false;
-            me.$message.error(error);
-          }
-        });
+        this.templateBrowserVisible = true;
+        this.force = false;
       },
       prepareDownload(fileInfo) {
         if (fileInfo) {
