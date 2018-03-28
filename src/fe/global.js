@@ -9,7 +9,7 @@ config.imPort = 9000;
 
 config.socketDomain = `${config.imHost}:${config.imPort}`;
 
-config.baseDomain = '10.0.16.102:8080';
+config.baseDomain = 'localhost:8080';
 
 config.streamURL = 'http://ump-live.phoenixtv.com';
 
