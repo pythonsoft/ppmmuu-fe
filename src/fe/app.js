@@ -2,7 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import './css/base.css';
 import routes from './routers/routes';
-import { formatTime, valueLengthLimit } from './common/utils';
+import { formatTime, valueLengthLimit, ensureLocalData } from './common/utils';
+
+const api = require('./api/user');
 
 Vue.use(VueRouter);
 
@@ -19,7 +21,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title || '';
-  next();
+  if(to.fullPath === '/login') {
+    next();
+  }else {
+    //todo 在调用next之前需要加载动画
+    api.getUserAuth().then((res) => {
+      ensureLocalData(res.data);
+      next();
+    }).catch(() => {
+      //todo 出错处理，提示可以刷新界面重试
+    });
+  }
 });
 
 new Vue({

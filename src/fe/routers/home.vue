@@ -18,8 +18,12 @@
     components: {
       Im,
       default: root,
-      'left-menu': menu,
-      showMenuIndex: []
+      'left-menu': menu
+    },
+    data() {
+      return {
+        showMenuIndex: []
+      }
     },
     created() {
       const me = this;
@@ -31,11 +35,6 @@
         const index = getDefaultPageIndex(showMenuIndex);
         this.$router.push({name: index});
       }
-    },
-    data() {
-      return {
-
-      };
     }
   };
 </script>

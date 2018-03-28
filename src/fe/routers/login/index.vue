@@ -92,7 +92,6 @@
       };
     },
     created() {
-      const me = this;
       this.defaultRoute = this.getActiveRoute(this.$route.path, 1);
       this.isLogin();
     },
@@ -111,9 +110,8 @@
         return pathArr[level] || '';
       },
       isLogin() {
-        api.getUserAuth().then(() => {
-          const showMenuIndex = JSON.parse(localStorage.getItem('menu'));
-          const index = getDefaultPageIndex(showMenuIndex);
+        api.getUserAuth().then((res) => {
+          const index = getDefaultPageIndex(res.data.menu);
           this.$router.push({ name: index });
         }).catch(() => {});
       },
@@ -132,10 +130,6 @@
       loginSuccess(res) {
         this.$message.success('登录成功!');
         const index = getDefaultPageIndex(res.data.menu);
-        localStorage.setItem('menu', JSON.stringify(res.data.menu));
-        localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
-        localStorage.setItem('token', JSON.stringify(res.data.token));
-        localStorage.setItem('jwtToken', JSON.stringify(res.data.jwtToken));
         this.$router.push({ name: index });
       },
       loginError(error) {

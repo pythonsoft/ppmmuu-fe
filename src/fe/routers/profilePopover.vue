@@ -31,8 +31,6 @@
       },
       signOut() {
         userAPI.postUserLogout({}, this).then((res) => {
-          localStorage.setItem('menu', '');
-          localStorage.setItem('userInfo', '');
           this.$message.success('成功退出当前帐户，期待下次光临.');
           window.location.href = '/login';
         }).catch((error) => {
