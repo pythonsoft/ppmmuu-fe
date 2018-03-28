@@ -113,6 +113,29 @@ config.FILE_STATUS = {
 
 config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4', '5'];
 
+config.getOriginalFile = function(files, fromWhere) {
+  if (!files || files.length === 0) {
+    return '';
+  }
+
+  let arr = [];
+  let key = '';
+  if (fromWhere === utils.FROM_WHERE.HK_RUKU) {
+    arr = config.UMP_FILETYPE_VALUE;
+    key = 'type';
+  } else {
+    arr = config.IVIDEO_EDIT_FILE_TYPE_ID;
+    key = 'FILETYPEID';
+  }
+  for (let j = 0, l = arr.length; j < l; j++) {
+    for (let i = 0, len = files.length; i < len; i++) {
+      if (files[i][key] === arr[j]) {
+        return files[i];
+      }
+    }
+  }
+};
+
 method.getTextByValue = function (v, st) {
   return utils.getTextByValue(config, v, st) || {};
 };

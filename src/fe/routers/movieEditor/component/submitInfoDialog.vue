@@ -63,10 +63,11 @@
       <div :class="$style.showMoreBtn">
         <fj-button type="text" @click="isShowMore=!isShowMore">{{ isShowMore ? '取消高级信息编辑' : '高级信息编辑' }}</fj-button>
       </div>
-      <fj-button type="primary" @click="showTemplate" :loading="isBtnLoading">入库</fj-button>
+      <fj-button type="primary" @click="showTemplate" :loading="isBtnLoading">发布</fj-button>
     </div>
     <template-browser
             :visible.sync="templateBrowserVisible"
+            groupName="media_editor_export"
             @confirm="warehouse"
     ></template-browser>
   </fj-dialog>
@@ -256,7 +257,7 @@
             .then((res) => {
               this.isBtnLoading = false;
               this.visible = false;
-              this.$message.success('入库成功');
+              this.$message.success('发布成功');
             })
             .catch((error) => {
               this.isBtnLoading = false;
