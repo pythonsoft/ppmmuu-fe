@@ -58,6 +58,7 @@
 <script>
   import './information.css';
   import UploadImg from './uploadImg';
+  import { setItemToLocalStorage, getItemFromLocalStorage } from '../../../common/utils';
 
   const api = require('../../../api/user');
 
@@ -121,20 +122,14 @@
       },
       saveClick() {
         const me = this;
-        api.postUserUpdate(this.userInfo)
-          .then((res) => {
-            me.$message.success('保存成功!');
-            try {
-              const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-              userInfo.photo = me.userInfo.photo;
-              localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            } catch (e) {
-
-            }
-          })
-          .catch((error) => {
-            me.$message.error(error);
-          });
+        api.postUserUpdate(this.userInfo).then(res => {
+          me.$message.success('保存成功!');
+          const userInfo = getItemFromLocalStorage('userInfo');
+          userInfo.photo = me.userInfo.photo;
+          setItemToLocalStorage('userInfo', userInfo);
+        }).catch((error) => {
+          me.$message.error(error);
+        });
       },
       cancelClick() {
         this.getUserDetail();
