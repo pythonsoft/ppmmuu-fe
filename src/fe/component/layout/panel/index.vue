@@ -1,14 +1,14 @@
 <template>
   <div>
-      <div v-for="(item, index) in splits" :style="item" class="layout-panel-item">
-        <slot :name="index" :height="getValue(item.height)" :width="getValue(item.width)" ></slot>
-      </div>
-      <div
-        v-for="(item, index) in bars"
-        :style="item"
-        :class="getBarClass()"
-        @mousedown="(e) => mousedown(e, index)"
-      ></div>
+    <div v-for="(item, index) in splits" :style="item" class="layout-panel-item">
+      <slot :name="index" :height="getValue(item.height)" :width="getValue(item.width)" ></slot>
+    </div>
+    <div
+      v-for="(item, index) in bars"
+      :style="item"
+      :class="getBarClass()"
+      @mousedown="(e) => {mousedown(e, index)}"
+    ></div>
   </div>
 </template>
 <script>
@@ -204,6 +204,8 @@
         return false;
       },
       mousemove(e) {
+        e.preventDefault();
+        e.stopPropagation();
         if (!this.isStartMove) { return false; }
         if(this.limitResize){
           if(this.direction == 'x' && e.pageX < this.limitResizeScale) {

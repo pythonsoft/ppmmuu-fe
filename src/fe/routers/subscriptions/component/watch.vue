@@ -21,14 +21,14 @@
           <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
           <td class="item-info-value clearfix">
             <template v-if="info.isFoldedContent">
-              <span class="inline-info">{{ formatValue(info.value) }}</span>
+              <span class="inline-info" v-html="formatContent(info.value).slice(0, 68) + '...'"></span>
               <span class="item-expand-btn" @click="expand(info, index)">详细<i class="tri-bottom"></i></span>
             </template>
             <template v-else>
               <span v-html="formatContent(info.value)"></span>
             </template>
 
-            <span class="item-folded-btn" v-if="info.value.length > 60 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
+            <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
           </td>
 
         </tr>
@@ -74,9 +74,6 @@
   import throttle from '../../../component/fjUI/utils/throttle';
 
   const config = require('../../mediaCenter/config');
-  const mediaAPI = require('../../../api/media');
-  const ivideoAPI = require('../../../api/ivideo');
-  const userAPI = require('../../../api/user');
   const subscribeAPI = require('../../../api/subscribe');
 
   const RIGHTBOX_WIDTH = 320;
@@ -135,15 +132,14 @@
         this.refresh();
       }
       this.updateLeftBoxSize();
-      window.addEventListener('resize', throttle(this.updateLeftBoxSize, 1000));
+      window.addEventListener('resize', throttle(this.updateLeftBoxSize, 200));
     },
     beforeDestroy() {
-      window.removeEventListener('resize', throttle(this.updateLeftBoxSize, 1000));
+      window.removeEventListener('resize', throttle(this.updateLeftBoxSize, 200));
     },
     methods: {
       formatSize,
       formatDuration,
-      formatContent,
       getTitle,
       getReplaceName,
       expand(info, key) {
@@ -207,7 +203,7 @@
           this.subscribeType = data.editorInfo.subscribeType;
           this.updateList();
           this.program = data.details.map((info) => {
-            if (info.value && info.value.length > 60) {
+            if (info.value && this.formatContent(info.value).length > 68) {
               info.isFoldedContent = true;
             }
             return info;
@@ -232,6 +228,15 @@
       back() {
         this.$router.push({ name: 'history' });
       },
+      formatContent(v) {
+        let r = v;
+
+        if(typeof r === 'string') {
+          r = formatContent(this.formatValue(v));
+        }
+
+        return r;
+      },
       formatValue(str) {
         let rs = str;
 
@@ -241,6 +246,7 @@
 
         return rs;
       }
+
     },
     components: {
       Player

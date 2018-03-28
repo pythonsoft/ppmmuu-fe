@@ -188,7 +188,6 @@
         this.updateRouter({ name: 'subscriptions' });
       },
       updateRouter(route) {
-        console.log('updateRouter', route);
         this.history.splice(this.routeIndex + 1, this.history.length - 1 - this.routeIndex, route);
         this.routeIndex = this.history.length - 1;
         this.$router.push(route);
