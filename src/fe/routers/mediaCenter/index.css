@@ -254,6 +254,10 @@
   left: 0;
 }
 
+.media-video-empty-text {
+  padding: 20px;
+}
+
 .media-video-panel-wrap .fj-tabs-content {
   width: 100%;
   overflow: hidden;
