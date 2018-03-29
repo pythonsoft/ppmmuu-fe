@@ -89,7 +89,7 @@
     { label: '名称', propName: 'name', valueName: 'name', type: 'text' },
     { label: '编目类', propName: 'ccid', valueName: 'ccid', type: 'select', options: [] },
     { label: '编目人', propName: 'owner', valueName: 'owner', type: 'text', disabled: true },
-    { label: '新闻类型', propName: 'newsType', valueName: 'newsType', type: 'select', options: [] },
+    { label: '新闻类型', propName: 'newsType', valueName: 'newsType', type:  'select', options: [] },
     { label: '人物', propName: 'keyman', valueName: 'keyman', type: 'text' },
     { label: '事发国家', propName: 'occurCountry', valueName: 'occurCountry', type: 'select', options: [] },
     { label: '净长', propName: 'duration', valueName: 'duration', type: 'text', disabled: true },
