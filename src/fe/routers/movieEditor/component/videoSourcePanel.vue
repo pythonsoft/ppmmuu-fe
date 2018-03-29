@@ -206,6 +206,7 @@
         this.videoSource = '';
         this.getStream(val);
         this.getSRTArr(val);
+        this.getDetail(val);
       },
       videoSnippet(val) {
         this.fileTypeId = val.fileTypeId;
@@ -709,6 +710,7 @@
         canvas.width = size.width;
         canvas.height = size.height;
         const ctx = canvas.getContext('2d');
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(this.video, 0, 0, canvas.width, canvas.height);
         const imageURL = canvas.toDataURL('image/png');
         return imageURL;
