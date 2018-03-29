@@ -112,6 +112,7 @@
         files: '',
         fileId: '',
         fileTypeId: '',
+        detail: '',
         currentTime: 0,
         clipDuration: 0,
         controllerList: this.getControllerList(this.controller),
@@ -303,13 +304,21 @@
       },
       getDetail(id) {
         api.getObject({ params: { objectid: id, fromWhere: this.fromWhere } }).then((res) => {
-          const files = res.data.result.files;
+          const data = res.data.result;
+          const files = data.files;
           const info = this.getDefaultFileInfo(files);
           info.INPOINT = info.INPOINT / this.fps;
           info.OUTPOINT = info.OUTPOINT / this.fps;
           this.videoInfo = info;
           this.fileTypeId = this.videoInfo.FILETYPEID || '';
           this.fileId = info._id || '';
+
+          const detail = data.basic;
+          const program = data.detail.program;
+          program.forEach((item) => {
+            detail[item.key] = item.value;
+          });
+          this.detail = detail;
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -692,7 +701,8 @@
           duration: this.outTime - this.inTime,
           screenshot: this.inTimeScreenshot,
           fromWhere: this.fromWhere,
-          _id: this.fileId
+          _id: this.fileId,
+          detail: this.detail
         };
         this.$emit('insert', info);
       },

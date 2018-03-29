@@ -107,6 +107,23 @@
      ] },
     { label: '首播日期', propName: 'airTime', valueName: 'airTime', type: 'date' }
   ];
+  const FIELD_MAP = {
+    type: 'FIELD276',
+    chineseName: 'FIELD195',
+    keyword: 'FIELD56',
+    englishName: 'FIELD196',
+    name: 'FIELD01',
+    ccid: 'CCID',
+    newsType: 'FIELD145',
+    keyman: 'FIELD100',
+    occurCountry: 'FIELD324',
+    version: 'FIELD263',
+    language: 'FIELD262',
+    madeLocation: 'FIELD223',
+    newsTime: 'FIELD162',
+    airTime: 'FIELD36'
+  };
+
   export default {
     props: {
       dialogVisible: Boolean,
@@ -205,6 +222,11 @@
     },
     watch: {
       dialogVisible(val) {
+        const defaultFormData = this.sequences[0].detail;
+        const keys = Object.keys(FIELD_MAP);
+        keys.forEach(key => {
+          this.formData[key] = defaultFormData[FIELD_MAP[key]] || '';
+        });
         this.visible = val;
       },
       sequences(val) {
