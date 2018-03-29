@@ -24,7 +24,9 @@ module.exports = merge(baseWebpackConfig, {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new OptimizeCSSPlugin({}),
+    new OptimizeCSSPlugin({
+      cssProcessor: require('cssnano')({ reduceIdents: false })
+    }),
     new UglifyJsPlugin({
       compress: {
         warnings: false
