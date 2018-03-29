@@ -552,8 +552,9 @@
             shelveTemplateId: params.shelveTemplateId,
             fileName: file.FILENAME,
             objectId: file.OBJECTID,
-            name: this.shelfName,
+            fileType: file.FILETYPEID,
             fromWhere:  this.videoInfo.from_where,
+            catalogName: this.shelfName || '',
             force: this.force,
           };
 

@@ -4,7 +4,7 @@
       v-for="item in menus"
       :command="item.command"
       :key="item.key">
-      {{ item.name }}
+      <a style="color: #ffffff;height:100%;width:100%;" :href="item.downloadUrl">{{item.name}}</a>
     </fj-dropdown-item>
   </div>
 </template>
