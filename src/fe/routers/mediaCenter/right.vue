@@ -552,6 +552,7 @@
             shelveTemplateId: params.shelveTemplateId,
             fileName: file.FILENAME,
             objectId: file.OBJECTID,
+            fileType: file.FILETYPEID,
             name: this.shelfName,
             fromWhere:  this.videoInfo.from_where,
             force: this.force,

@@ -117,7 +117,7 @@
           .then((response) => {
             const responseData = response.data;
             const tempList =
-              responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id }));
+              responseData.docs.map(item => Object.assign(item.videoContent, { _id: item._id, updatedTime: item.updatedTime }));
             this.items = tempList;
             this.currentPage = responseData.page;
             this.total = responseData.total;

@@ -239,10 +239,11 @@
         const objectIds = [];
         for (let i = 0, sequences = this.sequences; i < sequences.length; i++) {
           const { objectId, fromWhere, title: fileName, range } = sequences[i];
+          const fileType = sequences[i].filetypeid;
           const index = objectIds.indexOf(objectId);
           if (index < 0) {
             objectIds.push(objectId);
-            fileInfos.push({ objectId, fromWhere, fileName, startTime: [formatDuration(range[0]*1000, true)], endTime: [formatDuration(range[1]*1000, true)] });
+            fileInfos.push({ objectId, fromWhere, fileType,fileName, startTime: [formatDuration(range[0]*1000, true)], endTime: [formatDuration(range[1]*1000, true)] });
           } else {
             fileInfos[index].startTime.push(formatDuration(range[0]*1000, true));
             fileInfos[index].endTime.push(formatDuration(range[1]*1000, true));
