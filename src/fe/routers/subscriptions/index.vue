@@ -252,6 +252,7 @@
     width: 100%;
     padding: 28px 60px 24px;
     background: #fff;
+    overflow: hidden;
   }
   .topBar .btnGroup {
     float: left;

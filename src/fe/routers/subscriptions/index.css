@@ -3,6 +3,7 @@
   left: 140px;
   right: 200px;
   max-width: 676px;
+  min-width: 150px;
 }
 
 .btnBack,
