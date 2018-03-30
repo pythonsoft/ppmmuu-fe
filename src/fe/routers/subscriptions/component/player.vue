@@ -537,8 +537,8 @@
             const dropdownMenuHeight = this.dropdownMenu.$el.getBoundingClientRect().height;
             this.dropdownMenu.menuStyle = {
               top: `${position.top - dropdownMenuHeight - 5}px`,
-              left: `${position.left - 116}px`,
-              minWidth: '166px'
+              left: `${position.left - 27}px`,
+              minWidth: '78px'
             };
           }, 200);
         }

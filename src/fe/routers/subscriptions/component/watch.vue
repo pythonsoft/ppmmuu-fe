@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.watchContent">
     <div :class="[$style.mainBox, 'clearfix']" ref="mainBox">
-    <div :class="$style.leftBox" :style="{ width: `${leftBoxWidth}px` }">
+    <div :class="$style.leftBox" :style="leftBoxStyle">
       <div :class="$style.leftBoxContent">
         <player
           :videoId="objectId"
@@ -14,7 +14,8 @@
           :files="files"></player>
       </div>
     </div>
-    <div :class="$style.rightBox">
+    <i class="iconfont" :class="[rightBoxToggle, $style.rightBoxToggle]" :style="{ right: `${rightboxWidth}px` }" @click="foldedOrExpandRightBox"></i>
+    <div :class="$style.rightBox" :style="rightBoxStyle">
       <h4 :class="$style.rightBoxTitle">内容简介</h4>
       <table class="subscriptions-program-table">
         <tr v-for="(info, index) in program" v-if="info.cn && info.value" >
@@ -30,7 +31,6 @@
 
             <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
           </td>
-
         </tr>
       </table>
       <h4 :class="$style.rightBoxTitle">更多节目</h4>
@@ -90,6 +90,9 @@
     },
     data() {
       return {
+        rightBoxStatus: 'expand',
+        rightBoxToggle: 'icon-fill-toggle-right',
+        rightboxWidth: RIGHTBOX_WIDTH,
         activeTabName: 'tab1',
         files: [],
         _id: '',
@@ -126,6 +129,32 @@
       currentPage(val) {
         this.updateList();
       },
+      rightBoxStatus(val) {
+        // setTimeout(() => {
+          if (this.rightBoxStatus === 'expand') {
+            this.rightBoxToggle = 'icon-fill-toggle-right';
+          } else if (this.rightBoxStatus === 'folded') {
+            this.rightBoxToggle = 'icon-fill-toggle-left folded';
+          }
+        // }, 400);
+      }
+    },
+    computed: {
+      rightBoxStyle() {
+        const width = this.rightboxWidth;
+        return {
+          width: `${width}px`,
+          height: width === RIGHTBOX_WIDTH ? '100%' : '0',
+          padding: width === RIGHTBOX_WIDTH ? '0 20px' : '0'
+        };
+      },
+      leftBoxStyle() {
+        const style = { width: `${this.leftBoxWidth}px` };
+        if (this.rightBoxStatus === 'folded') {
+          style.transition = 'width .4s cubic-bezier(0.23, 1, 0.32, 1) 100ms'
+        }
+        return style;
+      }
     },
     mounted() {
       if (this.query._id) {
@@ -142,6 +171,19 @@
       formatDuration,
       getTitle,
       getReplaceName,
+      foldedOrExpandRightBox() {
+        if (this.rightBoxStatus === 'expand') {
+          this.rightBoxStatus = 'folded';
+          this.leftBoxWidth = this.leftBoxWidth + RIGHTBOX_WIDTH;
+          this.rightboxWidth = 0;
+          // setTimeout(this.updatePlayerWidth, 400);
+        } else if (this.rightBoxStatus === 'folded') {
+          this.rightBoxStatus = 'expand';
+          this.leftBoxWidth = this.leftBoxWidth - RIGHTBOX_WIDTH;
+          this.rightboxWidth = RIGHTBOX_WIDTH;
+          // setTimeout(this.updatePlayerWidth, 400);
+        }
+      },
       expand(info, key) {
         const newInfo = Object.assign({}, this.program[key], { isFoldedContent: false });
         this.$set(this.program, key, newInfo);
@@ -166,7 +208,7 @@
       },
       updateLeftBoxSize() {
         if (!this.$refs.mainBox) return;
-        const leftBoxWidth = this.$refs.mainBox.getBoundingClientRect().width - RIGHTBOX_WIDTH;
+        const leftBoxWidth = this.$refs.mainBox.getBoundingClientRect().width - this.rightboxWidth;
         const leftBoxHeight = this.$refs.mainBox.getBoundingClientRect().height;
         this.leftBoxWidth = leftBoxWidth;
         this.leftBoxHeight = leftBoxHeight;
@@ -257,7 +299,7 @@
 <style module>
 .watchContent {
   position: absolute;
-  top: 90px;
+  top: 63px;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -266,13 +308,15 @@
   overflow-x: auto;
 }
 .mainBox {
+  position: relative;
   min-width: 994px;
   height: 100%;
 }
 
 .rightBox {
+  position: relative;
   float: right;
-  width: 320px;
+  /*width: 320px;*/
   height: 100%;
   padding: 0 25px;
   background: rgba(248, 250, 251, .5);
@@ -280,6 +324,7 @@
   color: #4C637B;
   overflow-x: hidden;
   overflow-y: auto;
+  transition: width .4s cubic-bezier(0.23, 1, 0.32, 1) 100ms;
 }
 .rightBoxTitle {
   margin: 15px 0;
@@ -348,5 +393,25 @@
 }
 .itemThumb:hover .itemTitle {
   color: #38B1EB;
+}
+.rightBoxToggle {
+  position: absolute;
+  top: 50%;
+  /*right: 320px;*/
+  font-size: 30px;
+  color: #021120;
+  cursor: pointer;
+  z-index: 101;
+  transition: right .4s cubic-bezier(0.23, 1, 0.32, 1) 100ms;
+}
+.rightBoxToggle:after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 0;
+  height: 23px;
+  width: 13px;
+  background: #fff;
+  z-index: -1;
 }
 </style>
