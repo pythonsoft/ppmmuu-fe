@@ -61,6 +61,10 @@
     background-color: #38B1EB;
     color: #CED9E5;
   }
+  .dropdown-item-link {
+    display: block;
+    color: #CED9E5;
+  }
   .showButton button {
     display: inline-block !important;
   }

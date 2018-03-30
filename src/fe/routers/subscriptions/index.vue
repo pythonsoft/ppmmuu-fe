@@ -250,9 +250,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 28px 60px 24px;
+    padding: 13px 60px 14px;
     background: #fff;
-    overflow: hidden;
   }
   .topBar .btnGroup {
     float: left;
@@ -263,6 +262,7 @@
     float: right;
     font-size: 12px;
     color: #4C637B;
+    height: 36px;
     line-height: 36px;
   }
   .iconClock {
