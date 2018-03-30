@@ -4,6 +4,7 @@
     @click="()=>{this.$emit('update:activePanel', 'programPanel')}">
     <div class="video-source-title">{{ `素材：${title || '素材名称'} ${displayDuration}` }}</div>
     <div class="video-source-box">
+      <div class="videoSourceLoadingMask" v-if="loading"></div>
       <video @contextmenu.prevent="contextMenuStop" :src="videoSource" ref="video" :style="{ width: '100%', height: '100%' }" crossorigin="anonymous"></video>
     </div>
     <div class="video-source-bottom">
@@ -100,6 +101,7 @@
         screenshotURL: '',
         screenshotTitle: '',
         videoSource: '',
+        loading: false,
         programIndex: 0
       };
     },
@@ -139,6 +141,7 @@
         this.offset = 0;
       },
       videoId(val) {
+        this.loading = true;
         this.getStream(val);
       },
       isActivePanel(val) {
@@ -169,9 +172,10 @@
         this.range = program.range;
         this.programIndex = programIndex;
         if (isAutoPlay) {
-          this.$nextTick(()=> {
+          this.video.addEventListener('loadeddata', () => {
+            this.loading = false;
             this.updatePlayerStatus();
-          })
+          });
         }
       });
     },
@@ -179,6 +183,15 @@
       this.video = this.$refs.video;
       this.video.addEventListener('loadedmetadata', () => {
         this.video.currentTime = this.currentTime;
+      });
+      this.video.addEventListener('waiting', () => {
+        this.loading = true;
+      });
+      this.video.addEventListener('playing', () => {
+        this.loading = false;
+      });
+      this.video.addEventListener('loadeddata', () => {
+        this.loading = false;
       });
 
       if (this.isActivePanel) {
