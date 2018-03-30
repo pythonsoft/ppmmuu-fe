@@ -300,6 +300,7 @@
     font-size: 12px;
     text-align: center;
     color: #9FB3CA;
+    z-index: 101;
   }
   .closebtn:hover {
     background-color: #CED9E5;
