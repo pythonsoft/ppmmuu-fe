@@ -314,12 +314,14 @@
 }
 
 .rightBox {
-  position: relative;
-  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
+  /*float: right;*/
   /*width: 320px;*/
   height: 100%;
   padding: 0 25px;
-  background: rgba(248, 250, 251, .5);
+  background: #F8FAFB;
   font-size: 12px;
   color: #4C637B;
   overflow-x: hidden;
@@ -332,7 +334,10 @@
   font-weight: bold;
 }
 .leftBox {
-  float: left;
+  /*float: left;*/
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   background: #021120;
 }
