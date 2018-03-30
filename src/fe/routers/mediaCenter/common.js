@@ -38,7 +38,13 @@ const common = {
     return item.content_introduction || item.content || common.getTitle(item);
   },
   formatShowTime(item) {
-    const timeConfig = [{
+    const timeConfig = [
+      {
+        key: 'updatedTime',
+        name: '',
+        value: ''
+      },
+      {
       key: 'full_time',
       name: '',
       value: ''

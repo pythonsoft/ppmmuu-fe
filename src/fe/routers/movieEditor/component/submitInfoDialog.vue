@@ -89,7 +89,7 @@
     { label: '名称', propName: 'name', valueName: 'name', type: 'text' },
     { label: '编目类', propName: 'ccid', valueName: 'ccid', type: 'select', options: [] },
     { label: '编目人', propName: 'owner', valueName: 'owner', type: 'text', disabled: true },
-    { label: '新闻类型', propName: 'newsType', valueName: 'newsType', type: 'select', options: [] },
+    { label: '新闻类型', propName: 'newsType', valueName: 'newsType', type:  'select', options: [] },
     { label: '人物', propName: 'keyman', valueName: 'keyman', type: 'text' },
     { label: '事发国家', propName: 'occurCountry', valueName: 'occurCountry', type: 'select', options: [] },
     { label: '净长', propName: 'duration', valueName: 'duration', type: 'text', disabled: true },
@@ -107,6 +107,23 @@
      ] },
     { label: '首播日期', propName: 'airTime', valueName: 'airTime', type: 'date' }
   ];
+  const FIELD_MAP = {
+    type: 'FIELD276',
+    chineseName: 'FIELD195',
+    keyword: 'FIELD56',
+    englishName: 'FIELD196',
+    name: 'FIELD01',
+    ccid: 'CCID',
+    newsType: 'FIELD145',
+    keyman: 'FIELD100',
+    occurCountry: 'FIELD324',
+    version: 'FIELD263',
+    language: 'FIELD262',
+    madeLocation: 'FIELD223',
+    newsTime: 'FIELD162',
+    airTime: 'FIELD36'
+  };
+
   export default {
     props: {
       dialogVisible: Boolean,
@@ -205,6 +222,11 @@
     },
     watch: {
       dialogVisible(val) {
+        const defaultFormData = this.sequences[0].detail;
+        const keys = Object.keys(FIELD_MAP);
+        keys.forEach(key => {
+          this.formData[key] = defaultFormData[FIELD_MAP[key]] || '';
+        });
         this.visible = val;
       },
       sequences(val) {
@@ -239,10 +261,11 @@
         const objectIds = [];
         for (let i = 0, sequences = this.sequences; i < sequences.length; i++) {
           const { objectId, fromWhere, title: fileName, range } = sequences[i];
+          const fileType = sequences[i].filetypeid;
           const index = objectIds.indexOf(objectId);
           if (index < 0) {
             objectIds.push(objectId);
-            fileInfos.push({ objectId, fromWhere, fileName, startTime: [formatDuration(range[0]*1000, true)], endTime: [formatDuration(range[1]*1000, true)] });
+            fileInfos.push({ objectId, fromWhere, fileType,fileName, startTime: [formatDuration(range[0]*1000, true)], endTime: [formatDuration(range[1]*1000, true)] });
           } else {
             fileInfos[index].startTime.push(formatDuration(range[0]*1000, true));
             fileInfos[index].endTime.push(formatDuration(range[1]*1000, true));

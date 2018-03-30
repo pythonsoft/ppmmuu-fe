@@ -156,10 +156,10 @@
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
         const menus = this.files.map(file => {
-          return { command: file, key: file.type, name: file.typeName };
+          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, downloadUrl: file.downloadUrl };
         });
         this.dropdownMenu.menus = menus;
-        this.dropdownMenu.$on('item-click', this.handleItemClick);
+        // this.dropdownMenu.$on('item-click', this.handleItemClick);
       },
       handleItemClick(item, command) {
         this.showDownloadList(command);
