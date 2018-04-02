@@ -17,6 +17,13 @@
                   :label="item.label"></fj-option>
         </fj-select>
       </fj-form-item>
+      <fj-form-item label="首播时间" prop="airTime">
+        <fj-date-picker
+                theme="fill"
+                placeholder="请选择日期"
+                v-model="editorInfo.airTime"
+        ></fj-date-picker>
+      </fj-form-item>
       <fj-form-item label="限制" prop="limit">
         <fj-input v-model="editorInfo.limit"></fj-input>
       </fj-form-item>

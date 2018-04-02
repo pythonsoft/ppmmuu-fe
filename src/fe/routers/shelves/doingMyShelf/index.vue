@@ -16,6 +16,7 @@
         </div>
         <div class="operation-btn-group">
           <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickEdit">编辑</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="!canSubmit" @click="handleClickSubmit">提交</fj-button>
           <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickSendBack">退回</fj-button>
         </div>
         <div class="operation-btn-group">
@@ -99,7 +100,8 @@
         programNO: '',
         editId: '',
         objectId: '',
-        detailDialogVisible: false
+        detailDialogVisible: false,
+        canSubmit: false,
       };
     },
     created() {
@@ -168,6 +170,16 @@
       handleShowBack() {
         this.showEdit = false;
       },
+      handleClickSubmit() {
+        api.batchSubmitByIds({ _ids: this.selectedIds.join(',') })
+          .then(() => {
+            this.$message.error('提交成功');
+            this.handleClickSearch();
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          })
+      },
       confirmDialog() {
         const me = this;
         let postData = {};
@@ -204,11 +216,21 @@
       handleSelectionChange(rows) {
         this.selectedIds = [];
         this.selectedRows = [];
+        this.canSubmit = false;
         if (rows && rows.length) {
+          let flag = true;
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
             this.selectedRows.push(row);
+            if (row.packageStatus && row.packageStatus !== '' && row.packageStatus !== '2') {
+              flag = false;
+            }
+          }
+          if (flag) {
+            this.canSubmit = true;
+          } else {
+            this.canSubmit = false;
           }
         }
       },
