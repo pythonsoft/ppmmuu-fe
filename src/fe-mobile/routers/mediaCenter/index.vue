@@ -11,8 +11,8 @@
         <ul class="clearfix" :style="{marginLeft: '-3px'}">
           <fj-card
             width="50%"
-            v-for="item in categoryItem.docs"
-            :key="item.id"
+            v-for="(item, index) in categoryItem.docs"
+            :key="item.id + index"
             :thumb="getThumb(item)"
             :title="getTitle(item)"
             :time="formatShowTime(item).value || '无发布时间'"
@@ -31,8 +31,8 @@
         <ul class="clearfix" :style="{marginLeft: '-3px', marginTop: '15px'}">
           <fj-card
             width="50%"
-            v-for="item in searchResult"
-            :key="item.id"
+            v-for="(item, index) in searchResult"
+            :key="item.id + index"
             :thumb="getThumb(item)"
             :title="getTitle(item)"
             :time="formatShowTime(item).value || '无发布时间'"
@@ -56,8 +56,8 @@
       <ul class="clearfix" :style="{marginLeft: '-3px'}">
         <fj-card
           width="50%"
-          v-for="item in categoryList"
-          :key="item.id"
+          v-for="(item, index) in categoryList"
+          :key="item.id + index"
           :thumb="getThumb(item)"
           :title="getTitle(item)"
           :time="formatShowTime(item).value || '无发布时间'"
@@ -94,6 +94,7 @@
     HHIGHLIGHT_FIELDS2,
     FILETR_FIELDS
   } from '../../../fe/routers/mediaCenter/config';
+
   const mediaAPI = require('../../../fe/api/media');
   const userAPI = require('../../../fe/api/user');
 
