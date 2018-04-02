@@ -1,7 +1,7 @@
 <template>
   <a class="fj-card" :style="cardStyle" @click.prev="handleClick">
     <div class="fj-card-thumb" ref="cardThumbWrap" :style="thumbStyle">
-      <img class="fj-card-pic" :src="selfThumb" :alt="title" @error="imgError">
+      <img class="fj-card-pic" v-lazy="selfThumb" :alt="title" @error="imgError">
       <div class="fj-card-thumb-mask">
         <i v-if="editable" class="fj-card-delete-btn iconfont icon-close" @click.stop="$emit('delete-item')"></i>
         <span class="fj-card-video-duration">{{ duration }}</span>
@@ -15,8 +15,16 @@
   </a>
 </template>
 <script>
+  import Vue from 'vue';
+  import VueLazyload from 'vue-lazyload';
   import defaultPic from './video-default-pic.png';
   import errorPic from './video-error-pic.png';
+
+  Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: './video-error-pic.png',
+    attempt: 1
+  });
   export default {
     name: 'FjCard',
     props: {
