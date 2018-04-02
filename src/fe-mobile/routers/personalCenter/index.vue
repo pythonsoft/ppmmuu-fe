@@ -44,11 +44,18 @@
         userInfo: {}
       };
     },
-    mounted() {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      this.userInfo = userInfo;
-      this.path = userInfo.photo;
-      console.log('userInfo', userInfo);
+    created() {
+      userAPI.getUserAuth({}, null, true).then((res) => {
+        this.userInfo = res.data.userInfo;
+        this.path = this.userInfo.photo;
+      }).catch((error) => {
+        const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004', '-3005'];
+        if (loginStatusCodeArr.indexOf(error.status) !== -1) {
+          window.location.href = '/login';
+        } else {
+          this.$toast.error(error);
+        }
+      });
     },
     methods: {
       signOut() {
