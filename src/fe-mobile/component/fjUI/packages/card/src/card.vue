@@ -1,6 +1,6 @@
 <template>
   <a class="fj-card" :style="cardStyle" @click.prev="handleClick">
-    <div class="fj-card-thumb" ref="cardThumbWrap" :style="thumbStyle">
+    <div class="fj-card-thumb iconfont icon-phoenixtv" ref="cardThumbWrap" :style="thumbStyle">
       <img class="fj-card-pic" v-lazy="selfThumb" :alt="title" @error="imgError">
       <div class="fj-card-thumb-mask">
         <i v-if="editable" class="fj-card-delete-btn iconfont icon-close" @click.stop="$emit('delete-item')"></i>
