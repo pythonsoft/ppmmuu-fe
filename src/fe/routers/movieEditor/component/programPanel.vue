@@ -102,7 +102,8 @@
         screenshotTitle: '',
         videoSource: '',
         loading: false,
-        programIndex: 0
+        programIndex: 0,
+        isAutoPlay: false
       };
     },
     computed: {
@@ -171,12 +172,16 @@
         this.title = program.title;
         this.range = program.range;
         this.programIndex = programIndex;
-        if (isAutoPlay) {
-          this.video.addEventListener('loadeddata', () => {
-            this.loading = false;
+        this.isAutoPlay = isAutoPlay;
+        console.log('this.isAutoPlay', this.isAutoPlay);
+        this.video.addEventListener('loadeddata', () => {
+          this.loading = false;
+          console.log('loadeddata this.isAutoPlay', this.isAutoPlay);
+          if (this.isAutoPlay) {
             this.updatePlayerStatus();
-          });
-        }
+            this.isAutoPlay = false;
+          }
+        });
       });
     },
     mounted() {
@@ -295,6 +300,7 @@
         return icon;
       },
       updatePlayerStatus() {
+        console.log('updatePlayerStatus');
         if (!this.isPlaying) {
           // 如果此时为视频的出点时间则暂停播放
           if (this.currentTime + 1 / this.fps >= this.range[1]
