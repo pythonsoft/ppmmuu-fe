@@ -167,16 +167,19 @@
     created() {
       this.projectBus.$on('updateProgram', (program, programIndex, isAutoPlay) => {
         if (this.id === program.id) return;
+        const oldId = this.videoId;
         this.id = program.id;
         this.videoId = program.objectId;
         this.title = program.title;
         this.range = program.range;
         this.programIndex = programIndex;
         this.isAutoPlay = isAutoPlay;
-        console.log('this.isAutoPlay', this.isAutoPlay);
+        if (oldId === program.objectId && isAutoPlay) {
+          this.updatePlayerStatus();
+          this.isAutoPlay = false;
+        }
         this.video.addEventListener('loadeddata', () => {
           this.loading = false;
-          console.log('loadeddata this.isAutoPlay', this.isAutoPlay);
           if (this.isAutoPlay) {
             this.updatePlayerStatus();
             this.isAutoPlay = false;
@@ -300,7 +303,6 @@
         return icon;
       },
       updatePlayerStatus() {
-        console.log('updatePlayerStatus');
         if (!this.isPlaying) {
           // 如果此时为视频的出点时间则暂停播放
           if (this.currentTime + 1 / this.fps >= this.range[1]
