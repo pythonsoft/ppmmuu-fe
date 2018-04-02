@@ -148,6 +148,19 @@
   width: 100%;
   height: 100%;
 }
+.media-video-wrap-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  font-size: 38px;
+  background: #CED9E5;
+  color: #E3EAF3;
+}
+.media-video-empty-text {
+  padding: 10px;
+  color: #2A3E52;
+}
 .video-poster {
   display: flex;
   align-items: center;
