@@ -10,9 +10,6 @@
       <span v-html="getTitle(item)"></span>
       <span v-if="item.files.length > 0" class="iconfont icon-download download-btn" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, item.files)}" v-clickoutside="handleCloseMenu"></span>
     </div>
-    <div class="subscribe-item-detail" :title="item.viceTitle">
-      节目名称：{{ item.viceTitle || '无' }}
-    </div>
     <p class="subscribe-item-detail">
       限制：{{ item.limit }}
     </p>
