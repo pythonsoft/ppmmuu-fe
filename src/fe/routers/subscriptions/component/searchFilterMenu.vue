@@ -1,7 +1,7 @@
 <template>
   <div class="search-filter-menu" :style="menuStyle">
     <li v-for="menu in menus" class="clearfix">
-      <span class="label">{{ menu.label }}</span>
+      <span :class="['label', {'label-l': menu.type === 'daterange'}]">{{ menu.label }}</span>
       <div v-if="menu.items" class="value-box">
         <span
           v-for="item in menu.items"
@@ -145,6 +145,10 @@
     width: 96px;
     color: #4C637B;
     padding: 10px;
+    line-height: 22px;
+  }
+  .search-filter-menu li .label-l {
+    line-height: 30px;
   }
   .search-filter-menu li .value-box {
     margin-left: 96px;
