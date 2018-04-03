@@ -113,7 +113,7 @@
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
         const menus = files.map(file => {
-          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, downloadUrl: file.downloadUrl };
+          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, shelfTaskId: file.shelfTaskId };
         });
         this.dropdownMenu.menus = menus;
         // this.dropdownMenu.$on('item-click', this.handleItemClick);

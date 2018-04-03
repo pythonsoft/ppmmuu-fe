@@ -510,7 +510,7 @@
         document.body.appendChild(this.dropdownMenu.$el);
         this.updateMenuPosition();
         const menus = this.files.map(file => {
-          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, downloadUrl: file.downloadUrl };
+          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, shelfTaskId: file.shelfTaskId };
         });
         this.dropdownMenu.isDark = true;
         this.dropdownMenu.menus = menus;
