@@ -247,7 +247,7 @@
         if (val !== this.$route.name) {
           this.$router.push({ name: val });
         }
-        if (val !== 'mediaCenter') {
+        if (val !== 'mediaCenter' && val !== 'watch') {
           this.headerContentType = 'default';
           this.handleReset();
         }
@@ -324,12 +324,6 @@
           this.isShowSearchCondition = false;
           this.handleReset();
           this.searchOptions = {};
-          // if (!isEmptyObject(this.searchOptions)) {
-          //   this.$router.push({ name: 'mediaCenter' });
-          //   this.searchOptions = {};
-          //   this.tempKeyword = '';
-          //   this.keyword = '';
-          // }
         }
         this.headerContentType = type;
       },
@@ -348,11 +342,6 @@
             } else {
               item.collapse = true;
               item.tempSelected = item.selected.slice();
-              // item.items.forEach(function(subItem) {
-              //   if (subItem.label.length > 16) {
-              //     subItem.label = subItem.label.slice(0, 16) + '...';
-              //   }
-              // });
               const displayItems = [];
               let tempDisplayItem = [];
               for (let i = 0; i < item.items.length; i++) {
@@ -379,13 +368,6 @@
       },
       initSearchQuery() {
         if (this.$route.name === 'mediaCenter') {
-          // const keyword = this.$route.query.keyword;
-          // if (keyword) {
-          //   this.tempKeyword = keyword;
-          //   this.headerContentType = 'searchInput';
-          //   this.handleSearch();
-          //   this.getSearchHistory();
-          // }
           let search_query = this.$route.query.search_query;
           if (search_query) {
             this.headerContentType = 'searchInput';
@@ -438,23 +420,17 @@
           });
       },
       handleReset() {
-        // this.tempKeyword = this.keyword;
-        // this.tempOrderVal = this.orderVal;
-        // this.searchSelectConfigs.forEach(function(item) {
-        //   item.tempSelected = item.selected.slice();
-        // });
-        // this.searchRadioboxConfigs.forEach(function(item) {
-        //   item.tempSelected = item.selected;
-        // });
         this.tempKeyword = '';
-        this.tempOrderVal = 'order1';
+        this.tempOrderVal = 'order2';
         this.tempCreatedTimeVal = 'all';
+        this.isAccurate = true;
         this.searchSelectConfigs.forEach(function(item) {
           item.tempSelected = [];
         });
         this.searchRadioboxConfigs.forEach(function(item) {
           item.tempSelected = '';
         });
+        this.programType = [];
         this.full_time = { start: null, end: null };
       },
       handleSearch() {
@@ -524,16 +500,7 @@
           }
         }
         this.searchOptions = options;
-
         this.linkToMediaSearch(search_query);
-
-        // mediaAPI.esSearch(options).then((res) => {
-        //   // me.items = res.data.docs;
-        //   // me.total = res.data.numFound;
-        //   // me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
-        // }).catch((error) => {
-        //   // me.$message.error(error);
-        // });
       },
       linkToMediaSearch(options) {
         this.$router.push({ name: 'mediaCenter', params: { program_type: 'searchResult' }, query: { search_query: JSON.stringify(options) } });
