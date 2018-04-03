@@ -2,6 +2,6 @@
   --z-index-mask: 200;
   --z-index-picker: 201;
   --z-index-toast: 300;
-  --z-index-header: 99;
-  --z-index-tabbar: 99;
+  --z-index-header: 999;
+  --z-index-tabbar: 999;
 }
