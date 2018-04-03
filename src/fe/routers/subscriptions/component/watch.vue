@@ -84,6 +84,14 @@
     attempt: 1
   });
 
+  const PROGRAM_MAP = {
+    name: { cn: '节目名称' },
+    FIELD36: { cn: '播出时间' },
+    lastModifyTime: { cn: '上架时间' },
+    limit: { cn: '限制' },
+    FIELD247: { cn: '内容介绍' },
+  }
+
   export default {
     props: {
       query: {}
@@ -244,12 +252,20 @@
           this.currentPage = 1;
           this.subscribeType = data.editorInfo.subscribeType;
           this.updateList();
-          this.program = data.details.map((info) => {
+
+          const details = data.details;
+          const programKeys = Object.keys(PROGRAM_MAP);
+          const tempProgram = [];
+          for (let i = 0, len = details.length; i < len; i++) {
+            const info = details[i];
+            if (programKeys.indexOf(info.key) === -1) continue;
             if (info.value && this.formatContent(info.value).length > 68) {
               info.isFoldedContent = true;
             }
-            return info;
-          });
+            info.cn = PROGRAM_MAP[info.key].cn;
+            tempProgram.push(info);
+          }
+          this.program = tempProgram;
           this.files = data.files;
 
         }).catch((error) => {

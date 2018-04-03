@@ -4,6 +4,11 @@
       <i class="iconfont icon-arrow-left icon-return" @click="back"></i>
       <h3 class="watch-title has-return-btn">{{ filename }}</h3>
     </div>
+    <template v-if="isOnTape">
+      <div class="iconfont icon-tape media-video-wrap-bg"></div>
+      <p class="media-video-empty-text">此节目在磁带上，请联系PMD部门采集</p>
+    </template>
+    <template v-else>
     <player
       :poster="getThumb({ id: objectId, from_where: fromWhere })"
       :url="url"
@@ -83,6 +88,7 @@
           :highlight="false"></fj-card>
       </ul>
     </div>
+    </template>
   </div>
 </template>
 <script>
@@ -107,7 +113,8 @@
     HHIGHLIGHT_FIELDS1,
     HHIGHLIGHT_FIELDS2,
     FILETR_FIELDS,
-    getConfig
+    getConfig,
+    isOnTape
   } from '../../../fe/routers/mediaCenter/config';
   import ActionSheet from './actionSheet';
   import Player from './player';
@@ -141,6 +148,7 @@
         ARCHIVETYPE: getConfig('ARCHIVETYPE'),
         FILE_STATUS: getConfig('FILE_STATUS'),
         UMP_FILETYPE_VALUE: getConfig('UMP_FILETYPE_VALUE'),
+        isOnTape: false
       };
     },
     watch: {
@@ -151,6 +159,9 @@
       },
       '$route.params.objectId'(val) {
         this.refresh();
+      },
+      files(val) {
+        this.isOnTape = isOnTape(val);
       }
     },
     mounted() {

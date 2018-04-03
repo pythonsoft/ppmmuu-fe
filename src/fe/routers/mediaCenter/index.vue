@@ -421,10 +421,12 @@
           isAccurate: this.isAccurate
         };
         fillOptions(this.programType, options, this.searchConfig);
+        // 把时间限定参数加进去
         if (this.datetimerangeCreated.length) {
           const created = getTimeRange(this.datetimerangeCreated, 'created');
           options.range.push(created);
         }
+        // 检索词提示
         let searchNotice = `检索词: ${this.keyword}`;
         const searchChoose = getSearchNotice(this.searchConfig).join(',');
         if (this.keyword && searchChoose) {
@@ -452,6 +454,7 @@
 
         if (this.keyword) {
           if (options.sort.length) {
+            // 关键字与节目类型相同不高亮
             for (let k = 0, len = this.programType.length; k < len; k++) {
               if (this.programType[k] === this.keyword) {
                 options.hl = HHIGHLIGHT_FIELDS2;
@@ -464,6 +467,7 @@
             formatMust(options.should, { full_name: this.keyword });
           }
         } else {
+          // 默认排序为关联度排序
           if (!options.sort.length) {
             options.sort = [{
               key: 'full_time',

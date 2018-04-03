@@ -602,7 +602,7 @@ utils.ensureLocalData = (data) => {
 };
 
 utils.getItemFromLocalStorage = key => {
-  return window[localDataKey][key] ? window[localDataKey][key] : null;
+  return window[localDataKey] && window[localDataKey][key] ? window[localDataKey][key] : null;
 };
 
 utils.setItemToLocalStorage = (key, value) => {
