@@ -23,6 +23,7 @@
   </div>
 </template>
 <script>
+  import { getItemFromLocalStorage, ensureLocalData } from '../../../fe/common/utils';
   const userAPI = require('../../../fe/api/user');
   const uploadAPI = require('../../../fe/api/upload');
 
@@ -44,13 +45,30 @@
         userInfo: {}
       };
     },
-    mounted() {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      this.userInfo = userInfo;
-      this.path = userInfo.photo;
-      console.log('userInfo', userInfo);
+    created() {
+      const tempUserInfo = getItemFromLocalStorage('userInfo');
+      if (!tempUserInfo) {
+        this.getUserAuth();
+      } else {
+        this.userInfo = tempUserInfo;
+        this.path = tempUserInfo.photo;
+      }
     },
     methods: {
+      getUserAuth() {
+        userAPI.getUserAuth({}, this, true).then((res) => {
+          ensureLocalData(res.data);
+          this.userInfo = res.data.userInfo;
+          this.path = this.userInfo.photo;
+        }).catch((error) => {
+          const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004', '-3005'];
+          if (loginStatusCodeArr.indexOf(error.status) !== -1) {
+            window.location.href = '/login';
+          } else {
+            this.$toast.error(error);
+          }
+        });
+      },
       signOut() {
         userAPI.postUserLogout({}).then((res) => {
           // localStorage.setItem('menu', '');

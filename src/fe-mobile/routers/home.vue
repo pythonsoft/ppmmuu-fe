@@ -37,10 +37,47 @@
           清除搜索记录
         </li>
       </ul>
+      <div :class="['media-category', { 'collapse': collapseSearchType }]">
+        <h4 class="media-category-label">
+          搜索方式
+          <i class="iconfont icon-arrow-up" @click="collapseSearchType = !collapseSearchType"></i>
+        </h4>
+        <ul class="clearfix media-category-list">
+          <li class="media-category-option-l">
+            <span
+              :class="[
+                'media-category-option-content radio',
+                {'selected': isAccurate}]"
+              @click="isAccurate = true">精确搜索</span>
+          </li>
+          <li class="media-category-option-l">
+            <span
+              :class="[
+                'media-category-option-content radio',
+                {'selected': !isAccurate}]"
+              @click="isAccurate = false">模糊搜索</span>
+          </li>
+        </ul>
+      </div>
+      <div :class="['media-category', { 'collapse': collapseTime }]">
+        <h4 class="media-category-label">
+          时间
+          <i class="iconfont icon-arrow-up" @click="collapseTime = !collapseTime"></i>
+        </h4>
+        <ul class="clearfix media-category-list">
+          <li v-for="item in CREATED_TIME_OPTIONS" class="media-category-option-l">
+            <span
+              :class="[
+                'media-category-option-content radio',
+                {'selected': tempCreatedTimeVal === item.value}]"
+              @click="tempCreatedTimeVal = item.value">{{ item.label }}</span>
+          </li>
+        </ul>
+      </div>
       <div :class="['media-category', { 'collapse': collapseOrder }]">
         <h4 class="media-category-label">
           排序
-          <i class="iconfont icon-arrow-down" @click="collapseOrder = !collapseOrder"></i>
+          <i class="iconfont icon-arrow-up" @click="collapseOrder = !collapseOrder"></i>
         </h4>
         <ul class="clearfix media-category-list">
           <li v-for="item in ORDER_OPTIONS" class="media-category-option-l">
@@ -52,10 +89,10 @@
           </li>
         </ul>
       </div>
-      <div v-for="config in searchSelectConfigs" :class="['media-category', { 'collapse': config.collapse }]">
+      <div v-for="config in searchSelectConfigs" :class="['media-category', { 'collapse': config.collapse }]" v-show="getDisplayItem(config)">
         <h4 class="media-category-label clearfix">
           {{config.label}}
-          <i class="iconfont icon-arrow-down" @click="config.collapse = !config.collapse"></i>
+          <i class="iconfont icon-arrow-up" @click="config.collapse = !config.collapse"></i>
         </h4>
         <ul v-if="config.displayItems" class="clearfix media-category-list">
           <li v-for="row in config.displayItems" class="media-category-option-row">
@@ -65,7 +102,7 @@
                 'media-category-option-row-content',
                 {'selected': config.tempSelected.indexOf(item.value)>-1}
               ]"
-              @click="setMultipleValue(config.tempSelected, item.value)">{{ item.label }}</span>
+              @click="setMultipleValue(config.tempSelected, item.value, config.key)">{{ item.label }}</span>
           </li>
         </ul>
         <ul v-else class="clearfix media-category-list">
@@ -74,14 +111,14 @@
               :class="[
                 'media-category-option-content',
                 {'selected': config.tempSelected.indexOf(item.value)>-1}]"
-              @click="setMultipleValue(config.tempSelected, item.value)">{{ item.label }}</span>
+              @click="setMultipleValue(config.tempSelected, item.value, config.key)">{{ item.label }}</span>
           </li>
         </ul>
       </div>
-      <div v-for="config in searchRadioboxConfigs" :class="['media-category', { 'collapse': config.collapse }]">
+      <div v-for="config in searchRadioboxConfigs" :class="['media-category', { 'collapse': config.collapse }]" v-show="getDisplayItem(config)">
         <h4 class="media-category-label">
           {{config.label}}
-          <i class="iconfont icon-arrow-down" @click="config.collapse = !config.collapse"></i>
+          <i class="iconfont icon-arrow-up" @click="config.collapse = !config.collapse"></i>
         </h4>
         <ul class="clearfix media-category-list">
           <li v-for="item in config.items" class="media-category-option">
@@ -95,27 +132,14 @@
       </div>
       <div class="media-category">
         <h4 class="media-category-label">
-          新聞日期
+          日期范围
         </h4>
         <ul class="clearfix media-category-list">
           <li class="media-category-option-l">
-            <div :class="['datetime-input', { 'placeholder': !datetimerange1.start }]" @click="showPicker(datetimerange1, 'start')">{{ formatTime(datetimerange1.start) || '开始时间' }}</div>
+            <div :class="['datetime-input', { 'placeholder': !full_time.start }]" @click="showPicker(full_time, 'start')">{{ formatTime(full_time.start) || '开始时间' }}</div>
           </li>
           <li class="media-category-option-l">
-            <div :class="['datetime-input', { 'placeholder': !datetimerange1.end }]" @click="showPicker(datetimerange1, 'end')">{{ formatTime(datetimerange1.end) || '结束时间' }}</div>
-          </li>
-        </ul>
-      </div>
-      <div class="media-category">
-        <h4 class="media-category-label">
-          首播日期
-        </h4>
-        <ul class="clearfix media-category-list">
-          <li class="media-category-option-l">
-            <div :class="['datetime-input', { 'placeholder': !datetimerange2.start }]" @click="showPicker(datetimerange2, 'start')">{{ formatTime(datetimerange2.start) || '开始时间' }}</div>
-          </li>
-          <li class="media-category-option-l">
-            <div :class="['datetime-input', { 'placeholder': !datetimerange2.end }]" @click="showPicker(datetimerange2, 'end')">{{ formatTime(datetimerange2.end) || '结束时间' }}</div>
+            <div :class="['datetime-input', { 'placeholder': !full_time.end }]" @click="showPicker(full_time, 'end')">{{ formatTime(full_time.end) || '结束时间' }}</div>
           </li>
         </ul>
       </div>
@@ -143,7 +167,9 @@
     getOrder,
     formatMust,
     getHighLightFields,
+    fillOptions,
     ORDER_OPTIONS,
+    CREATED_TIME_OPTIONS,
     HHIGHLIGHT_FIELDS1,
     HHIGHLIGHT_FIELDS2,
     FILETR_FIELDS
@@ -152,7 +178,9 @@
     isEmptyObject,
     formatTime
   } from '../../fe/common/utils';
+  import searchConfig from './searchConfig';
   import './home.css';
+
   const mediaAPI = require('../../fe/api/media');
   const userAPI = require('../../fe/api/user');
 
@@ -175,10 +203,17 @@
       } else {
         this.hideTabbar = false;
       }
+      searchConfig.forEach((item) => {
+        if (item.key === 'program_type') {
+          this.programType = item.selected;
+        }
+      });
     },
     data() {
       return {
+        CREATED_TIME_OPTIONS: CREATED_TIME_OPTIONS,
         ORDER_OPTIONS: ORDER_OPTIONS,
+        programType: [],
         keyword: '',
         tempKeyword: '',
         tabIndex: 'mediaCenter',
@@ -188,16 +223,20 @@
         keywordOptions: [],
         pageSize: 24,
         keywordOptionsLen: 2,
-        orderVal: 'order1',
-        tempOrderVal: 'order1',
+        orderVal: 'order2',
+        tempOrderVal: 'order2',
+        tempCreatedTimeVal: 'all',
+        datetimerangeCreated: [],
+        isAccurate: true,
+        collapseSearchType: false,
         collapseOrder: false,
+        collapseTime: false,
         searchOptions: {},
         headerContentType: 'default',
         pickerVisible: false,
         pickerDate: null,
         pickerBindValue: { obj: null, key: '' },
-        datetimerange1: { start: null, end: null },
-        datetimerange2: { start: null, end: null },
+        full_time: { start: null, end: null },
         pickerStartDate: START_DATE,
         pickerEndDate: END_DATE,
         hideTabbar: false
@@ -208,7 +247,7 @@
         if (val !== this.$route.name) {
           this.$router.push({ name: val });
         }
-        if (val !== 'mediaCenter') {
+        if (val !== 'mediaCenter' && val !== 'watch') {
           this.headerContentType = 'default';
           this.handleReset();
         }
@@ -220,10 +259,21 @@
           this.hideTabbar = false;
         }
         this.tabIndex = this.getActiveRoute(this.$route.path, 1);
+      },
+      tempCreatedTimeVal(val) {
+        const start = new Date();
+        const end = new Date();
+        if (val !== 'all') {
+          start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * Number(val));
+        }
+        this.datetimerangeCreated = [start, end];
       }
     },
     methods: {
       formatTime,
+      getDisplayItem(item) {
+        return item.show(this.programType);
+      },
       showPicker(dateObj, key) {
         if (key === 'start') {
           this.pickerStartDate = new Date(2000, 0, 1);
@@ -240,7 +290,15 @@
       setDate(date) {
         this.pickerBindValue.obj[this.pickerBindValue.key] = new Date(date);
       },
-      setMultipleValue(target, value) {
+      setMultipleValue(target, value, key) {
+        if (key === 'program_type') {
+          const index = this.programType.indexOf(value);
+          if (index > -1) {
+            this.programType.splice(index, 1);
+          } else {
+            this.programType.push(value);
+          }
+        }
         const index = target.indexOf(value);
         if (index > -1) {
           target.splice(index, 1);
@@ -266,19 +324,14 @@
           this.isShowSearchCondition = false;
           this.handleReset();
           this.searchOptions = {};
-          // if (!isEmptyObject(this.searchOptions)) {
-          //   this.$router.push({ name: 'mediaCenter' });
-          //   this.searchOptions = {};
-          //   this.tempKeyword = '';
-          //   this.keyword = '';
-          // }
         }
         this.headerContentType = type;
       },
       getSeachConfigs() {
-        mediaAPI.getSearchConfig().then((res) => {
-          const tempSelectConfigs = [];
-          res.data.searchSelectConfigs.forEach(function(item, index) {
+        const tempSelectConfigs = [];
+        const tempRadioboxConfigs = [];
+        searchConfig.forEach((item, index) => {
+          if (item.type === 'select') {
             if (item.key !== 'occur_country') {
               item.collapse = index < 3 ? false : true;
               item.tempSelected = item.selected.slice();
@@ -289,11 +342,6 @@
             } else {
               item.collapse = true;
               item.tempSelected = item.selected.slice();
-              // item.items.forEach(function(subItem) {
-              //   if (subItem.label.length > 16) {
-              //     subItem.label = subItem.label.slice(0, 16) + '...';
-              //   }
-              // });
               const displayItems = [];
               let tempDisplayItem = [];
               for (let i = 0; i < item.items.length; i++) {
@@ -308,34 +356,26 @@
               item.displayItems = displayItems;
               tempSelectConfigs.push(item);
             }
-          });
-          this.searchSelectConfigs = tempSelectConfigs;
-          this.searchRadioboxConfigs = res.data.searchRadioboxConfigs.map(function(item) {
+          } else if (item.type === 'radio') {
             item.collapse = true;
             item.tempSelected = item.selected;
-            return item;
-          });
-          this.initSearchQuery();
-        }).catch((error) => {
+            tempRadioboxConfigs.push(item);
+          }
         });
+        this.searchSelectConfigs = tempSelectConfigs;
+        this.searchRadioboxConfigs = tempRadioboxConfigs;
+        this.initSearchQuery();
       },
       initSearchQuery() {
         if (this.$route.name === 'mediaCenter') {
-          // const keyword = this.$route.query.keyword;
-          // if (keyword) {
-          //   this.tempKeyword = keyword;
-          //   this.headerContentType = 'searchInput';
-          //   this.handleSearch();
-          //   this.getSearchHistory();
-          // }
           let search_query = this.$route.query.search_query;
           if (search_query) {
             this.headerContentType = 'searchInput';
             search_query = JSON.parse(search_query);
             this.tempKeyword = search_query.keyword;
             this.tempOrderVal = search_query.orderVal;
-            this.datetimerange1 = { start: search_query.datetimerange1[0], end: search_query.datetimerange1[1] };
-            this.datetimerange2 = { start: search_query.datetimerange2[0], end: search_query.datetimerange2[1] };
+
+            this.full_time = { start: search_query.full_time[0], end: search_query.full_time[1] };
             const selectValue = search_query.selectValue;
             const radioValue = search_query.radioValue;
             this.searchSelectConfigs.forEach(function(item) {
@@ -344,6 +384,8 @@
             this.searchRadioboxConfigs.forEach(function(item) {
               item.tempSelected = radioValue[item.key] || '';
             });
+            this.programType = selectValue.programType || [];
+            this.tempCreatedTimeVal = search_query.createdTimeVal;
             this.handleSearch();
             this.getSearchHistory();
           }
@@ -378,24 +420,18 @@
           });
       },
       handleReset() {
-        // this.tempKeyword = this.keyword;
-        // this.tempOrderVal = this.orderVal;
-        // this.searchSelectConfigs.forEach(function(item) {
-        //   item.tempSelected = item.selected.slice();
-        // });
-        // this.searchRadioboxConfigs.forEach(function(item) {
-        //   item.tempSelected = item.selected;
-        // });
         this.tempKeyword = '';
-        this.tempOrderVal = 'order1';
+        this.tempOrderVal = 'order2';
+        this.tempCreatedTimeVal = 'all';
+        this.isAccurate = true;
         this.searchSelectConfigs.forEach(function(item) {
           item.tempSelected = [];
         });
         this.searchRadioboxConfigs.forEach(function(item) {
           item.tempSelected = '';
         });
-        this.datetimerange1 = { start: null, end: null };
-        this.datetimerange2 = { start: null, end: null };
+        this.programType = [];
+        this.full_time = { start: null, end: null };
       },
       handleSearch() {
         this.isShowSearchCondition = false;
@@ -416,10 +452,10 @@
         const search_query = {
           keyword: this.keyword,
           orderVal: this.orderVal,
+          createdTimeVal: this.tempCreatedTimeVal,
           selectValue: selectValue,
           radioValue: radioValue,
-          datetimerange1: [this.datetimerange1.start, this.datetimerange2.end],
-          datetimerange2: [this.datetimerange2.start, this.datetimerange2.end]
+          full_time: [this.full_time.start, this.full_time.end]
         };
         const options = {
           source: FILETR_FIELDS,
@@ -429,50 +465,26 @@
           hl: HHIGHLIGHT_FIELDS1,
           sort: {},
           start: 0,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          isAccurate: this.isAccurate
         };
-        const must = options.match;
-        const f_date_162 = getTimeRange([
-          this.datetimerange1.start,
-          this.datetimerange1.end
-        ], 'news_data'); // 新聞日期
-        const f_date_36 = getTimeRange([
-          this.datetimerange2.start,
-          this.datetimerange2.end
-        ], 'airdata'); // 首播日期
-        options.range.push(f_date_162);
-        options.range.push(f_date_36);
-        getQuery(must, this.searchSelectConfigs.concat(this.searchRadioboxConfigs));
-        // let searchNotice = `检索词: ${this.keyword}`;
-        // const searchChoose = getSearchNotice(this.searchSelectConfigs.concat(this.searchRadioboxConfigs)).join(',');
-        // if (this.keyword && searchChoose) {
-        //   searchNotice += `,${searchChoose}`;
-        // } else {
-        //   searchNotice += searchChoose;
-        // }
-        // const noticeLength = getStringLength(searchNotice);
-        // if (noticeLength > 15) {
-        //   searchNotice = searchNotice.substr(0, 15);
-        //   searchNotice += '...';
-        // } else {
-        //   searchNotice += '   ';
-        // }
-        // this.searchResult = searchNotice;
+        fillOptions(this.programType, options, this.searchSelectConfigs);
+        fillOptions(this.programType, options, this.searchRadioboxConfigs);
+        options.range.push(getTimeRange([this.full_time.start, this.full_time.end], 'full_time'));
 
-        const obj = {
-          // f_str_187: me.houseNo,
-          publish_status: 1,
-          full_text: this.keyword
-        };
-
-        formatMust(must, obj);
+        if (this.tempCreatedTimeVal !== 'all') {
+          const created = getTimeRange(this.datetimerangeCreated, 'created');
+          options.range.push(created);
+        }
+        formatMust(options.match, { full_text: this.keyword });
 
         // 跟should和sort有关
         options.sort = getOrder(this.orderVal);
+
         if (this.keyword) {
           if (options.sort.length) {
-            for (let k = 0, len = this.searchSelectConfigs[0].items.length; k < len; k++) {
-              if (this.searchSelectConfigs[0].items[k].value === this.keyword) {
+            for (let k = 0, len = this.programType.length; k < len; k++) {
+              if (this.programType[k] === this.keyword) {
                 options.hl = HHIGHLIGHT_FIELDS2;
               }
             }
@@ -482,22 +494,13 @@
         } else {
           if (!options.sort.length) {
             options.sort = [{
-              key: 'publish_time',
+              key: 'full_time',
               value: 'desc'
             }];
           }
         }
         this.searchOptions = options;
-
         this.linkToMediaSearch(search_query);
-
-        // mediaAPI.esSearch(options).then((res) => {
-        //   // me.items = res.data.docs;
-        //   // me.total = res.data.numFound;
-        //   // me.searchResult = `${searchNotice}耗时${res.data.QTime / 1000}秒,结果${me.total}条`;
-        // }).catch((error) => {
-        //   // me.$message.error(error);
-        // });
       },
       linkToMediaSearch(options) {
         this.$router.push({ name: 'mediaCenter', params: { program_type: 'searchResult' }, query: { search_query: JSON.stringify(options) } });

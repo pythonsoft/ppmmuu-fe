@@ -71,8 +71,8 @@
         userAPI.postUserLogin(reqData)
           .then((res) => {
             this.disabled = false;
-            localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
-            localStorage.setItem('jwtToken', JSON.stringify(res.data.jwtToken));
+            // localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
+            // localStorage.setItem('jwtToken', JSON.stringify(res.data.jwtToken));
             this.$router.push({ name: 'mediaCenter' });
           })
           .catch((error) => {
