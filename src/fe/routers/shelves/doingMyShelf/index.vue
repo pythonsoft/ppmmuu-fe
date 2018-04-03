@@ -234,9 +234,15 @@
           });
       },
       submitShelf(){
-        this.operation = 'submitOne';
-        this.dialogMessage = '您确定要提交这个任务吗?';
-        this.dialogVisible = true;
+        const editorInfo = this.selectedRows[0].editorInfo;
+
+        if (!editorInfo.name || !editorInfo.cover || !editorInfo.subscribeType || !editorInfo.limit) {
+          this.$message.error('编目信息没有填写完整不能提交');
+        } else {
+          this.operation = 'submitOne';
+          this.dialogMessage = '您确定要提交这个任务吗?';
+          this.dialogVisible = true;
+        }
       },
       handleSelectionChange(rows) {
         this.selectedIds = [];
