@@ -17,7 +17,7 @@
           type="datetimerange"
           direction="horizontal"
           placeholder="请选择日期范围"
-          v-model="fullTime"
+          v-model="menu.selected"
         ></fj-date-picker>
         </div>
       </div>
@@ -53,6 +53,15 @@
     },
     methods: {
       handleClick() {
+        for (let i = 0, len = this.menus.length; i < len; i++) {
+          const menu = this.menus[i];
+          if (menu.type === 'daterange' && menu.selected.length) {
+            const time = menu.selected[0]
+                ? new Date(menu.selected[0]).toISOString() + ',' + new Date(menu.selected[1]).toISOString()
+                : '';
+            this.selfFilterList[menu.key]= time;
+          }
+        }
         this.$emit('update-filter-list', this.selfFilterList);
       },
       handleCancel() {
