@@ -105,7 +105,6 @@
         defaultList: [],
         categoryList: [],
         searchResult: [],
-        fl: FILETR_FIELDS,
         datetimerange1: [],
         datetimerange2: [],
         pageSize: 24,
@@ -117,9 +116,12 @@
       };
     },
     created() {
-      this.getDefaultMedia();
       const program_type = this.$route.params.program_type;
-      if (program_type) this.listType = program_type;
+      if (program_type) {
+        this.listType = program_type;
+      } else {
+        this.getDefaultMedia();
+      }
     },
     watch: {
       '$route.params.program_type'(val) {
@@ -207,12 +209,10 @@
         }
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        // const f_date_162 = getTimeRange(this.datetimerange1, 'f_date_162'); // 新聞日期
-        // const f_date_36 = getTimeRange(this.datetimerange2, 'f_date_36'); // 首播日期
         const options = {
-          source: this.fl,
+          source: FILETR_FIELDS,
           match: [],
-          // should: [],
+          should: [],
           hl: HHIGHLIGHT_FIELDS1,
           sort: {},
           start: start,
@@ -221,21 +221,14 @@
         const must = options.match;
         must.push({ key: 'program_type', value: this.listType });
 
-        const obj = {
-          publish_status: 1
-        };
-
-        formatMust(must, obj);
         options.sort = [{
-          key: 'publish_time',
+          key: 'full_time',
           value: 'desc'
         }];
 
         mediaAPI.esSearch(options, this).then((res) => {
           this.categoryList = this.categoryList.concat(res.data.docs);
           this.loadCategoryListBtnText = '加载更多';
-          // me.items = res.data.docs;
-          // me.total = res.data.numFound;
         }).catch((error) => {
           this.$toast.error(error);
         });
