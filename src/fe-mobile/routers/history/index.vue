@@ -8,8 +8,8 @@
       <fj-card
         editable
         width="50%"
-        v-for="item in items"
-        :key="item.id"
+        v-for="(item, index) in items"
+        :key="item.id + index"
         :thumb="getThumb(item)"
         :title="getTitle(item)"
         :time="formatTime(item.publish_time) || '无发布时间'"
