@@ -135,7 +135,7 @@
             }
           }
           if (!isSave && !canSubmit) {
-            me.showErrorInfo('存在打包状态不是完成的任务，不能提交');
+            me.showErrorInfo('存在打包状态未完成的任务，请等待打包状态完成后提交');
             return { postData: null, func: null};
           }
           func = isSave ? api.batchSaveShelf : api.batchSubmitShelf;
@@ -150,7 +150,7 @@
             canSubmit = false;
           }
           if (!isSave && !canSubmit) {
-            me.showErrorInfo('存在打包状态不是完成的任务，不能提交');
+            me.showErrorInfo('存在打包状态未完成的任务，请等待打包状态完成后提交');
             return { postData: null, func: null};
           }
           func = isSave ? api.saveShelf : api.submitShelf;

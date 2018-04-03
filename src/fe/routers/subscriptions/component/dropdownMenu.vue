@@ -4,16 +4,29 @@
       v-for="item in menus"
       :command="item.command"
       :key="item.key">
-      <a :class='[ isDark ? "dropdown-menu-dark-a": "dropdown-menu-a"]' :href="item.downloadUrl">{{item.name}}</a>
+      <span :class='[ isDark ? "dropdown-menu-dark-a": "dropdown-menu-a"]' @click="createDownloadUrl(item)">{{item.name}}</span>
     </fj-dropdown-item>
   </div>
 </template>
 <script>
+  const api = require('../../../api/subscribe');
+
   export default {
     props: {
       isDark: {},
       menuStyle: {},
       menus: []
+    },
+    methods: {
+      createDownloadUrl(item) {
+        api.createDownloadUrl({ shelfTaskId: item.shelfTaskId, type: item.key })
+          .then((res) => {
+            window.open(res.data);
+          })
+          .catch((error)=>{
+            this.$message.error(error);
+          })
+      }
     }
   };
 </script>
