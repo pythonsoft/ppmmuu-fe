@@ -46,12 +46,15 @@
 
         <div slot="footer" class="dialog-footer">
           <fj-button @click="cancelDialog">取消</fj-button><!--
-          --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
+          --><fj-button type="primary" :loading="isBtnLoading" @click="confirmDialog">确定</fj-button>
         </div>
 
       </fj-dialog>
       <shelf-detail
-              :btnShow="false"
+              :btnShow="canBtnShow"
+              btnText="提交"
+              btnType="info"
+              @operation-click="submitShelf"
               :title="videoTitle"
               :programNO="programNO"
               :id="editId"
@@ -84,7 +87,7 @@
         dialogVisible: false,
         dialogMessage: '',
         departmentId: '',
-        sendBackOrDelete: '',
+        operation: '',
         keyword: '',
         tableData: [],
         searchOwner: [],
@@ -102,6 +105,8 @@
         objectId: '',
         detailDialogVisible: false,
         canSubmit: false,
+        isBtnLoading: false,
+        canBtnShow: false
       };
     },
     created() {
@@ -145,11 +150,16 @@
         this.programNO = row.programNO;
         this.videoTitle = row.name;
         this.editId = row._id;
+        if (row.packageStatus && row.packageStatus !== '' && row.packageStatus !== '2') {
+          this.canBtnShow = false;
+        } else {
+          this.canBtnShow = true;
+        }
       },
       handleClickSendBack() {
         this.dialogMessage = '您确定要退回这些任务吗?';
         this.dialogVisible = true;
-        this.sendBackOrDelete = 'sendBack';
+        this.operation = 'sendBack';
       },
       handleClickEdit() {
         this.editRow = this.selectedRows;
@@ -158,11 +168,12 @@
       handleClickDelete() {
         this.dialogMessage = '您确定要删除这些任务吗?';
         this.dialogVisible = true;
-        this.sendBackOrDelete = 'delete';
+        this.operation = 'delete';
       },
       resetDialog() {
         this.dialogMessage = '';
         this.dialogVisible = false;
+        this.isBtnLoading = false;
       },
       cancelDialog() {
         this.resetDialog();
@@ -171,36 +182,45 @@
         this.showEdit = false;
       },
       handleClickSubmit() {
-        api.batchSubmitByIds({ _ids: this.selectedIds.join(',') })
-          .then(() => {
-            this.$message.error('提交成功');
-            this.handleClickSearch();
-          })
-          .catch((error) => {
-            this.$message.error(error);
-          })
+        this.dialogMessage = '您确定要提交这些任务吗?';
+        this.dialogVisible = true;
+        this.operation = 'submitMany';
       },
       confirmDialog() {
         const me = this;
         let postData = {};
         let message = '';
         let apiFunc = '';
-        if (this.sendBackOrDelete === 'sendBack') {
+        if (this.operation === 'sendBack') {
           postData = {
             _ids: this.selectedIds.join(','),
           };
           message = '退回';
           apiFunc = api.sendBackShelf;
-        } else if (this.sendBackOrDelete === 'delete') {
+        } else if (this.operation === 'delete') {
           postData = {
             _ids: this.selectedIds.join(','),
           };
           message = '删除';
           apiFunc = api.deleteShelfTask;
+        } else if (this.operation === 'submitMany') {
+          postData = {
+            _ids: this.selectedIds.join(','),
+          };
+          message = '提交';
+          apiFunc = api.batchSubmitByIds;
+        } else if (this.operation === 'submitOne') {
+          postData = {
+            _ids: this.editId,
+          };
+          message = '提交';
+          apiFunc = api.batchSubmitByIds;
         } else {
           this.resetDialog();
           return;
         }
+
+        this.isBtnLoading = true;
 
         apiFunc(postData)
           .then((response) => {
@@ -212,6 +232,11 @@
             me.showErrorInfo(error);
             me.resetDialog();
           });
+      },
+      submitShelf(){
+        this.operation = 'submitOne';
+        this.dialogMessage = '您确定要提交这个任务吗?';
+        this.dialogVisible = true;
       },
       handleSelectionChange(rows) {
         this.selectedIds = [];

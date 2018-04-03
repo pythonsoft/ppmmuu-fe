@@ -1,10 +1,7 @@
 <template>
   <div>
     <h1 class="shelf-edit-title">填写内容</h1>
-    <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="100px">
-      <fj-form-item label="节目名称(中文)" prop="name">
-        <fj-input v-model="editorInfo.name"></fj-input>
-      </fj-form-item>
+    <fj-form :model="editorInfo" :rules="rules" ref="editorInfoForm" label-width="90px">
       <fj-form-item label="订阅类型" prop="subscribeType">
         <fj-select
                 :remote-method="remoteMethod"
@@ -17,7 +14,10 @@
                   :label="item.label"></fj-option>
         </fj-select>
       </fj-form-item>
-      <fj-form-item label="首播时间" prop="airTime">
+      <fj-form-item label="节目名称" prop="name">
+        <fj-input v-model="editorInfo.name"></fj-input>
+      </fj-form-item>
+      <fj-form-item label="播出时间" prop="airTime">
         <fj-date-picker
                 theme="fill"
                 placeholder="请选择日期"
@@ -27,13 +27,13 @@
       <fj-form-item label="限制" prop="limit">
         <fj-input v-model="editorInfo.limit"></fj-input>
       </fj-form-item>
-      <fj-form-item label="文件名" prop="fileName">
-        <fj-input v-model="editorInfo.fileName" :disabled="true"></fj-input>
-      </fj-form-item>
       <fj-form-item label="封面" prop="cover">
         <div class="shelf-edit-cover">
           <upload-img :imgPath="editorInfo.cover" @img-change="imgChange"></upload-img>
         </div>
+      </fj-form-item>
+      <fj-form-item label="内容介绍" v-if="editorInfo.content">
+        <fj-input type="textarea" v-model="editorInfo.content" :rows="6" :disabled="true"></fj-input>
       </fj-form-item>
     </fj-form>
   </div>
