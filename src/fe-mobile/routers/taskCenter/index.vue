@@ -74,20 +74,26 @@
       };
     },
     created() {
-      this.runTimer = true;
       if (this.$route.params.type) {
         this.navIndex = this.$route.params.type;
-        this.updateStatus();
-      } else {
-        this.updateStatus();
       }
-      this.autoRefreshList();
+      this.updateStatus();
+      if (this.navIndex === 'task_download_all') {
+        this.runTimer = true;
+        this.autoRefreshList();
+      }
     },
     destroyed() {
       this.runTimer = false;
     },
     watch: {
       navIndex(val) {
+        if (val !== 'task_download_all') {
+          this.runTimer = false;
+        } else {
+          this.runTimer = true;
+          this.autoRefreshList();
+        }
         this.updateStatus();
         this.$router.push({ name: 'taskCenter', params: { type: val } });
       },
