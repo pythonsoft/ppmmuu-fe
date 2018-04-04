@@ -61,6 +61,33 @@ const common = {
       }
     }
     return { key: '', name: '', value: '' };
+  },
+  formatProgramGroup(program) {
+    const groupObj = {};
+    for (let i = 0, len = program.length; i < len; i++) {
+      const { index, groupName, groupIndex } = program[i].order;
+      const keys = Object.keys(groupObj);
+      if (keys.indexOf(groupIndex+'') > -1) {
+        groupObj[groupIndex].itemsObj[index] = i;
+      } else {
+        groupObj[groupIndex] = { groupIndex: groupIndex, groupName: groupName, itemsObj: { [index]: i } };
+      }
+    }
+
+    const groupKeys = Object.keys(groupObj).sort((a, b) => {
+      return Number(a) - Number(b);
+    });
+
+    const programGroup = groupKeys.map(key => {
+      const { itemsObj, groupName } = groupObj[key];
+      const itemKeys = Object.keys(itemsObj).sort((a, b) => {
+        return Number(a) - Number(b);
+      });
+      const programIndexs = itemKeys.map(itemKey => { return itemsObj[itemKey] });
+      return { groupName, programIndexs };
+    });
+
+    return programGroup;
   }
 };
 
