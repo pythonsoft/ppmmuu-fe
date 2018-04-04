@@ -84,7 +84,7 @@
           :key="item.id"
           :thumb="getThumb(item)"
           :title="getTitle(item)"
-          :time="formatTime(item.publish_time) || '无发布时间'"
+          :time="formatShowTime(item).value || '无发布时间'"
           :duration="getDuration(item)"
           :definition="getMediaFormat(item)"
           @click-card="linkToWatch(item)"
@@ -100,7 +100,8 @@
     getMediaFormat,
     getTitle,
     getThumb,
-    formatProgramGroup
+    formatProgramGroup,
+    formatShowTime
   } from '../../../fe/routers/mediaCenter/common';
   import {
     formatSize,
@@ -183,6 +184,7 @@
       formatDuration,
       getMediaFormat,
       formatTime,
+      formatShowTime,
       isEmptyObject,
       linkToWatch(item) {
         this.$router.push({ name: 'watch', params: { objectId: item.id } });
