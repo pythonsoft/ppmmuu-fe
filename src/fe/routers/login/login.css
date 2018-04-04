@@ -1,9 +1,9 @@
 .login-box {
   position: absolute;
   left: 0;
-  top: 30%;
+  top: 40%;
   width: 100%;
-  transform: translateY(-30%);
+  transform: translateY(-40%);
 }
 
 .login {
