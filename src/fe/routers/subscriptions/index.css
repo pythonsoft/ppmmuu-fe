@@ -475,7 +475,7 @@
   position: relative;
 }
 
-.item-info-key {
+.subscriptions-program-table .item-info-key {
   text-align: right;
   line-height: 150%;
   color: #2A3E52;
@@ -488,38 +488,6 @@
   width: 190px;
   display: block;
   word-break: break-all;
-}
-
-.media-center-file-item {
-  padding: 8px 30px 8px 10px;
-}
-
-.media-center-file-item-bottom-line {
-  border-bottom: 1px solid #E3EAF3;
-}
-
-.media-center-file-name {
-  font-weight: bold;
-  padding-right: 70px;
-  position: relative;
-  word-break: break-all;
-  word-wrap: break-word;
-}
-
-.media-center-file-type {
-  height: 20px;
-  line-height: 20px;
-  text-align: center;
-  position: absolute;
-  right: 0px;
-  top: 0;
-  padding: 0 6px;
-  font-size: 12px;
-  font-weight: normal;
-  background: #F2F6FA;
-  border: 1px solid #CED9E5;
-  border-radius: 2px;
-  cursor: default;
 }
 
 .media-center-operation-bar {
