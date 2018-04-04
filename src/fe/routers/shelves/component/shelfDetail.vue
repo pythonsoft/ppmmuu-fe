@@ -36,20 +36,25 @@
             </table>
           </fj-tab-pane>
           <fj-tab-pane label="媒体库信息" name="tab1">
-            <table class="media-center-table">
-              <tr v-for="(info, key) in programDetails" v-if="info.cn && info.value" >
-                <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info" v-html="formatContent(info.value).slice(0, 68) + '...'"></span>
-                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand('programDetails', info, key)">详细<i class="tri-bottom"></i></span>
-                  <template v-else>
-                    <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ formatValue(info.value) }}</span>
-                  </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded('programDetails', info, key)">收起<i class="tri-top"></i></span>
-                </td>
-              </tr>
-            </table>
+            <div class="media-center-file-item">
+              <template v-if="programEmpty">无</template>
+              <template v-for="groupItem in programGroup" v-else>
+                <h4 class="media-center-table-title">{{ groupItem.groupName }}</h4>
+                <table class="media-center-table">
+                  <tr v-for="index in groupItem.programIndexs" v-if="programDetails[index] && programDetails[index].value" >
+                    <td class="item-info-key" width="80">{{ programDetails[index].cn + ': ' || '空KEY:' }}</td>
+                    <td class="item-info-value clearfix">
+                      <span v-if="programDetails[index].isFoldedContent" class="inline-info" v-html="formatContent(programDetails[index].value).slice(0, 68) + '...'"></span>
+                      <span class="item-expand-btn" v-if="programDetails[index].isFoldedContent" @click="expand(programDetails[index], index)">详细<i class="tri-bottom"></i></span>
+                      <template v-else>
+                        <span v-html="formatContent(programDetails[index].value)"></span>
+                      </template>
+                      <span class="item-folded-btn" v-if="programDetails[index].value.length > 68 && !programDetails[index].isFoldedContent" @click="folded(programDetails[index], index)">收起<i class="tri-top"></i></span>
+                    </td>
+                  </tr>
+                </table>
+              </template>
+            </div>
           </fj-tab-pane>
           <fj-tab-pane label="状态信息" name="tab3" v-if="showPackageInfo">
             暂无
@@ -74,6 +79,7 @@
     formatQuery,
     FROM_WHERE
   } from '../../../common/utils';
+  import { formatProgramGroup } from '../../mediaCenter/common';
   import { SUBSCRIBE_TYPE } from '../config';
   import Player from '../../mediaCenter/components/player';
   import MoreView from '../../mediaCenter/moreView';
@@ -130,7 +136,9 @@
         activeTabName: 'tab2',
         videoId: '',
         FILE_TYPE_MAP: FILE_TYPE_MAP,
-        fromWhere: ''
+        fromWhere: '',
+        programEmpty: false,
+        programGroup: []
       };
     },
     created() {
@@ -150,7 +158,9 @@
           this.programDetails = [];
           this.editorDetails = {};
           this.activeTabName = 'tab2';
+          this.programGroup = [];
           this.videoId = '';
+          this.programEmpty = false;
         } else {
           this.getShelfDetail();
           this.getDetail();
@@ -180,6 +190,13 @@
       folded(source, info, key) {
         const newInfo = Object.assign({}, this[source][key], { isFoldedContent: true });
         this.$set(this[source], key, newInfo);
+      },
+      isProgramEmpty(){
+        const programDetails = this.programDetails;
+        if(programDetails.length > 0){
+          return false;
+        }
+        return true;
       },
       getStream() {
         getStreamURL(this.objectId, this.fromWhere, (err, url, res) => {
@@ -215,16 +232,22 @@
         api.getObject(formatQuery({ objectid: me.objectId, fromWhere: me.fromWhere }, true))
           .then((res)=>{
             const data = res.data.result.detail.program;
-            const programNOObj = {
-                key: 'programNO',
-                cn: '节目编号',
-                value: me.programNO
-            }
-            data.push(programNOObj);
             me.programDetails = data;
-            for (let i = 0; i < me.programDetails.length; i++) {
-              const info = me.programDetails[i];
-              if (formatContent(info.value).length > 68) {
+            me.programGroup = formatProgramGroup(data);
+            if (isEmptyObject(res.data.result.detail.program)) {
+              me.programDetails = res.data.result.detail.sequence;
+            }
+            me.programEmpty = me.isProgramEmpty();
+            console.log('empty==>', me.programEmpty);
+            console.log('err==>', JSON.stringify(me.programGroup));
+
+            for(let i =0, len = this.programDetails.length; i < len; i++){
+              if(this.programDetails[i].key === 'OBJECTID'){
+                this.programDetails.splice(i, 1);
+                break;
+              }
+              const info = this.programDetails[i];
+              if (this.formatContent(info.value).length > 68) {
                 info.isFoldedContent = true;
               }
             }

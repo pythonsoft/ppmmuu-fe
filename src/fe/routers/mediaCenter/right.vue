@@ -36,19 +36,22 @@
         <fj-tab-pane label="条目信息" name="tab1">
           <div class="media-center-file-item">
             <template v-if="programEmpty">无</template>
-            <table class="media-center-table" v-else>
-              <tr v-for="(info, index) in program" v-if="info.value" >
-                <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                <td class="item-info-value clearfix">
-                  <span v-if="info.isFoldedContent" class="inline-info" v-html="formatContent(info.value).slice(0, 68) + '...'"></span>
-                  <span class="item-expand-btn" v-if="info.isFoldedContent" @click="expand(info, index)">详细<i class="tri-bottom"></i></span>
-                  <template v-else>
-                    <span v-html="formatContent(info.value)"></span>
-                  </template>
-                  <span class="item-folded-btn" v-if="info.value.length > 68 && !info.isFoldedContent" @click="folded(info, index)">收起<i class="tri-top"></i></span>
-                </td>
-              </tr>
-            </table>
+            <template v-for="groupItem in programGroup" v-else>
+              <h4 class="media-center-table-title">{{ groupItem.groupName }}</h4>
+              <table class="media-center-table">
+                <tr v-for="index in groupItem.programIndexs" v-if="program[index] && program[index].value" >
+                  <td class="item-info-key" width="80">{{ program[index].cn + ': ' || '空KEY:' }}</td>
+                  <td class="item-info-value clearfix">
+                    <span v-if="program[index].isFoldedContent" class="inline-info" v-html="formatContent(program[index].value).slice(0, 68) + '...'"></span>
+                    <span class="item-expand-btn" v-if="program[index].isFoldedContent" @click="expand(program[index], index)">详细<i class="tri-bottom"></i></span>
+                    <template v-else>
+                      <span v-html="formatContent(program[index].value)"></span>
+                    </template>
+                    <span class="item-folded-btn" v-if="program[index].value.length > 68 && !program[index].isFoldedContent" @click="folded(program[index], index)">收起<i class="tri-top"></i></span>
+                  </td>
+                </tr>
+              </table>
+            </template>
           </div>
         </fj-tab-pane>
         <fj-tab-pane label="文件信息" name="tab2">
@@ -172,6 +175,7 @@
     getMediaFormatStyle,
     getReplaceName,
     getTitle,
+    formatProgramGroup
   } from './common';
   import {
     isEmptyObject,
@@ -212,6 +216,7 @@
     data() {
       return {
         title: '',
+        programGroup: [],
         program: [],
         basic: {},
         files: [], // 所有的文件信息
@@ -309,7 +314,11 @@
         const me = this;
         api.getObject({ params: { objectid: this.item.id, fromWhere: this.videoInfo.from_where } }).then((res) => {
           const detail = res.data.result.detail;
-          me.program = detail.program;
+          const program = detail.program;
+          me.program = program;
+
+          this.programGroup = formatProgramGroup(program);
+
           if (isEmptyObject(detail.program)) {
             me.program = detail.sequence;
           }

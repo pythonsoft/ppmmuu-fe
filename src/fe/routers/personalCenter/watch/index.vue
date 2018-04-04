@@ -36,20 +36,24 @@
         <i class="iconfont rightBoxToggle" :class="rightBoxToggle" @click="foldedOrExpandRightBox"></i>
         <fj-tabs v-if="objectId" v-model="activeTabName" class="media-video-panel-wrap">
           <fj-tab-pane label="条目信息" name="tab1">
-            <div class="media-center-file-item">
-              <table class="media-center-table">
-                <tr v-for="info in program" v-if="info.value" >
-                  <td class="item-info-key" width="80">{{ info.cn + ': ' || '空KEY:' }}</td>
-                  <td class="item-info-value">
-                    <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-                    <span v-else>{{ formatValue(info.value) }}</span>
-                  </td>
-                </tr>
-              </table>
+            <div class="watch-history-file-item">
+              <template v-if="program.length === 0">无</template>
+              <template v-for="groupItem in programGroup" v-else>
+                <h4 class="media-center-table-title">{{ groupItem.groupName }}</h4>
+                <table class="media-center-table">
+                  <tr v-for="index in groupItem.programIndexs" v-if="program[index] && program[index].value" >
+                    <td class="item-info-key" width="80">{{ program[index].cn + ': ' || '空KEY:' }}</td>
+                    <td class="item-info-value">
+                      <span v-if="program[index].cn === '內容介紹'" v-html="formatContent(program[index].value)"></span>
+                      <span v-else>{{ formatValue(program[index].value) }}</span>
+                    </td>
+                  </tr>
+                </table>
+              </template>
             </div>
           </fj-tab-pane>
           <fj-tab-pane label="文件信息" name="tab2">
-            <div class="media-center-file-item media-center-file-item-bottom-line" v-for="file in files">
+            <div class="watch-history-file-item media-center-file-item-bottom-line" v-for="file in files">
               <table class="media-center-table">
                 <tr>
                   <td class="item-info-key" width="80">文件名: </td>
@@ -103,7 +107,7 @@
   import GridListView from '../../mediaCenter/gridAndList';
   import MoreView from '../../mediaCenter/moreView';
   import Player from '../../mediaCenter/components/player';
-  import { getTitle, getThumb } from '../../mediaCenter/common';
+  import { getTitle, getThumb, formatProgramGroup } from '../../mediaCenter/common';
   import downloadListView from '../../management/template/download/component/downloadDialog';
   import throttle from '../../../component/fjUI/utils/throttle';
 
@@ -137,6 +141,7 @@
           FILENAME: ''
         },
         program: [],
+        programGroup: [],
         items: [],
         rightboxWidth: '452px',
         templateInfo: {},
@@ -225,7 +230,9 @@
       },
       getDetail() {
         mediaAPI.getObject({ params: { objectid: this.objectId, fromWhere: this.fromWhere } }).then((res) => {
-          this.program = res.data.result.detail.program;
+          const program = res.data.result.detail.program;
+          this.program = program;
+          this.programGroup = formatProgramGroup(program);
           this.files = res.data.result.files;
           for(let i =0, len = this.program.length; i < len; i++){
             if(this.program[i].key === 'OBJECTID'){
@@ -359,7 +366,7 @@
           rs = formatTime(str);
         }
 
-        console.log(str, rs);
+        // console.log(str, rs);
 
         return rs;
       }
