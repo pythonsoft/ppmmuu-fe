@@ -238,8 +238,6 @@
               me.programDetails = res.data.result.detail.sequence;
             }
             me.programEmpty = me.isProgramEmpty();
-            console.log('empty==>', me.programEmpty);
-            console.log('err==>', JSON.stringify(me.programGroup));
 
             for(let i =0, len = this.programDetails.length; i < len; i++){
               if(this.programDetails[i].key === 'OBJECTID'){
