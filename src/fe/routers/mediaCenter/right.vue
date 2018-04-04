@@ -314,7 +314,7 @@
         const me = this;
         api.getObject({ params: { objectid: this.item.id, fromWhere: this.videoInfo.from_where } }).then((res) => {
           const detail = res.data.result.detail;
-          const program = detail.program;
+          const program = detail.program.length > 0 ? detail.program : detail.sequence;
           me.program = program;
 
           this.programGroup = formatProgramGroup(program);

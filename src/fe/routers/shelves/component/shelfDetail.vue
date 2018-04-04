@@ -45,11 +45,11 @@
                     <td class="item-info-key" width="80">{{ programDetails[index].cn + ': ' || '空KEY:' }}</td>
                     <td class="item-info-value clearfix">
                       <span v-if="programDetails[index].isFoldedContent" class="inline-info" v-html="formatContent(programDetails[index].value).slice(0, 68) + '...'"></span>
-                      <span class="item-expand-btn" v-if="programDetails[index].isFoldedContent" @click="expand(programDetails[index], index)">详细<i class="tri-bottom"></i></span>
+                      <span class="item-expand-btn" v-if="programDetails[index].isFoldedContent" @click="expand('programDetails', programDetails[index], index)">详细<i class="tri-bottom"></i></span>
                       <template v-else>
                         <span v-html="formatContent(programDetails[index].value)"></span>
                       </template>
-                      <span class="item-folded-btn" v-if="programDetails[index].value.length > 68 && !programDetails[index].isFoldedContent" @click="folded(programDetails[index], index)">收起<i class="tri-top"></i></span>
+                      <span class="item-folded-btn" v-if="programDetails[index].value.length > 68 && !programDetails[index].isFoldedContent" @click="folded('programDetails', programDetails[index], index)">收起<i class="tri-top"></i></span>
                     </td>
                   </tr>
                 </table>
@@ -231,9 +231,10 @@
         const me = this;
         api.getObject(formatQuery({ objectid: me.objectId, fromWhere: me.fromWhere }, true))
           .then((res)=>{
-            const data = res.data.result.detail.program;
-            me.programDetails = data;
-            me.programGroup = formatProgramGroup(data);
+            const detail = res.data.result.detail;
+            const program = detail.program.length > 0 ? detail.program : detail.sequence;
+            me.programDetails = program;
+            me.programGroup = formatProgramGroup(program);
             if (isEmptyObject(res.data.result.detail.program)) {
               me.programDetails = res.data.result.detail.sequence;
             }
