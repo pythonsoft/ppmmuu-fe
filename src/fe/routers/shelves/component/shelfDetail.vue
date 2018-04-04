@@ -231,9 +231,10 @@
         const me = this;
         api.getObject(formatQuery({ objectid: me.objectId, fromWhere: me.fromWhere }, true))
           .then((res)=>{
-            const data = res.data.result.detail.program;
-            me.programDetails = data;
-            me.programGroup = formatProgramGroup(data);
+            const detail = res.data.result.detail;
+            const program = detail.program.length > 0 ? detail.program : detail.sequence;
+            me.programDetails = program;
+            me.programGroup = formatProgramGroup(program);
             if (isEmptyObject(res.data.result.detail.program)) {
               me.programDetails = res.data.result.detail.sequence;
             }
