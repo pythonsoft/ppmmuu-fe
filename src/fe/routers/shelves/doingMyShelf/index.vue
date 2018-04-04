@@ -16,6 +16,7 @@
         </div>
         <div class="operation-btn-group">
           <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickEdit">编辑</fj-button>
+          <fj-button type="primary" size="mini" v-bind:disabled="!canSubmit" @click="handleClickSubmit">提交</fj-button>
           <fj-button type="primary" size="mini" v-bind:disabled="selectedIds.length < 1" @click="handleClickSendBack">退回</fj-button>
         </div>
         <div class="operation-btn-group">
@@ -45,12 +46,15 @@
 
         <div slot="footer" class="dialog-footer">
           <fj-button @click="cancelDialog">取消</fj-button><!--
-          --><fj-button type="primary" @click="confirmDialog">确定</fj-button>
+          --><fj-button type="primary" :loading="isBtnLoading" @click="confirmDialog">确定</fj-button>
         </div>
 
       </fj-dialog>
       <shelf-detail
-              :btnShow="false"
+              :btnShow="canBtnShow"
+              btnText="提交"
+              btnType="info"
+              @operation-click="submitShelf"
               :title="videoTitle"
               :programNO="programNO"
               :id="editId"
@@ -83,7 +87,7 @@
         dialogVisible: false,
         dialogMessage: '',
         departmentId: '',
-        sendBackOrDelete: '',
+        operation: '',
         keyword: '',
         tableData: [],
         searchOwner: [],
@@ -99,7 +103,10 @@
         programNO: '',
         editId: '',
         objectId: '',
-        detailDialogVisible: false
+        detailDialogVisible: false,
+        canSubmit: false,
+        isBtnLoading: false,
+        canBtnShow: false
       };
     },
     created() {
@@ -143,11 +150,16 @@
         this.programNO = row.programNO;
         this.videoTitle = row.name;
         this.editId = row._id;
+        if (row.packageStatus && row.packageStatus !== '' && row.packageStatus !== '2') {
+          this.canBtnShow = false;
+        } else {
+          this.canBtnShow = true;
+        }
       },
       handleClickSendBack() {
         this.dialogMessage = '您确定要退回这些任务吗?';
         this.dialogVisible = true;
-        this.sendBackOrDelete = 'sendBack';
+        this.operation = 'sendBack';
       },
       handleClickEdit() {
         this.editRow = this.selectedRows;
@@ -156,11 +168,12 @@
       handleClickDelete() {
         this.dialogMessage = '您确定要删除这些任务吗?';
         this.dialogVisible = true;
-        this.sendBackOrDelete = 'delete';
+        this.operation = 'delete';
       },
       resetDialog() {
         this.dialogMessage = '';
         this.dialogVisible = false;
+        this.isBtnLoading = false;
       },
       cancelDialog() {
         this.resetDialog();
@@ -168,27 +181,46 @@
       handleShowBack() {
         this.showEdit = false;
       },
+      handleClickSubmit() {
+        this.dialogMessage = '您确定要提交这些任务吗?';
+        this.dialogVisible = true;
+        this.operation = 'submitMany';
+      },
       confirmDialog() {
         const me = this;
         let postData = {};
         let message = '';
         let apiFunc = '';
-        if (this.sendBackOrDelete === 'sendBack') {
+        if (this.operation === 'sendBack') {
           postData = {
             _ids: this.selectedIds.join(','),
           };
           message = '退回';
           apiFunc = api.sendBackShelf;
-        } else if (this.sendBackOrDelete === 'delete') {
+        } else if (this.operation === 'delete') {
           postData = {
             _ids: this.selectedIds.join(','),
           };
           message = '删除';
           apiFunc = api.deleteShelfTask;
+        } else if (this.operation === 'submitMany') {
+          postData = {
+            _ids: this.selectedIds.join(','),
+          };
+          message = '提交';
+          apiFunc = api.batchSubmitByIds;
+        } else if (this.operation === 'submitOne') {
+          postData = {
+            _ids: this.editId,
+          };
+          message = '提交';
+          apiFunc = api.batchSubmitByIds;
         } else {
           this.resetDialog();
           return;
         }
+
+        this.isBtnLoading = true;
 
         apiFunc(postData)
           .then((response) => {
@@ -201,14 +233,35 @@
             me.resetDialog();
           });
       },
+      submitShelf(){
+        const editorInfo = this.selectedRows[0].editorInfo;
+
+        if (!editorInfo.name || !editorInfo.cover || !editorInfo.subscribeType || !editorInfo.limit) {
+          this.$message.error('编目信息没有填写完整不能提交');
+        } else {
+          this.operation = 'submitOne';
+          this.dialogMessage = '您确定要提交这个任务吗?';
+          this.dialogVisible = true;
+        }
+      },
       handleSelectionChange(rows) {
         this.selectedIds = [];
         this.selectedRows = [];
+        this.canSubmit = false;
         if (rows && rows.length) {
+          let flag = true;
           for (let i = 0, len = rows.length; i < len; i++) {
             const row = rows[i];
             this.selectedIds.push(row._id);
             this.selectedRows.push(row);
+            if (row.packageStatus && row.packageStatus !== '' && row.packageStatus !== '2') {
+              flag = false;
+            }
+          }
+          if (flag) {
+            this.canSubmit = true;
+          } else {
+            this.canSubmit = false;
           }
         }
       },

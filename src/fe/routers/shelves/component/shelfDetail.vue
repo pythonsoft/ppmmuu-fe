@@ -139,13 +139,24 @@
       }
     },
     watch: {
-      id(val) {
-        if (this.visible) {
+      visible(val) {
+        if (!val) {
+          this.url = '';
+          this.streamInfo = {
+            INPOINT: 0,
+            OUTPOINT: 0,
+            FILENAME: ''
+          };
+          this.programDetails = [];
+          this.editorDetails = {};
+          this.activeTabName = 'tab2';
+          this.videoId = '';
+        } else {
           this.getShelfDetail();
           this.getDetail();
           this.getStream();
         }
-      },
+      }
     },
     methods: {
       isEmptyObject,
@@ -300,6 +311,7 @@
     font-size: 12px;
     text-align: center;
     color: #9FB3CA;
+    z-index: 101;
   }
   .closebtn:hover {
     background-color: #CED9E5;

@@ -10,9 +10,6 @@
       <span v-html="getTitle(item)"></span>
       <span v-if="item.files.length > 0" class="iconfont icon-download download-btn" ref="downloadBtn" @click.stop="(e)=>{mountDropdownMenu(e, item.files)}" v-clickoutside="handleCloseMenu"></span>
     </div>
-    <div class="subscribe-item-detail" :title="item.viceTitle">
-      节目副题(中文)：{{ item.viceTitle || '无' }}
-    </div>
     <p class="subscribe-item-detail">
       限制：{{ item.limit }}
     </p>
@@ -113,7 +110,7 @@
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
         const menus = files.map(file => {
-          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, downloadUrl: file.downloadUrl };
+          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, shelfTaskId: file.shelfTaskId };
         });
         this.dropdownMenu.menus = menus;
         // this.dropdownMenu.$on('item-click', this.handleItemClick);

@@ -1,7 +1,7 @@
 <template>
   <div class="search-filter-menu" :style="menuStyle">
     <li v-for="menu in menus" class="clearfix">
-      <span class="label">{{ menu.label }}</span>
+      <span :class="['label', {'label-l': menu.type === 'daterange'}]">{{ menu.label }}</span>
       <div v-if="menu.items" class="value-box">
         <span
           v-for="item in menu.items"
@@ -17,7 +17,7 @@
           type="datetimerange"
           direction="horizontal"
           placeholder="请选择日期范围"
-          v-model="fullTime"
+          v-model="menu.selected"
         ></fj-date-picker>
         </div>
       </div>
@@ -53,6 +53,15 @@
     },
     methods: {
       handleClick() {
+        for (let i = 0, len = this.menus.length; i < len; i++) {
+          const menu = this.menus[i];
+          if (menu.type === 'daterange' && menu.selected.length) {
+            const time = menu.selected[0]
+                ? new Date(menu.selected[0]).toISOString() + ',' + new Date(menu.selected[1]).toISOString()
+                : '';
+            this.selfFilterList[menu.key]= time;
+          }
+        }
         this.$emit('update-filter-list', this.selfFilterList);
       },
       handleCancel() {
@@ -145,6 +154,10 @@
     width: 96px;
     color: #4C637B;
     padding: 10px;
+    line-height: 22px;
+  }
+  .search-filter-menu li .label-l {
+    line-height: 30px;
   }
   .search-filter-menu li .value-box {
     margin-left: 96px;

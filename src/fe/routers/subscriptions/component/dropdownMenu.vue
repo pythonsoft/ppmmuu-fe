@@ -4,16 +4,29 @@
       v-for="item in menus"
       :command="item.command"
       :key="item.key">
-      <a style="color: #ffffff;height:100%;width:100%;display:inline-block;" :href="item.downloadUrl">{{item.name}}</a>
+      <span :class='[ isDark ? "dropdown-menu-dark-a": "dropdown-menu-a"]' @click="createDownloadUrl(item)">{{item.name}}</span>
     </fj-dropdown-item>
   </div>
 </template>
 <script>
+  const api = require('../../../api/subscribe');
+
   export default {
     props: {
       isDark: {},
       menuStyle: {},
       menus: []
+    },
+    methods: {
+      createDownloadUrl(item) {
+        api.createDownloadUrl({ shelfTaskId: item.shelfTaskId, type: item.key })
+          .then((res) => {
+            window.open(res.data);
+          })
+          .catch((error)=>{
+            this.$message.error(error);
+          })
+      }
     }
   };
 </script>
@@ -59,7 +72,11 @@
   }
   .dropdown-item:hover {
     background-color: #38B1EB;
-    color: #fff;
+    color: #CED9E5;
+  }
+  .dropdown-item-link {
+    display: block;
+    color: #CED9E5;
   }
   .showButton button {
     display: inline-block !important;
@@ -68,5 +85,20 @@
     background: #2A3E52;
     color: #CED9E5;
   }
+
+  .dropdown-menu-a {
+    color: #2A3E52;
+    height: 100%;
+    width: 100%;
+    display: inline-block;
+  }
+
+  .dropdown-menu-dark-a {
+    color: #fff;
+    height: 100%;
+    width: 100%;
+    display: inline-block;
+  }
+
 
 </style>

@@ -38,7 +38,7 @@
 }
 .subscribe-list-wrap {
   position: absolute;
-  top: 90px;
+  top: 63px;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -292,7 +292,7 @@
 }
 .search-wrap {
   position: absolute;
-  top: 90px;
+  top: 63px;
   left: 0;
   bottom: 0;
   right: 0;
@@ -301,7 +301,7 @@
 }
 .channel-wrap {
   position: absolute;
-  top: 90px;
+  top: 63px;
   left: 0;
   bottom: 0;
   right: 0;

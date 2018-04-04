@@ -11,8 +11,8 @@
         <ul class="clearfix" :style="{marginLeft: '-3px'}">
           <fj-card
             width="50%"
-            v-for="item in categoryItem.docs"
-            :key="item.id"
+            v-for="(item, index) in categoryItem.docs"
+            :key="item.id + index"
             :thumb="getThumb(item)"
             :title="getTitle(item)"
             :time="formatShowTime(item).value || '无发布时间'"
@@ -31,8 +31,8 @@
         <ul class="clearfix" :style="{marginLeft: '-3px', marginTop: '15px'}">
           <fj-card
             width="50%"
-            v-for="item in searchResult"
-            :key="item.id"
+            v-for="(item, index) in searchResult"
+            :key="item.id + index"
             :thumb="getThumb(item)"
             :title="getTitle(item)"
             :time="formatShowTime(item).value || '无发布时间'"
@@ -56,8 +56,8 @@
       <ul class="clearfix" :style="{marginLeft: '-3px'}">
         <fj-card
           width="50%"
-          v-for="item in categoryList"
-          :key="item.id"
+          v-for="(item, index) in categoryList"
+          :key="item.id + index"
           :thumb="getThumb(item)"
           :title="getTitle(item)"
           :time="formatShowTime(item).value || '无发布时间'"
@@ -94,6 +94,7 @@
     HHIGHLIGHT_FIELDS2,
     FILETR_FIELDS
   } from '../../../fe/routers/mediaCenter/config';
+
   const mediaAPI = require('../../../fe/api/media');
   const userAPI = require('../../../fe/api/user');
 
@@ -104,7 +105,6 @@
         defaultList: [],
         categoryList: [],
         searchResult: [],
-        fl: FILETR_FIELDS,
         datetimerange1: [],
         datetimerange2: [],
         pageSize: 24,
@@ -116,9 +116,12 @@
       };
     },
     created() {
-      this.getDefaultMedia();
       const program_type = this.$route.params.program_type;
-      if (program_type) this.listType = program_type;
+      if (program_type) {
+        this.listType = program_type;
+      } else {
+        this.getDefaultMedia();
+      }
     },
     watch: {
       '$route.params.program_type'(val) {
@@ -206,12 +209,10 @@
         }
         const me = this;
         const start = this.currentPage ? (this.currentPage - 1) * this.pageSize : 0;
-        // const f_date_162 = getTimeRange(this.datetimerange1, 'f_date_162'); // 新聞日期
-        // const f_date_36 = getTimeRange(this.datetimerange2, 'f_date_36'); // 首播日期
         const options = {
-          source: this.fl,
+          source: FILETR_FIELDS,
           match: [],
-          // should: [],
+          should: [],
           hl: HHIGHLIGHT_FIELDS1,
           sort: {},
           start: start,
@@ -220,21 +221,14 @@
         const must = options.match;
         must.push({ key: 'program_type', value: this.listType });
 
-        const obj = {
-          publish_status: 1
-        };
-
-        formatMust(must, obj);
         options.sort = [{
-          key: 'publish_time',
+          key: 'full_time',
           value: 'desc'
         }];
 
         mediaAPI.esSearch(options, this).then((res) => {
           this.categoryList = this.categoryList.concat(res.data.docs);
           this.loadCategoryListBtnText = '加载更多';
-          // me.items = res.data.docs;
-          // me.total = res.data.numFound;
         }).catch((error) => {
           this.$toast.error(error);
         });

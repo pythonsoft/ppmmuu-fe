@@ -102,7 +102,8 @@
         screenshotTitle: '',
         videoSource: '',
         loading: false,
-        programIndex: 0
+        programIndex: 0,
+        isAutoPlay: false
       };
     },
     computed: {
@@ -166,17 +167,24 @@
     created() {
       this.projectBus.$on('updateProgram', (program, programIndex, isAutoPlay) => {
         if (this.id === program.id) return;
+        const oldId = this.videoId;
         this.id = program.id;
         this.videoId = program.objectId;
         this.title = program.title;
         this.range = program.range;
         this.programIndex = programIndex;
-        if (isAutoPlay) {
-          this.video.addEventListener('loadeddata', () => {
-            this.loading = false;
-            this.updatePlayerStatus();
-          });
+        this.isAutoPlay = isAutoPlay;
+        if (oldId === program.objectId && isAutoPlay) {
+          this.updatePlayerStatus();
+          this.isAutoPlay = false;
         }
+        this.video.addEventListener('loadeddata', () => {
+          this.loading = false;
+          if (this.isAutoPlay) {
+            this.updatePlayerStatus();
+            this.isAutoPlay = false;
+          }
+        });
       });
     },
     mounted() {
