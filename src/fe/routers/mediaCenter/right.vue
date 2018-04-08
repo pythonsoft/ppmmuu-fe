@@ -283,7 +283,7 @@
         }
       },
       files(val) {
-        this.isOnTape = config.isOnTape(val);
+        this.isOnTape = config.isOnTape(val, this.videoInfo.from_where);
       }
     },
     created() {

@@ -295,13 +295,16 @@ method.getHighLightFields = function getHighLightFields(fields) {
  * @param {Array} files
  * @return {Boolean}
  */
-method.isOnTape = function(files = []) {
+method.isOnTape = function(files = [], fromWhere) {
   if (!files.length) return true;
-  const file = files[0];
+  const file = config.getOriginalFile(files, fromWhere);
   const keys = Object.keys(file);
   if (keys.indexOf('STATUS') === -1
     || keys.indexOf('FILETYPEID') === -1
-    || keys.indexOf('ARCHIVETYPE') === -1) return true;
+    || keys.indexOf('ARCHIVETYPE') === -1) {
+    return true;
+  }
+  console.log('file -->', file.NAME);
   if (method.getVideoPosition(file.FILETYPEID, file.STATUS, file.ARCHIVETYPE) === '带库') return true;
   return false;
 };
@@ -317,17 +320,14 @@ method.getVideoPosition = function(fileTypeId, status, archiveType) {
   const st = status + '';
   let flag = false;
 
+
   for(let i = 0, len = config.IVIDEO_EDIT_FILE_TYPE_ID.length; i < len; i++) {
     if(fileTypeId === config.IVIDEO_EDIT_FILE_TYPE_ID[i]) {
       flag = true;
     }
   }
 
-  if(!flag) {
-    return config.FILE_STATUS[2].text;
-  }
-
-  if(st === config.FILE_STATUS[2].value) {
+  if(!flag || st === config.FILE_STATUS[2].value) {
     return config.FILE_STATUS[2].text;
   }
 
@@ -335,5 +335,6 @@ method.getVideoPosition = function(fileTypeId, status, archiveType) {
     return config.ARCHIVETYPE[archiveType] ? config.ARCHIVETYPE[archiveType].text : '未知';
   }
 };
+
 
 module.exports = method;
