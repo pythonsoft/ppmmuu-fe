@@ -35,11 +35,11 @@ export default function (element, options) {
     }
   });
   if (supportTouch) {
-    element.addEventListener('touchmove', moveFn);
-    element.addEventListener('touchend', endFn);
-    element.addEventListener('touchcancel', endFn);
+    element.addEventListener('touchmove', moveFn, { passive: true });
+    element.addEventListener('touchend', endFn, { passive: true });
+    element.addEventListener('touchcancel', endFn, { passive: true });
   } else {
-    element.addEventListener('mousemove', moveFn);
-    element.addEventListener('mouseup', moveFn);
+    element.addEventListener('mousemove', moveFn, { passive: true });
+    element.addEventListener('mouseup', moveFn, { passive: true });
   }
 }
