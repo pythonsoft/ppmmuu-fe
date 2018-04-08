@@ -304,7 +304,6 @@ method.isOnTape = function(files = [], fromWhere) {
     || keys.indexOf('ARCHIVETYPE') === -1) {
     return true;
   }
-  console.log('file -->', file.NAME);
   if (method.getVideoPosition(file.FILETYPEID, file.STATUS, file.ARCHIVETYPE) === '带库') return true;
   return false;
 };
