@@ -54,3 +54,19 @@
 .operation-btn-group button {
   margin-right: 6px;
 }
+
+.deleted {
+  background: #AAAAAA;
+}
+
+.prepare {
+  background: #38B1EB;
+}
+
+.doing {
+  background: #C0C003;
+}
+
+.submitted {
+  background: #2EC4B6;
+}

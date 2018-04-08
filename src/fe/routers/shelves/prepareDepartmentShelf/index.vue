@@ -65,6 +65,7 @@
   import AddUser from '../../management/role/searchAddUser';
   import ShelfDetail from '../component/shelfDetail';
   import { formatPacakgeStatus } from '../config';
+  import '../index.css';
 
   const api = require('../../../api/shelves');
 
@@ -290,5 +291,21 @@
   }
   .operation-btn-group button {
     margin-right: 6px;
+  }
+
+  .deleted {
+    background: #AAAAAA;
+  }
+
+  .prepare {
+    background: #38B1EB;
+  }
+
+  .doing {
+    background: #C0C003;
+  }
+
+  .submitted {
+    background: #2EC4B6;
   }
 </style>
