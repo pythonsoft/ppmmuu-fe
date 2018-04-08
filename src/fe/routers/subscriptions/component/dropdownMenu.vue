@@ -93,6 +93,10 @@
     display: inline-block;
   }
 
+  .dropdown-menu-a:hover {
+    color: #fff;
+  }
+
   .dropdown-menu-dark-a {
     color: #fff;
     height: 100%;
