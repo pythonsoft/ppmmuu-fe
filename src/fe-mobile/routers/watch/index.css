@@ -41,6 +41,25 @@
 .media-center-file-item.first-child {
   margin-top: -15px;
 }
+
+.media-center-table-title {
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding-left: 9px;
+  color: #767676;
+  font-weight: bold;
+}
+.media-center-table-title:before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 12px;
+  top: 3px;
+  left: 0;
+  background: #38B1EB;
+}
+
 .media-center-table {
   width: 100%;
 }
@@ -48,16 +67,14 @@
   padding: 2px 4px;
 }
 .item-info-key {
-  text-align: right;
+  color: #333333;
   line-height: 150%;
-  color: #767676;
   vertical-align: top;
-  width: 80px;
+  width: 90px;
 }
 .item-info-value {
   line-height: 150%;
-  color: #333333;
-  /*width: 303px;*/
+  color: #767676;
   display: block;
   word-break: break-all;
 }

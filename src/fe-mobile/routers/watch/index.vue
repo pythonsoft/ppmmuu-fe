@@ -24,16 +24,19 @@
       </fj-tab-item>
     </fj-navbar>
     <div class="media-center-file-item first-child" v-if="navIndex === 'nav1'">
-      <table class="media-center-table">
-        <div v-if="isEmptyObject(program)">无</div>
-        <tr v-for="info in program" v-if="info.value" >
-          <td class="item-info-key">{{ info.cn + ': ' || '空KEY:' }}</td>
-          <td class="item-info-value">
-            <span v-if="info.cn === '內容介紹'" v-html="formatContent(info.value)"></span>
-            <span v-else>{{ formatValue(info.value) }}</span>
-          </td>
-        </tr>
-      </table>
+      <div v-if="program.length === 0">无</div>
+      <template v-else v-for="groupItem in programGroup">
+        <h4 class="media-center-table-title">{{ groupItem.groupName }}</h4>
+        <table class="media-center-table">
+          <tr v-for="index in groupItem.programIndexs" v-if="program[index] && program[index].value" >
+            <td class="item-info-key">{{ program[index].cn + ': ' || '空KEY:' }}</td>
+            <td class="item-info-value">
+              <span v-if="program[index].cn === '內容介紹'" v-html="formatContent(program[index].value)"></span>
+              <span v-else>{{ formatValue(program[index].value) }}</span>
+            </td>
+          </tr>
+        </table>
+      </template>
     </div>
     <template v-else>
       <div :class="['media-center-file-item media-center-file-item-bottom-line', { 'first-child': index === 0 }]" v-for="(file, index) in files">
@@ -81,7 +84,7 @@
           :key="item.id"
           :thumb="getThumb(item)"
           :title="getTitle(item)"
-          :time="formatTime(item.publish_time) || '无发布时间'"
+          :time="formatShowTime(item).value || '无发布时间'"
           :duration="getDuration(item)"
           :definition="getMediaFormat(item)"
           @click-card="linkToWatch(item)"
@@ -97,6 +100,8 @@
     getMediaFormat,
     getTitle,
     getThumb,
+    formatProgramGroup,
+    formatShowTime
   } from '../../../fe/routers/mediaCenter/common';
   import {
     formatSize,
@@ -132,6 +137,7 @@
         streamInfo: {},
         objectId: '',
         program: [],
+        programGroup: [],
         fileInfo: {},
         currentRow: {},
         basic: {},
@@ -178,6 +184,7 @@
       formatDuration,
       getMediaFormat,
       formatTime,
+      formatShowTime,
       isEmptyObject,
       linkToWatch(item) {
         this.$router.push({ name: 'watch', params: { objectId: item.id } });
@@ -241,9 +248,13 @@
           fromWhere: this.fromWhere
         };
         mediaAPI.getObject({ params: params }).then((res) => {
-          this.program = res.data.result.detail.program;
-          this.files = res.data.result.files;
-          this.basic = res.data.result.basic;
+          const result = res.data.result;
+          const detail = result.detail;
+          const program = detail.program.length > 0 ? detail.program : detail.sequence;
+          this.program = program;
+          this.programGroup = formatProgramGroup(program);
+          this.files = result.files;
+          this.basic = result.basic;
           for(let i =0, len = this.program.length; i < len; i++){
             if(this.program[i].key === 'OBJECTID'){
               this.program.splice(i, 1);

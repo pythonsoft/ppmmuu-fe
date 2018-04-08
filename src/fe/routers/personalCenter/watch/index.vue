@@ -230,7 +230,8 @@
       },
       getDetail() {
         mediaAPI.getObject({ params: { objectid: this.objectId, fromWhere: this.fromWhere } }).then((res) => {
-          const program = res.data.result.detail.program;
+          const detail = res.data.result.detail;
+          const program = detail.program.length > 0 ? detail.program : detail.sequence;
           this.program = program;
           this.programGroup = formatProgramGroup(program);
           this.files = res.data.result.files;

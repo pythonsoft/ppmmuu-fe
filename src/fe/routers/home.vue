@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="app-refresh-wrap" v-else-if="isShowRefreshBox">
-      <span class="iconfont icon-refresh" @click="()=>{ location.reload() }"></span>
+      <span class="iconfont icon-refresh" @click="reload"></span>
       <p>点击刷新</p>
     </div>
     <template v-else>
@@ -72,6 +72,11 @@
           this.isShowRefreshBox = true;
         }
       });
+    },
+    methods: {
+      reload() {
+        window.location.reload();
+      }
     }
   };
 </script>
