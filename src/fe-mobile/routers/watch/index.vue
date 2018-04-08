@@ -167,7 +167,7 @@
         this.refresh();
       },
       files(val) {
-        this.isOnTape = isOnTape(val);
+        this.isOnTape = isOnTape(val, this.fromWhere);
       }
     },
     mounted() {
