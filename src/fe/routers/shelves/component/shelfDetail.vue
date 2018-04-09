@@ -163,8 +163,6 @@
           this.programEmpty = false;
         } else {
           this.getShelfDetail();
-          this.getDetail();
-          this.getStream();
         }
       }
     },
@@ -222,6 +220,8 @@
                 info.isFoldedContent = true;
               }
             }
+            this.getDetail();
+            this.getStream();
           })
           .catch((error)=>{
             me.$message.error(error);
