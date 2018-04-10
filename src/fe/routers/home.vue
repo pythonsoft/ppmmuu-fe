@@ -55,6 +55,8 @@
       userAPI.getUserAuth({}, null, true).then((res) => {
         ensureLocalData(res.data);
         this.isShowLoading = false;
+        console.log('getItemFromLocalStorage --->', res.data, getItemFromLocalStorage('jwtToken'));
+
         const showMenuIndex = getItemFromLocalStorage('menu', this);
         const normalMenu = ['taskCenter', 'personalCenter'];
         this.showMenuIndex = showMenuIndex.length? normalMenu.concat(getChildMenuByIndex('', false, this)) : normalMenu;

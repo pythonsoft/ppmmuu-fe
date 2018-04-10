@@ -134,7 +134,7 @@
         const showMenuIndex = this.showMenuIndex;
         const showMenu = [];
         for (let i = 0, len = menu.length; i < len; i++) {
-          if (showMenuIndex.indexOf(menu[i].index) !== -1 && menu[i].index !== 'trends') {
+          if (showMenuIndex.indexOf(menu[i].index) !== -1) {
             showMenu.push(menu[i]);
           }
         }

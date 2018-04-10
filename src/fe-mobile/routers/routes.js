@@ -1,6 +1,6 @@
 import Home from './home';
 
-// const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
+const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter')), 'mediaCenter');
 const Login = resolve => require.ensure([], () => resolve(require('./login')), 'login');
 const Watch = resolve => require.ensure([], () => resolve(require('./watch')), 'watch');
@@ -45,6 +45,12 @@ export default [{
     meta: { title: '个人中心' },
     children: [],
     name: 'personalCenter'
+  },{
+    path: 'trends',
+    component: Trends,
+    meta: { title: '舆情' },
+    children: [],
+    name: 'trends'
   }, {
     path: 'mediaCenter/:program_type?',
     component: MediaCenter,
