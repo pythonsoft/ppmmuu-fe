@@ -201,6 +201,7 @@
       }
     },
     created() {
+      BigdataAPI.create();
       BigdataAPI.getRealtimeBuzz()
         .then((response) => {
           this.realtimeBuzzBd = response.data;

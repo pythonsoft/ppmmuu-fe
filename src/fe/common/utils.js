@@ -687,16 +687,21 @@ utils.formatShortTime = function (time) {
 };
 
 utils.getDefaultPageIndex = function getDefaultPageIndex(menu) {
-  let subscriptions = '';
+  let defaultPage = [];
+
   for (let i = 0, len = menu.length; i < len; i++) {
+    if (menu[i].index === 'trends') {
+      defaultPage[0] = 'trends';
+    }
     if (menu[i].index === 'mediaCenter') {
-      return 'mediaCenter';
+      defaultPage[1] = 'mediaCenter';
     }
     if (menu[i].index === 'subscriptions') {
-      subscriptions = 'subscriptions';
+      defaultPage[2] = 'subscriptions';
     }
   }
-  return subscriptions || 'personalCenter';
+
+  return defaultPage[0] || defaultPage[1] || defaultPage[2] || 'personalCenter';
 };
 
 utils.formatTaskList = function (currentStep, taskList = []) {

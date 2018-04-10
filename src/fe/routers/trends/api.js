@@ -4,33 +4,38 @@ import { getItemFromLocalStorage } from '../../common/utils';
 
 import axios from 'axios';
 
-const jswToken = getItemFromLocalStorage('jwtToken');
+let axiosInstance = null;
 
-const axiosInstance = axios.create({
-  baseURL: 'http://182.61.54.108:9999/api/v1/bigdata',
-  withCredentials: true,
-  headers: {
-    common: {
-      Authorization: `JWT ${jswToken}`
+api.create = function() {
+  const jswToken = getItemFromLocalStorage('jwtToken');
+  console.log('jswtoken -->', jswToken);
+
+  axiosInstance = axios.create({
+    baseURL: 'http://182.61.54.108:9999/api/v1/bigdata',
+    withCredentials: true,
+    headers: {
+      common: {
+        Authorization: `JWT ${jswToken}`
+      }
     }
-  }
-});
+  });
 
-axiosInstance.interceptors.request.use((config) => {
-  // Do something before request is sent
-  if (config.method === 'get') {
-    config.params = config.params || {};
-    config.params.t = new Date().getTime();
-  } else if (config.method === 'post') {
-    config.data = config.data || {};
-    config.data.t = new Date().getTime();
-  }
+  axiosInstance.interceptors.request.use((config) => {
+      // Do something before request is sent
+      if (config.method === 'get') {
+        config.params = config.params || {};
+        config.params.t = new Date().getTime();
+      } else if (config.method === 'post') {
+        config.data = config.data || {};
+        config.data.t = new Date().getTime();
+      }
 
-  return config;
-}, error =>
-  // Do something with request error
-  Promise.reject(error)
-);
+      return config;
+    }, error =>
+      // Do something with request error
+      Promise.reject(error)
+  );
+};
 
 api.getKeywordStatus = function (data, scope) {
   return new Promise((resolve, reject) => {
