@@ -29,7 +29,7 @@ const Account = resolve => require.ensure([], () => resolve(require('./managemen
 const Report = resolve => require.ensure([], () => resolve(require('./management/report')), 'report');
 
 const Copy = resolve => require.ensure([], () => resolve(require('./copy')), 'copy');
-// const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
+const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
 const MovieEditor = resolve => require.ensure([], () => resolve(require('./movieEditor')), 'movieEditor');
 const Catalog = resolve => require.ensure([], () => resolve(require('./library/catalog')), 'catalog');

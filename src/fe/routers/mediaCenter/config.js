@@ -115,7 +115,7 @@ config.UMP_FILETYPE_VALUE = ['0', '1', '2', '3', '4', '5'];
 
 config.getOriginalFile = function(files, fromWhere) {
   if (!files || files.length === 0) {
-    return '';
+    return false;
   }
 
   let arr = [];
@@ -134,6 +134,8 @@ config.getOriginalFile = function(files, fromWhere) {
       }
     }
   }
+
+  return false;
 };
 
 method.getTextByValue = function (v, st) {
@@ -291,7 +293,7 @@ method.getHighLightFields = function getHighLightFields(fields) {
 };
 
 /**
- * 判断节目是否在磁带上
+ * 判断节目是否可以通过系统进行下载，如果不能需要联系PMD进行确认
  * @param {Array} files
  * @return {Boolean}
  */
@@ -304,7 +306,6 @@ method.isOnTape = function(files = [], fromWhere) {
     || keys.indexOf('ARCHIVETYPE') === -1) {
     return true;
   }
-  if (method.getVideoPosition(file.FILETYPEID, file.STATUS, file.ARCHIVETYPE) === '带库') return true;
   return false;
 };
 
