@@ -131,14 +131,11 @@
       this.getSRTArr(this.videoId);
       const videoWidth = this.$refs.videoWrap.getBoundingClientRect().width;
       this.height = videoWidth * 9 / 16;
-      this.video.addEventListener('error', () => {
-        this.loading = true;
-      });
-      this.video.addEventListener('stalled', () => {
-        this.loading = true;
-      });
       this.video.addEventListener('waiting', () => {
         this.loading = true;
+      });
+      this.video.addEventListener('abort', () => {
+        this.loading = false;
       });
       this.video.addEventListener('canplay', () => {
         this.loading = false;
@@ -153,8 +150,8 @@
         this.updateCurrentSRT();
       });
       this.video.addEventListener('canplay', () => {
+        this.loading = false;
         if (this.video.currentTime < this.INPOINT) {
-          this.loading = false;
           this.video.currentTime = this.INPOINT;
           this.currentTime = this.video.currentTime;
         }

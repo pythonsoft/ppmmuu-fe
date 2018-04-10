@@ -72,6 +72,10 @@
     props: {
       parentEl: {},
       size: String,
+      clearable: {
+        type: Boolean,
+        default: true
+      },
       placeholder: String,
       pickerPosition: String,
       theme: {
@@ -102,6 +106,9 @@
     computed: {
       iconClass() {
         if (this.type !== 'datetimerange' && this.type !== 'daterange') {
+          if (!this.clearable) {
+            return 'icon-date datetime-date-icon';
+          }
           return this.inputHovering && this.displayValue !== '' ? 'icon-fill-close datetime-date-icon' : 'icon-date datetime-date-icon';
         }
         return this.inputHovering && this.displayValue[0] ? 'icon-fill-close datetime-date-icon' : 'icon-date datetime-date-icon';

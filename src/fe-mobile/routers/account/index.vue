@@ -19,6 +19,8 @@
   </div>
 </template>
 <script>
+  import { getItemFromLocalStorage, setItemToLocalStorage } from '../../../fe/common/utils';
+
   const userAPI = require('../../../fe/api/user');
 
   const INFORMATION_LIST = [
@@ -62,6 +64,12 @@
       submit() {
         userAPI.postUserUpdate(this.userInfo, this)
           .then((res) => {
+            // 如果有本地信息则更新本地信息
+            const userInfo = getItemFromLocalStorage('userInfo');
+            if (userInfo) {
+              userInfo.name = this.userInfo.name;
+              setItemToLocalStorage('userInfo', userInfo);
+            }
             this.$toast.success('保存成功!');
           })
           .catch((error) => {

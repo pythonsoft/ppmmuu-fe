@@ -163,6 +163,9 @@
     convertSentimentData
   } from '../../../fe/routers/trends/option/sentimentOption';
   import BigdataAPI from '../../../fe/routers/trends/api';
+  import { getItemFromLocalStorage, ensureLocalData } from '../../../fe/common/utils';
+
+  const userAPI = require('../../../fe/api/user');
 
   export default {
     data() {
@@ -201,21 +204,12 @@
       }
     },
     created() {
-      BigdataAPI.create();
-      BigdataAPI.getRealtimeBuzz()
-        .then((response) => {
-          this.realtimeBuzzBd = response.data;
-          if (this.realtimeBuzzBd.length > 0) {
-            this.keyword = this.realtimeBuzzBd[0].keyword;
-          }
-        }).catch((error) => {
-        });
-      BigdataAPI.getRealtimeBuzzWb()
-        .then((response) => {
-          this.realtimeBuzzWb = response.data;
-        }).catch((error) => {
-        });
-      this.refreshKeywordsStatus();
+      const tempJwtToken = getItemFromLocalStorage('jwtToken');
+      if (!tempJwtToken) {
+        this.getUserAuth();
+      } else {
+        this.getData();
+      }
     },
     mounted() {
       const chartWidth = this.$refs.geoChart.getBoundingClientRect().width;
@@ -259,6 +253,36 @@
       }
     },
     methods: {
+      getData() {
+        BigdataAPI.create();
+        BigdataAPI.getRealtimeBuzz()
+          .then((response) => {
+            this.realtimeBuzzBd = response.data;
+            if (this.realtimeBuzzBd.length > 0) {
+              this.keyword = this.realtimeBuzzBd[0].keyword;
+            }
+          }).catch((error) => {
+          });
+        BigdataAPI.getRealtimeBuzzWb()
+          .then((response) => {
+            this.realtimeBuzzWb = response.data;
+          }).catch((error) => {
+          });
+        this.refreshKeywordsStatus();
+      },
+      getUserAuth() {
+        userAPI.getUserAuth({}, this, true).then((res) => {
+          ensureLocalData(res.data);
+          this.getData();
+        }).catch((error) => {
+          const loginStatusCodeArr = ['-3001', '-3002', '-3003', '-3004', '-3005'];
+          if (loginStatusCodeArr.indexOf(error.status) !== -1) {
+            window.location.href = '/login';
+          } else {
+            this.$toast.error(error);
+          }
+        });
+      },
       getFaviconBgImg(name) {
         return `/static/picture/${name}.png`;
       },

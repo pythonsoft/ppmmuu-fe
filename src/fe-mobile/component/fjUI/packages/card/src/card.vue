@@ -1,7 +1,7 @@
 <template>
-  <a class="fj-card" :style="cardStyle" @click.prev="handleClick">
+  <li class="fj-card" :style="cardStyle" @click.prev="handleClick">
     <div class="fj-card-thumb iconfont icon-phoenixtv" ref="cardThumbWrap" :style="thumbStyle">
-      <img class="fj-card-pic" v-lazy="selfThumb">
+      <img class="fj-card-pic" :alt="title" v-lazy="selfThumb">
       <div class="fj-card-thumb-mask">
         <i v-if="editable" class="fj-card-delete-btn iconfont icon-close" @click.stop="$emit('delete-item')"></i>
         <span class="fj-card-video-duration">{{ duration }}</span>
@@ -12,7 +12,7 @@
       <div :class="['fj-card-title', { 'highlight': highlight }]" v-html="title"></div>
       <span class="fj-card-desc">{{ time }}</span>
     </div>
-  </a>
+  </li>
 </template>
 <script>
   import Vue from 'vue';

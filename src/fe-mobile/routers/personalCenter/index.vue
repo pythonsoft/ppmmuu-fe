@@ -71,8 +71,6 @@
       },
       signOut() {
         userAPI.postUserLogout({}).then((res) => {
-          // localStorage.setItem('menu', '');
-          localStorage.setItem('userInfo', '');
           // this.$message.success('成功退出当前帐户，期待下次光临.');
           window.location.href = '/login';
         }).catch((error) => {
@@ -112,13 +110,6 @@
           .then((res) => {
             this.path = photo;
             this.$toast('上传成功');
-            try {
-              const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-              userInfo.photo = photo;
-              localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            } catch (e) {
-
-            }
           })
           .catch((error) => {
             this.$toast.error(error);
