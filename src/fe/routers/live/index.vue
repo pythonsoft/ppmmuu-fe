@@ -8,7 +8,7 @@
           :class="[$style.channelItem, {[$style.on]: item._id === channel}]"
           @click="linkToChannel(item._id)">
             <span :class="$style.channelItemImgBox">
-              <img :class="$style.channelItemImg" :src="item.avatar" width="16" height="16" />
+              <img :class="$style.channelItemImg" :src="item.avatar" width="26" height="26" />
             </span>
             <span :class="$style.channelItemText" :title="item.name">{{ item.name }}</span>
           </li>
@@ -88,7 +88,7 @@
   const channelList = {
     资讯台: { _id: '资讯台', name: '资讯台', avatar: require('./infonews_channel.webp'), liveSource: '凤凰卫视资讯台HD' },
     中文台: { _id: '中文台', name: '中文台', avatar: require('./chinese_channel.webp'), liveSource: '凤凰卫视中文台HD' },
-    香港台: { _id: '香港台', name: '香港台', avatar: require('./hk_channel.webp'), liveSource: '凤凰卫视香港台HD' }
+    // 香港台: { _id: '香港台', name: '香港台', avatar: require('./hk_channel.webp'), liveSource: '凤凰卫视香港台HD' }
   };
 
   export default {

@@ -62,7 +62,7 @@
 }
 .channelItemText {
   position: absolute;
-  left: 50px;
+  left: 60px;
   line-height: 46px;
   overflow: hidden;
   white-space: nowrap;
@@ -73,18 +73,18 @@
 
 .channelItemImgBox {
   position: absolute;
-  top: 15px;
+  top: 10px;
   border-radius: 50%;
   overflow: hidden;
-  width: 16px;
-  height: 16px;
+  width: 26px;
+  height: 26px;
 }
 
 .channelItemImg {
   position: absolute;
   top: 0;
-  width: 16px;
-  height: 16px;
+  width: 26px;
+  height: 26px;
 }
 .datePicker {
   float: left;
