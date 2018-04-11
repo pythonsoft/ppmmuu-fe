@@ -14,6 +14,7 @@
 }
 .fj-tabs-item.active,
 .fj-tabs-item:hover {
+  font-weight: bold;
   color: var(--tabs-item-active-color);
 }
 .fj-tabs-item.active {

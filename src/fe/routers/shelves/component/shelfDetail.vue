@@ -36,7 +36,7 @@
             </table>
           </fj-tab-pane>
           <fj-tab-pane label="媒体库信息" name="tab1">
-            <div class="media-center-file-item">
+            <div class="shelf-file-item">
               <template v-if="programEmpty">无</template>
               <template v-for="groupItem in programGroup" v-else>
                 <h4 class="media-center-table-title">{{ groupItem.groupName }}</h4>
@@ -348,5 +348,8 @@
     right: 14px;
     height: 42px;
     line-height: 42px;
+  }
+  .shelf-file-item {
+    margin-top: -8px;
   }
 </style>
