@@ -86,8 +86,8 @@
   import liveAPI from '../../api/live';
 
   const channelList = {
-    资讯台: { _id: '资讯台', name: '资讯台', avatar: require('./infonews_channel.webp'), liveSource: '凤凰卫视资讯台HD' },
-    中文台: { _id: '中文台', name: '中文台', avatar: require('./chinese_channel.webp'), liveSource: '凤凰卫视中文台HD' },
+    资讯台: { _id: '资讯台', name: '资讯台', avatar: require('./avatar/infonews_channel.jpg'), liveSource: '凤凰卫视资讯台HD' },
+    中文台: { _id: '中文台', name: '中文台', avatar: require('./avatar/chinese_channel.jpg'), liveSource: '凤凰卫视中文台HD' },
     // 香港台: { _id: '香港台', name: '香港台', avatar: require('./hk_channel.webp'), liveSource: '凤凰卫视香港台HD' }
   };
 
