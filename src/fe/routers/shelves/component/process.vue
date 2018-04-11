@@ -2,7 +2,7 @@
   <div>
     <div v-if="processData.length" class="process-table">
       <div class="process-table-header">
-        <span class="process-table-header-span">流程</span>
+        <span class="process-table-header-span" style="width: 28%;">流程</span>
         <span class="process-table-header-span">状态</span>
         <span class="process-table-header-span">进度</span>
       </div>
@@ -63,7 +63,7 @@
 </script>
 <style scope>
   .process-table {
-    width: 320px;
+    width: 360px;
     font-size: 12px;
     color: #2A3E52;
   }
@@ -117,7 +117,7 @@
     left: 5px;
     top: 0;
     height: 100%;
-    width: 320px;
+    width: 360px;
   }
 
   .process-items {
@@ -126,11 +126,12 @@
 
   .process-item {
     display: inline-block;
-    width: 32%;
+    width: 30%;
   }
 
   .process-item-first {
-    padding-left: 17px;
+    margin-left: 17px;
+    width: 26%;
   }
 
   .process-item-not-start {
