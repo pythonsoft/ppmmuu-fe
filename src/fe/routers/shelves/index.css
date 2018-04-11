@@ -24,7 +24,7 @@
 }
 
 .deleted {
-  background: #AAAAAA;
+  background: #FF3366;
 }
 
 .prepare {
@@ -37,6 +37,10 @@
 
 .submitted {
   background: #2EC4B6;
+}
+
+.stopped {
+  background: #AAAAAA;
 }
 
 .permission-enable {
@@ -53,20 +57,4 @@
 }
 .operation-btn-group button {
   margin-right: 6px;
-}
-
-.deleted {
-  background: #AAAAAA;
-}
-
-.prepare {
-  background: #38B1EB;
-}
-
-.doing {
-  background: #C0C003;
-}
-
-.submitted {
-  background: #2EC4B6;
 }
