@@ -2,18 +2,9 @@ const api = {};
 const axios = require('../config');
 
 api.list = function list(data, scope, needOriginResponse) {
-
-  const startName = 'liststart';
-  const endName = 'listend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/list', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('list', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -33,18 +24,9 @@ api.list = function list(data, scope, needOriginResponse) {
 };
 
 api.listChildTask = function listChildTask(data, scope, needOriginResponse) {
-
-  const startName = 'listChildTaskstart';
-  const endName = 'listChildTaskend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/listChildTask', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('listChildTask', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -64,18 +46,9 @@ api.listChildTask = function listChildTask(data, scope, needOriginResponse) {
 };
 
 api.restart = function restart(data, scope, needOriginResponse) {
-
-  const startName = 'restartstart';
-  const endName = 'restartend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/restart', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('restart', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -95,18 +68,9 @@ api.restart = function restart(data, scope, needOriginResponse) {
 };
 
 api.stop = function stop(data, scope, needOriginResponse) {
-
-  const startName = 'stopstart';
-  const endName = 'stopend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/transcode/stop', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('stop', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;

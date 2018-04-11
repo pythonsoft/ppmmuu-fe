@@ -2,18 +2,9 @@ const api = {};
 const axios = require('../config');
 
 api.channels = function channels(data, scope, needOriginResponse) {
-
-  const startName = 'channelsstart';
-  const endName = 'channelsend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/live/channels', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('channels', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -33,18 +24,9 @@ api.channels = function channels(data, scope, needOriginResponse) {
 };
 
 api.listProgram = function listProgram(data, scope, needOriginResponse) {
-
-  const startName = 'listProgramstart';
-  const endName = 'listProgramend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/live/listProgram', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('listProgram', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -64,18 +46,9 @@ api.listProgram = function listProgram(data, scope, needOriginResponse) {
 };
 
 api.getProgram = function getProgram(data, scope, needOriginResponse) {
-
-  const startName = 'getProgramstart';
-  const endName = 'getProgramend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/live/getProgram', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('getProgram', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -95,18 +68,9 @@ api.getProgram = function getProgram(data, scope, needOriginResponse) {
 };
 
 api.createDownloadUrl = function createDownloadUrl(data, scope, needOriginResponse) {
-
-  const startName = 'createDownloadUrlstart';
-  const endName = 'createDownloadUrlend';
-  window.performance.mark(startName);
-
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/live/createDownloadUrl', data).then((response) => {
-
-      window.performance.mark(endName);
-      window.performance.measure('createDownloadUrl', startName, endName);
-
       if (!response) {
         reject('返回数据格式不正确');
         return false;

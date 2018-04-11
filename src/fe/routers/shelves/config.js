@@ -32,6 +32,7 @@ config.formatPacakgeStatus = {
   0: '<span class="permission-status-span prepare">待处理</span>',
   1: '<span class="permission-status-span doing">处理中</span>',
   2: '<span class="permission-status-span submitted">已完成</span>',
-  3: '<span class="permission-status-span deleted">出错</span>'
+  3: '<span class="permission-status-span deleted">出错</span>',
+  4: '<span class="permission-status-span stopped">停止</span>'
 };
 module.exports = config;

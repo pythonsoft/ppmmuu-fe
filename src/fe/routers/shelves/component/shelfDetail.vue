@@ -58,6 +58,7 @@
           </fj-tab-pane>
           <fj-tab-pane label="状态信息" name="tab3" v-if="showPackageInfo">
             暂无
+            <!--<process></process>-->
           </fj-tab-pane>
         </fj-tabs>
         <div class="detail-operation" v-if="btnShow">
@@ -84,6 +85,7 @@
   import Player from '../../mediaCenter/components/player';
   import MoreView from '../../mediaCenter/moreView';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
+  import Process  from './process'
   import '../../mediaCenter/index.css';
 
 
@@ -274,7 +276,8 @@
     directives: { Clickoutside },
     components: {
       Player,
-      MoreView
+      MoreView,
+      Process
     }
   };
 </script>
