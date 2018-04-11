@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <!-- A minimal Flowplayer setup to get you started -->
+    <!-- 
+		include flowplayer JavaScript file that does  
+		Flash embedding and provides the Flowplayer API.
+	-->
+
+    <script type="text/javascript" src="flowplayer-3.2.6.min.js"></script>
+
+</head>
+<body>
+<!-- this A tag is where your Flowplayer will be placed. it can be anywhere -->
+<a id="fms" style="width: 640px; height: 480px;"></a>
+    <!-- this will install flowplayer inside previous A- tag. -->
+
+<script>
+    $f("fms", "flowplayer-3.2.6.swf", {
+
+        clip: {
+            url: 'mp4:201103/72e28c7e-dd15-4bc3-b375-388f8932e161.mp4',
+            // configure clip to use influxis as our provider, it uses our rtmp plugin
+            provider: 'influxis',
+            autoPlay: true
+        },
+
+        // streaming plugins are configured under the plugins node
+        plugins: {
+
+            // here is our rtpm plugin configuration
+            influxis: {
+                url: 'flowplayer.rtmp-3.2.3.swf',
+
+                // netConnectionUrl defines where the streams are found
+                netConnectionUrl: 'rtmp://hkss1.phoenixtv.com/vod'
+            }
+        }
+    });
+	</script>
+
+</body>
+</html>

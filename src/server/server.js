@@ -57,5 +57,7 @@ app.listen(port, function() {
   console.log('Listening on 1 port ' + port + '...');
   if(process.env !== 'development') {
     app.use('/apps/journalistCloud', require('./apps/journalistCloud'));
+  }else {
+
   }
 });

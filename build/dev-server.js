@@ -18,6 +18,8 @@ const uri = 'http://localhost:' + port;
 // app.use('/static', express.static('./static'));
 app.use('/img', express.static(path.join(__dirname, '../src/fe/img')));
 app.use('/static', express.static(path.join(__dirname, '../src/fe/static')));
+app.use('/flowplayer', express.static(path.join(__dirname, '../src/fe/public/flowplayer')));
+app.use('/apps', express.static(path.join(__dirname, '../src/fe/public/apps')));
 // app.set('views', path.join(__dirname, '../src/fe/html'));
 
 let compiler = webpack(webpackConfig);
