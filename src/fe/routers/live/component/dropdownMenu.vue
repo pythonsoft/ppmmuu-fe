@@ -11,7 +11,7 @@
 <script>
   import { download } from '../../../common/utils';
 
-  const api = require('../../../api/subscribe');
+  const liveAPI = require('../../../api/live');
 
   export default {
     props: {
@@ -21,10 +21,10 @@
     },
     methods: {
       createDownloadUrl(item) {
-        api.createDownloadUrl({ shelfTaskId: item.shelfTaskId, type: item.key })
+        liveAPI.createDownloadUrl({ catalogInfoId: item.catalogInfoId, type: item.key })
           .then((res) => {
             download(res.data, item.fileName);
-            this.$emit('click');
+            this.$emit('item-click');
           })
           .catch((error)=>{
             this.$message.error(error);

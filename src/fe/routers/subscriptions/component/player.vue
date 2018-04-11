@@ -42,6 +42,7 @@
         <div :class="$style.playerTime">{{ displayCurrentTime }} / {{ displayDuration }}</div>
         <i :class="[$style.playerBtn, $style.rightControl, 'iconfont', isFullscreen ? 'icon-esc-fullscreen' : 'icon-fullscreen']" @click="fullscreen"></i>
         <i v-if="files.length > 0" :class="[$style.playerBtn, $style.rightControl, 'iconfont icon-video-download']" @click.stop="(e)=>{mountDropdownMenu(e)}" v-clickoutside="handleCloseMenu" ref="downloadBtn"></i>
+        <i v-if="showCutIcon" :class="[$style.playerBtn, $style.rightControl, 'iconfont icon-cut']" @click.stop="gotoEditer"></i>
       </div>
     </div>
     <download-list-view
@@ -53,12 +54,14 @@
 <script>
   import Vue from 'vue';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
-  import DropdownMenu from './dropdownMenu';
+  // import DropdownMenu from './dropdownMenu';
   import DownloadListView from '../../management/template/download/component/downloadDialog';
   import { transformSecondsToStr, getSRT } from '../../../common/utils';
   import { getPosition } from '../../../component/fjUI/utils/position';
   import { isEmptyObject } from '../../../common/utils';
   const jobAPI = require('../../../api/job');
+  const ivideoAPI = require('../../../api/ivideo');
+  const mediaAPI = require('../../../api/media');
 
   const volumeSliderWidth = 38;
   const volumeSliderHandleWidth = 8;
@@ -69,9 +72,19 @@
       DownloadListView
     },
     props: {
+      downloadMenu: {},
+      fileType: String,
       videoId: {
         type: String,
         default: ''
+      },
+      showCutIcon: {
+        type: Boolean,
+        default: false
+      },
+      isAutoPlay: {
+        type: Boolean,
+        default: false
       },
       url: String,
       streamInfo: {
@@ -104,7 +117,7 @@
       return {
         INPOINT: this.streamInfo.INPOINT / this.fps || 0,
         OUTPOINT: this.streamInfo.OUTPOINT / this.fps || 0,
-        loading: true,
+        loading: false,
         videoSRT: [],
         videoSRTPosition: 0,
         currentVideoSRT: '',
@@ -162,6 +175,11 @@
       }
     },
     watch: {
+      url(val) {
+        if (val) {
+          this.loading = true;
+        }
+      },
       videoId(val) {
         this.reset();
         this.getSRTArr(val);
@@ -245,6 +263,12 @@
         this.currentTime = this.video.currentTime;
         this.updateCurrentSRT();
         this.updateVideoTitlePosition();
+      });
+      this.video.addEventListener('loadeddata', () => {
+        this.loading = false;
+        if (this.isAutoPlay) {
+          this.updatePlayerStatus();
+        }
       });
       document.addEventListener('fullscreenchange', this.fullscreenchangeListener, false);
       document.addEventListener('mozfullscreenchange', this.fullscreenchangeListener, false);
@@ -359,6 +383,7 @@
         }
 
         if (this.currentTime <= this.OUTPOINT && this.currentTime + 1 / this.fps >= this.OUTPOINT) {
+          this.$emit('on-ended');
           this.pause();
           this.isPlaying = false;
           clearInterval(this.moveIndicatorTimer);
@@ -506,18 +531,18 @@
       },
       mountDropdownMenu(e) {
         if (this.dropdownMenu) return;
-        this.dropdownMenu = new Vue(DropdownMenu).$mount();
+        this.dropdownMenu = new Vue(this.downloadMenu).$mount();
         document.body.appendChild(this.dropdownMenu.$el);
         this.updateMenuPosition();
         const menus = this.files.map(file => {
-          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, shelfTaskId: file.shelfTaskId };
+          return { command: file, key: file.type, name: file.typeName, streamUrl: file.streamUrl, shelfTaskId: file.shelfTaskId, catalogInfoId: file.catalogInfoId, fileName: this.name };
         });
         this.dropdownMenu.isDark = true;
         this.dropdownMenu.menus = menus;
-        // this.dropdownMenu.$on('item-click', this.handleItemClick);
+        this.dropdownMenu.$on('item-click', this.handleItemClick);
       },
       handleItemClick(item, command) {
-        this.showDownloadList(command);
+        // this.showDownloadList(command);
         this.unmountDropdownMenu();
       },
       handleCloseMenu(target) {
@@ -598,6 +623,28 @@
           this.videoTitleTop = 0;
           this.videoTitleLeft = (wrapWidth - videoWidth * wrapHeight / videoHeight) / 2 - 18;
         }
+      },
+      gotoEditer() {
+        if (!this.videoId) {
+          return;
+        }
+        const reqData = { parentId: '' };
+        reqData.name = this.name;
+        reqData.snippet = {
+          objectId: this.videoId,
+          thumb: mediaAPI.getIcon(this.videoId, this.fromWhere),
+          input: this.streamInfo.INPOINT,
+          output: this.streamInfo.OUTPOINT,
+          duration: this.streamInfo.OUTPOINT - this.streamInfo.INPOINT,
+          fileTypeId: this.fileType,
+          fromWhere: this.fromWhere
+        };
+
+        ivideoAPI.createItem(reqData).then((response) => {
+          this.$router.push({ name: 'movieEditor', params: { objectId: this.videoId, fromWhere: this.fromWhere } });
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       }
     }
   };

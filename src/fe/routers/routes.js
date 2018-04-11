@@ -28,6 +28,8 @@ const Feedback = resolve => require.ensure([], () => resolve(require('./personal
 const Account = resolve => require.ensure([], () => resolve(require('./management/account')), 'account');
 const Report = resolve => require.ensure([], () => resolve(require('./management/report')), 'report');
 
+const Live = resolve => require.ensure([], () => resolve(require('./live')), 'live');
+
 const Copy = resolve => require.ensure([], () => resolve(require('./copy')), 'copy');
 const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter/index')), 'mediaCenter');
@@ -115,6 +117,13 @@ export default [{
         { path: 'fastEditTemplate', component: FastEditTemplate, meta: { title: '快编模板' }, name: 'fastEditTemplate' },
         { path: 'processTemplate', component: ProcessTemplate, meta: { title: '流程模板' }, name: 'processTemplate' }
       ]
+    },
+    {
+      path: 'live',
+      component: Live,
+      meta: { title: '直播' },
+      name: 'live',
+      children: []
     },
     {
       path: 'personalCenter',

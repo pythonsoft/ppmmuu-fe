@@ -362,6 +362,22 @@ utils.formatTime = function (date, format = 'YYYY-MM-DD HH:mm:ss') {
   result = result.replace(/ss/, fillupZero(secs));
   return result;
 };
+/**
+ * 根据传入的时间计算当天的0点时间
+ * @param  {Date} date 时间
+ * @return {Date}      时间
+ */
+utils.formatDate = function (date) {
+  date = toDate(date);
+  if (!date) return '';
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const secs = date.getSeconds();
+  return new Date(year, month, day, 0, 0, 0);
+};
 
 /**
  *
@@ -737,5 +753,14 @@ utils.valueLengthLimit = function valueLengthLimit(value, len){
   }
   return value;
 }
+
+utils.download = function(url, name) {
+  const aLink = document.createElement('a');
+  aLink.href = url;
+  aLink.download = name;
+  document.body.appendChild(aLink);
+  aLink.click();
+  document.body.removeChild(aLink);
+};
 
 module.exports = utils;

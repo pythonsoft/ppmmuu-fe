@@ -71,7 +71,7 @@ module.exports = {
         }
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
+        test: /\.(png|jpe?g|gif|svg|webp)(\?\S*)?$/,
         loader: 'file-loader',
         query: {
           name: path.join(assetsSubDirectory, '/img/[name].[ext]?[hash]')

@@ -24,7 +24,7 @@
           '凤凰卫视中文台SD': { channel: '270DE943-3CDF-45E1-8445-9403F93E80C4', uid: '270DE943-3CDF-45E1-8445-9403F93E80C4', stream: 'pcc.stream_360p' },
           '凤凰卫视资讯台SD': { channel: '4AC51C17-9FBE-47F2-8EE0-8285A66EAFF5', uid: '4AC51C17-9FBE-47F2-8EE0-8285A66EAFF5', stream: 'pic.stream_360p' },
           '凤凰卫视中文台HD': { channel: '370DE943-3CDF-45E1-8445-9403F93E80C4', uid: '270DE943-3CDF-45E1-8445-9403F93E80C4', stream: 'pcc.stream_720p' },
-          '凤凰卫视资讯台HD': { channel: '47C51C17-9FBE-47F2-8EE0-8285A66EAFF5', uid: '4AC51C17-9FBE-47F2-8EE0-8285A66EAFF5', stream: 'pcc.stream_720p' },
+          '凤凰卫视资讯台HD': { channel: '47C51C17-9FBE-47F2-8EE0-8285A66EAFF5', uid: '4AC51C17-9FBE-47F2-8EE0-8285A66EAFF5', stream: 'pic.stream_720p' },
         },
         rtmp:'rtmp://hkss3.phoenixtv.com/live/mp4:',
         PLUGINS: {
@@ -57,7 +57,7 @@
                 fontSize: 14,
                 fontFamily: 'Arial',
                 textAlign: 'center',
-                color: '#ffffff'
+                color: '#021120'
               }
             }
           }
@@ -73,19 +73,31 @@
           clip: this.CLIP
         },
         CANVAS: {
-          backgroundColor: "#333333"
+          backgroundColor: "#021120"
         },
       }
     },
-    created() {
-      const channelInfo = this.info[this.channel];
-      if(!channelInfo) {
-        return false;
+    watch: {
+      channel(channelName) {
+        this.create(channelName);
       }
-
-      this.cfg = this.getCfg(this.rtmp + channelInfo.stream);
+    },
+    created() {
+      this.create();
     },
     methods: {
+      create(channelName) {
+        this.cfg = '';
+        const channelInfo = this.info[channelName || this.channel];
+        if(!channelInfo) {
+          return false;
+        }
+
+        this.id = (new Date()).getTime() + '';
+        this.$nextTick(() => {
+          this.cfg = this.getCfg(this.rtmp + channelInfo.stream);
+        });
+      },
       getCfg(clip, cfg) {
         if (typeof clip === 'string') {
           const t = Object.assign({}, this.CLIP);

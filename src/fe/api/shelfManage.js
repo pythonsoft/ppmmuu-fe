@@ -2,9 +2,18 @@ const api = {};
 const axios = require('../config');
 
 api.getShelfDetail = function getShelfDetail(data, scope, needOriginResponse) {
+
+  const startName = 'getShelfDetailstart';
+  const endName = 'getShelfDetailend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelfManage/getShelfDetail', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('getShelfDetail', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -24,9 +33,18 @@ api.getShelfDetail = function getShelfDetail(data, scope, needOriginResponse) {
 };
 
 api.listShelfManageTask = function listShelfManageTask(data, scope, needOriginResponse) {
+
+  const startName = 'listShelfManageTaskstart';
+  const endName = 'listShelfManageTaskend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelfManage/listTask', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('listShelfManageTask', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -46,9 +64,18 @@ api.listShelfManageTask = function listShelfManageTask(data, scope, needOriginRe
 };
 
 api.deleteShelfTask = function deleteShelfTask(data, scope, needOriginResponse) {
+
+  const startName = 'deleteShelfTaskstart';
+  const endName = 'deleteShelfTaskend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/deleteShelfTask', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('deleteShelfTask', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -68,9 +95,18 @@ api.deleteShelfTask = function deleteShelfTask(data, scope, needOriginResponse) 
 };
 
 api.addTemplate = function addTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'addTemplatestart';
+  const endName = 'addTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/addTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('addTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -90,9 +126,18 @@ api.addTemplate = function addTemplate(data, scope, needOriginResponse) {
 };
 
 api.getTemplateInfo = function getTemplateInfo(data, scope, needOriginResponse) {
+
+  const startName = 'getTemplateInfostart';
+  const endName = 'getTemplateInfoend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelfManage/getTemplateInfo', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('getTemplateInfo', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -112,9 +157,18 @@ api.getTemplateInfo = function getTemplateInfo(data, scope, needOriginResponse) 
 };
 
 api.listTemplate = function listTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'listTemplatestart';
+  const endName = 'listTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelfManage/listTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('listTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -134,9 +188,18 @@ api.listTemplate = function listTemplate(data, scope, needOriginResponse) {
 };
 
 api.removeTemplate = function removeTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'removeTemplatestart';
+  const endName = 'removeTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/removeTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('removeTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -156,9 +219,18 @@ api.removeTemplate = function removeTemplate(data, scope, needOriginResponse) {
 };
 
 api.updateTemplate = function updateTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'updateTemplatestart';
+  const endName = 'updateTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/updateTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('updateTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -178,9 +250,18 @@ api.updateTemplate = function updateTemplate(data, scope, needOriginResponse) {
 };
 
 api.addFastEditTemplate = function addFastEditTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'addFastEditTemplatestart';
+  const endName = 'addFastEditTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/addFastEditTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('addFastEditTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -200,9 +281,18 @@ api.addFastEditTemplate = function addFastEditTemplate(data, scope, needOriginRe
 };
 
 api.getFastEditTemplateInfo = function getFastEditTemplateInfo(data, scope, needOriginResponse) {
+
+  const startName = 'getFastEditTemplateInfostart';
+  const endName = 'getFastEditTemplateInfoend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelfManage/getFastEditTemplateInfo', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('getFastEditTemplateInfo', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -222,9 +312,18 @@ api.getFastEditTemplateInfo = function getFastEditTemplateInfo(data, scope, need
 };
 
 api.listFastEditTemplate = function listFastEditTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'listFastEditTemplatestart';
+  const endName = 'listFastEditTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelfManage/listFastEditTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('listFastEditTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -244,9 +343,18 @@ api.listFastEditTemplate = function listFastEditTemplate(data, scope, needOrigin
 };
 
 api.removeFastEditTemplate = function removeFastEditTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'removeFastEditTemplatestart';
+  const endName = 'removeFastEditTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/removeFastEditTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('removeFastEditTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -266,9 +374,18 @@ api.removeFastEditTemplate = function removeFastEditTemplate(data, scope, needOr
 };
 
 api.updateFastEditTemplate = function updateFastEditTemplate(data, scope, needOriginResponse) {
+
+  const startName = 'updateFastEditTemplatestart';
+  const endName = 'updateFastEditTemplateend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/shelfManage/updateFastEditTemplate', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('updateFastEditTemplate', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -288,9 +405,18 @@ api.updateFastEditTemplate = function updateFastEditTemplate(data, scope, needOr
 };
 
 api.getShelfTaskProcess = function getShelfTaskProcess(data, scope, needOriginResponse) {
+
+  const startName = 'getShelfTaskProcessstart';
+  const endName = 'getShelfTaskProcessend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.get('/shelfManage/getShelfTaskProcess', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('getShelfTaskProcess', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
