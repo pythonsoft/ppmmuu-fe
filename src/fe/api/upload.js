@@ -30,9 +30,18 @@ api.uploadWatermark = function uploadWatermark(param, config) {
 };
 
 api.uploadBase64 = function uploadBase64(data, scope, needOriginResponse) {
+
+  const startName = 'uploadBase64start';
+  const endName = 'uploadBase64end';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/upload/uploadBase64', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('uploadBase64', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;
@@ -52,9 +61,18 @@ api.uploadBase64 = function uploadBase64(data, scope, needOriginResponse) {
 };
 
 api.remove = function remove(data, scope, needOriginResponse) {
+
+  const startName = 'removestart';
+  const endName = 'removeend';
+  window.performance.mark(startName);
+
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
     axios.post('/upload/remove', data).then((response) => {
+
+      window.performance.mark(endName);
+      window.performance.measure('remove', startName, endName);
+
       if (!response) {
         reject('返回数据格式不正确');
         return false;

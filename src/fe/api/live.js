@@ -1,18 +1,18 @@
 const api = {};
 const axios = require('../config');
 
-api.list = function list(data, scope, needOriginResponse) {
+api.channels = function channels(data, scope, needOriginResponse) {
 
-  const startName = 'liststart';
-  const endName = 'listend';
+  const startName = 'channelsstart';
+  const endName = 'channelsend';
   window.performance.mark(startName);
 
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/list', data).then((response) => {
+    axios.get('/live/channels', data).then((response) => {
 
       window.performance.mark(endName);
-      window.performance.measure('list', startName, endName);
+      window.performance.measure('channels', startName, endName);
 
       if (!response) {
         reject('返回数据格式不正确');
@@ -32,18 +32,18 @@ api.list = function list(data, scope, needOriginResponse) {
   });
 };
 
-api.listChildTask = function listChildTask(data, scope, needOriginResponse) {
+api.listProgram = function listProgram(data, scope, needOriginResponse) {
 
-  const startName = 'listChildTaskstart';
-  const endName = 'listChildTaskend';
+  const startName = 'listProgramstart';
+  const endName = 'listProgramend';
   window.performance.mark(startName);
 
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/listChildTask', data).then((response) => {
+    axios.get('/live/listProgram', data).then((response) => {
 
       window.performance.mark(endName);
-      window.performance.measure('listChildTask', startName, endName);
+      window.performance.measure('listProgram', startName, endName);
 
       if (!response) {
         reject('返回数据格式不正确');
@@ -63,18 +63,18 @@ api.listChildTask = function listChildTask(data, scope, needOriginResponse) {
   });
 };
 
-api.restart = function restart(data, scope, needOriginResponse) {
+api.getProgram = function getProgram(data, scope, needOriginResponse) {
 
-  const startName = 'restartstart';
-  const endName = 'restartend';
+  const startName = 'getProgramstart';
+  const endName = 'getProgramend';
   window.performance.mark(startName);
 
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/restart', data).then((response) => {
+    axios.get('/live/getProgram', data).then((response) => {
 
       window.performance.mark(endName);
-      window.performance.measure('restart', startName, endName);
+      window.performance.measure('getProgram', startName, endName);
 
       if (!response) {
         reject('返回数据格式不正确');
@@ -94,18 +94,18 @@ api.restart = function restart(data, scope, needOriginResponse) {
   });
 };
 
-api.stop = function stop(data, scope, needOriginResponse) {
+api.createDownloadUrl = function createDownloadUrl(data, scope, needOriginResponse) {
 
-  const startName = 'stopstart';
-  const endName = 'stopend';
+  const startName = 'createDownloadUrlstart';
+  const endName = 'createDownloadUrlend';
   window.performance.mark(startName);
 
   return new Promise((resolve, reject) => {
     if (scope) { scope.$progress.start(); }
-    axios.get('/transcode/stop', data).then((response) => {
+    axios.post('/live/createDownloadUrl', data).then((response) => {
 
       window.performance.mark(endName);
-      window.performance.measure('stop', startName, endName);
+      window.performance.measure('createDownloadUrl', startName, endName);
 
       if (!response) {
         reject('返回数据格式不正确');
