@@ -137,7 +137,7 @@
 .fj-button-disabled:hover,
 .fj-button-disabled:active {
   background: var(--button-hover-disabled-background-color);
-  color: rgba(255, 255, 255, .5);
+  color: rgba(255, 255, 255);
   border-color: var(--disabled-border-color);
   cursor: not-allowed;
 }
