@@ -25,7 +25,7 @@
       <left-menu :showMenuIndex="showMenuIndex">
       </left-menu>
       <div class="main"><router-view></router-view></div>
-      <im></im>
+      <im v-show="isShowIm"></im>
     </template>
   </div>
 </template>
@@ -48,7 +48,14 @@
       return {
         isShowLoading: true,
         isShowRefreshBox: false,
-        showMenuIndex: []
+        showMenuIndex: [],
+        imBlacklist: ['subscriptions', 'live'],
+        isShowIm: true
+      }
+    },
+    watch: {
+      '$route.name'(val) {
+        this.displayIm(val);
       }
     },
     created() {
@@ -72,10 +79,18 @@
           this.isShowRefreshBox = true;
         }
       });
+      this.displayIm(this.$route.name);
     },
     methods: {
       reload() {
         window.location.reload();
+      },
+      displayIm(routeName) {
+        if (this.imBlacklist.indexOf(routeName) > -1) {
+          this.isShowIm = false;
+        } else {
+          this.isShowIm = true;
+        }
       }
     }
   };
