@@ -35,7 +35,7 @@
         <template v-else v-for="item in programList">
           <li
             v-if="item.isActive"
-            @click="handleChangeCurrProgram(item._id, item.name)"
+            @click="handleChangeCurrProgram(item._id, item.name, item.materialTime.from)"
             :class="[
               $style.programItem,
               $style.active,
@@ -54,7 +54,9 @@
       </ul>
     </div>
     <div :class="$style.playerWrap" ref="playerWrap">
+      <rtmp-player v-if="onLiveProgram === currentProgram || !currentProgram" :channel="channelList[channel].liveSource"></rtmp-player>
       <player
+        v-else
         :video-id="objectId"
         :height="playerHeight"
         :width="playerWidth"
@@ -80,13 +82,14 @@
   import DropdownMenu from './component/dropdownMenu';
   import Player from '../subscriptions/component/player';
   import throttle from '../../component/fjUI/utils/throttle';
+  import RtmpPlayer from '../../component/rtmpPlayer';
   import liveAPI from '../../api/live';
 
-  const channelList = [
-    { _id: '中文台', name: '中文台', avatar: require('./chinese_channel.webp') },
-    { _id: '咨询台', name: '咨询台', avatar: require('./infonews_channel.webp') },
-    { _id: '香港台', name: '香港台', avatar: require('./hk_channel.webp') }
-  ];
+  const channelList = {
+    资讯台: { _id: '资讯台', name: '资讯台', avatar: require('./infonews_channel.webp'), liveSource: '凤凰卫视资讯台HD' },
+    中文台: { _id: '中文台', name: '中文台', avatar: require('./chinese_channel.webp'), liveSource: '凤凰卫视中文台HD' },
+    香港台: { _id: '香港台', name: '香港台', avatar: require('./hk_channel.webp'), liveSource: '凤凰卫视香港台HD' }
+  };
 
   export default {
     data() {
@@ -161,7 +164,7 @@
         if (query.channel) {
           this.channel = query.channel;
         } else {
-          this.channel = this.channelList[0]._id;
+          this.channel = '资讯台';
         }
         // 获取节目单
         this.updateProgramList();
@@ -203,6 +206,7 @@
         });
       },
       updateProgramInfo() {
+        if (this.onLiveProgram === this.currentProgram) return;
         liveAPI.getProgram({ params: { _id: this.currentProgram } }).then((res) => {
           const list = res.data;
           let program_720P = {};
@@ -246,13 +250,14 @@
           query: { channel: channel }
         });
       },
-      handleChangeCurrProgram(programId, programName) {
+      handleChangeCurrProgram(programId, programName, startTime) {
         this.currentProgram = programId;
-        this.name = programName
+        this.name = formatTime(startTime, 'YYYY-MM-DD') + ' ' + programName;
       }
     },
     components: {
-      Player
+      Player,
+      RtmpPlayer
     }
   };
 </script>
