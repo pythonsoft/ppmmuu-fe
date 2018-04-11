@@ -1,0 +1,165 @@
+.liveWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 1196px;
+  overflow-x: auto;
+}
+.channelWrap,
+.programWrap,
+.playerWrap {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+.channelWrap {
+  left: 0;
+  width: 136px;
+  border-right: 4px solid #F2F6FA;
+  overflow-y: auto;
+}
+.programWrap {
+  left: 136px;
+  width: 350px;
+  overflow-y: auto;
+}
+.playerWrap {
+  left: 486px;
+  right: 0;
+  background: #021120;
+  overflow: hidden;
+}
+
+.channelTitle {
+  height: 62px;
+  line-height: 61px;
+  padding-left: 22px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #4C637B;
+  border-bottom: 1px solid #EBF3FB;
+}
+.programTitle {
+  float: left;
+  line-height: 30px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #4C637B;
+}
+.programHeader {
+  padding: 17px 0 14px 22px;
+  border-bottom: 1px solid #EBF3FB;
+}
+.channelItem {
+  position: relative;
+  height: 46px;
+  line-height: 46px;
+  padding: 0 15px 0 24px;
+}
+.channelItem:hover,
+.channelItem.on {
+  background: #EBF3FB;
+}
+.channelItemText {
+  position: absolute;
+  left: 50px;
+  line-height: 46px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+  color: #2A3E52;
+}
+
+.channelItemImgBox {
+  position: absolute;
+  top: 15px;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 16px;
+  height: 16px;
+}
+
+.channelItemImg {
+  position: absolute;
+  top: 0;
+  width: 16px;
+  height: 16px;
+}
+.datePicker {
+  float: left;
+  width: 168px;
+  margin-left: 16px;
+  margin-right: 19px;
+}
+.liveSwitch {
+  float: left;
+  width: 78px;
+  height: 30px;
+  line-height: 30px;
+  background: #F2F6FA;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #4C637B;
+  text-align: center;
+  cursor: pointer;
+  transition: color .3s;
+}
+.liveSwitch:active,
+.liveSwitch:hover {
+  color: #38B1EB;
+}
+.liveSwitch i {
+  font-size: 12px;
+}
+.emptyText {
+  padding: 17px 0 14px 22px;
+  font-size: 12px;
+  color: #2A3E52;
+}
+.programItem {
+  height: 46px;
+  line-height: 46px;
+  padding-left: 29px;
+  font-size: 12px;
+  color: #9FB3CA;
+  cursor: default;
+}
+.programItem.active {
+  color: #4C637B;
+}
+.programItem.active:hover,
+.programItem.current {
+  background: #EBF3FB;
+}
+.programItem.on {
+  font-weight: bold;
+  color: #38B1EB;
+}
+.programItemTime {
+  float: left;
+  width: 32px;
+  margin-right: 32px;
+}
+.programItemName {
+  float: left;
+  width: 162px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.onLiveText {
+  float: left;
+  position: relative;
+  padding-left: 11px;
+}
+.onLiveText:before {
+  content: '';
+  position: absolute;
+  top: 19px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38B1EB;
+}
