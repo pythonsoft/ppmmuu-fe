@@ -9,6 +9,8 @@
   </div>
 </template>
 <script>
+  import { download } from '../../../common/utils';
+
   const api = require('../../../api/subscribe');
 
   export default {
@@ -21,7 +23,8 @@
       createDownloadUrl(item) {
         api.createDownloadUrl({ shelfTaskId: item.shelfTaskId, type: item.key })
           .then((res) => {
-            window.open(res.data);
+            download(res.data, item.fileName);
+            this.$emit('click');
           })
           .catch((error)=>{
             this.$message.error(error);

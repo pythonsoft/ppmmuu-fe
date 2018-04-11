@@ -11,7 +11,8 @@
           :streamInfo="streamInfo"
           :fromWhere="fromWhere"
           :name="name"
-          :files="files"></player>
+          :files="files"
+          :download-menu="DropdownMenu"></player>
       </div>
     </div>
     <i class="iconfont" :class="[rightBoxToggle, $style.rightBoxToggle]" :style="{ right: `${rightboxWidth}px` }" @click="foldedOrExpandRightBox"></i>
@@ -98,6 +99,7 @@
     },
     data() {
       return {
+        DropdownMenu: DropdownMenu,
         rightBoxStatus: 'expand',
         rightBoxToggle: 'icon-fill-toggle-right',
         rightboxWidth: RIGHTBOX_WIDTH,
