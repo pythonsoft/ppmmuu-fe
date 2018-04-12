@@ -132,9 +132,12 @@
       },
       add(reqData) {
         const me = this;
-        const wh = reqData.wh.split('x');
-        reqData.w = wh[0];
-        reqData.h = wh[1];
+
+        if(reqData.wh) {
+          const wh = reqData.wh.split('x');
+          reqData.w = wh[0];
+          reqData.h = wh[1];
+        }
 
         api.createTemplate({createJson: reqData}, me).then((res) => {
           me.$message.success('保存成功');
@@ -148,9 +151,13 @@
       },
       update(reqData) {
         const me = this;
-        const wh = reqData.wh.split('x');
-        reqData.w = wh[0];
-        reqData.h = wh[1];
+
+        if(reqData.wh) {
+          const wh = reqData.wh.split('x');
+          reqData.w = wh[0];
+          reqData.h = wh[1];
+        }
+
         reqData.id = me.templateInfo.id;
 
         api.updateTemplate({updateJson: reqData}, me).then((res) => {

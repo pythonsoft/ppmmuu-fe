@@ -243,7 +243,9 @@
           this.url = program.streamUrl;
           this.streamInfo = {
             INPOINT: program.inpoint,
-            OUTPOINT: program.outpoint
+            //todo 此处是临时方案 5分钟 ，按每秒25帧算，5*60*25=7500
+            // OUTPOINT: program.outpoint
+            OUTPOINT: 7500
           };
           this.type = program.type;
           this.fromWhere = program.fromWhere;
