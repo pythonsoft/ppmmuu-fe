@@ -235,9 +235,9 @@ config.audioFields = {
       required: false,
       value: '128000',
       show: true,
-      unit: 'Mb',
-      decoder: function (value) { return value / 1000 / 1000; },
-      encoder: function (value) { return value * 1000 * 1000; }
+      unit: 'kb',
+      decoder: function (value) { return value / 1000; },
+      encoder: function (value) { return value * 1000; }
     },
     audioIndexs: {
       field: 'audioIndexs', type: 'select', text: '音轨数量', required: true, selected: '1',options: [
