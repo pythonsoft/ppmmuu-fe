@@ -88,10 +88,11 @@ config.videoFields = {
       type: 'input',
       text: '比特率',
       required: false,
-      value: '150',
+      value: '150000000',
       show: true,
       unit: 'MB',
-      formatter: function (value) { return value * 1000 * 1000; }
+      decoder: function (value) { return value / 1000 / 1000; },
+      encoder: function (value) { return value * 1000 * 1000; }
     },
     framerate: {
       field: 'framerate', type: 'input', text: '帧率', required: false, value: '25', show: true, unit: '帧/秒'
@@ -232,10 +233,11 @@ config.audioFields = {
       type: 'input',
       text: '比特率',
       required: false,
-      value: '128',
+      value: '128000',
       show: true,
       unit: 'MB',
-      formatter: function (value) { return value * 1000; }
+      decoder: function (value) { return value / 1000; },
+      encoder: function (value) { return value * 1000; }
     },
     audioIndexs: {
       field: 'audioIndexs', type: 'select', text: '音轨数量', required: true, selected: '1',options: [
@@ -261,7 +263,12 @@ config.getFormData = function getFormData(types = ['basicFields', 'videoFields',
     const sectionKeys = Object.keys(section);
     for (let j = 0; j < sectionKeys.length; j++) {
       const item = section[sectionKeys[j]];
-      form[item.field] = item.type === 'select' ? item.selected : item.value;
+      // form[item.field] = item.type === 'select' ? item.selected : item.value;
+      if (item.type === 'select') {
+        form[item.field] = item.selected;
+      } else {
+        form[item.field] = item.decoder ? item.decoder(item.value) : item.value;
+      }
     }
   }
   return form;
