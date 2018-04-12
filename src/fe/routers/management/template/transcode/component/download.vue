@@ -55,7 +55,7 @@
     created() {
       if (this.type !== 'add') {
         this.initParam();
-        this.formData = Object.assign({}, this.formData, this.templateInfo);
+        this.formData = Object.assign({}, this.formData, this.valueFormatter(this.templateInfo, 'decoder'));
         if(this.templateInfo.watermarkFile && this.templateInfo.watermarkFile !== 'null'){
           this.watermarkUrl = templateApi.getWatermark(formatQuery(this.templateInfo.watermarkFile));
         }
@@ -87,6 +87,30 @@
       }
     },
     methods: {
+      valueFormatter(data = {}, funcName = 'encoder') {
+        let fieldNames = [];
+        if (this.fieldsType === 'video') {
+          fieldNames = Object.keys(config.getFormData());
+        } else {
+          fieldNames = Object.keys(config.getFormData(['basicFields', 'audioFields']));
+        }
+        const result = {};
+        const fields = this.fields;
+        const fieldKeys = Object.keys(fields);
+        fieldNames.forEach(key => {
+          result[key] = data[key];
+          for (let i = 0, len = fieldKeys.length; i < len; i++) {
+            const field = fields[fieldKeys[i]];
+            if (field[key]) {
+              if (field[key][funcName]) {
+                result[key] = field[key][funcName](data[key]);
+              }
+              break;
+            }
+          }
+        });
+        return result;
+      },
       initParam() {
         this.formData = config.getFormData()
       },
@@ -97,29 +121,7 @@
         const me = this;
         this.$refs.editForm.validate((valid) => {
           if (valid) {
-            let fieldNames = [];
-            if (this.fieldsType === 'video') {
-              fieldNames = Object.keys(config.getFormData());
-            } else {
-              fieldNames = Object.keys(config.getFormData(['basicFields', 'audioFields']));
-            }
-
-            const reqData = {};
-            const formData = this.formData;
-            const fields = this.fields;
-            const fieldKeys = Object.keys(fields);
-            fieldNames.forEach(key => {
-              reqData[key] = formData[key];
-              for (let i = 0, len = fieldKeys.length; i < len; i++) {
-                const field = fields[fieldKeys[i]];
-                if (field[key]) {
-                  if (field[key].formatter) {
-                    reqData[key] = field[key].formatter(formData[key]);
-                  }
-                  break;
-                }
-              }
-            });
+            const reqData = this.valueFormatter(this.formData, 'encoder');
             if (me.type === 'add') {
               this.add(reqData);
             } else {
