@@ -60,8 +60,7 @@
               <ul v-show="articleList.length > 0">
                 <li v-for="item in articleList" class="article-list-item">
                   <div class="article-source-image">
-                    <img :src="getFaviconBgImg(tab.label)" width="42">
-                    <img :ref="item.source" :src="getFavicon(item.source)" :width="getFaviconWidth(item.source)">
+                    <img :ref="item.source" v-lazy="getFavicon(item.source, tab.label)" :width="getFaviconWidth(item.source)">
                   </div>
                   <div :style="{ overflow: 'hidden' }">
                     <a :href="item.url" target="_blank" class="article-title" v-html="item.title"></a>
@@ -181,6 +180,8 @@
 </template>
 <script>
   import echarts from 'echarts';
+  import Vue from 'vue';
+  import VueLazyload from 'vue-lazyload';
 
   // import echarts from 'echarts/lib/echarts';
   // import 'echarts/lib/component/tooltip';
@@ -236,6 +237,12 @@
     { label: '今日热点', name: '1' },
     { label: '七日热点', name: '7' }
   ];
+
+  Vue.use(VueLazyload, {
+    preLoad: 1.3,
+    error: '',
+    attempt: 1
+  });
 
   export default {
     components: {WebBrowser},
@@ -373,8 +380,11 @@
       getFaviconBgImg(name) {
         return `/static/picture/${name}.png`;
       },
-      getFavicon(source) {
-        return `/static/picture/${source}.jpg`;
+      getFavicon(source, name) {
+        return {
+          src: `/static/picture/${source}.jpg`,
+          error: `/static/picture/${name}.png`
+        };
       },
       getFaviconWidth(name) {
         let width = 42;
