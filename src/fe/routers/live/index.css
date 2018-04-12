@@ -138,7 +138,7 @@
 }
 .programItemTime {
   float: left;
-  width: 32px;
+  /*width: 32px;*/
   margin-right: 32px;
 }
 .programItemName {
