@@ -221,8 +221,7 @@
           };
 
           for (let i = 0, len = list.length; i < len; i++) {
-            //暂时使用中文对比
-            if (list[i].typeName = fileInfoTYPE.LOW_BIT_VIDEO.text) {
+            if (list[i].type === fileInfoTYPE.LOW_BIT_VIDEO.value) {
               program = list[i];
             }
           }
