@@ -344,3 +344,17 @@ export const radioFields = {
     selected: '是'
   }
 };
+
+export const fileInfoTYPE = {
+  HIGH_VIDEO: { value: '0', text: '高码流' }, // 高码流
+  LOW_BIT_VIDEO: { value: '1', text: '低码流' }, // 低码流
+  SUBTITLE: { value: '2', text: '字幕' }, // 字幕
+  THUMB: { value: '3', text: '缩略图' }, // 缩略图
+  DOC: { value: '4', text: '文档' },  // 文档
+  OTHER: { value: '5', text: '其它' }, // 其它
+  P1080: { value: '6', text: '1080P' }, // 1080P
+  P360: { value: '7', text: '360P' }, // 360P
+  AUDIO: { value: '8', text: '音频' }, // 音频
+  MP3: { value: '9', text: 'mp3' }, // mp3
+  P720: { value: '10', text: '720P' }, // 720P
+};

@@ -84,6 +84,7 @@
   import throttle from '../../component/fjUI/utils/throttle';
   import RtmpPlayer from '../../component/rtmpPlayer';
   import liveAPI from '../../api/live';
+  import { fileInfoTYPE } from "../library/config";
 
   const channelList = {
     phoenixtv_infonews: { _id: 'phoenixtv_infonews', name: '资讯台', avatar: require('./avatar/infonews_channel.jpg'), liveSource: '凤凰卫视资讯台HD' },
@@ -209,8 +210,8 @@
         if (this.onLiveProgram === this.currentProgram) return;
         liveAPI.getProgram({ params: { _id: this.currentProgram } }).then((res) => {
           const list = res.data;
-          let program_720P = {};
-          let program_360P = {};
+          // let program_720P = {};
+          // let program_360P = {};
           let program = {
             objectId: '',
             streamUrl: '',
@@ -218,19 +219,27 @@
             outpoint: 0,
             fromWhere: ''
           };
-          for (let i = 0; i < list.length; i++) {
-            if (list[i].typeName === '720P') {
-              program_720P = list[i];
-              break;
-            } else if (list[i].typeName === '360P') {
-              program_360P = list[i];
+
+          for (let i = 0, len = list.length; i < len; i++) {
+            //暂时使用中文对比
+            if (list[i].typeName = fileInfoTYPE.LOW_BIT_VIDEO.text) {
+              program = list[i];
             }
           }
-          if (program_720P.typeName) {
-            program = program_720P;
-          } else if (program_360P.typeName) {
-            program = program_360P;
-          }
+
+          // for (let i = 0; i < list.length; i++) {
+          //   if (list[i].typeName === '720P') {
+          //     program_720P = list[i];
+          //     break;
+          //   } else if (list[i].typeName === '360P') {
+          //     program_360P = list[i];
+          //   }
+          // }
+          // if (program_720P.typeName) {
+          //   program = program_720P;
+          // } else if (program_360P.typeName) {
+          //   program = program_360P;
+          // }
           this.objectId = program.objectId;
           this.url = program.streamUrl;
           this.streamInfo = {
