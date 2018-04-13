@@ -186,12 +186,13 @@
         groupAPI.postUpdateOwnerPermission(requestData)
           .then((response) => {
             this.$message.success('保存成功');
-            this.isUpdatePermissionBtnLoading = false;
             this.cancel();
           })
           .catch((error) => {
-            this.isUpdatePermissionBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isUpdatePermissionBtnLoading = false;
           });
       }
     },

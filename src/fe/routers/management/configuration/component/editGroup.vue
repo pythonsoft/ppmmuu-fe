@@ -62,12 +62,13 @@
                 me.$emit('edited', { name: me.formData.name });
                 me.formData.name = '';
                 me.$message.success('保存成功');
-                me.isBtnLoading = false;
                 me.handleClose();
               })
               .catch((error) => {
-                this.isBtnLoading = false;
                 this.$message.error(error);
+              })
+              .then(() => {
+                this.isBtnLoading = false;
               });
           }
         });

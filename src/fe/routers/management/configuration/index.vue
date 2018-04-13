@@ -231,7 +231,6 @@
         func({ _id: _id })
           .then((res) => {
             me.$message.success('删除成功');
-            me.isDeleteBtnLoading = false;
             me.deleteDialogVisible = false;
             if (this.dialogTitle === '组') {
               me.vueInstance.$emit('tree.removeNode', _id);
@@ -239,8 +238,9 @@
               this.handleClickSearch();
             }
           }).catch((error) => {
-            me.isDeleteBtnLoading = false;
             me.$message.error(error);
+          }).then(() => {
+            me.isDeleteBtnLoading = false;
           });
       },
 

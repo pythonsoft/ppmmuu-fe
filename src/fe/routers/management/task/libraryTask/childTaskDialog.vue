@@ -288,11 +288,11 @@
 
         api.stopJob({ params: param }).then((res) => {
           me.$message.success('任务已成功停止');
-          me.stopBtn.loading = false;
           me.listChildTask();
         }).catch((error) => {
-          me.stopBtn.loading = false;
           me.$message.error(error);
+        }).then(() => {
+          me.stopBtn.loading = false;
         });
 
         return false;
@@ -315,11 +315,11 @@
 
         api.restartJob({ params: param }).then((res) => {
           me.$message.success('任务已成功重启');
-          me.restartBtn.loading = false;
           me.listChildTask();
         }).catch((error) => {
-          me.restartBtn.loading = false;
           me.$message.error(error);
+        }).then(() => {
+          me.restartBtn.loading = false;
         });
 
         return false;

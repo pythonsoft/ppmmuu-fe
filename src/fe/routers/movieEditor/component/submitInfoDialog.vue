@@ -278,15 +278,15 @@
         this.templateBrowserVisible = false;
         api.warehouse(reqData)
             .then((res) => {
-              this.isBtnLoading = false;
-              this.visible = false;
               this.$message.success('发布成功');
             })
             .catch((error) => {
-              this.isBtnLoading = false;
-              this.visible = false;
               this.$message.error(error);
             })
+            .then(() => {
+              this.isBtnLoading = false;
+              this.visible = false;
+            });
       },
     }
   };

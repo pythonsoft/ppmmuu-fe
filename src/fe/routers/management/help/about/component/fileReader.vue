@@ -53,12 +53,12 @@
         api.installPackage({
           id: this.packageInfo._id
         }).then((res) => {
-          me.isBtnLoading = false;
           me.isSuccess = true;
           me.getDetail();
         }).catch((error) => {
-          me.isBtnLoading = false;
           me.installMessage.push(error);
+        }).then(() => {
+          me.isBtnLoading = false;
         });
       },
       readFile() {

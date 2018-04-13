@@ -195,13 +195,14 @@
           .then((response) => {
             this.$message.success('保存成功');
             this.$emit('updateList');
-            this.isBtnLoading = false;
             this.resetFormData();
             this.handleClose();
           })
           .catch((error) => {
-            this.isBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isBtnLoading = false;
           });
       },
       editUser() {
@@ -216,13 +217,14 @@
           .then((response) => {
             this.$message.success('保存成功');
             this.$emit('updateList');
-            this.isBtnLoading = false;
             this.resetFormData();
             this.handleClose();
           })
           .catch((error) => {
-            this.isBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isBtnLoading = false;
           });
       },
       addOwner(row, parentNode) {

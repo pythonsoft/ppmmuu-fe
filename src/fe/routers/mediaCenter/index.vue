@@ -317,7 +317,6 @@
       getSearchHistory() {
         this.loading = true;
         api.getSearchHistory().then((res) => {
-          this.loading = false;
           const data = res.data;
           this.keywordOptions = res.data.map((item) => {
             item.value = item.keyword;
@@ -325,8 +324,9 @@
             return item;
           });
         }).catch((error) => {
-          this.loading = false;
           this.$message.error(error);
+        }).then(() => {
+          this.loading = false;
         });
       },
       remoteMethod() {},

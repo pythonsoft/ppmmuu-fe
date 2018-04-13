@@ -62,12 +62,13 @@
                 this.formData.name = '';
                 this.$emit('added');
                 this.$message.success('保存成功');
-                this.isBtnLoading = false;
                 this.handleClose();
               })
               .catch((error) => {
-                this.isBtnLoading = false;
                 this.$message.error(error);
+              })
+              .then(() => {
+                this.isBtnLoading = false;
               });
           }
         });
