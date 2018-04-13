@@ -181,14 +181,15 @@
           .then((response) => {
             me.showSuccessInfo(`${message}成功!`);
             me.detailDialogVisible = false;
-            me.isLoading = false;
             me.resetDialog();
             me.handleClickSearch();
           })
           .catch((error) => {
-            me.isLoading = false;
             me.showErrorInfo(error);
             me.resetDialog();
+          })
+          .then(() => {
+            me.isLoading = false;
           });
       },
       onlineShelf(){

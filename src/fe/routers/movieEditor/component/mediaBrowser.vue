@@ -231,12 +231,13 @@
             this.currentNodeId = '';
             this.currentNodeInfo = {};
             this.$message.success('删除成功');
-            this.isDeleteBtnLoading = false;
             this.deleteNodeDialogVisible = false;
           })
           .catch((error) => {
-            this.isDeleteBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isDeleteBtnLoading = false;
           });
       },
       listSourceItem(id = '', cb, node) {

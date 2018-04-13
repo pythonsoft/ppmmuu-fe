@@ -232,12 +232,13 @@
           .then((response) => {
             this.vueInstance.$emit('tree.removeNode', this.deleteGroupDialogId);
             this.$message.success('删除成功');
-            this.isDeleteBtnLoading = false;
             this.deleteGroupDialogVisible = false;
           })
           .catch((error) => {
-            this.isDeleteBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isDeleteBtnLoading = false;
           });
       }
     },

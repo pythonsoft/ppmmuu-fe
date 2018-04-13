@@ -30,7 +30,7 @@
               <fj-button type="primary" size="mini" :loading="isBtnLoading" @click="handleClick">
                 上传安装包(.zip)
               </fj-button>
-              <input ref="helpPackageUploadBtn" accept="application/zip" class="about-upload-input" @change="(event) => upload(event)" type="file">
+              <input ref="helpPackageUploadBtn" accept="application/zip" class="about-upload-input" @change="(event) => {upload(event)}" type="file">
             </div>
           </div>
           <div class="detail">
@@ -109,12 +109,12 @@
         me.isBtnLoading = true;
 
         api.uploadPackage(param).then((res) => {
-          me.isBtnLoading = false;
           me.packageInfo = res.data;
           me.visible = true;
         }).catch((error) => {
-          me.isBtnLoading = false;
           me.$message.error(error);
+        }).then(() => {
+          me.isBtnLoading = false;
         });
 
         return true;

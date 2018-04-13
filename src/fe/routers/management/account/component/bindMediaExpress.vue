@@ -81,14 +81,15 @@
                 me.formData.password = '';
                 me.$emit('added');
                 me.$message.success('绑定成功');
-                me.isBtnLoading = false;
                 me.btnText = '开始验证';
                 me.handleClose();
               })
               .catch((error) => {
-                me.isBtnLoading = false;
                 me.btnText = '开始验证';
                 me.$message.error(error);
+              })
+              .then(() => {
+                me.isBtnLoading = false;
               });
           }
         });

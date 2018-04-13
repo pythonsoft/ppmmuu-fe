@@ -237,12 +237,12 @@
         }
 
         api.installMonitor(param, me).then((res) => {
-          this.isEnterAuthenticationBtnLoading = false;
           this.enterAuthenticationDialogVisible = false;
           me.$message.success('正在安装引擎');
         }).catch((error) => {
-          this.isEnterAuthenticationBtnLoading = false;
           me.showErrorInfo(error);
+        }).then(() => {
+          this.isEnterAuthenticationBtnLoading = false;
         });
 
         return false;
