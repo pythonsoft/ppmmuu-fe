@@ -86,12 +86,13 @@
         this.isLoading = true;
         api.uploadWatermark(param, config)
           .then((res) => {
-            me.isLoading = false;
             me.$emit('img-change', res.statusInfo.message);
           })
           .catch((error) => {
-            this.isLoading = false;
             me.$message.error(error);
+          })
+          .then(() => {
+            this.isLoading = false;
           });
         return true;
       }

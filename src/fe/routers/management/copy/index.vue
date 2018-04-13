@@ -188,11 +188,12 @@
             me.$message.success('再次提交成功!');
             me.handleClickSearch();
             me.dialogVisible = false;
-            me.isBtnLoading = false;
           })
           .catch((error) => {
             me.$message.error(error);
             me.dialogVisible = false;
+          })
+          .then(() => {
             me.isBtnLoading = false;
           });
       },

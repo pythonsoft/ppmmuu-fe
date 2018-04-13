@@ -133,13 +133,14 @@
         libraryAPI.sendBackCatalogTask({ taskIds: this.selectedItem._id })
           .then((response) => {
             this.updateList();
-            this.isEditStatusBtnLoading = false;
             this.editStatusDialogVisible = false;
             this.$message.success('退回成功');
           })
           .catch((error) => {
-            this.isEditStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditStatusBtnLoading = false;
           });
       },
       deleteCatalogTask() {
@@ -147,26 +148,28 @@
         libraryAPI.deleteCatalogTask({ taskIds: this.selectedItem._id })
           .then((response) => {
             this.updateList();
-            this.isEditStatusBtnLoading = false;
             this.editStatusDialogVisible = false;
             this.$message.success('删除成功');
           })
           .catch((error) => {
-            this.isEditStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditStatusBtnLoading = false;
           });
       },
       submitCatalogTask() {
         this.isSubmitBtnLoading = true;
         libraryAPI.submitCatalogTask({ taskIds: this.selectedItem._id })
           .then((response) => {
-            this.isSubmitBtnLoading = false;
             this.updateList();
             this.$message.success('提交成功');
           })
           .catch((error) => {
-            this.isSubmitBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isSubmitBtnLoading = false;
           });
       },
       updateStatus() {

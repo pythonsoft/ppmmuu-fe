@@ -196,7 +196,6 @@
             groupAPI.postUpdateGroupInfo(requestData)
               .then((res) => {
                 this.$message.success('保存成功');
-                this.isBtnLoading = false;
                 this.$emit('update', { name: this.formData.name });
                 const mediaExpressUser = res.data.mediaExpressUser;
                 if(mediaExpressUser && mediaExpressUser.userType && MEDIAEXPRESS_USER_TYPE_MAP[mediaExpressUser.userType]){
@@ -204,8 +203,9 @@
                 }
                 //this.cancel();
               }).catch((error) => {
-                this.isBtnLoading = false;
                 this.$message.error(error);
+              }).then(() => {
+                this.isBtnLoading = false;
               });
           }
         });

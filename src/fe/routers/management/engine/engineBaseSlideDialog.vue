@@ -199,12 +199,11 @@
             me.$message.success('已更新引擎信息');
             me.confirmFn && me.confirmFn(res.data);
             me.$emit('update:visible', false);
-            me.submitBtn.disabled = false;
-            me.submitBtn.loading = false;
           }).catch((error) => {
+            me.showErrorInfo(error);
+          }).then(() => {
             me.submitBtn.disabled = false;
             me.submitBtn.loading = false;
-            me.showErrorInfo(error);
           });
         } else {
           me.formData.groupId = me.selectedNodeInfo && me.selectedNodeInfo._id || '';

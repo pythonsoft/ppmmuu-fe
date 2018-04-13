@@ -86,12 +86,13 @@
         api.upload(param, config)
           .then((res) => {
             me.path = res.data;
-            me.isLoading = false;
             me.$emit('img-change', res.data);
           })
           .catch((error) => {
-            this.isLoading = false;
             me.$message.error(error);
+          })
+          .then(() => {
+            this.isLoading = false;
           });
         return true;
       }

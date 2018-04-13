@@ -171,13 +171,14 @@
         this.isApplyBtnLoading = true;
         libraryAPI.applyCatalogTask({ taskIds: taskIdsArr.join(',') })
           .then((response) => {
-            this.isApplyBtnLoading = false;
             this.updateList();
             this.$message.success('认领成功');
           })
           .catch((error) => {
-            this.isApplyBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isApplyBtnLoading = false;
           });
       },
       assignCatalogTask(info) {
@@ -198,13 +199,14 @@
         libraryAPI.deleteCatalogTask({ taskIds: taskIdsArr.join(',') })
           .then((response) => {
             this.updateList();
-            this.isEditStatusBtnLoading = false;
             this.editStatusDialogVisible = false;
             this.$message.success('删除成功');
           })
           .catch((error) => {
-            this.isEditStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditStatusBtnLoading = false;
           });
       },
       resumeCatalogTask() {
@@ -213,13 +215,14 @@
         libraryAPI.resumeCatalogTask({ taskIds: taskIdsArr.join(',') })
           .then((response) => {
             this.updateList();
-            this.isEditStatusBtnLoading = false;
             this.editStatusDialogVisible = false;
             this.$message.success('恢复成功');
           })
           .catch((error) => {
-            this.isEditStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditStatusBtnLoading = false;
           });
       },
       showEditStatusDialog(type) {

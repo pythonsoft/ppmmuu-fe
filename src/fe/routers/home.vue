@@ -61,7 +61,6 @@
     created() {
       userAPI.getUserAuth({}, null, true).then((res) => {
         ensureLocalData(res.data);
-        this.isShowLoading = false;
         const showMenuIndex = getItemFromLocalStorage('menu', this);
         const normalMenu = ['taskCenter', 'personalCenter'];
         this.showMenuIndex = showMenuIndex.length? normalMenu.concat(getChildMenuByIndex('', false, this)) : normalMenu;
@@ -75,9 +74,10 @@
         if (loginStatusCodeArr.indexOf(error.status) !== -1) {
           window.location.href = '/login';
         } else {
-          this.isShowLoading = false;
           this.isShowRefreshBox = true;
         }
+      }).then(() => {
+        this.isShowLoading = false;
       });
       this.displayIm(this.$route.name);
     },

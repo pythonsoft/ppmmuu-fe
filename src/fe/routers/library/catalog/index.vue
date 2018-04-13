@@ -288,28 +288,30 @@
         this.isEditStatusBtnLoading = true;
         libraryAPI.sendBackCatalogTask({ taskIds: this.taskId })
           .then((response) => {
-            this.isEditStatusBtnLoading = false;
             this.editStatusDialogVisible = false;
             this.$message.success('退回成功');
             this.back();
           })
           .catch((error) => {
-            this.isEditStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditStatusBtnLoading = false;
           });
       },
       deleteCatalogTask() {
         this.isEditStatusBtnLoading = true;
         libraryAPI.deleteCatalogTask({ taskIds: this.taskId })
           .then((response) => {
-            this.isEditStatusBtnLoading = false;
             this.editStatusDialogVisible = false;
             this.$message.success('删除成功');
             this.back();
           })
           .catch((error) => {
-            this.isEditStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditStatusBtnLoading = false;
           });
       },
       showEditStatusDialog(type) {
@@ -323,13 +325,14 @@
             this.isSubmitBtnLoading = true;
             libraryAPI.submitCatalogTask({taskIds: this.taskId})
               .then((response) => {
-                this.isSubmitBtnLoading = false;
                 this.$router.push({name: 'personal_catalog_task_submitted'});
                 this.$message.success('提交成功');
               })
               .catch((error) => {
-                this.isSubmitBtnLoading = false;
                 this.$message.error(error);
+              })
+              .then(() => {
+                this.isSubmitBtnLoading = false;
               });
           }else{
             this.$message.error('请检查编目信息是否填写正确');
@@ -344,13 +347,14 @@
               const data = Object.assign({}, this.formData, { id: this.currentCatalogId });
               libraryAPI.updateCatalog(data)
                 .then((response) => {
-                  this.isUpdateBtnLoading = false;
                   this.$message.success('保存成功');
                   this.listCatalog(this.objectId);
                 })
                 .catch((error) => {
-                  this.isUpdateBtnLoading = false;
                   this.$message.error(error);
+                })
+                .then(() => {
+                  this.isUpdateBtnLoading = false;
                 });
             } else {
               const data = Object.assign({}, this.formData);
@@ -360,13 +364,14 @@
               data.outpoint = this.currentClip.range[1];
               libraryAPI.createCatalog(data)
                 .then((response) => {
-                  this.isUpdateBtnLoading = false;
                   this.$message.success('保存成功');
                   this.listCatalog(this.objectId);
                 })
                 .catch((error) => {
-                  this.isUpdateBtnLoading = false;
                   this.$message.error(error);
+                })
+                .then(() => {
+                  this.isUpdateBtnLoading = false;
                 });
             }
           }
