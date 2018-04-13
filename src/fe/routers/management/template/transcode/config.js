@@ -240,7 +240,8 @@ config.audioFields = {
       encoder: function (value) { return value * 1000; }
     },
     audioIndexs: {
-      field: 'audioIndexs', type: 'select', text: '音轨数量', required: true, selected: '1',options: [
+      field: 'audioIndexs', type: 'select', text: '音轨数量', required: true, selected: 'null',options: [
+        { text: 'null', value: 'null', key: 'audio_null' },
         { text: '1', value: '1', key: 'audio_1' },
         { text: '2', value: '2', key: 'audio_2' },
         { text: '4', value: '4', key: 'audio_4' },
