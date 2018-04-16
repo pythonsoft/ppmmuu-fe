@@ -19,11 +19,8 @@ const searchConfig = [
     key: 'ccid',
     label: '編目類',
     items: [
-      { value: '視音頻類', label: '視音頻類' },
+      { value: '新聞節目類', label: '視音頻類' },
       { value: '片段子類', label: '片段子類' },
-      { value: '場景子類', label: '場景子類' },
-      { value: '片頭子類', label: '片頭子類' },
-      { value: 'segment', label: 'segment' },
     ],
     selected: [],
     show: true,
