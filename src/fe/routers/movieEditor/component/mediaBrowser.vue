@@ -58,10 +58,14 @@
   import TreeNodeContent from './sourceTreeNode';
   import TreeView from '../../../component/higherOrder/tree/_index';
   import ivideoAPI from '../../../api/ivideo';
+  import liveAPI from '../../../api/live';
+  import mediaAPI from '../../../api/media';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   import DropDownMenu from './dropdownMenu.vue';
   import SourceMenuDialog from './sourceMenuDialog';
   import { getPosition } from '../../../component/fjUI/utils/position';
+  import { getDayCountOfMonth, formatTime } from '../../../common/utils';
+  import configurationAPI from '../../../api/configuration';
 
   const TYPE_CONFIG = {
     0: 'folder',
@@ -82,6 +86,12 @@
       theme: String
     },
     data() {
+      const listRecordNodeFuncConfig = {
+        'channel': this.getRecordYearList,
+        'year': this.getRecordMonthList,
+        'month': this.getRecordDateList,
+        'date': this.getRecordProgramList
+      };
       return {
         // _id: '',
         rootIds: {},
@@ -91,7 +101,9 @@
         sourceMenuDialogVisible: false,
         isDeleteBtnLoading: false,
         command: '',
-        defaultExpandedKey: ''
+        defaultExpandedKey: '',
+        recordChannel: [],
+        listRecordNodeFuncConfig: listRecordNodeFuncConfig
       };
     },
     computed: {
@@ -245,6 +257,12 @@
         if (node && node.ownerType) {
           params.ownerType = node.ownerType;
         }
+        if (node && (node.name === '收录素材' || node.rootName === '收录素材')) {
+          this.getRecordList(node).then(data => {
+            cb && cb(data);
+          });
+          return;
+        }
         ivideoAPI.listItem({ params: params }).then((res) => {
           const resData = res.data;
           const data = [];
@@ -255,9 +273,11 @@
           }
           for (let i = 0; i < resData.length; i++) {
             const item = resData[i];
+            // 2 默认目录
             if (item.type === '2') {
               this.rootIds[item.ownerType] = item._id;
               if (item.ownerType === '4') this.defaultExpandedKey = item._id;
+              item.treeAlias = item.name;
             }
             if (TYPE_CONFIG[item.type] === 'folder') item.isFolder = true;
             data.push(item);
@@ -317,6 +337,158 @@
           parentId: this.currentNodeId // this._id
         };
         this.vueInstance.$emit('tree.insertNode', this.currentNodeId, node);
+      },
+      getRecordList(parent) {
+        if (this.recordChannel.length === 0) {
+          return this.getRecordChannel();
+        } else {
+          return this.listRecordNodeFuncConfig[parent.recordNodeType](parent);
+        }
+      },
+      getRecordChannel() {
+        return configurationAPI.configurationDetail({ params: { groupName: 'record_config', key: 'start_record' } })
+          .then((response) => {
+            const resData = JSON.parse(response.data.value);
+            this.recordChannel = resData;
+            return resData.map((item) => {
+              return {
+                _id: item._id,
+                name: item.channel,
+                type: '0',
+                isFolder: true,
+                rootName: '收录素材',
+                startDate: item.start,
+                recordNodeType: 'channel',
+                channelId: item._id
+              }
+            });
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          });
+      },
+      getRecordYearList(parent) {
+        const { startDate, _id } = parent;
+        const data = [];
+        const start = Number(startDate.split('-')[0]);
+        const currYear = new Date().getFullYear();
+
+        for (let i = currYear; i >= start; i--) {
+          data.push(
+          {
+            _id: _id + i,
+            name: `${i}年`,
+            value: i,
+            type: '0',
+            isFolder: true,
+            rootName: '收录素材',
+            startDate: startDate,
+            recordNodeType: 'year',
+            channelId: _id,
+            date: [i] // 记录年月日
+          });
+        }
+        return Promise.resolve(data);
+      },
+      getRecordMonthList(parent) {
+        const { startDate, value, channelId, _id, date } = parent;
+        const data = [];
+        const startYear = Number(startDate.split('-')[0]);
+        const currYear = new Date().getFullYear();
+        let start = 1;
+        let end = 12;
+
+        if (Number(value) === startYear) {
+          start = Number(startDate.split('-')[1]);
+        }
+        if (Number(value) === currYear) {
+          end = new Date().getMonth() + 1;
+        }
+        for (let i = end; i >= start; i--) {
+          const tempDate = JSON.parse(JSON.stringify(date));
+          tempDate.push(i);
+
+          data.push({
+            _id: _id + i,
+            name: `${i}月`,
+            value: i,
+            type: '0',
+            isFolder: true,
+            rootName: '收录素材',
+            startDate: startDate,
+            recordNodeType: 'month',
+            channelId: channelId,
+            date: tempDate
+          });
+        }
+        return Promise.resolve(data);
+      },
+      getRecordDateList(parent) {
+        const { startDate, value, channelId, _id, date } = parent;
+        const data = [];
+        const startYear = Number(startDate.split('-')[0]);
+        const startMonth = Number(startDate.split('-')[1]);
+        const currYear = new Date().getFullYear();
+        const currMonth = new Date().getMonth() + 1;
+        const year = Number(date[0]);
+        const month = Number(date[1]);
+        let start = 1;
+        let end = getDayCountOfMonth(year, month - 1);
+        if (startYear === year && startMonth === month) {
+          start = Number(startDate.split('-')[2]);
+        }
+        if (currYear === year && currMonth === month) {
+          end = new Date().getDate();
+        }
+        for (let i = end; i >= start; i--) {
+          const tempDate = JSON.parse(JSON.stringify(date));
+          tempDate.push(i);
+
+          data.push({
+            _id: _id + i,
+            name: `${i}日`,
+            value: i,
+            type: '0',
+            isFolder: true,
+            rootName: '收录素材',
+            startDate: startDate,
+            recordNodeType: 'date',
+            channelId: channelId,
+            date: tempDate
+          });
+        }
+
+        return Promise.resolve(data);
+      },
+      getRecordProgramList(parent) {
+        const [year, month, day] = parent.date;
+        const reqData = {
+          channel: parent.channelId,
+          time: new Date(year, Number(month) - 1, day, 0, 0, 0),
+          fieldsNeed: '_id,name,materialTime,objectId,fromWhere,inpoint,outpoint'
+        };
+        return liveAPI.listProgram({ params: reqData }).then((res) => {
+          const resData = res.data.docs;
+          return resData.map(item => {
+            // duration 单位为帧
+            const duration = item.outpoint - item.inpoint;
+            return {
+              _id: item._id,
+              type: '1', // video
+              name: `${parent.rootName} ${formatTime(item.materialTime.from)}`,
+              snippet: {
+                duration: duration,
+                objectId: item.objectId,
+                fromWhere: item.fromWhere,
+                input: item.inpoint,
+                output: item.outpoint,
+                thumb: mediaAPI.getIcon(item.objectId, item.fromWhere)
+              }
+            };
+          })
+        }).catch((error) => {
+          this.$message.error(error);
+        });
       }
     },
     created() {
