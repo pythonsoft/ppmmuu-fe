@@ -432,7 +432,6 @@
         this.typesLine.showLoading({ color: '#38B1EB' });
         RequestsAPI.sendRequests(data)
           .then((response) => {
-            this.loading = false;
             const resData = response.data;
             this.lineData = this.convertLineData(resData);
 
@@ -443,13 +442,14 @@
 
             this.updateLine();
           }).catch((error) => {
-            this.loading = false;
             this.$message.error(error);
 
             this.statisticsLine.hideLoading();
             this.areasLine.hideLoading();
             this.locationsLine.hideLoading();
             this.typesLine.hideLoading();
+          }).then(() => {
+            this.loading = false;
           });
       },
       getReport(type = 'all') {

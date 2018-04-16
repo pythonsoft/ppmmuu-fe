@@ -244,13 +244,14 @@
         groupAPI.postDeleteGroupUser({ _ids: this.editUserStatusIds.join(',') })
           .then((response) => {
             this.updateList();
-            this.isEditUserStatusBtnLoading = false;
             this.editUserStatusDialogVisible = false;
             this.$message.success('保存成功');
           })
           .catch((error) => {
-            this.isEditUserStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditUserStatusBtnLoading = false;
           });
       },
       enableUser(status) {
@@ -258,13 +259,14 @@
         groupAPI.postEnableGroupUser({ _ids: this.editUserStatusIds.join(','), status: status })
           .then((response) => {
             this.updateList();
-            this.isEditUserStatusBtnLoading = false;
             this.editUserStatusDialogVisible = false;
             this.$message.success('保存成功');
           })
           .catch((error) => {
-            this.isEditUserStatusBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isEditUserStatusBtnLoading = false;
           });
       },
       addOwner(row, parentNode) {

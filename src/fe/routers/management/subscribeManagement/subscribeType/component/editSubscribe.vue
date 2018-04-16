@@ -139,12 +139,13 @@
             me.$message.success('保存成功');
             me.$emit('updateList');
             me.close();
-            me.isBtnLoading = false;
             me.resetFormData();
           })
           .catch((error) => {
-            me.isBtnLoading = false;
             me.$message.error(error);
+          })
+          .then(() => {
+            me.isBtnLoading = false;
           });
       },
       edit() {
@@ -156,12 +157,13 @@
             me.$message.success('保存成功');
             me.$emit('updateList');
             me.close();
-            me.isBtnLoading = false;
             me.resetFormData();
           })
           .catch((error) => {
-            this.isBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isBtnLoading = false;
           });
       },
       close() {

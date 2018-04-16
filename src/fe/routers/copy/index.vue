@@ -522,7 +522,6 @@
       getSearchHistory() {
         this.loading = true;
         manuscriptAPI.getSearchHistory().then((res) => {
-          this.loading = false;
           const data = res.data;
           this.keywordOptions = res.data.map((item) => {
             item.value = item.keyword;
@@ -530,8 +529,9 @@
             return item;
           });
         }).catch((error) => {
-          this.loading = false;
           this.$message.error(error);
+        }).then(() => {
+          this.loading = false;
         });
       },
       remoteMethod() {},
@@ -707,17 +707,17 @@
         const id = this.copyContent._id;
         this.isResubmitBtnLoading = true
         manuscriptAPI.resubmitScript({_id: id})
-            .then((response) => {
-              this.$message.success('再次提交成功!');
-              this.isResubmitBtnLoading = false;
-              this.resubmitDialogVisible = false;
-              this.copyList = [];
-              this.updateList({status: this.submitStatus})
-            })
-            .catch((error) => {
-              this.isResubmitBtnLoading = false;
-              this.$message.error(error);
-            });
+          .then((response) => {
+            this.$message.success('再次提交成功!');
+            this.resubmitDialogVisible = false;
+            this.copyList = [];
+            this.updateList({status: this.submitStatus})
+          })
+          .catch((error) => {
+            this.$message.error(error);
+          }).then(() => {
+            this.isResubmitBtnLoading = false;
+          });
       },
       getItemAttachmentsLength(item){
         let len = item.attachments.length;

@@ -235,13 +235,14 @@
         };
         apiFunc(postData)
           .then((res) => {
-            me.isBtnLoading = false;
             me.handleClickSearch();
             me.showSuccessInfo('保存成功');
           })
           .catch((error) => {
-            me.isBtnLoading = false;
             me.showErrorInfo(error);
+          })
+          .then(() => {
+            me.isBtnLoading = false;
           });
       },
       resetSlideDialog() {

@@ -267,7 +267,6 @@
         func({ groupId: _id }, me)
           .then((res) => {
             me.showSuccessInfo('删除成功');
-            me.isDeleteBtnLoading = false;
             me.deleteDialogVisible = false;
             if (this.dialogTitle === '组') {
               me.vueInstance.$emit('tree.removeNode', this.deleteDialogId);
@@ -276,9 +275,10 @@
               this.handleClickSearch();
             }
           }).catch((error) => {
-            me.isDeleteBtnLoading = false;
             me.showErrorInfo(error);
-        });
+          }).then(() => {
+            me.isDeleteBtnLoading = false;
+          });
       },
       listTemplate(searchObj) {
         const me = this;

@@ -65,13 +65,14 @@
         userAPI.clearSearchHistory()
           .then((response) => {
             this.updateList();
-            this.isClearBtnLoading = false;
             this.clearHistoryDialogVisible = false;
             this.$message.success('删除成功');
           })
           .catch((error) => {
-            this.isClearBtnLoading = false;
             this.$message.error(error);
+          })
+          .then(() => {
+            this.isClearBtnLoading = false;
           });
       },
       deleteHistory() {
