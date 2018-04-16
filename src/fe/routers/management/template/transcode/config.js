@@ -246,6 +246,13 @@ config.audioFields = {
         { text: '2', value: '2', key: 'audio_2' },
         { text: '4', value: '4', key: 'audio_4' },
       ]
+    },
+    channels: {
+      field: 'channels', type: 'select', text: '声道', required: true, selected: '1',options: [
+        { text: '1', value: '1', key: 'channel_1' },
+        { text: '2', value: '2', key: 'channel_2' },
+        { text: '4', value: '4', key: 'channel_4' },
+      ]
     }
   }
 };
