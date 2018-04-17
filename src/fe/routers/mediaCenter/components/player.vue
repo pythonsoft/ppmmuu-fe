@@ -50,16 +50,18 @@
 
   export default {
     props: {
+      // 用于控制重置内部状态，以及获取字幕
       videoId: {
         type: String,
         default: ''
       },
+      // 视频资源
       url: String,
       streamInfo: {
         type: Object,
         default() {
           return {
-            INPOINT: 0,
+            INPOINT: 0,// 单位为帧
             OUTPOINT: 0
           };
         }
@@ -74,6 +76,7 @@
         type: Number,
         default: 25
       },
+      // 尺寸有 normal 和 big
       mode: {
         type: String,
         default: 'normal'
@@ -85,22 +88,21 @@
         OUTPOINT: this.streamInfo.OUTPOINT / this.fps || 0,
         loading: true,
         videoSRT: [],
-        videoSRTPosition: 0,
+        videoSRTPosition: 0,// 当前字幕在 videoSRT 中的索引值
         currentVideoSRT: '',
         isPlaying: false,
-        moveIndicatorTimer: null,
+        moveIndicatorTimer: null,// 控制器随播放时间而变化的intervalID
         progressBarHoverTimer: null,
-        moveIndicatorTimeId: null,
-        updateCurrentTimeTimeId: null,
+        moveIndicatorTimeId: null,// 鼠标拖拽控制器时进度条和控制器位置变化的timeoutID
+        updateCurrentTimeTimeId: null,// 鼠标拖拽控制器时currentTime变化的timeoutID
         currentTime: 0,
         duration: (this.streamInfo.OUTPOINT - this.streamInfo.INPOINT) / this.fps,
-        indicatorOffset: 0,
-        playProgressPercent: 0,
-        hoverProgressPercent: 0,
+        indicatorOffset: 0,// 控制器位移值
+        playProgressPercent: 0,// 播放进度(0~1之间)
+        hoverProgressPercent: 0,// 鼠标悬停的位置(0~1之间)
         isShowHoverProgress: false,
-        tooltipStyle: { display: 'none' },
+        tooltipStyle: { display: 'none' },// 提示时间的样式(left值将会改变)
         tooltipTime: 0,
-        tooltipText: '00:00:00',
         isFullscreen: false,
         isMute: false,
         volume: 1,
@@ -111,6 +113,7 @@
     },
     computed: {
       interval() {
+        // 改变进度条状态的时间间隔
         return Math.floor(1000 / this.fps);
       },
       displayCurrentTime() {
@@ -134,6 +137,9 @@
       innerCurrentTime() {
         return this.currentTime - this.INPOINT > this.OUTPOINT
           ? this.OUTPOINT : this.currentTime - this.INPOINT;
+      },
+      tooltipText() {
+        return transformSecondsToStr(this.tooltipTime, 'HH:mm:ss');
       }
     },
     watch: {
@@ -348,7 +354,6 @@
         this.tooltipTime = currentLeft / progressBar.width * this.duration;
         if (this.tooltipTime < 0) this.tooltipTime = 0;
         if (this.tooltipTime > this.duration) this.tooltipTime = this.duration;
-        this.tooltipText = transformSecondsToStr(this.tooltipTime, 'HH:mm:ss');
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 59;
         if (currentLeft + tooltipWidth > this.width) {
