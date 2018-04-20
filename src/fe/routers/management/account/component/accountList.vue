@@ -12,7 +12,7 @@
         </fj-select>
       </div>
       <div class="search-item" :style="{ width: '190px' }">
-        <fj-input theme="fill" size="small" placeholder="请输入账户名" v-model="keyword"></fj-input>
+        <fj-input theme="fill" size="small" placeholder="请输入账户名" v-model="keyword" @keydown.native.enter.prevent="handleSearch"></fj-input>
       </div>
       <div class="search-item">
         <fj-button size="small" type="primary" @click="handleSearch">查询</fj-button>
