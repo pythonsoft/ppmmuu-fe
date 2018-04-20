@@ -176,7 +176,7 @@
       },
       offlineShelf(){
         this.operation = 'offline';
-        this.dialogMessage = '您确定要上架这个节目吗?';
+        this.dialogMessage = '您确定要下架这个节目吗?';
         this.dialogVisible = true;
       },
       handleSelectionChange(rows) {
