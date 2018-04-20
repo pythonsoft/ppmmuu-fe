@@ -82,6 +82,7 @@
         type: String,
         default: ''
       },
+      sourceFromWhere: String,
       videoId: {
         type: String,
         default: ''
@@ -205,9 +206,13 @@
         this.loading = true;
         this.reset();
         this.videoSource = '';
+        this.fromWhere = this.sourceFromWhere;
         this.getStream(val);
         this.getSRTArr(val);
         this.getDetail(val);
+      },
+      sourceFromWhere(val) {
+        this.fromWhere = val;
       },
       videoSnippet(val) {
         this.fileTypeId = val.fileTypeId;

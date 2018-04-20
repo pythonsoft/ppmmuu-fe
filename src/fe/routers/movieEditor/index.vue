@@ -30,9 +30,10 @@
               <template slot="0" slot-scope="props">
                 <video-source-panel
                   :title="sourceTitle"
-                  :videoId="sourceVideoId"
-                  :videoSnippet="sourceSnippet"
-                  :activePanel.sync="activePanel"
+                  :video-id="sourceVideoId"
+                  :source-from-where="sourceFromWhere"
+                  :video-snippet="sourceSnippet"
+                  :active-panel.sync="activePanel"
                   :size="{ width: props.width, height: props.height }"
                   @insert="importSource"></video-source-panel>
               </template>
@@ -102,6 +103,7 @@
         importSourceInfo: null,
         sourceTitle: '',
         sourceVideoId: '',
+        sourceFromWhere: '',
         sourceSnippet: {},
         activePanel: 'sourcePanel',
         size: { width: document.body.clientWidth, height: document.body.clientHeight - 32 },
@@ -128,6 +130,7 @@
         this.importSourceInfo = info;
       },
       updateCurrentSource(item) {
+        this.sourceFromWhere = item.snippet.fromWhere;
         this.sourceVideoId = item.snippet.objectId || '';
         this.sourceTitle = item.name;
         this.sourceSnippet = item.snippet;
