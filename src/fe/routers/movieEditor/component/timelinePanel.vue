@@ -158,7 +158,9 @@
     created() {
       this.projectBus.$on('updateProgramIndex', (index) => {
         if (index > this.sequences.length - 1 || index < 0) {
-          if (this.currentSequenceIndex === 0) return;
+          if (this.currentSequenceIndex === 0) {
+            this.updateProgram();
+          }
           this.currentSequenceIndex = 0;
         } else {
           if (this.currentSequenceIndex === index) return;

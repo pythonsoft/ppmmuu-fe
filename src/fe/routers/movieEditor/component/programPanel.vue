@@ -166,14 +166,23 @@
     },
     created() {
       this.projectBus.$on('updateProgram', (program, programIndex, isAutoPlay) => {
-        if (this.id === program.id) return;
+        if (this.id === program.id) {
+          this.currentTime = program.range[0];
+          this.video.currentTime = program.range[0];
+          return;
+        }
         const oldId = this.videoId;
         this.id = program.id;
+
         this.videoId = program.objectId;
         this.title = program.title;
         this.range = program.range;
+        if (this.programIndex === programIndex) {
+
+        }
         this.programIndex = programIndex;
         this.isAutoPlay = isAutoPlay;
+
         if (oldId === program.objectId && isAutoPlay) {
           this.updatePlayerStatus();
           this.isAutoPlay = false;
