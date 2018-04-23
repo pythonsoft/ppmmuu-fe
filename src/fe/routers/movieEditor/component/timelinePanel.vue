@@ -48,7 +48,7 @@
 </template>
 <script>
   import Vue from 'vue';
-  import { transformSecondsToStr, isEmptyObject, FROM_WHERE, formatDuration } from '../../../common/utils';
+  import { secondsToTimeCode, isEmptyObject, FROM_WHERE, formatDuration } from '../../../common/utils';
   import DownloadListView from '../../management/template/download/component/downloadDialog';
   import DropDownMenu from './dropdownMenu.vue';
   import SubmitInfoDialog from './submitInfoDialog';
@@ -149,7 +149,7 @@
         if (this.sequences.length === 0) return '时间轴（无序列）';
         const currentSequence = this.sequences[this.currentSequenceIndex];
         const duration = currentSequence.duration;
-        return `${currentSequence.title} ${transformSecondsToStr(duration)}`;
+        return `${currentSequence.title} ${secondsToTimeCode(duration)}`;
       },
       isDisabledControl() {
         return this.sequences.length === 0 || this.currentSequenceIndex < 0;
@@ -158,7 +158,9 @@
     created() {
       this.projectBus.$on('updateProgramIndex', (index) => {
         if (index > this.sequences.length - 1 || index < 0) {
-          if (this.currentSequenceIndex === 0) return;
+          if (this.currentSequenceIndex === 0) {
+            this.updateProgram();
+          }
           this.currentSequenceIndex = 0;
         } else {
           if (this.currentSequenceIndex === index) return;
@@ -398,7 +400,7 @@
           const titleStartY = rect.startY + (11 * this.dpr);
           ctx.fillText(item.title, titleStartX, titleStartY);
 
-          const duration = transformSecondsToStr(item.duration);
+          const duration = secondsToTimeCode(item.duration);
           const fontSize = parseInt(this.TIMELINE_CONFIG.font.match(/(\d*)/)[0], 10);
           ctx.fillText(duration, titleStartX, titleStartY + ((fontSize + 10) * this.dpr));
         });

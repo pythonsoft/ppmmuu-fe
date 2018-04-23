@@ -56,7 +56,7 @@
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
   // import DropdownMenu from './dropdownMenu';
   import DownloadListView from '../../management/template/download/component/downloadDialog';
-  import { transformSecondsToStr, getSRT } from '../../../common/utils';
+  import { secondsToTimeCode, getSRT } from '../../../common/utils';
   import { getPosition } from '../../../component/fjUI/utils/position';
   import { isEmptyObject } from '../../../common/utils';
   const jobAPI = require('../../../api/job');
@@ -152,10 +152,10 @@
         return Math.floor(1000 / this.fps);
       },
       displayCurrentTime() {
-        return transformSecondsToStr(this.innerCurrentTime, 'HH:mm:ss');
+        return secondsToTimeCode(this.innerCurrentTime, 'HH:mm:ss');
       },
       displayDuration() {
-        return transformSecondsToStr(this.duration, 'HH:mm:ss');
+        return secondsToTimeCode(this.duration, 'HH:mm:ss');
       },
       indicatorStyle() {
         return { transform: `translateX(${this.indicatorOffset}px)` };
@@ -405,7 +405,7 @@
         this.tooltipTime = currentLeft / progressBar.width * this.duration;
         if (this.tooltipTime < 0) this.tooltipTime = 0;
         if (this.tooltipTime > this.duration) this.tooltipTime = this.duration;
-        this.tooltipText = transformSecondsToStr(this.tooltipTime, 'HH:mm:ss');
+        this.tooltipText = secondsToTimeCode(this.tooltipTime, 'HH:mm:ss');
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 59;
         if (currentLeft + tooltipWidth > this.width) {

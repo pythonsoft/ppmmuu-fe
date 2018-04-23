@@ -79,6 +79,12 @@
     3: true,
     4: true
   };
+  const MOVEABLE_OWNERTYPE_CONFIG = {
+    1: false,
+    2: false,
+    3: false,
+    4: true
+  };
 
   export default {
     props: {
@@ -175,10 +181,21 @@
         const parentEl = this.parentEl || document.body;
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
-        const menus = [
-          { command: 'move', key: 'move', name: '移动到'},
-          { command: 'copy', key: 'copy', name: '复制到'},
-        ];
+
+        // 某些目录文件不可移动
+        const ownerType = this.currentNodeInfo.ownerType;
+        let menus = [];
+        if (MOVEABLE_OWNERTYPE_CONFIG[ownerType]) {
+          menus = [
+            { command: 'move', key: 'move', name: '移动到'},
+            { command: 'copy', key: 'copy', name: '复制到'},
+          ];
+        } else {
+          menus = [
+            { command: 'copy', key: 'copy', name: '复制到'},
+          ];
+        }
+
         this.dropdownMenu.menus = menus;
         this.dropdownMenu.isDark = this.isDark;
         this.dropdownMenu.$on('item-click', this.handleItemClick);
@@ -359,6 +376,7 @@
                 rootName: '收录素材',
                 startDate: item.start,
                 recordNodeType: 'channel',
+                channel: item.channel,
                 channelId: item._id
               }
             });
@@ -368,7 +386,7 @@
           });
       },
       getRecordYearList(parent) {
-        const { startDate, _id } = parent;
+        const { startDate, _id, channel } = parent;
         const data = [];
         const start = Number(startDate.split('-')[0]);
         const currYear = new Date().getFullYear();
@@ -384,6 +402,7 @@
             rootName: '收录素材',
             startDate: startDate,
             recordNodeType: 'year',
+            channel: channel,
             channelId: _id,
             date: [i] // 记录年月日
           });
@@ -391,7 +410,7 @@
         return Promise.resolve(data);
       },
       getRecordMonthList(parent) {
-        const { startDate, value, channelId, _id, date } = parent;
+        const { startDate, value, channelId, _id, date, channel } = parent;
         const data = [];
         const startYear = Number(startDate.split('-')[0]);
         const currYear = new Date().getFullYear();
@@ -417,6 +436,7 @@
             rootName: '收录素材',
             startDate: startDate,
             recordNodeType: 'month',
+            channel: channel,
             channelId: channelId,
             date: tempDate
           });
@@ -424,7 +444,7 @@
         return Promise.resolve(data);
       },
       getRecordDateList(parent) {
-        const { startDate, value, channelId, _id, date } = parent;
+        const { startDate, value, channelId, _id, date, channel } = parent;
         const data = [];
         const startYear = Number(startDate.split('-')[0]);
         const startMonth = Number(startDate.split('-')[1]);
@@ -453,6 +473,7 @@
             rootName: '收录素材',
             startDate: startDate,
             recordNodeType: 'date',
+            channel: channel,
             channelId: channelId,
             date: tempDate
           });
@@ -475,7 +496,7 @@
             return {
               _id: item._id,
               type: '1', // video
-              name: `${parent.rootName} ${formatTime(item.materialTime.from)}`,
+              name: `${parent.channel} ${formatTime(item.materialTime.from)}`,
               snippet: {
                 duration: duration,
                 objectId: item.objectId,

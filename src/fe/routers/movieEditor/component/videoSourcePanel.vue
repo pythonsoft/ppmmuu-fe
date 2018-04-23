@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-  import { getStreamURL, getSRT, transformSecondsToStr } from '../../../common/utils';
+  import { getStreamURL, getSRT, secondsToTimeCode } from '../../../common/utils';
   import './videoPanel.css';
   const config = require('../../mediaCenter/config');
   const mediaConfig = require('../../mediaCenter/config');
@@ -182,13 +182,13 @@
         return this.activePanel === 'sourcePanel';
       },
       displayDuration() {
-        return transformSecondsToStr(this.duration);
+        return secondsToTimeCode(this.duration);
       },
       displayCurrentTime() {
-        return transformSecondsToStr(this.innerCurrentTime);
+        return secondsToTimeCode(this.innerCurrentTime);
       },
       displayClipDuration() {
-        return transformSecondsToStr(this.clipDuration);
+        return secondsToTimeCode(this.clipDuration);
       }
     },
     watch: {
@@ -632,7 +632,7 @@
         this.tooltipTime = currentLeft / progressBar.width * this.duration;
         if (this.tooltipTime < 0) this.tooltipTime = 0;
         if (this.tooltipTime > this.duration) this.tooltipTime = this.duration;
-        this.tooltipText = transformSecondsToStr(this.tooltipTime);
+        this.tooltipText = secondsToTimeCode(this.tooltipTime);
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 80;
         if (currentLeft + tooltipWidth > this.size.width) {
@@ -713,7 +713,7 @@
       },
       screenshot() {
         this.screenshotURL = this.createImage();
-        this.screenshotTitle = (this.title || this.videoInfo.FILENAME) + transformSecondsToStr(this.currentTime - this.videoInfo.INPOINT) + '.png';
+        this.screenshotTitle = (this.title || this.videoInfo.FILENAME) + secondsToTimeCode(this.currentTime - this.videoInfo.INPOINT) + '.png';
         this.imageDialogVisible = true;
       },
       createImage() {

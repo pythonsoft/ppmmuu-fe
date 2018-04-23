@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-  import { transformSecondsToStr, getStreamURL, FROM_WHERE } from '../../../common/utils';
+  import { secondsToTimeCode, getStreamURL, FROM_WHERE } from '../../../common/utils';
 
   export default {
     props: {
@@ -124,10 +124,10 @@
         return this.activePanel === 'programPanel';
       },
       displayDuration() {
-        return transformSecondsToStr(this.innerDuration);
+        return secondsToTimeCode(this.innerDuration);
       },
       displayCurrentTime() {
-        return transformSecondsToStr(this.innerCurrentTime);
+        return secondsToTimeCode(this.innerCurrentTime);
       }
     },
     created() {
@@ -166,14 +166,23 @@
     },
     created() {
       this.projectBus.$on('updateProgram', (program, programIndex, isAutoPlay) => {
-        if (this.id === program.id) return;
+        if (this.id === program.id) {
+          this.currentTime = program.range[0];
+          this.video.currentTime = program.range[0];
+          return;
+        }
         const oldId = this.videoId;
         this.id = program.id;
+
         this.videoId = program.objectId;
         this.title = program.title;
         this.range = program.range;
+        if (this.programIndex === programIndex) {
+
+        }
         this.programIndex = programIndex;
         this.isAutoPlay = isAutoPlay;
+
         if (oldId === program.objectId && isAutoPlay) {
           this.updatePlayerStatus();
           this.isAutoPlay = false;
@@ -351,7 +360,7 @@
         this.tooltipTime = currentLeft / progressBar.width * this.innerDuration;
         if (this.tooltipTime < 0) this.tooltipTime = 0;
         if (this.tooltipTime > this.innerDuration) this.tooltipTime = this.innerDuration;
-        this.tooltipText = transformSecondsToStr(this.tooltipTime);
+        this.tooltipText = secondsToTimeCode(this.tooltipTime);
         const tooltip = this.$refs.tooltip;
         const tooltipWidth = tooltip.getBoundingClientRect().width || 80;
         if (currentLeft + tooltipWidth > this.size.width) {
@@ -419,7 +428,7 @@
       },
       screenshot() {
         this.screenshotURL = this.createImage();
-        this.screenshotTitle = this.title + transformSecondsToStr(this.innerCurrentTime) + '.png';
+        this.screenshotTitle = this.title + secondsToTimeCode(this.innerCurrentTime) + '.png';
         this.imageDialogVisible = true;
       },
       createImage() {

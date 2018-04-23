@@ -24,7 +24,7 @@
   import Vue from 'vue';
   import VueLazyload from 'vue-lazyload';
   import Clickoutside from '../../../component/fjUI/utils/clickoutside';
-  import { transformSecondsToStr } from '../../../common/utils';
+  import { secondsToTimeCode } from '../../../common/utils';
 
   Vue.use(VueLazyload, {
     preLoad: 1.3,
@@ -73,7 +73,7 @@
     },
     methods: {
       formatTime(time = 0) {
-        return transformSecondsToStr(time / 25, 'HH:mm:ss');
+        return secondsToTimeCode(time / 25, 'HH:mm:ss');
       },
       dblclickFolder() {
         this.nodeStatus = 'editing';

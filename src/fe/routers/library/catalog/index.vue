@@ -142,7 +142,7 @@
   import './index.css';
   import VideoSourcePanel from '../../movieEditor/component/videoSourcePanel';
   import PanelView from '../../../component/layout/panel';
-  import { isVideoType, transformSecondsToStr } from '../../../common/utils';
+  import { isVideoType, secondsToTimeCode } from '../../../common/utils';
   import { selectFields, dateFields, radioFields} from '../config';
   import FjDatePicker from "../../../component/fjUI/packages/datePicker/src/datePicker.vue";
   import FjFormItem from "../../../component/fjUI/packages/form/src/formItem.vue";
@@ -492,10 +492,10 @@
                 {},
                 info,
                 { _id: `${this.currentCatalogId}-${info.range[0]}-${info.range[1]}-${item.children.length + 1}` },
-                { name: `片段${item.children.length + 1} ${transformSecondsToStr(info.duration)}` },
+                { name: `片段${item.children.length + 1} ${secondsToTimeCode(info.duration)}` },
                 { type: 'tempItem' },
                 { parentId: this.currentCatalogId },
-                { duration: transformSecondsToStr(info.duration)},
+                { duration: secondsToTimeCode(info.duration)},
             );
             item.children.push(newChild);
             break;

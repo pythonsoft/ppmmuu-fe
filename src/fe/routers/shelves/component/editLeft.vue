@@ -62,7 +62,7 @@
     getStreamURL,
     formatTime,
     formatQuery,
-    transformSecondsToStr,
+    secondsToTimeCode,
     FROM_WHERE
   } from '../../../common/utils';
   import Player from '../../mediaCenter/components/player';
@@ -220,7 +220,7 @@
         }
         this.canScreenshot = false;
         this.screenshotURL = this.createImage();
-        this.screenshotTitle = this.shelfInfo.name + transformSecondsToStr(this.currentTime) + '.png';
+        this.screenshotTitle = this.shelfInfo.name + secondsToTimeCode(this.currentTime) + '.png';
         if(this.vueInstance) {
           this.vueInstance.$emit('screenshot', this.screenshotURL);
         }
