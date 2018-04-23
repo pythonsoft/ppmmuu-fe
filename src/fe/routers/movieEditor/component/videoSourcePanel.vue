@@ -236,32 +236,26 @@
         this.offset = (this.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
       },
       inTime(val) {
-        const progressBar = this.getProgressBarStyle();
-        const progressBarWidth = progressBar.width;
-        if (progressBarWidth > 0) {
-          this.inPointOffset = (val - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 9;
-          if (val <= this.outTime) {
-            this.clipDuration = this.outTime - val;
-          }
+        this.setInPointOffset(val);
+
+        if (val <= this.outTime) {
+          this.clipDuration = this.outTime - val;
         }
         this.inTimeScreenshot = this.createImage();
       },
       outTime(val) {
-        const progressBar = this.getProgressBarStyle();
-        const progressBarWidth = progressBar.width;
-        if (progressBarWidth > 0) {
-          this.outPointOffset = (val - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 5;
-          if (this.inTime <= val) {
-            this.clipDuration = val - this.inTime;
-          }
+        this.setOutPointOffset(val);
+
+        if (this.inTime <= val) {
+          this.clipDuration = val - this.inTime;
         }
       },
       'size.width'(val) {
         const progressBar = this.getProgressBarStyle();
         const progressBarWidth = progressBar.width;
         this.offset = (this.video.currentTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth;
-        this.inPointOffset = (this.inTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 9;
-        this.outPointOffset = (this.outTime - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 5;
+        this.setInPointOffset(this.inTime);
+        this.setOutPointOffset(this.outTime);
       }
     },
     mounted() {
@@ -306,6 +300,24 @@
     methods: {
       contextMenuStop() {
         return false;
+      },
+      setInPointOffset(val) {
+        const progressBar = this.getProgressBarStyle();
+        const progressBarWidth = progressBar.width;
+        if (progressBarWidth > 0) {
+          this.inPointOffset = (val - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 9;
+        } else {
+          this.inPointOffset = -9;
+        }
+      },
+      setOutPointOffset(val) {
+        const progressBar = this.getProgressBarStyle();
+        const progressBarWidth = progressBar.width;
+        if (progressBarWidth > 0) {
+          this.outPointOffset = (val - this.videoInfo.INPOINT) / this.duration * progressBarWidth - 5;
+        } else {
+          this.outPointOffset = -5;
+        }
       },
       getDetail(id) {
         api.getObject({ params: { objectid: id, fromWhere: this.fromWhere } }).then((res) => {
@@ -356,10 +368,10 @@
         this.isPlaying = false;
         this.isShowInPoint = false;
         this.isShowOutPoint = false;
-        this.inPointOffset = -9;
-        this.outPointOffset = -5;
         this.inTime = this.videoInfo.INPOINT;
         this.outTime = this.videoInfo.OUTPOINT;
+        this.setInPointOffset(this.inTime);
+        this.setOutPointOffset(this.outTime);
         this.tooltipTimeId = null;
         this.moveIndicatorTimer = null;
         this.moveIndicatorTimeId = null;
