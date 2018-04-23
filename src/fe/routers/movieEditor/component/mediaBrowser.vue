@@ -79,6 +79,12 @@
     3: true,
     4: true
   };
+  const MOVEABLE_OWNERTYPE_CONFIG = {
+    1: false,
+    2: false,
+    3: false,
+    4: true
+  };
 
   export default {
     props: {
@@ -175,10 +181,21 @@
         const parentEl = this.parentEl || document.body;
         parentEl.addEventListener('scroll', this.updateMenuPosition);
         this.updateMenuPosition();
-        const menus = [
-          { command: 'move', key: 'move', name: '移动到'},
-          { command: 'copy', key: 'copy', name: '复制到'},
-        ];
+
+        // 某些目录文件不可移动
+        const ownerType = this.currentNodeInfo.ownerType;
+        let menus = [];
+        if (MOVEABLE_OWNERTYPE_CONFIG[ownerType]) {
+          menus = [
+            { command: 'move', key: 'move', name: '移动到'},
+            { command: 'copy', key: 'copy', name: '复制到'},
+          ];
+        } else {
+          menus = [
+            { command: 'copy', key: 'copy', name: '复制到'},
+          ];
+        }
+
         this.dropdownMenu.menus = menus;
         this.dropdownMenu.isDark = this.isDark;
         this.dropdownMenu.$on('item-click', this.handleItemClick);
