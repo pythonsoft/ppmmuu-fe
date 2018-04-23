@@ -42,7 +42,7 @@
   </div>
 </template>
 <script>
-  import { transformSecondsToStr, getSRT } from '../../../common/utils';
+  import { secondsToTimeCode, getSRT } from '../../../common/utils';
   import './player.css';
 
   const volumeSliderWidth = 38;
@@ -117,10 +117,10 @@
         return Math.floor(1000 / this.fps);
       },
       displayCurrentTime() {
-        return transformSecondsToStr(this.innerCurrentTime, 'HH:mm:ss');
+        return secondsToTimeCode(this.innerCurrentTime, 'HH:mm:ss');
       },
       displayDuration() {
-        return transformSecondsToStr(this.duration, 'HH:mm:ss');
+        return secondsToTimeCode(this.duration, 'HH:mm:ss');
       },
       indicatorStyle() {
         return { transform: `translateX(${this.indicatorOffset}px)` };
@@ -139,7 +139,7 @@
           ? this.OUTPOINT : this.currentTime - this.INPOINT;
       },
       tooltipText() {
-        return transformSecondsToStr(this.tooltipTime, 'HH:mm:ss');
+        return secondsToTimeCode(this.tooltipTime, 'HH:mm:ss');
       }
     },
     watch: {

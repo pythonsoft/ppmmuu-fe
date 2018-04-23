@@ -74,7 +74,7 @@
 </template>
 <script>
   import TemplateBrowser from './templateBrowser';
-  import { transformSecondsToStr, formatDuration } from '../../../common/utils';
+  import { secondsToTimeCode, formatDuration } from '../../../common/utils';
   import { selectFields, dateFields, radioFields} from '../../library/config';
   import { getItemFromLocalStorage } from '../../../common/utils';
 
@@ -233,7 +233,7 @@
         const duration = val.reduce((accumulator, currentValue)=> {
           return accumulator + parseFloat(currentValue.duration);
         }, 0);
-        this.formData.duration = transformSecondsToStr(duration);
+        this.formData.duration = secondsToTimeCode(duration);
       }
     },
     mounted() {

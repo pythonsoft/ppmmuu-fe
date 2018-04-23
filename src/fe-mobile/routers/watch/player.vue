@@ -38,7 +38,7 @@
 </template>
 <script>
   import draggable from '../../common/draggable';
-  import { transformSecondsToStr, getSRT } from '../../../fe/common/utils';
+  import { secondsToTimeCode, getSRT } from '../../../fe/common/utils';
   export default {
     props: {
       poster: String,
@@ -99,10 +99,10 @@
         return { left: `${left}%` };
       },
       displayCurrentTime() {
-        return transformSecondsToStr(this.innerCurrentTime, 'HH:mm:ss');
+        return secondsToTimeCode(this.innerCurrentTime, 'HH:mm:ss');
       },
       displayDuration() {
-        return transformSecondsToStr(this.duration, 'HH:mm:ss');
+        return secondsToTimeCode(this.duration, 'HH:mm:ss');
       },
       playProgressStyle() {
         return { transform: `scaleX(${this.playProgressPercent})` };

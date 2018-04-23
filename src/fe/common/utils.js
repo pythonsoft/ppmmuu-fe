@@ -397,7 +397,7 @@ utils.formatDuration = function formatDuration(duration, needMiniSeconds = false
   return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
 };
 
-utils.transformSecondsToStr = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {
+utils.secondsToTimeCode = function (time = 0, format = 'HH:mm:ss:ff', fps = 25) {
   if (time < 0) time = 0;
   const hours = Math.floor(time / (60 * 60));
   time %= (60 * 60);
