@@ -86,6 +86,7 @@
         this.permission = [];
         this.permissionViewVisible = false;
         this.type = '';
+        this.currentId = '';
         this.$emit('update:visible', false);
       },
       handleCurrentChange(current) {
