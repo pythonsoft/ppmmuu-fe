@@ -177,9 +177,7 @@
         this.videoId = program.objectId;
         this.title = program.title;
         this.range = program.range;
-        if (this.programIndex === programIndex) {
 
-        }
         this.programIndex = programIndex;
         this.isAutoPlay = isAutoPlay;
 
