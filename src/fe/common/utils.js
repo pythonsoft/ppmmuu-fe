@@ -390,9 +390,10 @@ utils.formatDuration = function formatDuration(duration, needMiniSeconds = false
   const minutes = Math.floor(duration / (60 * 1000));
   duration %= 60 * 1000;
   const seconds = Math.floor(duration / 1000);
-  duration %= 1000;
+  duration = Math.round(duration % 1000);
+  duration = duration < 10 ? `00${duration}` : (duration < 100 ? `0${duration}` : duration);
   if (needMiniSeconds && duration !== 0) {
-    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}.${Math.round(duration)}`;
+    return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}.${duration}`;
   }
   return `${fillupZero(hours)}:${fillupZero(minutes)}:${fillupZero(seconds)}`;
 };

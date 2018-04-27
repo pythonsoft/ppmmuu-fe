@@ -339,20 +339,20 @@
         const templateInfo = rs[type];
         const transferParams = rs[type + '_info'];
 
-        let inpoint = 0;
-        let outpoint = 0;
+        let inpoint = '0';
+        let outpoint = '0';
 
         //说明是片断子类，这个是需要打点下载的
         if(this.basic['OBJECTID'] !== this.basic['ROOTID']) {
-          inpoint = this.fileInfo.INPOINT;
-          outpoint = this.fileInfo.OUTPOINT;
+          inpoint = formatDuration(this.fileInfo.INPOINT, true);
+          outpoint = formatDuration(this.fileInfo.OUTPOINT, true);
         }
 
         //如果不是打点下载，将inpoint，outpoint设置为'0'
         const param = {
           objectid: this.fileInfo.OBJECTID,
-          inpoint: this.fileInfo.INPOINT,
-          outpoint: 0,
+          inpoint: inpoint,
+          outpoint: outpoint,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID || '',
           templateId: templateInfo._id,

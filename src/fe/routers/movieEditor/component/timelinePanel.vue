@@ -271,8 +271,8 @@
 
         const param = {
           objectid: item.objectId,
-          inpoint: Math.floor(item.range[0] * 25),
-          outpoint: Math.floor(item.range[1] * 25),
+          inpoint: formatDuration(item.range[0] * 1000, true),
+          outpoint: formatDuration(item.range[1] * 1000, true),
           filename: item.title,
           filetypeid: item.filetypeid,
           templateId: templateInfo._id,
