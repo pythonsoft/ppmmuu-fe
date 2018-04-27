@@ -4,6 +4,9 @@
     <fj-form-item label="标志">
       <fj-input v-model="formData.id" :disabled="type==='update'"></fj-input>
     </fj-form-item>
+    <fj-form-item label="流程标识">
+      <fj-input v-model="formData.workflowId"></fj-input>
+    </fj-form-item>
     <fj-form-item label="名称" prop="name">
       <fj-input v-model="formData.name"></fj-input>
     </fj-form-item>
@@ -125,6 +128,7 @@
         this.formData.bucketId = this.templateInfo.details.bucketId;
         this.formData.groupId = this.templateInfo.groupId;
         this.formData.groupName = this.templateInfo.groupName;
+        this.formData.workflowId = this.templateInfo.workflowId;
         this.formData.script = this.templateInfo.details.script;
         this.formData.description = this.templateInfo.description;
         this.formData.type = this.templateInfo.type === '2' ? [this.templateInfo.type] : [];
