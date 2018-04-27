@@ -56,11 +56,11 @@
             :objectId="objectId"
             :visible.sync="detailDialogVisible">
     </shelf-detail>
-    <add-user :visible.sync="assignDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick" title="选择用户"></add-user>
+    <add-user :visible.sync="assignDialogVisible" @add-owner="addOwner" :searchOwner="searchOwner" @search-user-api="searchOwnerClick" title="选择用户" :department-id="departmentId"></add-user>
   </four-row-layout-right-content>
 </template>
 <script>
-  import { formatQuery, formatTime} from '../../../common/utils';
+  import { formatQuery, formatTime, getItemFromLocalStorage } from '../../../common/utils';
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import AddUser from '../../management/role/searchAddUser';
   import ShelfDetail from '../component/shelfDetail';
@@ -105,6 +105,8 @@
     created() {
       this.defaultRoute = this.getActiveRoute(this.$route.path, 2);
       this.handleClickSearch();
+      const myselfInfo = getItemFromLocalStorage('userInfo');
+      this.departmentId = myselfInfo.department._id;
     },
     methods: {
       getActiveRoute(path, level) {
