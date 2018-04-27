@@ -118,6 +118,7 @@
         };
         jobAPI.deleteJob({ params: param }).then((res) => {
           this.$message.success('任务已成功删除');
+          this.dialogVisible = true;
           this.listTask();
         }).catch((error) => {
           this.$message.error(error);

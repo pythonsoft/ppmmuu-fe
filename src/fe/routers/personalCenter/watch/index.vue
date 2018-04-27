@@ -140,6 +140,7 @@
           OUTPOINT: 0,
           FILENAME: ''
         },
+        basic: {},
         program: [],
         programGroup: [],
         items: [],
@@ -230,6 +231,7 @@
       },
       getDetail() {
         mediaAPI.getObject({ params: { objectid: this.objectId, fromWhere: this.fromWhere } }).then((res) => {
+          this.basic = res.data.result.basic;
           const detail = res.data.result.detail;
           const program = detail.program.length > 0 ? detail.program : detail.sequence;
           this.program = program;
@@ -256,26 +258,6 @@
           this.url = url;
         }, this);
       },
-      // download(info) {
-      //   const param = {
-      //     objectid: this.objectId,
-      //     inpoint: this.streamInfo.INPOINT,
-      //     outpoint: this.streamInfo.OUTPOINT,
-      //     fileName: this.streamInfo.FILENAME
-      //   };
-      //   if (info && !isEmptyObject(info)) {
-      //     param.objectid = info.OBJECTID;
-      //     param.fileName = info.FILENAME;
-      //     param.inpoint = info.INPOINT;
-      //     param.outpoint = info.OUTPOINT;
-      //   }
-
-      //   jobAPI.download(param).then((res) => {
-      //     this.$message.success('正在下载文件，请到"任务"查看详细情况');
-      //   }).catch((error) => {
-      //     this.$message.error(error);
-      //   });
-      // },
       downloadListConfirm(templateInfo) {
         this.templateInfo = templateInfo || {};
         if (!isEmptyObject(templateInfo)) {
@@ -319,11 +301,19 @@
         }
 
         const me = this;
+        let inpoint = '0';
+        let outpoint = '0';
+
+        //说明是片断子类，这个是需要打点下载的
+        if(me.basic['OBJECTID'] !== me.basic['ROOTID']) {
+          inpoint = formatDuration(this.fileInfo.INPOINT, true);
+          outpoint = formatDuration(this.fileInfo.OUTPOINT, true);
+        }
 
         const param = {
           objectid: this.fileInfo.OBJECTID,
-          inpoint: this.fileInfo.INPOINT,
-          outpoint: 0,
+          inpoint: inpoint,
+          outpoint: outpoint,
           filename: this.fileInfo.FILENAME,
           filetypeid: this.fileInfo.FILETYPEID,
           templateId: this.templateInfo._id,
