@@ -32,6 +32,9 @@
       { title: '个人信息', icon: 'icon-person', linkTo: '/account' }
     ],
     [
+      { title: '任务', icon: 'icon-task', linkTo: '/taskCenter' }
+    ],
+    [
       { title: '观看历史', icon: 'icon-view', linkTo: '/history' },
       { title: '检索历史', icon: 'icon-search-right', linkTo: '/searchHistory' }
     ]
@@ -154,6 +157,9 @@
   }
   .manage-list .icon-search-right {
     background: #008CFF;
+  }
+  .manage-list .icon-task {
+    background: #38B1EB;
   }
   .logout-btn {
     position: relative;
