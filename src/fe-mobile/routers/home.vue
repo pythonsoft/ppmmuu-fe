@@ -187,7 +187,7 @@
   const MENU = [
     { text: '首页', route: 'trends', icon: 'icon-home' },
     { text: '媒体库', route: 'mediaCenter', icon: 'icon-media-library' },
-    { text: '任务', route: 'taskCenter', icon: 'icon-menu' },
+    { text: '直播', route: 'live', icon: 'icon-live' },
     { text: '个人中心', route: 'personalCenter', icon: 'icon-person' },
   ];
   const START_DATE = new Date(2000, 0, 1);

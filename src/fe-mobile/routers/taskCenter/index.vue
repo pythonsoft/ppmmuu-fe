@@ -1,5 +1,9 @@
 <template>
   <div class="page-wrap">
+    <div class="return-bar">
+      <i class="iconfont icon-arrow-left icon-return" @click="linkToPersonalCenter"></i>
+      <h3 class="category-title has-return-btn">任务</h3>
+    </div>
     <fj-navbar v-model="navIndex">
       <fj-tab-item v-for="item in MENU_CONFIG" :key="item.index" :id="item.index">{{ item.text }}</fj-tab-item>
     </fj-navbar>
@@ -109,6 +113,9 @@
     methods: {
       formatTaskList: utils.formatTaskList,
       isTaskCanStop: common.isTaskCanStop,
+      linkToPersonalCenter() {
+        this.$router.push({ name: 'personalCenter' });
+      },
       getStatus(v) {
         return config.getConfig('DOWNLOAD_STATUS', v);
       },
@@ -225,6 +232,35 @@
     padding-top: 45px;
     padding-bottom: 55px;
     background: #F8FAFB;
+  }
+  .return-bar {
+    display: flex;
+    position: relative;
+    height: 49px;
+    line-height: 49px;
+    padding: 0 15px;
+    background-color: #fff;
+    background-image: linear-gradient(0deg,#E2E2E2,#E2E2E2 50%,transparent 0);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .return-bar .icon-return {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    padding: 0 5px;
+    font-size: 18px;
+    color: #767676;
+  }
+  .category-title {
+    flex: 1;
+    font-size: 17px;
+    font-weight: bold;
+    color: #333333;
+  }
+  .category-title.has-return-btn {
+    text-align: center;
   }
   .task-item {
     position: relative;
