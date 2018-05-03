@@ -108,7 +108,7 @@
       },
       mode: {
         type: String,
-        default: 'normal'
+        default: 'big'
       },
       name: String,
       files: Array
