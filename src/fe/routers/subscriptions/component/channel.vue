@@ -5,16 +5,7 @@
       <span class="channel-count">共{{ total }}个</span>
       <div class="channel-view-bar">
         <span :class="viewTypeSelect('grid')" @click="setViewType('grid')"></span><!--
-        --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span><!--
-        --><div class="order-select">
-          <fj-select v-model="orderVal" size="small">
-            <fj-option
-              v-for="item in ORDER_OPTIONS"
-              :key="item.value"
-              :value="item.value"
-              :label="item.label"></fj-option>
-          </fj-select>
-        </div>
+        --><span :class="viewTypeSelect('list')" @click="setViewType('list')"></span>
       </div>
     </div>
     <grid-list-view
