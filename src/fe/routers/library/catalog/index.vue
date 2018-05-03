@@ -39,9 +39,7 @@
                   @insert="importSource"></video-source-panel>
                 <program-panel
                   v-else
-                  :title="programInfo.title"
-                  :range="programInfo.range"
-                  :videoId="programInfo.objectId"
+                  :project-bus="projectBus"
                   :size="{ width: props.width, height: props.height }"></program-panel>
               </template>
               <template slot="1" slot-scope="props">
@@ -139,6 +137,7 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import './index.css';
   import VideoSourcePanel from '../../movieEditor/component/videoSourcePanel';
   import PanelView from '../../../component/layout/panel';
@@ -274,6 +273,7 @@
       if (this.$route.params.taskId) {
         this.taskId = this.$route.params.taskId;
       }
+      this.projectBus = new Vue();
     },
     mounted() {
       this.updateSize();
@@ -390,6 +390,7 @@
           this.programInfo.name = node.name;
           this.programInfo.range = node.range;
           this.programInfo.objectId = this.objectId;
+          this.updateProgram();
           this.currentCatalogId = '';
           this.currentClip = node;
           return;
@@ -415,15 +416,20 @@
             this.programInfo.name = node.name;
             this.programInfo.range = [node.inpoint, node.outpoint];
             this.programInfo.objectId = this.objectId;
+            this.updateProgram();
           }else{
             this.programInfo.name = '';
           }
           this.formData.ownerName = node.owner.name;
           this.formData.departmentName = node.department.name;
         }).catch((error) => {
-
           this.$message.error(error);
         });
+      },
+      updateProgram() {
+        this.$nextTick(()=> {
+          this.projectBus.$emit('updateProgram', this.programInfo || {}, 0, false);
+        })
       },
       listCatalog(objectId) {
         const me = this;
