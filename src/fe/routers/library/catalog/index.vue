@@ -86,7 +86,7 @@
                   </fj-form-item>
                   <template v-for="select in selectFields">
                     <fj-form-item :label="select.label" :prop="select.key" :key="select.key">
-                      <fj-select v-model="formData[select.key]" size="small" clearable>
+                      <fj-select v-model="formData[select.key]" clearable>
                         <fj-option
                                 v-for="item in select.items"
                                 :key="item.value"
