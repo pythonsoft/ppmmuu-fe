@@ -274,6 +274,9 @@
         this.taskId = this.$route.params.taskId;
       }
       this.projectBus = new Vue();
+      this.projectBus.$on('updateProgramIndex', (index) => {
+        this.updateProgram();
+      });
     },
     mounted() {
       this.updateSize();
