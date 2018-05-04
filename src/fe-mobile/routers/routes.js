@@ -19,7 +19,7 @@ export default [{
   children: [{
     path: 'taskCenter/:type?',
     component: TaskCenter,
-    meta: { title: '下载任务' },
+    meta: { title: '下载任务', hideTabbar: true },
     children: [],
     name: 'taskCenter'
   }, {

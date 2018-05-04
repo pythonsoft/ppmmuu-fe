@@ -28,7 +28,7 @@
         <fj-table-column prop="editorInfo" label="文件名"><template slot-scope="props">{{props.row.editorInfo.fileName}}</template></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
         <fj-table-column prop="editorInfo" label="申请人"><template slot-scope="props">{{props.row.creator.name}}</template></fj-table-column>
-        <fj-table-column prop="packageStatus" label="打包状态" width="50"><template slot-scope="props"><div v-html="getPackageStatus(props.row)"></div></template></fj-table-column>
+        <fj-table-column prop="packageStatus" label="打包状态" width="70"><template slot-scope="props"><div v-html="getPackageStatus(props.row)"></div></template></fj-table-column>
         <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
       </fj-table>
     </template>

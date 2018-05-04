@@ -55,7 +55,7 @@
               <fj-input v-model="configFormData.key" :disabled="action == 'changeConfig'" />
             </fj-form-item>
             <fj-form-item label="值" prop="value">
-              <fj-input v-model="configFormData.value" />
+              <fj-input type="textarea" :rows="5" v-model="configFormData.value" />
             </fj-form-item>
             <fj-form-item label="描述">
               <fj-input type="textarea" :rows="5" v-model="configFormData.description" />

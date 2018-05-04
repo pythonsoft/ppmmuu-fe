@@ -206,7 +206,9 @@
         this.loading = true;
         this.reset();
         this.videoSource = '';
-        this.fromWhere = this.sourceFromWhere;
+        if (this.sourceFromWhere) {
+          this.fromWhere = this.sourceFromWhere;
+        }
         this.getStream(val);
         this.getSRTArr(val);
         this.getDetail(val);

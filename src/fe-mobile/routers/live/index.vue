@@ -1,10 +1,11 @@
 <template>
-  <div class="page-wrap">
+  <div class="page-wrap" ref="videoWrap">
     <video
       @contextmenu.prevent="()=>{return false;}"
       class="live-player"
       v-if="onLiveProgram === currentProgram || !currentProgram"
       :src="liveUrl"
+      :style="{height: `${videoHeight}px`}"
       webkit-playsinline
       playsinline
       controls="controls"
@@ -78,6 +79,7 @@
   export default {
     data() {
       return {
+        videoHeight: 0,
         liveUrl: '',
         objectId: '',
         url: '',
@@ -117,6 +119,10 @@
     },
     created() {
       this.updateChannel();
+    },
+    mounted() {
+      const videoWidth = this.$refs.videoWrap.getBoundingClientRect().width;
+      this.videoHeight = videoWidth * 9 / 16;
     },
     methods: {
       getThumb,

@@ -94,6 +94,7 @@
     height: 100%;
     width: 100%;
     display: inline-block;
+    text-align: center;
   }
 
   .dropdown-menu-a:hover {
@@ -105,6 +106,7 @@
     height: 100%;
     width: 100%;
     display: inline-block;
+    text-align: center;
   }
 
 
