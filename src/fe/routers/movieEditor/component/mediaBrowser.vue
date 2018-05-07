@@ -362,12 +362,12 @@
       },
       getRecordList(parent) {
         if (this.recordChannel.length === 0) {
-          return this.getRecordChannel();
+          return this.getRecordChannel(parent);
         } else {
           return this.listRecordNodeFuncConfig[parent.recordNodeType](parent);
         }
       },
-      getRecordChannel() {
+      getRecordChannel(parent) {
         return configurationAPI.configurationDetail({ params: { groupName: 'record_config', key: 'start_record' } })
           .then((response) => {
             const resData = JSON.parse(response.data.value);
@@ -376,6 +376,7 @@
               return {
                 _id: item._id,
                 name: item.channel,
+                ownerType: parent.ownerType,
                 type: '0',
                 isFolder: true,
                 rootName: '收录素材',
@@ -402,6 +403,7 @@
             _id: _id + i,
             name: `${i}年`,
             value: i,
+            ownerType: parent.ownerType,
             type: '0',
             isFolder: true,
             rootName: '收录素材',
@@ -436,6 +438,7 @@
             _id: _id + i,
             name: `${i}月`,
             value: i,
+            ownerType: parent.ownerType,
             type: '0',
             isFolder: true,
             rootName: '收录素材',
@@ -473,6 +476,7 @@
             _id: _id + i,
             name: `${i}日`,
             value: i,
+            ownerType: parent.ownerType,
             type: '0',
             isFolder: true,
             rootName: '收录素材',
@@ -500,6 +504,7 @@
             const duration = item.outpoint - item.inpoint;
             return {
               _id: item._id,
+              ownerType: parent.ownerType,
               type: '1', // video
               name: `${formatTime(item.materialTime.from, 'HH:ss')} ${item.name}`,
               snippet: {
