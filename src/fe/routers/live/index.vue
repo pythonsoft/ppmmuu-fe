@@ -180,7 +180,7 @@
         };
         liveAPI.listProgram({ params: reqData }).then((res) => {
           this.loadingProgram = false;
-          const list = res.data.docs;
+          const list = res.data.docs.reverse();
           const now = new Date().toISOString();
           const tempIds = [];
           this.programList = list.map(item => {
