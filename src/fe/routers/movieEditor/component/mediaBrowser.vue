@@ -297,8 +297,14 @@
               item.treeAlias = item.name;
             }
             if (TYPE_CONFIG[item.type] === 'folder') item.isFolder = true;
-            data.push(item);
+            // 如果是目录要排在前面
+            if (TYPE_CONFIG[item.type] === 'folder' && item.type !== '2') {
+              data.unshift(item);
+            } else {
+              data.push(item);
+            }
           }
+          console.log(data);
           cb && cb(data);
         }).catch((error) => {
           this.$message.error(error);
