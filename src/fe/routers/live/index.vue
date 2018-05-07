@@ -29,7 +29,7 @@
         </div>
         <span :class="[$style.liveSwitch, {[$style.active]: onLiveProgram === currentProgram || !currentProgram}]" @click="handleClickLiveBtn"><i class="iconfont icon-live-stroke"></i> 直播</span>
       </div>
-      <ul>
+      <ul :class="$style.programList">
         <p v-if="loadingProgram" :class="$style.emptyText">加载中...</p>
         <p v-else-if="programList.length === 0" :class="$style.emptyText">暂无节目</p>
         <template v-else v-for="item in programList">
