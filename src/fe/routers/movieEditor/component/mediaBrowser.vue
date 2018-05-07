@@ -304,7 +304,6 @@
               data.push(item);
             }
           }
-          console.log(data);
           cb && cb(data);
         }).catch((error) => {
           this.$message.error(error);
@@ -502,7 +501,7 @@
             return {
               _id: item._id,
               type: '1', // video
-              name: `${parent.channel} ${formatTime(item.materialTime.from)}`,
+              name: `${formatTime(item.materialTime.from, 'HH:ss')} ${item.name}`,
               snippet: {
                 duration: duration,
                 objectId: item.objectId,
