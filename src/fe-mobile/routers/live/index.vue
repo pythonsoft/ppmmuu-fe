@@ -49,10 +49,12 @@
             {'on': item._id === onLiveProgram},
             'clearfix']">
           <span class="programItemTime">{{ item.startTime }}</span>
+          <span class="programItemName">{{ item.name }}</span>
           <span v-if="item._id === onLiveProgram" class="onLiveText">直播中</span>
         </li>
         <li v-else class="programItem clearfix">
           <span class="programItemTime">{{ item.startTime }}</span>
+          <span class="programItemName">{{ item.name }}</span>
         </li>
       </template>
     </ul>
@@ -179,7 +181,7 @@
                 item.isActive = false;
               }
             }
-            item.startTime = formatTime(range.from);
+            item.startTime = formatTime(range.from, 'HH:ss');
             return item;
           });
           this.programIds = tempIds;
@@ -328,6 +330,9 @@
     color: #38B1EB;
   }
   .programItemTime {
+    padding-right: 15px;
+  }
+  .programItemName {
     flex: 1;
   }
   .onLiveText {

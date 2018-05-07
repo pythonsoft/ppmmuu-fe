@@ -43,12 +43,12 @@
               {[$style.on]: item._id === onLiveProgram},
               'clearfix']">
             <span :class="$style.programItemTime">{{ item.startTime }}</span>
-            <!-- <span :class="$style.programItemName">{{ item.name }}</span> -->
+            <span :class="$style.programItemName">{{ item.name }}</span>
             <span v-if="item._id === onLiveProgram" :class="$style.onLiveText">直播中</span>
           </li>
           <li v-else :class="[$style.programItem, 'clearfix']">
             <span :class="$style.programItemTime">{{ item.startTime }}</span>
-            <!-- <span :class="$style.programItemName">{{ item.name }}</span> -->
+            <span :class="$style.programItemName">{{ item.name }}</span>
           </li>
         </template>
       </ul>
@@ -197,7 +197,7 @@
                 item.isActive = false;
               }
             }
-            item.startTime = formatTime(range.from);
+            item.startTime = formatTime(range.from, 'HH:ss');
             return item;
           });
           this.programIds = tempIds;
