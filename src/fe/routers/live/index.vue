@@ -27,7 +27,7 @@
             size="small"
             :clearable="false"></fj-date-picker>
         </div>
-        <span :class="$style.liveSwitch" @click="handleClickLiveBtn"><i class="iconfont icon-live-stroke"></i> 直播</span>
+        <span :class="[$style.liveSwitch, {[$style.active]: onLiveProgram === currentProgram || !currentProgram}]" @click="handleClickLiveBtn"><i class="iconfont icon-live-stroke"></i> 直播</span>
       </div>
       <ul>
         <p v-if="loadingProgram" :class="$style.emptyText">加载中...</p>
@@ -155,6 +155,8 @@
         this.playerHeight = playerHeight;
       },
       handleClickLiveBtn() {
+        if (this.onLiveProgram === this.currentProgram || !this.currentProgram) return;
+        console.log(this.onLiveProgram);
         this.onLive = true;
         this.date = new Date();
         // 切换program

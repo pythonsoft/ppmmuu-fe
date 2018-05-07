@@ -105,6 +105,7 @@
   cursor: pointer;
   transition: color .3s;
 }
+.liveSwitch.active,
 .liveSwitch:active,
 .liveSwitch:hover {
   color: #38B1EB;
