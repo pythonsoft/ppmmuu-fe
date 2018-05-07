@@ -39,7 +39,7 @@
         <fj-table-column prop="editorInfo" label="文件名"><template slot-scope="props">{{props.row.editorInfo.fileName}}</template></fj-table-column>
         <fj-table-column prop="editorInfo" label="申请人"><template slot-scope="props">{{props.row.creator.name}}</template></fj-table-column>
         <fj-table-column prop="programNO" label="节目编号" width="260"></fj-table-column>
-        <fj-table-column prop="packageStatus" label="打包状态" width="50"><template slot-scope="props"><div v-html="getPackageStatus(props.row)"></div></template></fj-table-column>
+        <fj-table-column prop="packageStatus" label="打包状态" width="60"><template slot-scope="props"><div v-html="getPackageStatus(props.row)"></div></template></fj-table-column>
         <fj-table-column prop="assignee" label="派发人" width="100"><template slot-scope="props">{{props.row.assignee.name}}</template></fj-table-column>
         <fj-table-column prop="dealer" label="认领人" width="100"><template slot-scope="props">{{props.row.dealer.name}}</template></fj-table-column>
         <fj-table-column prop="operationTime" label="操作时间" width="160"><template slot-scope="props">{{formatTime(props.row.operationTime)}}</template></fj-table-column>
@@ -78,6 +78,7 @@
   import FourRowLayoutRightContent from '../../../component/layout/fourRowLayoutRightContent/index';
   import AddUser from '../../management/role/searchAddUser';
   import ShelfDetail from '../component/shelfDetail';
+  import '../index.css';
 
   const api = require('../../../api/shelves');
   const OPTIONS = [
