@@ -297,7 +297,12 @@
               item.treeAlias = item.name;
             }
             if (TYPE_CONFIG[item.type] === 'folder') item.isFolder = true;
-            data.push(item);
+            // 如果是目录要排在前面
+            if (TYPE_CONFIG[item.type] === 'folder' && item.type !== '2') {
+              data.unshift(item);
+            } else {
+              data.push(item);
+            }
           }
           cb && cb(data);
         }).catch((error) => {
@@ -357,12 +362,12 @@
       },
       getRecordList(parent) {
         if (this.recordChannel.length === 0) {
-          return this.getRecordChannel();
+          return this.getRecordChannel(parent);
         } else {
           return this.listRecordNodeFuncConfig[parent.recordNodeType](parent);
         }
       },
-      getRecordChannel() {
+      getRecordChannel(parent) {
         return configurationAPI.configurationDetail({ params: { groupName: 'record_config', key: 'start_record' } })
           .then((response) => {
             const resData = JSON.parse(response.data.value);
@@ -371,6 +376,7 @@
               return {
                 _id: item._id,
                 name: item.channel,
+                ownerType: parent.ownerType,
                 type: '0',
                 isFolder: true,
                 rootName: '收录素材',
@@ -397,6 +403,7 @@
             _id: _id + i,
             name: `${i}年`,
             value: i,
+            ownerType: parent.ownerType,
             type: '0',
             isFolder: true,
             rootName: '收录素材',
@@ -431,6 +438,7 @@
             _id: _id + i,
             name: `${i}月`,
             value: i,
+            ownerType: parent.ownerType,
             type: '0',
             isFolder: true,
             rootName: '收录素材',
@@ -468,6 +476,7 @@
             _id: _id + i,
             name: `${i}日`,
             value: i,
+            ownerType: parent.ownerType,
             type: '0',
             isFolder: true,
             rootName: '收录素材',
@@ -495,8 +504,9 @@
             const duration = item.outpoint - item.inpoint;
             return {
               _id: item._id,
+              ownerType: parent.ownerType,
               type: '1', // video
-              name: `${parent.channel} ${formatTime(item.materialTime.from)}`,
+              name: `${formatTime(item.materialTime.from, 'HH:ss')} ${item.name}`,
               snippet: {
                 duration: duration,
                 objectId: item.objectId,

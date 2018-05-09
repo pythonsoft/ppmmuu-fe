@@ -21,7 +21,6 @@
 .programWrap {
   left: 136px;
   width: 350px;
-  overflow-y: auto;
 }
 .playerWrap {
   left: 486px;
@@ -47,8 +46,19 @@
   color: #4C637B;
 }
 .programHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
   padding: 17px 0 14px 22px;
   border-bottom: 1px solid #EBF3FB;
+}
+.programList {
+  position: absolute;
+  top: 62px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
 }
 .channelItem {
   position: relative;
@@ -105,6 +115,7 @@
   cursor: pointer;
   transition: color .3s;
 }
+.liveSwitch.active,
 .liveSwitch:active,
 .liveSwitch:hover {
   color: #38B1EB;

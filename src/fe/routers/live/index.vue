@@ -27,9 +27,9 @@
             size="small"
             :clearable="false"></fj-date-picker>
         </div>
-        <span :class="$style.liveSwitch" @click="handleClickLiveBtn"><i class="iconfont icon-live-stroke"></i> 直播</span>
+        <span :class="[$style.liveSwitch, {[$style.active]: onLiveProgram === currentProgram || !currentProgram}]" @click="handleClickLiveBtn"><i class="iconfont icon-live-stroke"></i> 直播</span>
       </div>
-      <ul>
+      <ul :class="$style.programList">
         <p v-if="loadingProgram" :class="$style.emptyText">加载中...</p>
         <p v-else-if="programList.length === 0" :class="$style.emptyText">暂无节目</p>
         <template v-else v-for="item in programList">
@@ -43,12 +43,12 @@
               {[$style.on]: item._id === onLiveProgram},
               'clearfix']">
             <span :class="$style.programItemTime">{{ item.startTime }}</span>
-            <!-- <span :class="$style.programItemName">{{ item.name }}</span> -->
+            <span :class="$style.programItemName">{{ item.name }}</span>
             <span v-if="item._id === onLiveProgram" :class="$style.onLiveText">直播中</span>
           </li>
           <li v-else :class="[$style.programItem, 'clearfix']">
             <span :class="$style.programItemTime">{{ item.startTime }}</span>
-            <!-- <span :class="$style.programItemName">{{ item.name }}</span> -->
+            <span :class="$style.programItemName">{{ item.name }}</span>
           </li>
         </template>
       </ul>
@@ -155,6 +155,8 @@
         this.playerHeight = playerHeight;
       },
       handleClickLiveBtn() {
+        if (this.onLiveProgram === this.currentProgram || !this.currentProgram) return;
+        console.log(this.onLiveProgram);
         this.onLive = true;
         this.date = new Date();
         // 切换program
@@ -180,7 +182,7 @@
         };
         liveAPI.listProgram({ params: reqData }).then((res) => {
           this.loadingProgram = false;
-          const list = res.data.docs;
+          const list = res.data.docs.reverse();
           const now = new Date().toISOString();
           const tempIds = [];
           this.programList = list.map(item => {
@@ -197,7 +199,7 @@
                 item.isActive = false;
               }
             }
-            item.startTime = formatTime(range.from);
+            item.startTime = formatTime(range.from, 'HH:ss');
             return item;
           });
           this.programIds = tempIds;
