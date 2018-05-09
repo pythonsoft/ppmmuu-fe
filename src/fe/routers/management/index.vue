@@ -61,12 +61,6 @@
         { text: '上架模板', index: 'shelfTemplate', route: 'shelfTemplate' },
       ]
     },
-    { title: '流程管理',
-      index: 'processManager',
-      children: [
-        { text: '流程模板', index: 'processTemplate', route: 'processTemplate' },
-      ]
-    },
     { title: '任务管理',
       index: 'taskManager',
       children: [
@@ -85,7 +79,16 @@
       children: [
         { text: '下载模板', index: 'downloadTemplate', route: 'downloadTemplate' },
         { text: '转码模板', index: 'transcodeTemplate', route: 'transcodeTemplate' },
-      ] },
+        { text: '流程模板', index: 'processTemplate', route: 'processTemplate' },
+      ]
+    },
+    { title: '工作流管理',
+      index: 'workflowManager',
+      children: [
+        { text: '工作流定义', index: 'workflowDefinition', route: 'workflowDefinition' },
+        { text: '工作流实例', index: 'workflowInstance', route: 'workflowInstance' },
+      ]
+    },
     { text: '大洋稿件入库', index: 'copyManagement', route: 'copyManagement' },
     { text: '设置', index: 'configuration', route: 'configuration' },
     { text: '报表统计', index: 'report', route: 'report' },

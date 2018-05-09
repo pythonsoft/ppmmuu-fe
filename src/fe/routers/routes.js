@@ -77,6 +77,9 @@ const FastEditTemplate = resolve => require.ensure([], () => resolve(require('./
 
 const ProcessTemplate = resolve => require.ensure([], () => resolve(require('./management/process/template/index')), 'processTemplate');
 
+const WorkflowDefinition = resolve => require.ensure([], () => resolve(require('./management/workflow/definition')), 'workflowDefinition');
+const WorkflowInstance = resolve => require.ensure([], () => resolve(require('./management/workflow/instance')), 'workflowInstance');
+
 export default [{
   path: '/',
   component: Home,
@@ -115,7 +118,9 @@ export default [{
         { path: 'shelfTemplate', component: ShelfTemplate, meta: { title: '上架模板' }, name: 'shelfTemplate' },
         { path: 'shelfList', component: ShelfListManagement, meta: { title: '上架任务' }, name: 'shelfList' },
         { path: 'fastEditTemplate', component: FastEditTemplate, meta: { title: '快编模板' }, name: 'fastEditTemplate' },
-        { path: 'processTemplate', component: ProcessTemplate, meta: { title: '流程模板' }, name: 'processTemplate' }
+        { path: 'processTemplate', component: ProcessTemplate, meta: { title: '流程模板' }, name: 'processTemplate' },
+        { path: 'workflowDefinition', component: WorkflowDefinition, meta: { title: '工作流定义' }, name: 'workflowDefinition' },
+        { path: 'workflowInstance', component: WorkflowInstance, meta: { title: '工作流实例' }, name: 'workflowInstance' }
       ]
     },
     {
