@@ -1,6 +1,7 @@
 import Home from './home';
 
 const Trends = resolve => require.ensure([], () => resolve(require('./trends')), 'trends');
+const Live = resolve => require.ensure([], () => resolve(require('./live')), 'live');
 const MediaCenter = resolve => require.ensure([], () => resolve(require('./mediaCenter')), 'mediaCenter');
 const Login = resolve => require.ensure([], () => resolve(require('./login')), 'login');
 const Watch = resolve => require.ensure([], () => resolve(require('./watch')), 'watch');
@@ -18,7 +19,7 @@ export default [{
   children: [{
     path: 'taskCenter/:type?',
     component: TaskCenter,
-    meta: { title: '下载任务' },
+    meta: { title: '下载任务', hideTabbar: true },
     children: [],
     name: 'taskCenter'
   }, {
@@ -45,7 +46,7 @@ export default [{
     meta: { title: '个人中心' },
     children: [],
     name: 'personalCenter'
-  },{
+  }, {
     path: 'trends',
     component: Trends,
     meta: { title: '舆情' },
@@ -62,6 +63,12 @@ export default [{
     component: Watch,
     meta: { hideTabbar: true },
     name: 'watch'
+  }, {
+    path: 'live',
+    component: Live,
+    meta: { title: '直播' },
+    children: [],
+    name: 'live'
   }]
 }, {
   path: '/login',

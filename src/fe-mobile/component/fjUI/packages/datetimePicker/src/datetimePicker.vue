@@ -37,12 +37,17 @@
           return new Date(new Date().getFullYear() + 10, 11, 31);
         }
       },
-      value: null
+      value: null,
+      keys: {
+        type: Array,
+        default() {
+          return ['year', 'month', 'date', 'hour', 'min', 'sec'];
+        }
+      }
     },
     data() {
       return {
         currentValue: this.value ? new Date(this.value) : new Date(this.startDate),
-        keys: ['year', 'month', 'date', 'hour', 'min', 'sec'],
         units: ['年', '月', '日', '时', '分', '秒']
       }
     },
@@ -142,7 +147,10 @@
         const values = this.values;
         values[index] = value;
         this.currentValue = new Date(this.currentValue.setFullYear(values[0], values[1] - 1, values[2]));
-        this.currentValue = new Date(this.currentValue.setHours(values[3], values[4], values[5]));
+        // 包含时分秒
+        if (values.length > 3) {
+          this.currentValue = new Date(this.currentValue.setHours(values[3], values[4], values[5]));
+        }
       },
       getDayCountOfMonth(year, month) {
         const date = new Date(year, month, 1);

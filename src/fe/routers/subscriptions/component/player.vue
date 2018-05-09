@@ -108,7 +108,7 @@
       },
       mode: {
         type: String,
-        default: 'normal'
+        default: 'big'
       },
       name: String,
       files: Array
@@ -562,8 +562,8 @@
             const dropdownMenuHeight = this.dropdownMenu.$el.getBoundingClientRect().height;
             this.dropdownMenu.menuStyle = {
               top: `${position.top - dropdownMenuHeight - 5}px`,
-              left: `${position.left - 27}px`,
-              minWidth: '78px'
+              left: `${position.left - 57}px`,
+              minWidth: '108px'
             };
           }, 200);
         }

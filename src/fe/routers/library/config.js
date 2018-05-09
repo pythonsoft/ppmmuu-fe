@@ -297,6 +297,7 @@ export const selectFields = {
       { value: '鏡面宣傳部', label: '鏡面宣傳部' },
       { value: '頻道編播部', label: '頻道編播部' },
       { value: '共享資源', label: '共享資源' },
+      { value: '節目製播中心製作部', label: '節目製播中心製作部' },
       { value: '中文台專題主編組', label: '中文台專題主編組' },
       { value: '中文台專題製作組', label: '中文台專題製作組' },
       { value: '中文台娛樂製作組', label: '中文台娛樂製作組' },

@@ -317,6 +317,10 @@
             this.updateProgramIndex();
             this.pause();
             this.isPlaying = false;
+
+            const progressBar = this.getProgressBarStyle();
+            const progressBarWidth = progressBar.width;
+            this.offset = progressBarWidth;
             clearInterval(this.moveIndicatorTimer);
             return;
           }
@@ -326,17 +330,19 @@
             const progressBar = this.getProgressBarStyle();
             const progressBarWidth = progressBar.width;
             this.currentTime = this.video.currentTime;
+
+            this.offset = (this.video.currentTime - this.range[0])
+              / this.innerDuration * progressBarWidth;
+            if (this.offset > progressBarWidth) this.offset = progressBarWidth;
+
             if (this.currentTime + 1 / this.fps >= this.range[1]
               && this.currentTime <= this.range[1]) {
               this.updateProgramIndex();
               this.pause();
               this.isPlaying = false;
+              this.offset = progressBarWidth;
               clearInterval(this.moveIndicatorTimer);
             }
-
-            this.offset = (this.video.currentTime - this.range[0])
-              / this.innerDuration * progressBarWidth;
-            if (this.offset > progressBarWidth) this.offset = progressBarWidth;
           }, this.interval);
         } else if (this.isPlaying) {
           this.pause();

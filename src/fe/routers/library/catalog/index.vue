@@ -39,9 +39,7 @@
                   @insert="importSource"></video-source-panel>
                 <program-panel
                   v-else
-                  :title="programInfo.title"
-                  :range="programInfo.range"
-                  :videoId="programInfo.objectId"
+                  :project-bus="projectBus"
                   :size="{ width: props.width, height: props.height }"></program-panel>
               </template>
               <template slot="1" slot-scope="props">
@@ -56,7 +54,7 @@
             </panel-view>
           </template>
           <template slot="1" slot-scope="props">
-            <div :style="{ width: '100%', height: '100%', overflow: 'auto', position: 'absolute' }" ref="rightContent">
+            <div :style="{ width: '100%', height: '100%', overflow: 'auto' }" ref="rightContent">
               <div class="catalogRightContent" v-if="hasSelectedItem || currentCatalogId">
                 <h3>填写编目内容</h3>
                 <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="100px">
@@ -86,7 +84,7 @@
                   </fj-form-item>
                   <template v-for="select in selectFields">
                     <fj-form-item :label="select.label" :prop="select.key" :key="select.key">
-                      <fj-select v-model="formData[select.key]" size="small" clearable>
+                      <fj-select v-model="formData[select.key]" clearable>
                         <fj-option
                                 v-for="item in select.items"
                                 :key="item.value"
@@ -139,6 +137,7 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import './index.css';
   import VideoSourcePanel from '../../movieEditor/component/videoSourcePanel';
   import PanelView from '../../../component/layout/panel';
@@ -274,10 +273,14 @@
       if (this.$route.params.taskId) {
         this.taskId = this.$route.params.taskId;
       }
-      this.parentEl = this.$refs.rightContent;
+      this.projectBus = new Vue();
+      this.projectBus.$on('updateProgramIndex', (index) => {
+        this.updateProgram();
+      });
     },
     mounted() {
       this.updateSize();
+      this.parentEl = this.$refs.rightContent;
       window.addEventListener('resize', throttle(this.updateSize));
     },
     beforDestroy() {
@@ -390,6 +393,7 @@
           this.programInfo.name = node.name;
           this.programInfo.range = node.range;
           this.programInfo.objectId = this.objectId;
+          this.updateProgram();
           this.currentCatalogId = '';
           this.currentClip = node;
           return;
@@ -415,15 +419,20 @@
             this.programInfo.name = node.name;
             this.programInfo.range = [node.inpoint, node.outpoint];
             this.programInfo.objectId = this.objectId;
+            this.updateProgram();
           }else{
             this.programInfo.name = '';
           }
           this.formData.ownerName = node.owner.name;
           this.formData.departmentName = node.department.name;
         }).catch((error) => {
-
           this.$message.error(error);
         });
+      },
+      updateProgram() {
+        this.$nextTick(()=> {
+          this.projectBus.$emit('updateProgram', this.programInfo || {}, 0, false);
+        })
       },
       listCatalog(objectId) {
         const me = this;

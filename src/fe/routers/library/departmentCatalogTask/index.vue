@@ -20,12 +20,12 @@
     </template>
     <template slot="operation">
       <div class="operation-btn-group">
-        <fj-button :loading="isApplyBtnLoading" size="mini" type="primary" :disabled="selectedItems.length<=0" @click="applyCatalogTask">认领</fj-button>
-        <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="searchUserDialogVisible = true">派发</fj-button>
+        <fj-button :loading="isApplyBtnLoading" size="mini" type="primary" :disabled="!canClaim" @click="applyCatalogTask">认领</fj-button>
+        <fj-button size="mini" type="primary" :disabled="!canAssign" @click="searchUserDialogVisible = true">派发</fj-button>
       </div>
       <div class="operation-btn-group">
-        <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showEditStatusDialog('deleteTask')">删除</fj-button>
-        <fj-button size="mini" type="primary" :disabled="selectedItems.length<=0" @click="showEditStatusDialog('resumeTask')">恢复</fj-button>
+        <fj-button size="mini" type="primary" :disabled="!canDelete" @click="showEditStatusDialog('deleteTask')">删除</fj-button>
+        <fj-button size="mini" type="primary" :disabled="!canRecover" @click="showEditStatusDialog('resumeTask')">恢复</fj-button>
       </div>
       <div class="operation-btn-group">
         <fj-button size="mini" type="primary" :disabled="selectedItems.length!==1" @click="detailDialogVisible=true">任务详情</fj-button>
@@ -90,6 +90,10 @@
       return {
         userList: [],
         selectedItems: [],
+        canClaim: false,
+        canAssign: false,
+        canDelete: false,
+        canRecover: false,
         tableData: [],
         pageSize: 20,
         total: 0,
@@ -165,6 +169,36 @@
       },
       handleSelectionChange(val) {
         this.selectedItems = val;
+        this.canAssign = false;
+        this.canClaim = false;
+        this.canDelete = false;
+        this.canRecover = false;
+        let assignFlag = true;
+        let claimFlag = true;
+        let deleteFlag = true;
+        let recoverFlag = true;
+
+        for(let i = 0, len = val.length; i < len; i ++ ){
+          const status = val[i].status;
+          if (status === TASK_STATUS.DOING.code) {
+            assignFlag = false;
+            claimFlag = false;
+            recoverFlag = false;
+          } else if (status === TASK_STATUS.SUBMITTED.code) {
+            assignFlag = false;
+            claimFlag = false;
+            recoverFlag = false;
+          } else if (status === TASK_STATUS.DELETED.code) {
+            assignFlag = false;
+            claimFlag = false;
+            deleteFlag = false;
+          }
+        }
+
+        this.canAssign = assignFlag;
+        this.canClaim = claimFlag;
+        this.canDelete = deleteFlag;
+        this.canRecover = recoverFlag;
       },
       applyCatalogTask() {
         const taskIdsArr = this.selectedItems.map(item => item._id);
