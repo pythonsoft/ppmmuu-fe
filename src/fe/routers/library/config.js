@@ -304,7 +304,19 @@ export const selectFields = {
       { value: '中文台時尚製作組', label: '中文台時尚製作組' },
       { value: '中文台時尚主編組', label: '中文台時尚主編組' },
       { value: '節目購銷部', label: '節目購銷部' },
-      { value: '影帶管理部', label: '影帶管理部' }
+      { value: '影帶管理部', label: '影帶管理部' },
+      { value: '節目製作部', label: '節目製作部' },
+    ],
+    selected: ''
+  },
+  language: {
+    key: 'language',
+    label: '語言',
+    items: [
+      {label: '繁体中文', value: 'f_cn'},
+      {label: '简体中文', value: 'cn'},
+      {label: '英文', value: 'en'},
+      {label: '中英文', value: 'cn_en'}
     ],
     selected: ''
   }
@@ -359,3 +371,28 @@ export const fileInfoTYPE = {
   MP3: { value: '9', text: 'mp3' }, // mp3
   P720: { value: '10', text: '720P' }, // 720P
 };
+
+export const FORM_ITEM = [
+  { label: '名称', propName: 'name', valueName: 'name', type: 'text' },
+  { label: '名称(中文)', propName: 'chineseName', valueName: 'chineseName', type: 'text' },
+  { label: '名称(英文)', propName: 'englishName', valueName: 'englishName', type: 'text' },
+  { label: '关键字', propName: 'keyword', valueName: 'keyword', type: 'text' },
+  { label: '編目人', propName: 'owner', valueName: 'owner', type: 'text', disabled: true },
+  { label: '人物', propName: 'keyman', valueName: 'keyman', type: 'text' },
+  { label: '净长', propName: 'duration', valueName: 'duration', type: 'text', disabled: true },
+  { label: '语言', propName: 'language', valueName: 'language', type: 'select', options: [] },
+  { label: '节目类型', propName: 'type', valueName: 'type', type: 'select', options: [] },
+  { label: '编目类', propName: 'ccid', valueName: 'ccid', type: 'select', options: [] },
+  { label: '资源所属部门', propName: 'resourceDepartment', valueName: 'resourceDepartment', type: 'select', options: [] },
+  { label: '首播日期', propName: 'airTime', valueName: 'airTime', type: 'date', show: (type)=>{ if(['包裝','自製','墊播', '採購', '宣傳'].indexOf(type) !== -1) { return true } return false } },
+  { label: '新闻日期', propName: 'newsTime', valueName: 'newsTime', type: 'date', show: (type)=>{ if(['素材'].indexOf(type) !== -1) { return true } return false } },
+  { label: '新闻类型', propName: 'newsType', valueName: 'newsType', type:  'select', options: [], show: (type)=>{ if(['素材'].indexOf(type) !== -1) { return true } return false } },
+  { label: '事发地区', propName: 'occurCountry', valueName: 'occurCountry', type: 'select', options: [], show: (type)=>{ if(['素材','包裝','自製','墊播'].indexOf(type) !== -1) { return true } return false } },
+  { label: '版本', propName: 'version', valueName: 'version', type: 'select', options: [], show: (type)=>{ if(['包裝','自製','墊播', '採購', '宣傳'].indexOf(type) !== -1) { return true } return false } },
+  { label: '制作地点', propName: 'madeLocation', valueName: 'madeLocation', type: 'select', options: [], show: (type)=>{ if(['包裝','自製','墊播', '採購'].indexOf(type) !== -1) { return true } return false } },
+  { label: '高标清', propName: 'hdFlag', valueName: 'hdFlag', type: 'radio', options: [
+    { label: '高清', value: '1' },
+    { label: '标清', value: '0' }
+  ] },
+  { label: '内容', propName: 'content', valueName: 'content', type: 'textarea' },
+];

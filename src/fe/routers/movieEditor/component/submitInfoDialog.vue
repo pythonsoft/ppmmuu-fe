@@ -33,7 +33,7 @@
           :class="$style.formItem"
           v-for="(item, index) in FORM_ITEM_MORE"
           :key="'FORM_ITEM_MORE'+index">
-          <fj-form-item :label="item.label" :prop="item.propName">
+          <fj-form-item :label="item.label" :prop="item.propName" v-if="isShow(item)">
             <fj-input v-if="item.type === 'text'" v-model="formData[item.valueName]" type="text" :disabled="item.disabled" />
             <fj-select v-else-if="item.type === 'select'" placeholder="请选择" v-model="formData[item.valueName]" :parent-el="parentEl">
               <fj-option
@@ -85,28 +85,7 @@
     { label: '关键字', propName: 'keyword', valueName: 'keyword', type: 'text' },
     { label: '名称(英文)', propName: 'englishName', valueName: 'englishName', type: 'text' }
   ];
-  const FORM_ITEM_MORE = [
-    { label: '名称', propName: 'name', valueName: 'name', type: 'text' },
-    { label: '编目类', propName: 'ccid', valueName: 'ccid', type: 'select', options: [] },
-    { label: '编目人', propName: 'owner', valueName: 'owner', type: 'text', disabled: true },
-    { label: '新闻类型', propName: 'newsType', valueName: 'newsType', type:  'select', options: [] },
-    { label: '人物', propName: 'keyman', valueName: 'keyman', type: 'text' },
-    { label: '事发国家', propName: 'occurCountry', valueName: 'occurCountry', type: 'select', options: [] },
-    { label: '净长', propName: 'duration', valueName: 'duration', type: 'text', disabled: true },
-    { label: '版本', propName: 'version', valueName: 'version', type: 'select', options: [] },
-    { label: '语言', propName: 'language', valueName: 'language', type: 'text' },
-    { label: '制作地点', propName: 'madeLocation', valueName: 'madeLocation', type: 'select', options: [] },
-    { label: '是否归档', propName: 'pigeonhole', valueName: 'pigeonhole', type: 'radio', options: [
-      { label: '是', value: '1' },
-      { label: '否', value: '0' }
-     ] },
-    { label: '新闻日期', propName: 'newsTime', valueName: 'newsTime', type: 'date' },
-    { label: '高标清', propName: 'hdFlag', valueName: 'hdFlag', type: 'radio', options: [
-      { label: '高清', value: '1' },
-      { label: '标清', value: '0' }
-     ] },
-    { label: '首播日期', propName: 'airTime', valueName: 'airTime', type: 'date' }
-  ];
+  const FORM_ITEM_MORE = require('./formConfig');
   const FIELD_MAP = {
     type: 'FIELD276',
     chineseName: 'FIELD195',
@@ -156,7 +135,7 @@
           occurCountry: '',
           duration: '',
           version: '',
-          language: '',
+          language: 'f_cn',
           madeLocation: '',
           pigeonhole: '是',
           newsTime: '',
@@ -170,20 +149,8 @@
           chineseName: [
             { required: true, message: '请输入名称' }
           ],
-          englishName: [
-            { required: true, message: '请输入名称' }
-          ],
-          keyword: [
-            { required: true, message: '请输入关键字' }
-          ],
           type: [
             { required: true, message: '请输入类型' }
-          ],
-          version: [
-            { required: true, message: '请输入版本' }
-          ],
-          keyman: [
-            { required: true, message: '请输入人物' }
           ],
           language: [
             { required: true, message: '请输入语言' }
@@ -194,30 +161,16 @@
           ccid: [
             { required: true, message: '请选择编目类'}
           ],
-          newsType: [
-            { required: true, message: '请选择新闻类型'}
-          ],
-          occurCountry: [
-            { required: true, message: '请选择事发国家'}
-          ],
-          version: [
-            { required: true, message: '请选择版本'}
-          ],
-          madeLocation: [
-            { required: true, message: '请选择制作地点'}
-          ],
           resourceDepartment: [
             { required: true, message: '请选择编目类'}
           ],
-          newsTime: [
-            { required: true, message: '请输入新闻日期'}
+          hdFlag: [
+            { required: true, message: '请选择高标清' }
           ],
-          airTime: [
-            { required: true, message: '请输入首播日期'}
-          ]
         },
         owner: { _id: '', name: '' },
-        isBtnLoading: false
+        isBtnLoading: false,
+        type: '宣傳',
       };
     },
     watch: {
@@ -234,7 +187,12 @@
           return accumulator + parseFloat(currentValue.duration);
         }, 0);
         this.formData.duration = secondsToTimeCode(duration);
-      }
+      },
+      'formData.type'(val) {
+        if (val) {
+          this.type = val;
+        }
+      },
     },
     mounted() {
       this.parentEl = this.$refs.dialogContent;
@@ -288,6 +246,18 @@
               this.visible = false;
             });
       },
+      isShow(item) {
+        if (!item.show) {
+          return true;
+        }
+
+        if (item.show && typeof item.show === 'function') {
+          if (item.show(this.type)) {
+            return true;
+          }
+        }
+        return false;
+      }
     }
   };
 </script>
@@ -301,7 +271,7 @@
     width: 100%;
   }
   .content {
-    max-height: 300px;
+    max-height: 650px;
     /*margin: 0 -10px;*/
     overflow-y: auto;
   }

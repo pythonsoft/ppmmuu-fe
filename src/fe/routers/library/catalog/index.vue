@@ -58,62 +58,41 @@
               <div class="catalogRightContent" v-if="hasSelectedItem || currentCatalogId">
                 <h3>填写编目内容</h3>
                 <fj-form :model="formData" :rules="rules" ref="catalogForm" label-width="100px">
-                  <fj-form-item label="名称" prop="name">
-                    <fj-input v-model="formData.name"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="名称(中文)" prop="chineseName">
-                    <fj-input v-model="formData.chineseName"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="名称(英文)" prop="englishName">
-                    <fj-input v-model="formData.englishName"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="关键字" prop="keyword">
-                    <fj-input v-model="formData.keyword"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="编目人">
-                    <fj-input v-model="formData.ownerName" :disabled="true"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="人物" prop="keyman">
-                    <fj-input v-model="formData.keyman"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="净长" prop="duration">
-                    <fj-input v-model="formData.duration" :disabled="true"></fj-input>
-                  </fj-form-item>
-                  <fj-form-item label="语言" prop="language">
-                    <fj-input v-model="formData.language"></fj-input>
-                  </fj-form-item>
-                  <template v-for="select in selectFields">
-                    <fj-form-item :label="select.label" :prop="select.key" :key="select.key">
-                      <fj-select v-model="formData[select.key]" clearable>
+                  <div
+                      v-for="(item, index) in FORM_ITEM"
+                      :key="'FORM_ITEM'+index">
+                    <fj-form-item :label="item.label" :prop="item.propName" v-if="isShow(item)">
+                      <fj-input v-if="item.type === 'text'" v-model="formData[item.valueName]" type="text" :disabled="item.disabled" />
+                      <fj-select v-else-if="item.type === 'select' && item.valueName === 'type'" placeholder="请选择" v-model="type" :parent-el="parentEl">
                         <fj-option
-                                v-for="item in select.items"
-                                :key="item.value"
-                                :value="item.value"
-                                :label="item.label"></fj-option>
+                                v-for="option in selectFields[item.propName].items"
+                                :key="option.label+option.value"
+                                :label="option.label"
+                                :value="option.value">
+                        </fj-option>
                       </fj-select>
-                    </fj-form-item>
-                  </template>
-                  <template v-for="dateField in dateFields">
-                    <fj-form-item :label="dateField.label" :prop="dateField.key">
-                      <fj-date-picker :type="dateField.type"
-                                      placeholder="请选择日期"
-                                      v-model="formData[dateField.key]"
-                                      :parent-el="parentEl">
-                      </fj-date-picker>
-                    </fj-form-item>
-                  </template>
-                  <template v-for="radioField in radioFields">
-                    <fj-form-item :label="radioField.label" :prop="radioField.key">
-                      <fj-radio-group v-model="formData[radioField.key]" custom-class="radio-group">
-                         <template v-for="item in radioField.items">
-                           <fj-radio :label="item.value">{{item.label}}</fj-radio>
-                         </template>
+                      <fj-select v-else-if="item.type === 'select'" placeholder="请选择" v-model="formData[item.valueName]" :parent-el="parentEl">
+                        <fj-option
+                                v-for="option in selectFields[item.propName].items"
+                                :key="option.label+option.value"
+                                :label="option.label"
+                                :value="option.value">
+                        </fj-option>
+                      </fj-select>
+                      <fj-radio-group v-else-if="item.type === 'radio'" v-model="formData[item.valueName]" custom-class="radio-group">
+                        <fj-radio v-for="radio in radioFields[item.propName].items" :key="radio.label+radio.value" :label="radio.value">{{ radio.label }}</fj-radio>
                       </fj-radio-group>
+                      <fj-input v-else-if="item.type === 'textarea'" type="textarea" :rows="5" v-model="formData.content"></fj-input>
+                      <fj-date-picker
+                              v-else
+                              type="date"
+                              format="YYYY-MM-DD"
+                              theme="stroke"
+                              placeholder="请选择日期"
+                              v-model="formData[item.valueName]"
+                              :parent-el="parentEl"></fj-date-picker>
                     </fj-form-item>
-                  </template>
-                  <fj-form-item label="内容" prop="content">
-                    <fj-input type="textarea" :rows="5" v-model="formData.content"></fj-input>
-                  </fj-form-item>
+                  </div>
                 </fj-form>
                 <div :style="{ marginLeft: '78px' }">
                   <fj-button :loading="isUpdateBtnLoading" size="mini" type="primary" @click="updateCatalog">保存</fj-button>
@@ -147,6 +126,7 @@
   import FjFormItem from "../../../component/fjUI/packages/form/src/formItem.vue";
   import ProgramPanel from '../../movieEditor/component/programPanel';
   import throttle from '../../../component/fjUI/utils/throttle';
+  import { FORM_ITEM } from '../config'
 
   const libraryAPI = require('../../../api/library');
 
@@ -157,6 +137,7 @@
         sourceTitle: '',
         sourceVideoId: '',
         sourceSnippet: {},
+        FORM_ITEM: FORM_ITEM,
         formData: {
           name: '',
           chineseName: '',
@@ -164,7 +145,7 @@
           keyword: '',
           departmentName: '',
           ownerName: '',
-          type: '',
+          type: '廣告',
           version: '',
           keyman: '',
           duration: '',
@@ -173,7 +154,6 @@
           ccid: '',
           newsType: '',
           occurCountry: '',
-          version: '',
           madeLocation: '',
           resourceDepartment: '',
           newsTime: '',
@@ -191,38 +171,17 @@
           chineseName: [
             { required: true, message: '请输入名称' }
           ],
-          englishName: [
-            { required: true, message: '请输入名称' }
-          ],
-          keyword: [
-            { required: true, message: '请输入关键字' }
-          ],
           type: [
             { required: true, message: '请输入类型' }
           ],
           version: [
             { required: true, message: '请输入版本' }
           ],
-          keyman: [
-            { required: true, message: '请输入人物' }
-          ],
-          duration: [
-            { required: true, message: '请输入净长' }
-          ],
           language: [
             { required: true, message: '请输入语言' }
           ],
           content: [
             { required: true, message: '请输入内容' }
-          ],
-          ccid: [
-            { required: true, message: '请选择编目类'}
-          ],
-          newsType: [
-            { required: true, message: '请选择新闻类型'}
-          ],
-          occurCountry: [
-            { required: true, message: '请选择事发国家'}
           ],
           version: [
             { required: true, message: '请选择版本'}
@@ -231,14 +190,8 @@
             { required: true, message: '请选择制作地点'}
           ],
           resourceDepartment: [
-            { required: true, message: '请选择编目类'}
+            { required: true, message: '请选择资源所属部门'}
           ],
-          newsTime: [
-            { required: true, message: '请输入新闻日期'}
-          ],
-          airTime: [
-            { required: true, message: '请输入首播日期'}
-          ]
         },
         catalogList: [],
         isUpdateBtnLoading: false,
@@ -258,7 +211,8 @@
           name: '',
           range: [],
           objectId: ''
-        }
+        },
+        type: '廣告',
       };
     },
     created() {
@@ -277,6 +231,11 @@
       this.projectBus.$on('updateProgramIndex', (index) => {
         this.updateProgram();
       });
+    },
+    watch: {
+      type(val) {
+        this.formData.type = val;
+      }
     },
     mounted() {
       this.updateSize();
@@ -425,6 +384,9 @@
           }
           this.formData.ownerName = node.owner.name;
           this.formData.departmentName = node.department.name;
+          if (!this.formData.type) {
+            this.formData.type = '廣告';
+          }
         }).catch((error) => {
           this.$message.error(error);
         });
@@ -511,6 +473,18 @@
           }
         }
 
+      },
+      isShow(item) {
+        if (!item.show) {
+          return true;
+        }
+
+        if (item.show && typeof item.show === 'function') {
+          if (item.show(this.type)) {
+            return true;
+          }
+        }
+        return false;
       }
     },
     components: {
