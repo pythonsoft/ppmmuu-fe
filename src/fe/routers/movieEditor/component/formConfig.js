@@ -8,7 +8,7 @@ const FORM_ITEM_MORE = [
   { label: '事发地区', propName: 'occurCountry', valueName: 'occurCountry', type: 'select', options: [], show: (type)=>{ if(['素材','包裝','自製','墊播'].indexOf(type) !== -1) { return true } return false } },
   { label: '净长', propName: 'duration', valueName: 'duration', type: 'text', disabled: true },
   { label: '版本', propName: 'version', valueName: 'version', type: 'select', options: [], show: (type)=>{ if(['包裝','自製','墊播', '採購', '宣傳'].indexOf(type) !== -1) { return true } return false } },
-  { label: '语言', propName: 'language', valueName: 'language', type: 'select', options: [{label: '繁体中文', value: 'f_cn'}, {label: '简体中文', value: 'cn'}, {label: '英文', value: 'en'}, {label: '中英文', value: 'cn_en'}] },
+  { label: '语言', propName: 'language', valueName: 'language', type: 'select', options: [] },
   { label: '制作地点', propName: 'madeLocation', valueName: 'madeLocation', type: 'select', options: [], show: (type)=>{ if(['包裝','自製','墊播', '採購'].indexOf(type) !== -1) { return true } return false } },
   { label: '新闻日期', propName: 'newsTime', valueName: 'newsTime', type: 'date', show: (type)=>{ if(['素材'].indexOf(type) !== -1) { return true } return false } },
   { label: '高标清', propName: 'hdFlag', valueName: 'hdFlag', type: 'radio', options: [

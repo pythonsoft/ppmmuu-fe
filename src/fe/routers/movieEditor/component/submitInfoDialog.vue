@@ -35,15 +35,7 @@
           :key="'FORM_ITEM_MORE'+index">
           <fj-form-item :label="item.label" :prop="item.propName" v-if="isShow(item)">
             <fj-input v-if="item.type === 'text'" v-model="formData[item.valueName]" type="text" :disabled="item.disabled" />
-            <fj-select v-else-if="item.type === 'select' && item.valueName === 'language'" placeholder="请选择" v-model="formData[item.valueName]" :parent-el="parentEl">
-              <fj-option
-                      v-for="option in item.options"
-                      :key="option.label+option.value"
-                      :label="option.label"
-                      :value="option.value">
-              </fj-option>
-            </fj-select>
-            <fj-select v-else-if="item.type === 'select' && item.valueName !== 'language'" placeholder="请选择" v-model="formData[item.valueName]" :parent-el="parentEl">
+            <fj-select v-else-if="item.type === 'select'" placeholder="请选择" v-model="formData[item.valueName]" :parent-el="parentEl">
               <fj-option
               v-for="option in selectFields[item.propName].items"
               :key="option.label+option.value"
