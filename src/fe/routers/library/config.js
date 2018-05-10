@@ -304,7 +304,8 @@ export const selectFields = {
       { value: '中文台時尚製作組', label: '中文台時尚製作組' },
       { value: '中文台時尚主編組', label: '中文台時尚主編組' },
       { value: '節目購銷部', label: '節目購銷部' },
-      { value: '影帶管理部', label: '影帶管理部' }
+      { value: '影帶管理部', label: '影帶管理部' },
+      { value: '節目製作部', label: '節目製作部' },
     ],
     selected: ''
   }
