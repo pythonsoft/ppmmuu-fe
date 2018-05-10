@@ -249,7 +249,8 @@
         force: false,
         warehouseData: {},
         FILE_STATUS: config.getConfig('FILE_STATUS'),
-        isOnTape: false
+        isOnTape: false,
+        objectId: '',
       };
     },
     watch: {
@@ -313,6 +314,7 @@
       getDetail() {
         const me = this;
         api.getObject({ params: { objectid: this.item.id, fromWhere: this.videoInfo.from_where } }).then((res) => {
+          me.objectId = res.data.result.basic.OBJECTID;
           const detail = res.data.result.detail;
           const program = detail.program.length > 0 ? detail.program : detail.sequence;
           me.program = program;
@@ -556,11 +558,12 @@
         if (row) {
           const params = row.params;
           const file = this.getDefaultFileInfo();
+          const objectId = this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU ? this.objectId : file.OBJECTID;
           const reqData = {
             processId: params.processId,
             shelveTemplateId: params.shelveTemplateId,
             fileName: file.FILENAME,
-            objectId: file.OBJECTID,
+            objectId,
             fileType: file.FILETYPEID,
             fromWhere:  this.videoInfo.from_where,
             catalogName: this.shelfName || '',
@@ -641,9 +644,11 @@
           outpoint = formatDuration(this.fileInfo.OUTPOINT, true);
         }
 
+        const objectId = this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU ? this.objectId : this.fileInfo.OBJECTID;
+
         //如果不是打点下载，将inpoint，outpoint设置为'0'
         const param = {
-          objectid: this.fileInfo.OBJECTID || '',
+          objectid: objectId || '',
           inpoint: inpoint,
           outpoint: outpoint,
           filename: this.fileInfo.FILENAME,
