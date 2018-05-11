@@ -212,7 +212,25 @@
         });
       },
       warehouse(row) {
-        const reqData = { processParams: row.params };
+        const processParams = row.params;
+        const reqData = {
+          workflowId: '',
+          priority: 0,
+          parms: {
+            templateId: '',
+            orgFiles: []
+          },
+        };
+
+        for (let i = 0, len = processParams.length; i< len; i++) {
+          if (processParams[i].key === 'workflowId') {
+            reqData.workflowId = processParams[i].value;
+          } else if (processParams[i].key === 'priority') {
+            reqData.priority = processParams[i].value * 0;
+          } else if (processParams[i].key === 'templateId') {
+            reqData.parms.templateId = processParams[i].value;
+          }
+        }
 
         // 根据sequences封装fileinfos
         const fileInfos = [];
@@ -223,15 +241,20 @@
           const index = objectIds.indexOf(objectId);
           if (index < 0) {
             objectIds.push(objectId);
-            fileInfos.push({ objectId, fromWhere, fileType,fileName, startTime: [formatDuration(range[0]*1000, true)], endTime: [formatDuration(range[1]*1000, true)] });
+            const startTime = formatDuration(range[0]*1000, true);
+            const endTime = formatDuration(range[1]*1000, true);
+            fileInfos.push({ objectId, fromWhere, fileType,fileName, parts: [startTime, endTime].join(',') });
           } else {
-            fileInfos[index].startTime.push(formatDuration(range[0]*1000, true));
-            fileInfos[index].endTime.push(formatDuration(range[1]*1000, true));
+            const startTime = formatDuration(range[0]*1000, true);
+            const endTime = formatDuration(range[1]*1000, true);
+            const newParts = [startTime, endTime].join(',');
+            fileInfos[index].parts = [fileInfos[index].parts, newParts].join('|');
           }
         }
-        reqData.originalFileInfo = fileInfos;
+        reqData.parms.orgFiles = fileInfos;
 
-        reqData.catalogInfo = Object.assign({}, this.formData, { ownerId: this.owner._id, ownerName: this.owner.name, inpoint: 0, outpoint: 0 });
+        reqData.parms.catalogInfo = Object.assign({}, this.formData, { ownerId: this.owner._id, ownerName: this.owner.name, inpoint: 0, outpoint: 0 });
+        reqData.parms.catalogName = reqData.parms.catalogInfo.chineseName || '';
         this.isBtnLoading = true;
         this.templateBrowserVisible = false;
         api.warehouse(reqData)
