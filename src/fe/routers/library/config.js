@@ -313,10 +313,10 @@ export const selectFields = {
     key: 'language',
     label: '語言',
     items: [
-      {label: '繁体中文', value: 'f_cn'},
-      {label: '简体中文', value: 'cn'},
-      {label: '英文', value: 'en'},
-      {label: '中英文', value: 'cn_en'}
+      {label: '繁体中文', value: 'f_chinese'},
+      {label: '简体中文', value: 'chinese'},
+      {label: '英文', value: 'english'},
+      {label: '中英文', value: 'chinese_english'}
     ],
     selected: ''
   }
