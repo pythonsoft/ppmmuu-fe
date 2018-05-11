@@ -278,7 +278,8 @@
           templateId: templateInfo._id,
           ownerName: item.ownerName,
           fromWhere: item.fromWhere || FROM_WHERE.MAM,
-          fileId: item._id
+          fileId: item._id,
+          needMerge: 'false',
         };
 
         if(transferParams) {
