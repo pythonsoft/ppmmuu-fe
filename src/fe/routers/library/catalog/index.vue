@@ -149,7 +149,7 @@
           version: '',
           keyman: '',
           duration: '',
-          language: '',
+          language: 'f_chinese',
           content: '',
           ccid: '',
           newsType: '',
@@ -158,7 +158,7 @@
           resourceDepartment: '',
           newsTime: '',
           airTime: '',
-          hdFlag: '',
+          hdFlag: 1,
           pigeonhole: ''
         },
         currentCatalogId: '',
@@ -386,6 +386,12 @@
           this.formData.departmentName = node.department.name;
           if (!this.formData.type) {
             this.formData.type = '廣告';
+          }
+          if (!this.formData.language) {
+            this.formData.type = 'f_chinese';
+          }
+          if (this.formData.hasOwnProperty(hdFlag)) {
+            this.formData.hdFlag = 1;
           }
         }).catch((error) => {
           this.$message.error(error);

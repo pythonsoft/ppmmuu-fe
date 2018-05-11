@@ -249,7 +249,9 @@
         force: false,
         warehouseData: {},
         FILE_STATUS: config.getConfig('FILE_STATUS'),
-        isOnTape: false
+        isOnTape: false,
+        objectId: '',
+        originalBasic: {},
       };
     },
     watch: {
@@ -313,6 +315,8 @@
       getDetail() {
         const me = this;
         api.getObject({ params: { objectid: this.item.id, fromWhere: this.videoInfo.from_where } }).then((res) => {
+          me.objectId = res.data.result.basic.OBJECTID;
+          me.originalBasic = JSON.parse(JSON.stringify(res.data.result.basic));
           const detail = res.data.result.detail;
           const program = detail.program.length > 0 ? detail.program : detail.sequence;
           me.program = program;
@@ -556,22 +560,26 @@
         if (row) {
           const params = row.params;
           const file = this.getDefaultFileInfo();
+          const objectId = this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU ? this.objectId : file.OBJECTID;
           const reqData = {
-            processId: params.processId,
+            workflowId: params.workflowId,
+            priority: params.priority || 0,
             shelveTemplateId: params.shelveTemplateId,
             fileName: file.FILENAME,
-            objectId: file.OBJECTID,
-            fileType: file.FILETYPEID,
+            objectId,
+            fileTypeId: file.FILETYPEID,
             fromWhere:  this.videoInfo.from_where,
             catalogName: this.shelfName || '',
             force: this.force,
           };
 
           for (let i = 0, len = params.length; i < len; i++) {
-            if (params[i].key === 'processId') {
-              reqData.processId = params[i].value;
+            if (params[i].key === 'workflowId') {
+              reqData.workflowId = params[i].value;
             } else if (params[i].key === 'shelveTemplateId') {
               reqData.shelveTemplateId = params[i].value;
+            } else if (params[i].key === 'priority') {
+              reqData.priority = params[i].value;
             }
           }
           this.warehouseData = reqData;
@@ -636,14 +644,16 @@
         let outpoint = '0';
 
         //说明是片断子类，这个是需要打点下载的
-        if(me.basic['OBJECTID'] !== me.basic['ROOTID']) {
+        if(this.originalBasic['ROOTID'] && this.originalBasic['OBJECTID'] !== this.originalBasic['ROOTID']) {
           inpoint = formatDuration(this.fileInfo.INPOINT, true);
           outpoint = formatDuration(this.fileInfo.OUTPOINT, true);
         }
 
+        const objectId = this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU ? this.objectId : this.fileInfo.OBJECTID;
+
         //如果不是打点下载，将inpoint，outpoint设置为'0'
         const param = {
-          objectid: this.fileInfo.OBJECTID || '',
+          objectid: objectId || '',
           inpoint: inpoint,
           outpoint: outpoint,
           filename: this.fileInfo.FILENAME,

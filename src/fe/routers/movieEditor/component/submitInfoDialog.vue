@@ -135,7 +135,7 @@
           occurCountry: '',
           duration: '',
           version: '',
-          language: 'f_cn',
+          language: 'f_chinese',
           madeLocation: '',
           pigeonhole: '是',
           newsTime: '',
@@ -158,9 +158,6 @@
           content: [
             { required: true, message: '请输入内容' }
           ],
-          ccid: [
-            { required: true, message: '请选择编目类'}
-          ],
           resourceDepartment: [
             { required: true, message: '请选择编目类'}
           ],
@@ -180,6 +177,9 @@
         keys.forEach(key => {
           this.formData[key] = defaultFormData[FIELD_MAP[key]] || '';
         });
+        if (!this.formData.language) {
+          this.formData.language = 'f_chinese';
+        }
         this.visible = val;
       },
       sequences(val) {
