@@ -199,7 +199,7 @@
                 item.isActive = false;
               }
             }
-            item.startTime = formatTime(range.from, 'HH:ss');
+            item.startTime = formatTime(range.from, 'HH:mm');
             return item;
           });
           this.programIds = tempIds;
