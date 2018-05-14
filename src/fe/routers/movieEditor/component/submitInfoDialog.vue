@@ -217,8 +217,13 @@
           workflowId: '',
           priority: 0,
           parms: {
-            templateId: '',
-            orgFiles: []
+            fastEditorTemplateId: '',
+            orgFiles: [],
+            userId: '',
+            userName: '',
+            importTemplateId: '',
+            shelveTemplateId: '',
+            needShelve: 'yes'
           },
         };
 
@@ -227,8 +232,12 @@
             reqData.workflowId = processParams[i].value;
           } else if (processParams[i].key === 'priority') {
             reqData.priority = processParams[i].value * 0;
-          } else if (processParams[i].key === 'templateId') {
-            reqData.parms.templateId = processParams[i].value;
+          } else if (processParams[i].key === 'fastEditorTemplateId') {
+            reqData.parms.fastEditorTemplateId = processParams[i].value;
+          } else if (processParams[i].key === 'importTemplateId') {
+            reqData.parms.importTemplateId = processParams[i].value;
+          } else if (processParams[i].key === 'shelveTemplateId') {
+            reqData.parms.shelveTemplateId = processParams[i].value;
           }
         }
 
@@ -252,7 +261,8 @@
           }
         }
         reqData.parms.orgFiles = fileInfos;
-
+        reqData.parms.userId = this.owner._id;
+        reqData.parms.userName = this.owner.name;
         reqData.parms.catalogInfo = Object.assign({}, this.formData, { ownerId: this.owner._id, ownerName: this.owner.name, inpoint: 0, outpoint: 0 });
         reqData.parms.catalogName = reqData.parms.catalogInfo.chineseName || '';
         this.isBtnLoading = true;
