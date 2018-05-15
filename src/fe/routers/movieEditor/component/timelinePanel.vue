@@ -237,6 +237,7 @@
           }
         }
 
+        reqData.parms.orgFiles = JSON.stringify(reqData.parms.orgFiles);
         jobAPI.download(reqData).then((res) => {
           if(res.data === 'audit'){
             me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');

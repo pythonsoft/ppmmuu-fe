@@ -671,6 +671,7 @@
             templateId: templateInfo._id,
             priority: 0,
           };
+          reqData.parms.orgFiles = JSON.stringify(reqData.parms.orgFiles);
         } else {
           reqData = {
             name: 'Download',
