@@ -37,15 +37,13 @@
               <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
             </template>
           </fj-table-column>
-          <fj-table-column prop="fileName" label="名称"></fj-table-column>
-          <fj-table-column prop="currentStep" label="进度">
-            <template slot-scope="props">
-              {{ props.row.currentStep }}
-              {{ props.row.tasklist[props.row.currentStep] ? '(' + props.row.tasklist[props.row.currentStep].position + '%)' : '--' }}
-            </template>
+          <fj-table-column prop="name" label="名称" width="100"></fj-table-column>
+          <fj-table-column prop="current" width="100" label="当前步骤">
           </fj-table-column>
-          <fj-table-column prop="createTime" width="160" label="创建时间">
-            <template slot-scope="props">{{ props.row.createTime | formatTime }}</template>
+          <fj-table-column prop="next" width="100" label="下个步骤">
+          </fj-table-column>
+          <fj-table-column prop="createdTime" width="160" label="创建时间">
+            <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
           </fj-table-column>
         </fj-table>
       </div>
