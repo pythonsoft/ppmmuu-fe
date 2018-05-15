@@ -268,6 +268,7 @@
         reqData.parms.catalogName = reqData.parms.catalogInfo.chineseName || '';
         this.isBtnLoading = true;
         this.templateBrowserVisible = false;
+        reqData.parms.orgFiles = JSON.stringify(reqData.parms.orgFiles);
         api.warehouse(reqData)
             .then((res) => {
               this.$message.success('发布成功');
