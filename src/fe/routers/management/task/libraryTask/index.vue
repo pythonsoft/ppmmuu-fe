@@ -34,25 +34,22 @@
       <fj-table highlightKey="id" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" align="center" label="状态">
           <template slot-scope="props">
-            <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
+            <div><span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span></div>
           </template>
         </fj-table-column>
-        <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="tasklist" width="80" label="进度">
-          <template slot-scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).total }}</template>
+        <fj-table-column prop="name" label="名称" width="100"></fj-table-column>
+        <fj-table-column prop="current" width="100" label="当前步骤">
         </fj-table-column>
-        <fj-table-column prop="tasklist" width="140" label="当前流程">
-          <template slot-scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).current }}</template>
+        <fj-table-column prop="next" width="100" label="下个步骤">
         </fj-table-column>
-        <fj-table-column prop="processType" width="80" label="任务类型"></fj-table-column>
         <fj-table-column prop="userName" width="120" label="用户名">
           <template slot-scope="props">{{ props.row.userName || '-' }}</template>
         </fj-table-column>
-        <fj-table-column prop="createTime" width="140"label="创建时间">
-          <template slot-scope="props">{{ props.row.createTime | formatTime }}</template>
+        <fj-table-column prop="createdTime" width="140"label="创建时间">
+          <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="lastModify" width="140" label="修改时间">
-          <template slot-scope="props">{{ props.row.lastModify | formatTime }}</template>
+        <fj-table-column prop="activedTime" width="140" label="修改时间">
+          <template slot-scope="props">{{ props.row.activedTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>
@@ -205,7 +202,7 @@
         const param = {
           page: this.page,
           pageSize: this.pageSize,
-          processType: 'archive',
+          processType: 'import',
         };
 
         if (this.formData.status) {

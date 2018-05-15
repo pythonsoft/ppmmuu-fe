@@ -21,16 +21,16 @@
     </template>
     <template slot="operation">
       <span class="layout-btn-mini-margin">
-        <fj-button type="primary" size="mini" v-bind:disabled="stopDisable" @click="stopClick">停止</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="true" @click="stopClick">停止</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="primary" size="mini" v-bind:disabled="restartDisable" @click="restartClick">重启</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="true" @click="restartClick">重启</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
-        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="deleteClick">删除</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="true" @click="deleteClick">删除</fj-button>
       </span>
       <span class="layout-btn-margin">
-        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="childTaskClick">任务详细</fj-button>
+        <fj-button type="primary" size="mini" v-bind:disabled="isDisabled" @click="childTask">任务详细</fj-button>
       </span>
       <span class="layout-btn-mini-margin">
         <fj-button type="primary" size="mini" @click="refreshClick">刷新</fj-button>
@@ -40,18 +40,19 @@
       <fj-table style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row highlightKey="id">
         <fj-table-column prop="status" width="90" align="center" label="状态">
           <template slot-scope="props">
-            <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
+            <div><span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span></div>
           </template>
         </fj-table-column>
-        <fj-table-column prop="name" label="名称"></fj-table-column>
-        <fj-table-column prop="tasklist" width="80" label="进度">
-          <template slot-scope="props">{{ formatTaskList(props.row.currentStep, props.row.tasklist).total }}</template>
+        <fj-table-column prop="name" label="名称" width="100"></fj-table-column>
+        <fj-table-column prop="current" width="100" label="当前步骤">
+        </fj-table-column>
+        <fj-table-column prop="next" width="100" label="下个步骤">
         </fj-table-column>
         <fj-table-column prop="createTime" width="160" label="创建时间">
-          <template slot-scope="props">{{ props.row.createTime | formatTime }}</template>
+          <template slot-scope="props">{{ props.row.createdTime | formatTime }}</template>
         </fj-table-column>
-        <fj-table-column prop="lastModify" width="160" label="修改时间">
-          <template slot-scope="props">{{ props.row.lastModify | formatTime }}</template>
+        <fj-table-column prop="activedTime" width="160" label="修改时间">
+          <template slot-scope="props">{{ props.row.activedTime | formatTime }}</template>
         </fj-table-column>
       </fj-table>
     </template>
@@ -68,6 +69,11 @@
       :parentInfo="table.currentRowInfo"
       :visible.sync="childTaskDialogVisible"
     ></child-task-slide-dialog-view>
+
+    <task-slide-dialog-view
+            :parentInfo="table.currentRowInfo"
+            :visible.sync="taskDialogVisible"
+    ></task-slide-dialog-view>
 
     <fj-dialog
       title="提示"
@@ -88,6 +94,7 @@
   import fourRowLayout from '../../../component/layout/fourRowLayoutRightContent/index';
   import childTaskDialogView from './childTaskDialog';
   import utils from '../../../common/utils';
+  import taskDialogView from '../../../component/higherOrder/propsSlideDialog';
 
   const api = require('../../../api/user');
   const config = require('../../management/task/config');
@@ -96,7 +103,8 @@
   export default {
     components: {
       'layout-four-row': fourRowLayout,
-      'child-task-slide-dialog-view': childTaskDialogView
+      'child-task-slide-dialog-view': childTaskDialogView,
+      'task-slide-dialog-view': taskDialogView,
     },
     data() {
       return {
@@ -105,6 +113,7 @@
         restartDisable: true,
         title: '',
         isShowSelect: true,
+        taskDialogVisible: false,
 
         status: config.getConfig('DOWNLOAD_STATUS'),
         formData: {
@@ -165,6 +174,9 @@
             break;
           }
         }
+      },
+      taskClick() {
+        this.taskDialogVisible = true;
       },
       handleClickSearch() {
         this.listTask();
