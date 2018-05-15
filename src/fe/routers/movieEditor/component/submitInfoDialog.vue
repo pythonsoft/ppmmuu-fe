@@ -222,8 +222,7 @@
             userId: '',
             userName: '',
             importTemplateId: '',
-            shelveTemplateId: '',
-            needShelve: 'yes'
+            shelveTemplateId: ''
           },
         };
 
@@ -238,6 +237,8 @@
             reqData.parms.importTemplateId = processParams[i].value;
           } else if (processParams[i].key === 'shelveTemplateId') {
             reqData.parms.shelveTemplateId = processParams[i].value;
+          } else if (processParams[i].key === 'needShelve') {
+            reqData.parms.needShelve = processParams[i].value;
           }
         }
 

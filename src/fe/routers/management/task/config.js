@@ -44,15 +44,13 @@ config.TASK_STATUS = {
 // 下载任务状态
 config.DOWNLOAD_STATUS = {
   all: { text: '全部', value: '', key: 'all' },
-  waiting: { text: '等待中', value: 'waiting', key: 'waiting', css: 'task-status-base task-status-created' },
-  created: { text: '已创建', value: 'created', key: 'created', css: 'task-status-base task-status-created' },
-  dealing: { text: '处理中', value: 'dealing', key: 'dealing', css: 'task-status-base task-status-dealing' },
-  stopping: { text: '停止中', value: 'stopping', key: 'stopping', css: 'task-status-base task-status-dealing' },
-  stopped: { text: '已停止', value: 'stopped', key: 'stopped', css: 'task-status-base task-status-dealing' },
-  restart: { text: '重启中', value: 'restart', key: 'restart', css: 'task-status-base task-status-created' },
-  error: { text: '错误', value: 'error', key: 'error', css: 'task-status-base task-status-error' },
-  complete: { text: '已完成', value: 'complete', key: 'complete', css: 'task-status-base task-status-complete' },
-  delete: { text: '已删除', value: 'delete', key: 'delete', css: 'task-status-base task-status-dealing' }
+  PENDING: { text: '等待中', value: 'PENDING', key: 'pending', css: 'task-status-base task-status-created' },
+  INITIALIZE: { text: '初始化', value: 'INITIALIZE', key: 'initialize', css: 'task-status-base task-status-created' },
+  RUNNING: { text: '运行中', value: 'RUNNING', key: 'running', css: 'task-status-base task-status-dealing' },
+  STOPPING: { text: '停止中', value: 'STOPPING', key: 'stopping', css: 'task-status-base task-status-dealing' },
+  STOPPED: { text: '已停止', value: 'STOPPED', key: 'stopped', css: 'task-status-base task-status-dealing' },
+  ERROR: { text: '错误', value: 'ERROR', key: 'error', css: 'task-status-base task-status-error' },
+  COMPLETED: { text: '已完成', value: 'COMPLETED', key: 'complete', css: 'task-status-base task-status-complete' },
 };
 
 config.PERMISSION = {

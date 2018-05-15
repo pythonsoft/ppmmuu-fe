@@ -34,7 +34,7 @@
       <fj-table highlightKey="id" style="font-size: 12px;" :data="tableData" name="table" ref="table" @current-change="handleCurrentChange" highlight-current-row>
         <fj-table-column prop="status" width="90" label="状态">
           <template slot-scope="props">
-            <span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span>
+            <div><span :class="getStatus(props.row.status).css">{{ getStatus(props.row.status).text }}</span></div>
           </template>
         </fj-table-column>
         <fj-table-column prop="filePath" label="名称"></fj-table-column>
