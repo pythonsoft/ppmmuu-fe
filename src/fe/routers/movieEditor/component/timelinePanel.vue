@@ -200,58 +200,46 @@
         const itemsObj = {};
         const objectIds = [];
 
-        for(let i = 0, len = items.length; i < len; i++){
-          const item = items[i];
-          if(itemsObj[item.objectId]){
-            itemsObj[item.objectId].push(item);
-          }else{
-            objectIds.push(item.objectId);
-            itemsObj[item.objectId] = [];
-            itemsObj[item.objectId].push(item);
-          }
-        }
-
-        const param = {
-          objectid: objectIds.join(','),
-          filename: items[0].title,
+        const reqData = {
+          name: 'Download',
+          workflowId: '0dfa68fa-2f25-4d8c-a466-bc7c24b3b0d6',
+          parms: {},
+          priority: 0,
           templateId: templateInfo._id,
-          fromWhere: items[0].fromWhere || FROM_WHERE.MAM,
-          fileInfo: [],
-          downloadParams: []
         };
 
-        for(let key in itemsObj) {
-          const itemsArr = itemsObj[key];
-          const downloadItem = {
-            objectid: itemsArr[0].objectId,
-            inpoint: 0,
-            outpoint: 0,
-            filename: itemsArr[0].title,
-            filetypeid: itemsArr[0].filetypeid,
-            destination: '',
-            targetname: ''
-          }
-          param.downloadParams.push(downloadItem);
-
-          const fileItem = {
-            fileId: itemsArr[0]._id,
-            startTime: [],
-            endTime: [],
-          }
-          for (let i = 0, len = itemsArr.length; i < len; i++) {
-            const item = itemsArr[i];
-            fileItem.startTime.push(formatDuration(item.range[0] * 1000, true));
-            fileItem.endTime.push(formatDuration(item.range[1] * 1000, true));
-          }
-          param.fileInfo.push(fileItem);
+        reqData.parms = {
+          bucketId: '',
+          transcodeTemplateId: '',
+          orgFiles: [],
+          downloadType: '2',
         }
 
-        if(transferParams) {
-          param.receiverId = transferParams.acceptor._id;
-          param.receiverType = transferParams.acceptor.targetType;
+        for(let i = 0, len = items.length; i < len; i++){
+          const item = items[i];
+          const index = objectIds.indexOf(item.objectId);
+          if (index == -1) {
+            objectIds.push(item.objectId);
+            const inpoint = formatDuration(item.range[0] * 1000, true);
+            const outpoint = formatDuration(item.range[1] * 1000, true);
+            const parts = inpoint + ',' + outpoint;
+            const file = {
+              objectId: item.objectId,
+              fileName: item.title,
+              fromWhere: item.fromWhere || FROM_WHERE.MAM,
+              fileType: item.filetypeid,
+              parts: parts,
+            };
+            reqData.parms.orgFiles.push(file);
+          }else{
+            const inpoint = formatDuration(item.range[0] * 1000, true);
+            const outpoint = formatDuration(item.range[1] * 1000, true);
+            const parts = inpoint + ',' + outpoint;
+            reqData.parms.orgFiles[index].parts = reqData.parms.orgFiles[index].parts + '|' + parts;
+          }
         }
 
-        jobAPI.multiDownload(param).then((res) => {
+        jobAPI.download(reqData).then((res) => {
           if(res.data === 'audit'){
             me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
           }else {
@@ -269,25 +257,37 @@
         const templateInfo = rs[type];
         const transferParams = rs[type + '_info'];
 
-        const param = {
-          objectid: item.objectId,
-          inpoint: formatDuration(item.range[0] * 1000, true),
-          outpoint: formatDuration(item.range[1] * 1000, true),
-          filename: item.title,
-          filetypeid: item.filetypeid,
+        const reqData = {
+          name: 'Download',
+          workflowId: '0dfa68fa-2f25-4d8c-a466-bc7c24b3b0d6',
+          parms: {},
+          priority: 0,
           templateId: templateInfo._id,
-          ownerName: item.ownerName,
-          fromWhere: item.fromWhere || FROM_WHERE.MAM,
-          fileId: item._id,
-          needMerge: 'false',
         };
+        const inpoint = formatDuration(item.range[0] * 1000, true);
+        const outpoint = formatDuration(item.range[1] * 1000, true);
+        const parts = inpoint + ',' + outpoint;
 
-        if(transferParams) {
-          param.receiverId = transferParams.acceptor._id;
-          param.receiverType = transferParams.acceptor.targetType;
+        reqData.parms = {
+          bucketId: '',
+          transcodeTemplateId: '',
+          orgFiles: [{
+            objectid: item.objectId,
+            fileName: item.title,
+            fromWhere: item.fromWhere || FROM_WHERE.MAM,
+            fileType: item.filetypeid,
+            parts: parts,
+          }],
+          downloadType: '1',
         }
 
-        jobAPI.download(param).then((res) => {
+
+//        if(transferParams) {
+//          param.receiverId = transferParams.acceptor._id;
+//          param.receiverType = transferParams.acceptor.targetType;
+//        }
+
+        jobAPI.download(reqData).then((res) => {
           if(res.data === 'audit'){
             me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
           }else {

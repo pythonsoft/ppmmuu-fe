@@ -643,32 +643,53 @@
         let inpoint = '0';
         let outpoint = '0';
 
+        const objectId = this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU ? this.objectId : this.fileInfo.OBJECTID;
+
+        let reqData = {};
+
         //说明是片断子类，这个是需要打点下载的
         if(this.originalBasic['ROOTID'] && this.originalBasic['OBJECTID'] !== this.originalBasic['ROOTID']) {
           inpoint = formatDuration(this.fileInfo.INPOINT, true);
           outpoint = formatDuration(this.fileInfo.OUTPOINT, true);
+          reqData = {
+            name: 'Download',
+            workflowId: '0dfa68fa-2f25-4d8c-a466-bc7c24b3b0d6',
+            parms: {
+              bucketId: '',
+              orgFiles: [
+                {
+                  objectId: objectId || '',
+                  fromWhere: this.videoInfo.from_where || FROM_WHERE.MAM,
+                  fileType: this.fileInfo.FILETYPEID || '',
+                  fileName: this.fileInfo.FILENAME,
+                  parts: inpoint + ',' + outpoint,
+                }
+              ],
+              transcodeTemplateId: '',
+              downloadType: '1'  // 分段下载
+            },
+            templateId: templateInfo._id,
+            priority: 0,
+          };
+        } else {
+          reqData = {
+            name: 'Download',
+            workflowId: '0dfa68fa-2f25-4d8c-a466-bc7c24b3b0d6',
+            parms: {
+              bucketId: '',
+              objectId: objectId || '',
+              from: this.videoInfo.from_where || FROM_WHERE.MAM,
+              fileTypeId: this.fileInfo.FILETYPEID || '',
+              fileName: this.fileInfo.FILENAME,
+              transcodeTemplateId: '',
+              downloadType: '0'  // 完整下载
+            },
+            templateId: templateInfo._id,
+            priority: 0,
+          };
         }
 
-        const objectId = this.videoInfo.from_where === this.FROM_WHERE.HK_RUKU ? this.objectId : this.fileInfo.OBJECTID;
-
-        //如果不是打点下载，将inpoint，outpoint设置为'0'
-        const param = {
-          objectid: objectId || '',
-          inpoint: inpoint,
-          outpoint: outpoint,
-          filename: this.fileInfo.FILENAME,
-          filetypeid: this.fileInfo.FILETYPEID || '',
-          templateId: templateInfo._id,
-          fromWhere: this.videoInfo.from_where || FROM_WHERE.MAM,
-          fileId: this.fileInfo._id || ''
-        };
-
-        if(transferParams) {
-          param.receiverId = transferParams.acceptor._id;
-          param.receiverType = transferParams.acceptor.targetType;
-        }
-
-        jobAPI.download(param).then((res) => {
+        jobAPI.download(reqData).then((res) => {
           if(res.data === 'audit'){
             me.$message.success('您下载文件需要审核，请到"任务-下载任务-待审核"查看详细情况');
           }else {

@@ -266,7 +266,7 @@
          **/
 
         api.listJob({ params: param }, notNeedProcess ? '' : me).then((res) => {
-          me.tableData = res.data;
+          me.tableData = res.data.docs;
           me.page = res.data.page;
           me.total = res.data.total;
           completeFn && completeFn();
