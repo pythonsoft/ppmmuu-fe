@@ -119,8 +119,8 @@ export default [{
         { path: 'shelfList', component: ShelfListManagement, meta: { title: '上架任务' }, name: 'shelfList' },
         { path: 'fastEditTemplate', component: FastEditTemplate, meta: { title: '快编模板' }, name: 'fastEditTemplate' },
         { path: 'processTemplate', component: ProcessTemplate, meta: { title: '流程模板' }, name: 'processTemplate' },
-        { path: 'workflowDefinition', component: WorkflowDefinition, meta: { title: '工作流定义' }, name: 'workflowDefinition' },
-        { path: 'workflowInstance', component: WorkflowInstance, meta: { title: '工作流实例' }, name: 'workflowInstance' }
+        { path: 'workflowDefinition', component: WorkflowDefinition, meta: { title: '工作流定义管理' }, name: 'workflowDefinition' },
+        { path: 'workflowInstance', component: WorkflowInstance, meta: { title: '工作流实例管理' }, name: 'workflowInstance' }
       ]
     },
     {

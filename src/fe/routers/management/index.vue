@@ -85,8 +85,8 @@
     { title: '工作流管理',
       index: 'workflowManager',
       children: [
-        { text: '工作流定义', index: 'workflowDefinition', route: 'workflowDefinition' },
-        { text: '工作流实例', index: 'workflowInstance', route: 'workflowInstance' },
+        { text: '定义管理', index: 'workflowDefinition', route: 'workflowDefinition' },
+        { text: '实例管理', index: 'workflowInstance', route: 'workflowInstance' },
       ]
     },
     { text: '大洋稿件入库', index: 'copyManagement', route: 'copyManagement' },
